@@ -1,0 +1,27 @@
+[
+
+    {
+        "phase":{
+            "target":"self",
+            "duration":"instant"
+        }
+
+    },
+
+    {
+        "magic_missile":{
+            "target":"single",
+            "damage":"1d4",
+            "duration":"instant"
+        },
+        "mage_armor":{
+            "name":"Mage Armor",
+            "target":"self",
+			"duration":"1hr",
+			"effect":""
+        }
+
+    }
+
+
+]

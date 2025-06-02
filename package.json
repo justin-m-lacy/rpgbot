@@ -1,0 +1,54 @@
+{
+  "name": "archbot",
+  "version": "2.1.2",
+  "description": "Bot for discord",
+  "main": "dist/archbot.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node .",
+    "dev": "cross-env NODE_ENV=production ts-node archbot.ts",
+    "serve": "cross-env NODE_ENV=production ts-node archbot.ts ----transpile-only",
+    "build": "rimraf dist && tsc && tsc-alias && pnpm run minify && pnpm run copydata && pnpm run copypackage",
+    "copypackage": "ts-node --project tsconfig.node.json strip-package.ts",
+    "minify": "node mterser --glob dist/**/*.js --compress --mangle",
+    "copydata": "copyfiles plugins/**/*.png dist && copyfiles .env dist && copyfiles -f assets/* dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justin-m-lacy/archbot.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justin-m-lacy/archbot/issues"
+  },
+  "homepage": "https://github.com/justin-m-lacy/archbot#readme",
+  "dependencies": {
+    "archcache": "^1.2.1",
+    "archdice": "^1.1.0",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.3.1",
+    "formulic": "^2.0.3"
+  },
+  "keywords": [
+    "discord",
+    "discordjs",
+    "bot",
+    "games",
+    "fun",
+    "chat",
+    "node",
+    "8ball",
+    "rpg"
+  ],
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "cross-env": "^7.0.3",
+    "glob": "^8.0.1",
+    "rimraf": "^3.0.2",
+    "terser": "^5.13.1",
+    "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.7",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.6"
+  },
+  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
+}
