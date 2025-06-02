@@ -9,8 +9,8 @@ import { toDirection } from "./world/loc";
 
 import { replyEmbedUrl } from '@/embeds';
 import { Char } from './char/char';
-import CharClass from './char/charclass';
-import Race from './char/race';
+import { CharClass } from './char/charclass';
+import { Race } from './char/race';
 import * as CharGen from './chargen';
 import * as display from './display';
 import * as gamejs from './game';
@@ -28,8 +28,8 @@ export class Rpg {
 	readonly charCache: Cache;
 	readonly context: BotContext<any>;
 
-	world: World;
-	game: Game;
+	readonly world: World;
+	readonly game: Game;
 
 	/**
 	 * Map User id's to name of last char played as.
@@ -52,6 +52,12 @@ export class Rpg {
 		await this.loadLastChars();
 	}
 
+	/**
+	 * Command to list all chars in instance..
+	 * @param m 
+	 * @param uname 
+	 * @returns 
+	 */
 	async cmdAllChars(m: Message, uname?: string) {
 
 		try {
@@ -64,12 +70,19 @@ export class Rpg {
 
 	}
 
+	/**
+	 * Get status of current party, or invite char to user party,
+	 * or join char's party.
+	 * @param m 
+	 * @param who 
+	 * @returns 
+	 */
 	async cmdParty(m: Message, who?: string) {
 
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		let t;
+		let t: Char | undefined;
 		if (who) {
 			t = await this.loadChar(who);
 			if (!t) return;
@@ -79,6 +92,12 @@ export class Rpg {
 
 	}
 
+	/**
+	 * Set party leader.
+	 * @param m 
+	 * @param who 
+	 * @returns 
+	 */
 	async cmdLeader(m: Message, who?: string) {
 
 		const char = await this.userCharOrErr(m, m.author);

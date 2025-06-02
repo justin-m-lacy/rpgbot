@@ -1,6 +1,6 @@
 import templates from '../data/minions.json';
 
-export default class Minion {
+export class Minion {
 
 	/**
 	 * Retrieves a minion template by name.

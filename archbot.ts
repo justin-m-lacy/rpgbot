@@ -11,17 +11,17 @@ process.chdir(__dirname);
 // init bot
 const client: Client = new Client({
 
-	closeTimeout: 4000,
-	intents: [GatewayIntentBits.Guilds,
-	GatewayIntentBits.GuildMessages,
-	GatewayIntentBits.MessageContent,
-	GatewayIntentBits.GuildMessageReactions,
-	GatewayIntentBits.GuildMembers,
-	GatewayIntentBits.DirectMessages,
-	GatewayIntentBits.GuildEmojisAndStickers,
-	GatewayIntentBits.GuildModeration,
-	GatewayIntentBits.GuildPresences,
-
+	closeTimeout: 10000,
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.GuildExpressions,
+		GatewayIntentBits.GuildModeration,
+		GatewayIntentBits.GuildPresences,
 	],
 	sweepers: {
 		messages: {
@@ -40,13 +40,14 @@ client.on('shardError', error => {
 
 console.log('client created.');
 
-const initBot = () => {
+const initBot = async () => {
 
-	const auth = require('./auth.json') as Auth;
+	const auth = (await import('./auth.json')).default as Auth;
+	const config = await loadConfig();
 
 	console.log(`base directory: ${__dirname}`);
 	try {
-		const bot = new DiscordBot(client, auth, __dirname);
+		const bot = new DiscordBot(client, auth, config, __dirname);
 		initBasicCommands(bot);
 		tryLogin(auth);
 
@@ -60,6 +61,27 @@ const initBot = () => {
 }
 
 initBot()!;
+
+/**
+ * Load config file.
+ */
+async function loadConfig() {
+
+	try {
+
+		const config = (await import('../../config.json')).default;
+
+		if (process.env.NODE_ENV !== 'production' && config.dev) {
+			Object.assign(config, config.dev);
+		}
+		return {}
+
+	} catch (e) {
+		return {};
+	}
+
+}
+
 
 function tryLogin(auth: Auth) {
 

@@ -1,14 +1,14 @@
-import Actor from '../char/actor';
+import { Actor } from '../char/actor';
 import { Char } from '../char/char';
 import { roll, Roller } from '../dice';
 import * as forms from '../formulas';
 import { ItemPicker } from '../inventory';
-import Grave from '../items/grave';
+import { Grave } from '../items/grave';
 import { Item } from '../items/item';
 import * as itemgen from '../items/itemgen';
-import Weapon from '../items/weapon';
-import Monster from '../monster/monster';
-import Party from '../social/party';
+import { Weapon } from '../items/weapon';
+import { Monster } from '../monster/monster';
+import { Party } from '../social/party';
 import World from '../world/world';
 import { Loot } from './loot';
 

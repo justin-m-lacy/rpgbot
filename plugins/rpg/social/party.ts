@@ -1,10 +1,10 @@
 import Cache from 'archcache';
-import Actor from '../char/actor';
+import { Actor } from '../char/actor';
 import { Char } from '../char/char';
 import { Coord } from '../world/loc';
 import SocialGroup from './socialGroup';
 
-export default class Party extends SocialGroup {
+export class Party extends SocialGroup {
 
 	static FromJSON(json: any, cache: Cache) {
 

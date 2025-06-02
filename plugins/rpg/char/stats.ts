@@ -62,11 +62,10 @@ export interface IStatBlock {
 	int: number;
 	wis: number;
 	cha: number;
-	/*get cha() { return this._cha; }
-	set cha(v) { this._cha = v; }*/
 
 }
-export default class StatBlock implements IStatBlock {
+
+export class StatBlock implements IStatBlock {
 
 	get evil() { return this._evil; }
 	set evil(v) { this._evil = v; }
@@ -163,7 +162,7 @@ export default class StatBlock implements IStatBlock {
 
 	toJSON() {
 
-		const o: any = {
+		return {
 
 			maxHp: this._maxHp,
 			curHp: this._curHp,
@@ -173,21 +172,19 @@ export default class StatBlock implements IStatBlock {
 			maxMp: this._maxMp,
 			curMp: this._curMp,
 
-			evil: this._evil,
-
 			str: this._str,
 			con: this._con,
 			dex: this._dex,
 			int: this._int,
 			wis: this._wis,
-			cha: this._cha
+			cha: this._cha,
+
+			evil: this._evil,
+
+			dr: this._dr ?? undefined,
+			resist: this._resist ?? undefined,
 
 		};
-
-		if (this._dr) o.dr = this._dr;
-		if (this._resist) o.resist = this._resist;
-
-		return o;
 
 	}
 

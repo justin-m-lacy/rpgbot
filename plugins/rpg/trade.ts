@@ -3,8 +3,8 @@ import { Char } from "./char/char";
 import { ItemIndex, ItemPicker } from './inventory';
 import { Item } from './items/item';
 import * as ItemGen from './items/itemgen';
-import Material from "./items/material";
-import Wearable, { toSlot } from './items/wearable';
+import { Material } from "./items/material";
+import { Wearable, toSlot } from './items/wearable';
 
 /**
  * @const {RegExp} isGold - Regexp testing for a gold amount.

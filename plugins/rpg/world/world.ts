@@ -2,9 +2,9 @@ import Cache from 'archcache';
 import { Char } from '../char/char';
 import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
-import Monster from '../monster/monster';
+import { Monster } from '../monster/monster';
 import Block from './block';
-import Feature from './feature';
+import { Feature } from './feature';
 import { Coord, DirString, DirVal, Exit, Loc } from './loc';
 import * as Gen from './worldgen';
 

@@ -2,7 +2,7 @@ import { Channel, Guild, GuildMember, User } from 'discord.js';
 import path from 'path';
 import * as afs from '../afs';
 
-export type Idable = {
+type Idable = {
 	id: string
 }
 /**
@@ -29,7 +29,7 @@ const USERS_DIR = 'users/';
 /**
  * @var {string} BASE_DIR - base directory for all data saves.
  */
-var BASE_DIR = './savedata';
+let BASE_DIR = './savedata';
 
 /**
  *
@@ -84,7 +84,7 @@ function getUserDir(user?: User) {
  * @param {string} member
  * @returns {string}
  */
-function getMemberPath(member?: GuildMember) {
+const memberPath = (member?: GuildMember) => {
 
 	if (!member || !member.guild) return '';
 	return GUILDS_DIR + member.guild.id + '/' + (member.id);
@@ -93,14 +93,13 @@ function getMemberPath(member?: GuildMember) {
 
 export default {
 
-	readData: readData,
-	writeData: writeData,
+	readData,
+	writeData,
 	deleteData(relPath: string): Promise<boolean> {
 		return afs.deleteFile(path.join(BASE_DIR, relPath + '.json')).then((v: any) => true, err => false);
 	},
 
-	memberPath: getMemberPath,
-
+	memberPath,
 	getUserDir,
 	getGuildDir,
 
@@ -120,9 +119,8 @@ export default {
 	 */
 	illegalChars: ['/', '\\', ':', '*', '?', '"', '|', '<', '>'],
 
-	getBaseDir() {
-		return BASE_DIR;
-	},
+	getBaseDir() { return BASE_DIR; },
+
 	setBaseDir(v: string) {
 		if (v.length > 0 && v[v.length - 1] !== '/') {
 			BASE_DIR = v + '/';

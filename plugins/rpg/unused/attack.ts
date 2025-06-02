@@ -1,6 +1,5 @@
-import { Effect } from '../magic/effects';
-import Actor from '../char/actor';
 import { Formula } from 'formulic';
+import { Actor } from '../char/actor';
 
 export class Attack {
 

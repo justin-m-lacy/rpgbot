@@ -4,7 +4,7 @@ const races: Race[] = [];
 
 const raceByName: { [race: string]: Race } = {};
 
-export default class Race {
+export class Race {
 
 	static GetRace(racename?: string) {
 		return racename ? raceByName[racename.toLowerCase()] : undefined;
@@ -94,7 +94,7 @@ const initRaces = async () => {
 
 		for (let i = raw.length - 1; i >= 0; i--) {
 
-			const race = Race.FromJSON( raw[i] );
+			const race = Race.FromJSON(raw[i]);
 			raceByName[race.name] = race;
 			races.push(race);
 

@@ -6,12 +6,12 @@ import { Item, ItemType } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
 import { Effect } from '../magic/effects';
 import { Coord } from '../world/loc';
-import Actor from './actor';
-import CharClass from './charclass';
-import Equip from './equip';
+import { Actor } from './actor';
+import { CharClass } from './charclass';
+import { Equip } from './equip';
 import { getNextExp, tryLevel } from './level';
-import Race from './race';
-import StatBlock, { getEvil, StatKey } from './stats';
+import { Race } from './race';
+import { getEvil, StatBlock, StatKey } from './stats';
 
 const statTypes = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 const saveProps = ['name', 'exp', 'owner', 'state', 'info', 'baseStats', 'effects',

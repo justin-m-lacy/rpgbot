@@ -1,5 +1,6 @@
 import { DiscordBot } from '@/bot/discordbot';
 import { Message } from 'discord.js';
+
 export const initPlugin = (bot: DiscordBot) => {
 
 	bot.addCmd('rollname', 'rollname [<race>] [m|f]', cmdRollName, { minArgs: 0, maxArgs: 2 });
@@ -191,8 +192,7 @@ export const genName = (race: string = "human", sex?: string) => {
 const cmdRollName = (m: Message<true>, race?: string, sex?: string) => {
 
 	try {
-		sex = toSex(sex);
-		const name = genName(race, sex!);
+		const name = genName(race, toSex(sex));
 		if (name) {
 			m.channel.send(name);
 		}

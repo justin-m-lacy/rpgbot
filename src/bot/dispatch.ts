@@ -12,9 +12,6 @@ export type CommandOpts = Partial<Command>;
 
 export default class CmdDispatch {
 
-	/**
-	 * {string}
-	 */
 	get prefix() { return this.cmdLine.prefix; }
 
 	private cmdLine: CmdLine;
@@ -23,16 +20,9 @@ export default class CmdDispatch {
 	 *
 	 * @param {string} cmdPrefix
 	 */
-	constructor(cmdPrefix = '!') {
-
+	constructor(cmdPrefix: string = '!') {
 		this.cmdLine = new CmdLine(cmdPrefix);
-
 	}
-
-	/**
-	 * @returns {Object[string->Command]} - Map of all active commands.
-	 */
-	getCommands() { return this.cmdLine.commands; }
 
 	/**
 	 *
@@ -44,7 +34,7 @@ export default class CmdDispatch {
 	/**
 	 * Parse a line of input.
 	 * @param {string} input - text input.
-	 * @returns {Command|null} - command found on input, or null.
+	 * @returns - command found on input, or null.
 	 */
 	parseLine(input: string) {
 		return this.cmdLine.setInput(input);
@@ -83,12 +73,15 @@ export default class CmdDispatch {
 
 	/**
 	 *
-	 * @param {string} name - Name of command.
-	 * @param {string} desc - Command Usage details.
-	 * @param {function} func - Function to call.
-	 * @param {Class} cmdClass - Class which owns the function.
-	 * @param {Object} opts - Command options.
-	 * @param {number} [opts.minArgs] @param {number} [opts.maxArgs] @param {bool}[opts.hidden] @param {string}[opts.group]
+	 * @param  name - Name of command.
+	 * @param  desc - Command Usage details.
+	 * @param  func - Function to call.
+	 * @param cmdClass - Class which owns the function.
+	 * @param  opts - Command options.
+	 * @param opts.minArgs
+	 * @param {number} [opts.maxArgs]
+	 * @param {bool}[opts.hidden]
+	 * @param {string}[opts.group]
 	 * @param {*[]} [opts.args] - Arguments to pass after all other arguments to command.
 	 */
 	addContextCmd(name: string, desc: string, func: Function, cmdClass: any, opts?: CommandOpts) {
@@ -159,8 +152,7 @@ export default class CmdDispatch {
 
 class CmdLine {
 
-	readonly _cmds: { [name: string]: Command } = {};
-	get commands() { return this._cmds; }
+	readonly commands: { [name: string]: Command } = {};
 
 	/**
 	 * @property {string[]} args - current arguments on command line.
@@ -177,12 +169,12 @@ class CmdLine {
 	/**
 	 * Length of command prefix.
 	 */
-	private readonly _prefixLen: number;
+	private readonly prefixLen: number;
 
 	constructor(cmdPrefix = '!') {
 
 		this.prefix = cmdPrefix;
-		this._prefixLen = cmdPrefix ? cmdPrefix.length : 0;
+		this.prefixLen = cmdPrefix ? cmdPrefix.length : 0;
 
 	}
 
@@ -191,7 +183,7 @@ class CmdLine {
 	 * @param {string} name
 	 */
 	getCommand(name: string) {
-		return this._cmds[name.toLowerCase()];
+		return this.commands[name.toLowerCase()];
 	}
 
 
@@ -207,17 +199,17 @@ class CmdLine {
 		// cmd prefix.
 		if (!str.startsWith(this.prefix)) return null;
 
-		const argIndex = str.indexOf(' ', this._prefixLen);
+		const argIndex = str.indexOf(' ', this.prefixLen);
 		let cmd: Command;
 
 		if (argIndex < 0) {
 
-			cmd = this._cmds[str.slice(this._prefixLen).toLowerCase()];
+			cmd = this.commands[str.slice(this.prefixLen).toLowerCase()];
 			this._args = null;
 
 		} else {
 
-			cmd = this._cmds[str.slice(this._prefixLen, argIndex).toLowerCase()];
+			cmd = this.commands[str.slice(this.prefixLen, argIndex).toLowerCase()];
 			if (!cmd) return null;
 
 			this.readArgs(str.slice(argIndex), cmd);
@@ -228,7 +220,7 @@ class CmdLine {
 
 	}
 
-	readArgs(argstr: string, cmd: Command) {
+	private readArgs(argstr: string, cmd: Command) {
 
 		// replace fancy quotes.
 		argstr = argstr.replace(QuoteRE, '"');
@@ -241,7 +233,7 @@ class CmdLine {
 
 	}
 
-	splitArgs(str: string) {
+	private splitArgs(str: string) {
 
 		const args = [];
 		const len = str.length;
@@ -280,7 +272,7 @@ class CmdLine {
 
 
 	// groups args on right to max count.
-	groupRight(str: string, argCount: number) {
+	private groupRight(str: string, argCount: number) {
 
 		const args = [];
 		const len = str.length;
@@ -323,7 +315,7 @@ class CmdLine {
 	}
 
 	// groups args on left to max count.
-	groupLeft(str: string, argCount: number) {
+	private groupLeft(str: string, argCount: number) {
 
 		const args = [];
 		let start = str.length - 1;
@@ -364,7 +356,7 @@ class CmdLine {
 
 	}
 
-	trimQuote(str: string) {
+	private trimQuote(str: string) {
 
 		str = str.trim();
 		const len = str.length;

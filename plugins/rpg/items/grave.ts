@@ -1,6 +1,6 @@
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
-import { Item, ItemType } from "./item";
+import { Item, ItemType, type ItemData } from "./item";
 
 export class Grave extends Item {
 
@@ -15,7 +15,7 @@ export class Grave extends Item {
 		return new Grave(char.name, slayer.name, Grave.GetEpitaph(char, slayer));
 	}
 
-	static FromJSON(json: any) {
+	static FromJSON(json: ItemData & { char: string, slayer: string, epitaph?: string }) {
 
 		const p = new Grave(json.char, json.slayer, json.epitaph);
 

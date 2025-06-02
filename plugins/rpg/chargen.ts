@@ -1,7 +1,7 @@
 import { Char } from './char/char';
-import CharClass from './char/charclass';
-import Race from './char/race';
-import StatBlock, { StatMod, StatName } from './char/stats';
+import { CharClass } from './char/charclass';
+import { Race } from './char/race';
+import { StatBlock, StatMod, StatName } from './char/stats';
 import * as Dice from './dice';
 import * as ItemGen from './items/itemgen';
 

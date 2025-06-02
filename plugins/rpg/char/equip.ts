@@ -1,8 +1,7 @@
-import Wearable from "../items/wearable";
-import { ItemType, Item } from '../items/item';
-import { HumanSlot, toSlot } from '../items/wearable';
-import Weapon from '../items/weapon';
+import { Item, ItemType } from '../items/item';
 import * as ItemGen from '../items/itemgen';
+import { Weapon } from '../items/weapon';
+import { HumanSlot, toSlot, Wearable } from "../items/wearable";
 
 var MaxSlots: { [key: string]: number | undefined } = {
 	neck: 3,
@@ -13,7 +12,7 @@ export type HumanSlots = {
 	[key in HumanSlot]: Wearable | Wearable[] | null;
 }
 
-export default class Equip {
+export class Equip {
 
 	static FromJSON(json: { slots?: Partial<HumanSlots> }) {
 

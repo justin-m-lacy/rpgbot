@@ -1,16 +1,15 @@
-import { Coord } from '../world/loc';
-import Race from './race';
-import StatBlock from './stats';
-import { StatKey, IStatBlock, StatMod, StatName } from './stats';
-import { ProtoEffect, Effect } from '../magic/effects';
-import CharClass from './charclass';
-import { roll, parseRoll } from '../dice';
+import { parseRoll, roll } from '../dice';
 import { Item } from '../items/item';
-import Weapon from '../items/weapon';
+import { Weapon } from '../items/weapon';
+import { Effect, ProtoEffect } from '../magic/effects';
+import { Coord } from '../world/loc';
+import { CharClass } from './charclass';
+import { Race } from './race';
+import { IStatBlock, StatBlock, StatKey, StatMod, StatName } from './stats';
 
 export type LifeState = 'alive' | 'dead';
 
-export default class Actor implements IStatBlock {
+export class Actor implements IStatBlock {
 
 	static FromJSON(json: any, act: Actor) {
 

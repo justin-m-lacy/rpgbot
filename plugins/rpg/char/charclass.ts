@@ -1,12 +1,12 @@
+import { ifString } from "plugins/rpg/util/parse";
+
 let classes: CharClass[];
 let classByName: { [name: string]: CharClass };
 
-export default class CharClass {
+export class CharClass {
 
 	static GetClass(classname?: string) {
-
 		return classname ? classByName[classname.toLowerCase()] : undefined;
-
 	}
 
 	static RandClass(classname?: string) {
@@ -19,47 +19,43 @@ export default class CharClass {
 
 	}
 
-	get talents() { return this._talents; }
+	readonly name: string;
+	desc: string = '';
 
-	get desc() { return this._desc; }
 	get baseMods() { return this._baseMods; }
 	get infoMods() { return this._infoMods; }
-	get ver() { return this._ver; }
 	get HD() { return this._hitdice; }
-	get name() { return this._name; }
 	get expMod() { return this._expMod ?? 1; }
 
-	private _talents: string[] = [];
-	private _desc?: string;
+	readonly talents: string[] = [];
 	private _baseMods: any;
 	private _infoMods: any;
-	private _ver?: number;
 	private _hitdice: number = 0;
-	private _name: string;
 	private _expMod: number = 1;
 
 	constructor(json: any) {
 
-		this._name = json.name ?? 'None';
+		this.name = ifString(json.name, 'None');
+		this.desc = ifString(json.desc);
 
 		this._hitdice = json.hitdice ?? 1;
 
-		if (json.hasOwnProperty('baseMods')) this._baseMods = json.baseMods;
+		if ('baseMods' in json) this._baseMods = json.baseMods;
 
-		if (json.talents) this._talents = json.talents;
-
-		this._desc = json.desc;
+		if (json.talents) {
+			this.talents = json.talents;
+		}
 
 		if (json.exp) this._expMod = json.exp;
 
-		if (json.hasOwnProperty('infoMods')) {
+		if ('infoMods' in json) {
 			this._infoMods = json.infoMods;
 		}
 
 	}
 
 	hasTalent(t: string) {
-		return this._talents.includes(t);
+		return this.talents.includes(t);
 	}
 
 }
@@ -71,7 +67,7 @@ function initClasses() {
 
 	try {
 
-		let a = require('../data/classes.json');
+		const a = require('../data/classes.json');
 
 		let classObj, charclass;
 		for (let i = a.length - 1; i >= 0; i--) {

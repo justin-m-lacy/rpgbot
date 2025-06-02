@@ -1,30 +1,30 @@
 import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
-import Actor, { LifeState } from './char/actor';
+import { Actor, LifeState } from './char/actor';
 import { Char } from './char/char';
-import Class from './char/charclass';
-import Race from "./char/race";
+import { CharClass } from './char/charclass';
+import { Race } from "./char/race";
 import Combat from "./combat/combat";
 import * as dice from './dice';
 import { ItemIndex, ItemPicker } from './inventory';
 import { Craft, Item } from './items/item';
-import Potion from './items/potion';
-import Wearable from './items/wearable';
-import Monster from './monster/monster';
+import { Potion } from './items/potion';
+import { Wearable } from './items/wearable';
+import { Monster } from './monster/monster';
 import { Rpg } from "./rpg";
 import { GuildManager } from './social/guild';
-import Party from './social/party';
+import { Party } from './social/party';
 import * as Trade from './trade';
 import { DirVal, toDirection } from './world/loc';
 import World from "./world/world";
 
 const itgen = require('./items/itemgen');
 
-var events = ['explored', 'crafted', 'levelup', 'died', 'pks', 'eaten'];
+const events = ['explored', 'crafted', 'levelup', 'died', 'pks', 'eaten'];
 
 export const getLore = (wot?: string) => {
 
-	const val = Race.GetRace(wot) ?? Class.GetClass(wot);
+	const val = Race.GetRace(wot) ?? CharClass.GetClass(wot);
 	if (val) return wot + ': ' + val.desc;
 
 	return 'Unknown entity: ' + wot;
@@ -43,16 +43,16 @@ const illegal_acts: Partial<{ [Property in LifeState]: any }> = {
 };
 
 // actions that allow some hp recovery.
-var rest_acts = { 'move': 1, 'cook': 1, 'drop': 1 };
-var party_acts = ['attack', 'move'];
+const rest_acts = { 'move': 1, 'cook': 1, 'drop': 1 };
+const party_acts = ['attack', 'move'];
 
-var eventFb = {
+const eventFb = {
 	levelup: '%c has leveled up.',
 	explored: '%c has found a new area.',
 	died: '%c has died.'
 };
 
-var eventExp = {
+const eventExp = {
 	explored: 2,
 	crafted: 1
 };
@@ -188,21 +188,21 @@ export default class Game {
 		return `Could not set ${tar.name} to party leader.`;
 	}
 
-	async party(char: Char, t?: Char) {
+	async party(char: Char, who?: Char) {
 
 		const party = this.getParty(char);
-		if (!t) return await party?.getStatus() ?? "You are not in a party.";
+		if (!who) return await party?.getStatus() ?? "You are not in a party.";
 
-		const other = this.getParty(t);
+		const other = this.getParty(who);
 
 		if (party) {
 
-			if (other === party) return `${t.name} is already in your party.`;
-			if (other) return `${t.name} is already in a party:\n${party.getList()}`;
+			if (other === party) return `${who.name} is already in your party.`;
+			if (other) return `${who.name} is already in a party:\n${party.getList()}`;
 			if (!party.isLeader(char)) return 'You are not the party leader.';
 
-			party.invite(t);
-			return `${char.name} has invited ${t.name} to join their party.`;
+			party.invite(who);
+			return `${char.name} has invited ${who.name} to join their party.`;
 
 		} else if (other) {
 
@@ -215,8 +215,8 @@ export default class Game {
 		} else {
 
 			// neither has party. new party with invite.
-			this.makeParty(char, t.name);
-			return `${char.name} has invited ${t.name} to join their party.`;
+			this.makeParty(char, who.name);
+			return `${char.name} has invited ${who.name} to join their party.`;
 
 		} //
 

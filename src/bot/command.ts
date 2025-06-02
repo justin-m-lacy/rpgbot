@@ -1,6 +1,6 @@
 import { PermissionResolvable } from "discord.js";
 
-export class Command {
+export class Command<F extends Function = Function> {
 
 	/**
 	 * @property {string}
@@ -39,10 +39,7 @@ export class Command {
 		this._module = v;
 	}
 
-	/**
-	 * @property {function}
-	 */
-	readonly func: Function;
+	readonly func: F;
 
 	_usage?: string;
 
@@ -100,7 +97,7 @@ export class Command {
 	 * @param func 
 	 * @param opts
 	 */
-	constructor(name: string, func: Function, opts?: Partial<Command>) {
+	constructor(name: string, func: F, opts?: Partial<Command>) {
 
 		this.name = name;
 		this.func = func;
