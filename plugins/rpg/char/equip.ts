@@ -3,7 +3,7 @@ import * as ItemGen from '../items/itemgen';
 import { Weapon } from '../items/weapon';
 import { HumanSlot, toSlot, Wearable } from "../items/wearable";
 
-var MaxSlots: { [key: string]: number | undefined } = {
+const MaxSlots: { [key: string]: number | undefined } = {
 	neck: 3,
 	fingers: 4
 };
@@ -24,7 +24,7 @@ export class Equip {
 		let k: HumanSlot;
 		for (k in src) {
 
-			var wot = src[k];
+			const wot = src[k];
 			if (!wot) continue;
 			else if (Array.isArray(wot)) {
 
@@ -86,10 +86,7 @@ export class Equip {
 	}
 
 	get(slot: HumanSlot) {
-
-		if (!this.slots.hasOwnProperty(slot)) return null;
-		return this.slots[slot];
-
+		return this.slots[slot] ?? null;
 	}
 
 	getWeapons(): Weapon | Weapon[] | null {
@@ -179,10 +176,8 @@ export class Equip {
 
 	equipWeap(it: Weapon) {
 
-		console.log('equipping weapon...');
-
-		let right = this.slots.right as Weapon;
-		let left = this.slots.left as Weapon;
+		const right = this.slots.right as Weapon;
+		const left = this.slots.left as Weapon;
 
 		if (it.hands === 2) {
 

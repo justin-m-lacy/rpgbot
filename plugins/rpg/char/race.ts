@@ -14,16 +14,15 @@ export class Race {
 
 		if (racename) {
 			racename = racename.toLowerCase();
-			if (raceByName.hasOwnProperty(racename)) return raceByName[racename];
+			if (raceByName[racename] != null) return raceByName[racename];
 		}
 		return races[Math.floor(races.length * Math.random())];
 	}
 
 	static Create(name: string, hitdice: any, statMods = {}) {
 
-		const r = new Race();
-		r._name = name;
-		r._hitdice = hitdice;
+		const r = new Race(name);
+		r.hitdice = hitdice;
 		r._baseMods = statMods;
 
 		return r;
@@ -32,16 +31,13 @@ export class Race {
 
 	static FromJSON(json: any) {
 
-		const o = new Race();
+		const o = new Race(json.name);
 
-		if (json.hasOwnProperty('name')) {
-			o._name = json.name;
-		}
 		if (json.hasOwnProperty('hitdice')) {
-			o._hitdice = json.hitdice;
+			o.hitdice = json.hitdice;
 		}
 
-		o._desc = json.desc;
+		o.desc = json.desc;
 
 		if (json.talents) o._talents = json.talents;
 
@@ -58,15 +54,20 @@ export class Race {
 
 	}
 
-	private _name: string = '';
-	private _desc?: string;
+	readonly id: string;
+	readonly name: string;
+
+	desc?: string;
 	private _baseMods?: StatMod;
 	private _infoMods?: StatMod;
-	private _hitdice: number = 0;
+	private hitdice: number = 0;
 	private _expMod: number = 1;
 	private _talents?: string[];
 
-	constructor() {
+	constructor(id: string) {
+
+		this.id = this.name = id;
+
 	}
 
 	hasTalent(t: string) {
@@ -75,16 +76,12 @@ export class Race {
 
 	get talents() { return this._talents; }
 
-	get desc() { return this._desc; }
 	get infoMods() { return this._infoMods; }
-	get HD() { return this._hitdice; }
-	get name() { return this._name; }
+	get HD() { return this.hitdice; }
 	get baseMods() { return this._baseMods; }
 	get expMod() { return this._expMod; }
 
 }
-
-
 
 const initRaces = async () => {
 

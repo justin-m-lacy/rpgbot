@@ -1,8 +1,7 @@
 import { Formula } from 'formulic';
 import { Char } from '../char/char';
+import * as Effects from '../magic/effects';
 import { Item, ItemType } from './item';
-
-const effects = require('../magic/effects');
 
 export class Potion extends Item {
 
@@ -65,7 +64,7 @@ export class Potion extends Item {
 
 			if (typeof (this._effect) === 'string') {
 
-				let e = effects.getEffect(this._effect);
+				let e = Effects.getEffect(this._effect);
 				if (!e) {
 					console.log('effect not found: ' + this._effect);
 					return;
@@ -74,7 +73,7 @@ export class Potion extends Item {
 				console.log('adding potion effect.');
 				char.addEffect(e);
 
-			} else if (this._effect instanceof effects.Effect) char.addEffect(this._effect);
+			} else if (this._effect instanceof Effects.Effect) char.addEffect(this._effect);
 
 		}
 

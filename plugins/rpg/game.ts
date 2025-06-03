@@ -4,7 +4,7 @@ import { Actor, LifeState } from './char/actor';
 import { Char } from './char/char';
 import { CharClass } from './char/charclass';
 import { Race } from "./char/race";
-import Combat from "./combat/combat";
+import { Combat } from "./combat/combat";
 import * as dice from './dice';
 import { ItemIndex, ItemPicker } from './inventory';
 import { Craft, Item } from './items/item';
@@ -57,7 +57,7 @@ const eventExp = {
 	crafted: 1
 };
 
-export default class Game {
+export class Game {
 
 	private readonly rpg: Rpg;
 	private readonly cache: Cache;
@@ -70,9 +70,9 @@ export default class Game {
 
 	/**
 	 *
-	 * @param {RPG} rpg
-	 * @param {Cache} charCache character cache.
-	 * @param {World} world RPG world
+	 * @param rpg
+	 * @param charCache character cache.
+	 * @param world RPG world
 	 */
 	constructor(rpg: Rpg, charCache: Cache, world: World) {
 
@@ -86,7 +86,7 @@ export default class Game {
 
 	}
 
-	skillRoll(act: Actor) { return dice.roll(1, 5 * (act.level + 4)); }
+	skillRoll(act: Actor) { return dice.roll(1, 5 * (+act.level + 4)); }
 
 	/**
 	 * Determines whether a character can perform a given action
@@ -180,7 +180,7 @@ export default class Game {
 		const party = this.getParty(char);
 		if (!party) return 'You are not in a party.';
 
-		if (!tar) { return `current leader: ${party.leader}.` }
+		if (!tar) { return `Party leader: ${party.leader}.` }
 
 		if (!party.isLeader(char)) return 'You are not the party leader.';
 
@@ -414,7 +414,6 @@ export default class Game {
 		if (this.tick(char, 'brew') === false) return char.output();
 
 
-
 		const s = this.skillRoll(char) + char.getModifier('wis');
 		if (s < 10 * pot.level) {
 			return char.output(`${char.name} failed to brew ${itemName}.`);
@@ -473,7 +472,7 @@ export default class Game {
 
 		if (this.tick(char, 'revive') === false) return char.output();
 
-		let roll = this.skillRoll(char) + char.getModifier('wis') + 2 * targ.curHp - 5 * targ.level;
+		let roll = this.skillRoll(char) + char.getModifier('wis') + (2 * targ.curHp) - 5 * +targ.level;
 		if (!char.hasTalent('revive')) roll -= 20;
 		if (roll < 10) return char.output(`You failed to revive ${targ.name}.`);
 

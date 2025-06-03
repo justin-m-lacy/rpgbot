@@ -3,7 +3,7 @@ import { DiscordBot } from '@/bot/discordbot';
 import Cache from 'archcache';
 import { Message, User } from "discord.js";
 import { Formula } from 'formulic';
-import Game from './game';
+import { Game } from './game';
 import { HumanSlot } from './items/wearable';
 import { toDirection } from "./world/loc";
 
@@ -62,7 +62,7 @@ export class Rpg {
 
 		try {
 			const list = await this.context.getDataList(RPG_DIR + CHAR_DIR);
-			if (!list) return m.reply('An unknown error has occurred. Oopsie.');
+			if (!list) return m.reply('Could not get char list.');
 
 			return m.reply(list.join(', '));
 

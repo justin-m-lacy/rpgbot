@@ -19,7 +19,7 @@ export class Inventory extends Container<Item> {
 
 			const it = ItemGen.fromJSON(arr[i]);
 			if (it) items.push(it);
-			else console.log('Inventory.js: ERR PARSING: ' + arr[i]);
+			else console.log('Inventory: ERR PARSING: ' + arr[i]);
 
 		}
 
@@ -48,7 +48,7 @@ export class Inventory extends Container<Item> {
 		if (!start) return null;
 
 		if (typeof start === 'string') {
-			let num = parseInt(start);
+			const num = parseInt(start);
 			if (Number.isNaN(num)) {
 				return this.findItem(start);
 			} else {

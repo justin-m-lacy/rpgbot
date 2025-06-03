@@ -43,11 +43,11 @@ let f: PronounMap = {
 	'child': 'girl'
 };
 
-let genders: { [types: string]: PronounMap } = {
+let sexes: { [types: string]: PronounMap } = {
 
-	m: m,
+	m,
 	male: m,
-	f: f,
+	f,
 	female: f
 }
 
@@ -55,14 +55,14 @@ let genders: { [types: string]: PronounMap } = {
 let genReg = /%sub|%ob|%adj|%pos|%ref|%is/g
 
 /**
- * Re-genders a string with grammatical gender markers: e.g. %sub (subjective)
- * @param {string} gender
+ * Re-sexes a string with grammatical gender markers: e.g. %sub (subjective)
+ * @param {string} sex
  * @param {string} str - string to genderfy
  * @returns {string}
  */
-export const genderfy = (gender: string, str: string) => {
+export const genderfy = (sex: string, str: string) => {
 
-	let pronouns = genders[gender.toLowerCase()];
+	let pronouns = sexes[sex.toLowerCase()];
 	if (!pronouns) return;
 
 	return str.replace(genReg, (orig) => {

@@ -1,6 +1,7 @@
-import { IMod, IModdable, ModState, SymMod } from '@/model/imod';
-import { Id, Numeric } from '@/model/types';
-import { precise } from '../../util/format';
+import { precise } from 'plugins/rpg/display';
+import { IMod, IModdable, ModState, SymMod } from '../imod';
+import { Id, Numeric } from '../types';
+
 
 export class PctMod implements IMod {
 

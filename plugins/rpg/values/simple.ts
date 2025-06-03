@@ -2,6 +2,9 @@ import { IMod } from './imod';
 
 export class Simple {
 
+	toJSON() { return this._base }
+	valueOf() { return this._value }
+
 	readonly id: string;
 
 	readonly mods = new Map<string, IMod>();
@@ -9,17 +12,18 @@ export class Simple {
 	/**
 	 * cached value.
 	 */
-	private _cached: number = 0;
+	private _value: number = 0;
 
 	/**
 	 * base value before mods.
 	 */
 	private _base: number = 0;
 
-	get value() { return this._cached; }
-	set value(v) { this._base = v; }
-
-
+	get value() { return this._value; }
+	set value(v) {
+		this._base = v;
+		this.recalc();
+	}
 
 	get base() { return this._base }
 	set base(v) {
@@ -28,11 +32,13 @@ export class Simple {
 
 	}
 
+	setTo(v: number) {
+		this._base = v;
+		this.recalc();
+	}
 
 	constructor(id: string) {
-
 		this.id = id;
-
 	}
 
 	add(v: number): void {
@@ -67,7 +73,7 @@ export class Simple {
 			m.applyMod(this, state);
 		}
 
-		this._cached = (this._base + state.bonus)
+		this._value = (this._base + state.bonus)
 			* (1 + state.pct * state.pctMult);
 
 	}

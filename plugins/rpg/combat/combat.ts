@@ -20,10 +20,13 @@ const fist = new Weapon('fists',
  * Exp for killing target.
  * @param {number} lvl
  */
-const npcExp = (lvl: number) => Math.floor(10 * Math.pow(1.3, lvl));
-const pvpExp = (lvl: number) => Math.floor(10 * Math.pow(1.2, lvl / 2));
+const NpcExp = (lvl: number) => Math.floor(10 * Math.pow(1.3, lvl));
+const PvpExp = (lvl: number) => Math.floor(10 * Math.pow(1.2, lvl / 2));
 
-export default class Combat {
+/**
+ * Single combat in progress.
+ */
+export class Combat {
 
 	getText() { return this.resp; }
 
@@ -83,12 +86,12 @@ export default class Combat {
 	 */
 	async partyAttack(p: Party, targ: Char | Party | Monster) {
 
-		let names = p.roster;
-		let len = names.length;
+		const names = p.roster;
+		const len = names.length;
 
 		for (let i = 0; i < len; i++) {
 
-			var c = await p.getChar(names[i]);
+			const c = await p.getChar(names[i]);
 			if (!c || c.state !== 'alive') {
 				if (!c) console.log('!c is true: ' + names[i]);
 				else console.log('attacking state: ' + c.state);
@@ -100,7 +103,7 @@ export default class Combat {
 
 				var destChar = await targ.randTarget();
 				if (!destChar) {
-					console.warn('All opponents have 0 hp.');
+					console.warn('All opponents have been defeated.');
 					break;	// no opponents with hp left.
 				}
 				await this.tryHit(c, destChar, p);
@@ -145,10 +148,10 @@ export default class Combat {
 	 */
 	async resolve() {
 
-		let len = this.attacks.length;
+		const len = this.attacks.length;
 		for (let i = 0; i < len; i++) {
 
-			var atk = this.attacks[i];
+			const atk = this.attacks[i];
 			if (atk.killed) {
 
 				//console.log('attack kills defender.')
@@ -178,20 +181,16 @@ export default class Combat {
 
 	}
 
-	async tryHit(src: Actor | Monster, dest: Actor | Party | Monster, srcParty?: Party) {
+	async tryHit(src: Actor | Monster, targ: Actor | Party | Monster, srcParty?: Party) {
 
 		if (!src) { console.warn('tryHit() src is null'); return; }
 
-		let d: Actor | Monster | null;
-		if (dest instanceof Party) {
-			d = await dest.randTarget();
-		} else d = dest;
+		const d = targ instanceof Party ? await targ.randTarget() : targ;
+		if (!d) { console.warn('tryHit() targ null'); return; }
 
-		if (!d) { console.warn('tryHit() dest is null'); return; }
+		const attack = new AttackInfo(src, d, srcParty);
 
-		let attack = new AttackInfo(src, d, srcParty);
-
-		this.resp += `${src.name} attacks ${dest.name} with ${attack.name}`;
+		this.resp += `${src.name} attacks ${targ.name} with ${attack.name}`;
 
 		if (attack.hit) {
 
@@ -206,17 +205,17 @@ export default class Combat {
 
 	async doKill(char: Char, target: Char | Monster, party: Party) {
 
-		let lvl = target.level;
+		const lvl = target.level;
 
 		if (target instanceof Monster) {
 
-			if (target.evil) char.evil += -target.evil / 4;
-			party ? await party.addExp(npcExp(lvl)) : char.addExp(npcExp(lvl));
+			if (target.evil) char.evil.add(-target.evil / 4);
+			party ? await party.addExp(NpcExp(lvl)) : char.addExp(NpcExp(lvl));
 			char.addHistory('slay');
 
 		} else {
 
-			party ? await party.addExp(pvpExp(lvl)) : char.addExp(pvpExp(lvl));
+			party ? await party.addExp(PvpExp(lvl)) : char.addExp(PvpExp(lvl));
 			char.evil += (-target.evil) / 2 + 1 + target.getModifier('cha');
 			char.addHistory('pk');
 
@@ -235,10 +234,10 @@ export default class Combat {
 		let defender: Char | Monster | undefined;
 
 		if (this.defender instanceof Party) {
+
 			defender = await this.defender.randChar();
-			if (!defender) {
-				return;
-			}
+			if (!defender) return;
+
 		} else { defender = this.defender }
 
 		/// Monsters always assumed to be at same location.
@@ -248,18 +247,19 @@ export default class Combat {
 		}
 
 		let atk = attacker.skillRoll() + attacker.getModifier('dex') + attacker.getModifier('wis');
-		let def = defender.skillRoll() + defender.getModifier('dex') + defender.getModifier('wis');
+		const def =
+			defender.skillRoll() + defender.getModifier('dex') + defender.getModifier('wis');
 
-		if (!attacker.hasTalent('steal')) atk -= 20;
+		if (!attacker.hasTalent('steal')) atk -= 40;
+		if (wot) atk -= 10;
 
-		let del = atk - def;
-		if (wot) del -= 5;
+		const delta = atk - def;
 
-		if (del > 15) {
+		if (delta > 15) {
 
-			this.take(attacker, defender, wot, del);
+			this.take(attacker, defender, wot, delta);
 
-		} else if (del < 5 && defender.state === 'alive') {
+		} else if (delta < 5 && defender.state === 'alive') {
 
 			this.resp += `${defender.name} catches ${attacker.name} attempting to steal.\n`;
 			this.attack(defender, attacker);
@@ -276,7 +276,7 @@ export default class Combat {
 	attack(src: Actor | Monster, dest: Actor | Monster) {
 
 		if ('loc' in src && 'loc' in dest && !(src.loc.equals(dest.loc))) {
-			this.resp += `${src.name} does not see ${dest.name} at their location.`;
+			this.resp += `${src.name} does not see ${dest.name} at this location.`;
 			return;
 		}
 
@@ -287,7 +287,7 @@ export default class Combat {
 
 	take(src: Actor | Monster, targ: Char | Monster, wot?: ItemPicker, stealRoll: number = 0) {
 
-		let it;
+		let it: Item | null | undefined;
 		if (wot) {
 
 			it = targ.takeItem(wot) as Item | null | undefined;
@@ -316,25 +316,20 @@ export default class Combat {
 
 		if (!loot.gold && (!loot.items || loot.items.length === 0)) return;
 
-		let d: Char | Party | undefined = dest;
-		if (d instanceof Party) {
-			d = await d.randChar();
-			if (d == null) {
-				return;
-			}
-		}
+		const targ: Char | Party | undefined = dest instanceof Party ? await dest.randChar() : dest;
+		if (targ == null) return;
 
 		this.resp += '\n' + dest.name + ' loots';
 
 		if (loot.gold) {
-			d.gold += loot.gold;
+			targ.gold += loot.gold;
 			this.resp += ` ${loot.gold} gold`;
 		}
 
 		let items = loot.items;
 		if (items && items.length > 0) {
 
-			var ind = d.addItem(items);
+			var ind = targ.addItem(items);
 
 			if (loot.gold) this.resp += ',';
 			for (let i = items.length - 1; i >= 1; i--) {
@@ -390,7 +385,7 @@ class AttackInfo {
 
 	}
 
-	skillRoll(act: Actor | Monster) { return roll(1, 5 * (act.level + 4)); }
+	skillRoll(act: Actor | Monster) { return roll(1, 5 * (act.level.valueOf() + 4)); }
 
 	rollHit() {
 
@@ -399,7 +394,7 @@ class AttackInfo {
 		}
 
 		this.hitroll = this.skillRoll(this.attacker) + this.attacker.toHit + this.weap.toHit;
-		if (this.hitroll > this.defender.armor) {
+		if (this.hitroll > +this.defender.armor) {
 			this._hit = true;
 			return true;
 		}
@@ -408,17 +403,17 @@ class AttackInfo {
 
 	rollDmg() {
 
-		let dmg = this.weap!.roll() + this.attacker.getModifier('str');
-		if (dmg <= 0) dmg = 1;
+		const dmg = Math.max(1,
+			this.weap!.roll() + this.attacker.getModifier('str'));
 		this._dmg = dmg;
 
-		let hp = this.defender.curHp -= dmg;
+		const hp = this.defender.curHp -= dmg;
 		if (hp <= 0) this._killed = true;
 	}
 
 	getWeapon(char: Actor | Monster) {
 
-		let w = char.getWeapons();
+		const w = char.getWeapons();
 		if (!w) return fist;
 		else if (Array.isArray(w)) {
 			return w[Math.floor(w.length * Math.random())];

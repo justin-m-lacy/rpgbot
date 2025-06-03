@@ -20,27 +20,13 @@ const saveProps = ['name', 'exp', 'owner', 'state', 'info', 'baseStats', 'effect
 
 export class Char extends Actor {
 
-	get owner() { return this._owner; }
-	set owner(v) { this._owner = v; }
-
-	/**
-	 * TODO: not yet implemented.
-	 * get id() { return this._id; }
-	set id(v) { this._id = v; }
-	**/
-
 	get exp() { return this._exp; }
 	set exp(v) { this._exp = v; }
 
 	get inv() { return this._inv; }
 
-	getEquips() { return this._equip; }
-
 	get home() { return this._home; }
 	set home(v) { this._home = v; }
-
-	get history() { return this._history; }
-	set history(v) { this._history = v; }
 
 	get statPoints() { return this._statPoints; }
 	set statPoints(v) { this._statPoints = v; }
@@ -54,8 +40,8 @@ export class Char extends Actor {
 	get skillPts() { return this._skillPts; }
 	set skillPts(v) { this._skillPts = v; }
 
-	get evil() { return this.baseStats.evil; }
-	set evil(v) { this.baseStats.evil = v; }
+	get evil() { return this.stats.evil; }
+	set evil(v) { this.stats.evil = v; }
 
 	get talents() { return this._talents; }
 	set talents(v) { this._talents = v; }
@@ -69,12 +55,9 @@ export class Char extends Actor {
 
 	toJSON() {
 
-		let json: any = {};
+		const json: any = {};
 		for (let i = saveProps.length - 1; i >= 0; i--) {
-
-			var p = saveProps[i];
-			json[p] = this[p as keyof Char];
-
+			json[saveProps[i]] = this[saveProps[i] as keyof Char];
 		}
 
 		if (this._home) json.home = this._home;
@@ -91,7 +74,7 @@ export class Char extends Actor {
 
 		if (!json) return null;
 
-		let char = new Char(
+		const char = new Char(
 			Race.RandRace(json.race),
 			CharClass.RandClass(json.charClass),
 			json.owner);
@@ -106,13 +89,13 @@ export class Char extends Actor {
 		if (json.history) Object.assign(char.history, json.history);
 		if (json.home) char._home = new Coord(json.home.x, json.home.y);
 
-		if (json.baseStats) Object.assign(char.baseStats, json.baseStats);
+		if (json.stats) Object.assign(char.stats, json.stats);
 		if (json.info) Object.assign(char.info, json.info);
 		if (json.loc) Object.assign(char.loc, json.loc);
 
 		if (json.state) char.state = json.state;
 
-		char.statPoints = json.statPoints || char.baseStats.level;
+		char.statPoints = json.statPoints || char.stats.level;
 		char.spentPoints = json.spentPoints || 0;
 
 		if (json.inv) Inventory.FromJSON(json.inv, char._inv);
@@ -138,6 +121,7 @@ export class Char extends Actor {
 
 	}
 
+	private readonly _log: Log = new Log();
 	private readonly _inv: Inventory;
 	private _equip: Equip;
 	private _statPoints: number;
@@ -145,12 +129,12 @@ export class Char extends Actor {
 	private _skillPts: number = 0;
 	private _owner: string;
 	private _exp: number = 0;
-	private readonly _log: Log;
+
 	private _home?: Coord;
 	private _skills: any;
 	// TODO: replace with events.
 	private _levelUp: boolean = false;
-	private _history: History;
+	readonly history: History;
 
 	constructor(race: Race, charclass: CharClass, owner: string) {
 
@@ -162,9 +146,7 @@ export class Char extends Actor {
 		this._inv = new Inventory();
 		this._equip = new Equip();
 
-		this._history = { explored: 0, crafted: 0 };
-
-		this._log = new Log();
+		this.history = { explored: 0, crafted: 0 };
 
 		this._owner = owner;
 
@@ -181,9 +163,8 @@ export class Char extends Actor {
 		if (statTypes.indexOf(stat) < 0) return 'Stat not found.';
 		if (this._spentPoints >= this._statPoints) return 'No stat points available.';
 
-		if (stat in this.baseStats) {
-			this.baseStats[stat as keyof StatBlock]++;
-			this.curStats[stat as keyof StatBlock]++;
+		if (stat in this.stats) {
+			this.stats[stat as keyof StatBlock]++;
 		}
 
 		this._spentPoints++;
@@ -197,8 +178,7 @@ export class Char extends Actor {
 	}
 
 	addHistory(evt: string) {
-		let v = this._history[evt] || 0;
-		this._history[evt] = v + 1;
+		this.history[evt] = (this.history[evt] || 0) + 1;
 	}
 
 	levelUp() {
@@ -216,27 +196,28 @@ export class Char extends Actor {
 
 	/**
 	 * Eat an item from inventory.
-	 * @param {number|string|Item} what
+	 * @param what
 	 * @returns {string} result message.
 	 */
 	eat(what: ItemIndex) {
 
-		let item = this._inv.get(what);
+		const item = this._inv.get(what);
 		if (!item) return 'Item not found.';
 
 		if (item.type !== ItemType.Food) return item.name + ' isn\'t food!';
 
 		this._inv.take(item);
 
-		let cook = require('../data/cooking.json');
+		const cook = require('../data/cooking.json');
 		this.addHistory('eat');
 
 		let resp = cook.response[Math.floor(cook.response.length * Math.random())];
 
-		let amt = this.heal(Math.floor(5 * Math.random()) + this.level);
+		const amt = this.heal(
+			Math.floor(5 * Math.random()) + this.level.value);
 
 		resp = `You eat the ${item.name}. ${resp}.`;
-		if (amt > 0) resp += ` ${amt} hp healed. ${this.curHp}/${this.maxHp} total.`;
+		if (amt > 0) resp += ` ${amt} hp healed. ${this.hp.value}/${this.hp.max.value} total.`;
 
 		return resp;
 	}
@@ -265,12 +246,12 @@ export class Char extends Actor {
 	 */
 	equip(what: ItemIndex) {
 
-		let item = this._inv.get(what);
+		const item = this._inv.get(what);
 		if (!item) return 'No such item.';
 
 		if (item instanceof Wearable) {
 
-			let removed = this._equip.equip(item);
+			const removed = this._equip.equip(item);
 			if (typeof (removed) !== 'string') {
 
 				this.applyEquip(item);
@@ -331,10 +312,10 @@ export class Char extends Actor {
 
 	applyEquip(it: Wearable) {
 		if (it.mods) {
-			it.mods.apply(this.curStats);
+			it.mods.apply(this.stats);
 		}
 		if (it.armor) {
-			this.curStats.armor += it.armor;
+			this.stats.armor.add(it.armor);;
 			//console.log('adding armor: ' + it.armor);
 		}
 	}
@@ -347,15 +328,16 @@ export class Char extends Actor {
 
 		if (Array.isArray(wot)) {
 
-			let it;
 			for (let i = wot.length - 1; i >= 0; i--) {
 				this.removeEquip(wot[i]);
 			}
 
 		} else if (wot instanceof Wearable) {
 
-			if (wot.mods) { wot.mods.remove(this.curStats); }
-			if (wot.armor) this.curStats.armor -= wot.armor;
+			if (wot.mods) { wot.mods.remove(this.stats); }
+			if (wot.armor) {
+				this.stats.armor.add(-wot.armor);
+			}
 		}
 
 	}
@@ -406,14 +388,10 @@ export class Char extends Actor {
 	*/
 	rollBaseHp() {
 
-		let hd = this.charClass!.HD;
-		let maxHp = Math.floor((this.race.HD + hd) / 2);
+		const maxHp = Math.floor((this.race.HD + this.charClass!.HD) / 2) +
+			roll(this.stats.level.value - 1, this.charClass!.HD);
 
-		for (let i = this.baseStats.level - 1; i > 0; i--) {
-			maxHp += roll(1, hd);
-		}
-
-		this.baseStats.maxHp = maxHp;
+		this.stats.hp.max.value = maxHp;
 
 	}
 
@@ -472,7 +450,7 @@ export class Char extends Actor {
 
 		let desc = `level ${this.level} ${getEvil(this.evil)} ${this.race.name} ${this.charClass!.name} [${this.state}]`;
 		desc += `\nage: ${this.age} sex: ${this.sex} gold: ${this.gold} exp: ${this._exp}/ ${getNextExp(this)}`;
-		desc += `\nhp: ${this.curHp}/${this.maxHp} armor: ${this.armor}\n`;
+		desc += `\nhp: ${this.hp}/${this.hp.max} armor: ${this.armor}\n`;
 		desc += this.getStatString();
 
 		if (this.spentPoints < this.statPoints) desc += '\n' + (this.statPoints - this.spentPoints) + ' stat points available.';
@@ -487,12 +465,12 @@ export class Char extends Actor {
 		const len = statTypes.length;
 
 		let stat = statTypes[0];
-		str += stat + ': ' + (this.curStats[stat as StatKey] ?? 0);
+		str += stat + ': ' + (this.stats[stat as StatKey] ?? 0);
 
 		for (let i = 1; i < len; i++) {
 
 			stat = statTypes[i];
-			str += '\n' + stat + ': ' + (this.curStats[stat as StatKey] ?? 0);
+			str += '\n' + stat + ': ' + (this.stats[stat as StatKey] ?? 0);
 
 		}
 		return str;
@@ -507,16 +485,16 @@ export class Char extends Actor {
 
 	getHistory() {
 
-		let resp = (this._history.explored || 0) + ' locations discovered.\n';
-		resp += (this._history.crafted || 0) + ' items crafted.\n';
-		resp += (this._history.slay || 0) + ' monsters slain.\n';
-		resp += (this._history.pk || 0) + ' players killed.\n';
+		let resp = (this.history.explored || 0) + ' locations discovered.\n';
+		resp += (this.history.crafted || 0) + ' items crafted.\n';
+		resp += (this.history.slay || 0) + ' monsters slain.\n';
+		resp += (this.history.pk || 0) + ' players killed.\n';
 		resp += (this.history.stolen || 0) + ' items stolen.\n'
-		resp += (this._history.cook || 0) + ' objects cooked.\n';
-		resp += (this._history.inscribe || 0) + ' items inscribed.\n';
-		resp += (this._history.eat || 0) + ' things eaten.\n';
-		resp += (this._history.quaff || 0) + ' potions quaffed.\n';
-		resp += (this._history.brew || 0) + ' potions brewed.';
+		resp += (this.history.cook || 0) + ' objects cooked.\n';
+		resp += (this.history.inscribe || 0) + ' items inscribed.\n';
+		resp += (this.history.eat || 0) + ' things eaten.\n';
+		resp += (this.history.quaff || 0) + ' potions quaffed.\n';
+		resp += (this.history.brew || 0) + ' potions brewed.';
 
 		return resp;
 

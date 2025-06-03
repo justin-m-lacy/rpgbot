@@ -6,7 +6,7 @@ const requiredExp = (level: number) => {
 
 export const getNextExp = (char: Char) => {
 
-	let req = requiredExp(char.level + 1);
+	let req = requiredExp(char.level.value + 1);
 
 	if (char.charClass) req *= char.charClass.expMod;
 	if (char.race) req *= char.race.expMod;

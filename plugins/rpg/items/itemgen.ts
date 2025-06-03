@@ -1,6 +1,6 @@
 import { Loot } from '../combat/loot';
-import baseArmors from '../data/items/armors.json';
-import baseWeapons from '../data/items/weapons.json';
+import BaseArmors from '../data/items/armors.json';
+import BaseWeapons from '../data/items/weapons.json';
 import featureList from '../data/world/features.json';
 import { Monster } from '../monster/monster';
 import { Feature } from '../world/feature';
@@ -12,8 +12,8 @@ import { Potion } from './potion';
 import { Weapon } from './weapon';
 import { HumanSlot, Wearable } from './wearable';
 
-type RawArmorData = (typeof baseArmors)[number];
-type RawWeaponData = (typeof baseWeapons)[number];
+type RawArmorData = (typeof BaseArmors)[number];
+type RawWeaponData = (typeof BaseWeapons)[number];
 type RawPotionData = (typeof import('../data/items/potions.json'))[number] & { type?: "potion" };
 type RawChestsData = (typeof import('../data/items/chests.json'))[number] & { type?: "chest" };
 type RawItemData = (typeof import('../data/items/items.json')['misc' | 'special'][number])
@@ -96,9 +96,9 @@ function initScrolls() {
 
 function initArmors() {
 
-	for (let k = baseArmors.length - 1; k >= 0; k--) {
+	for (let k = BaseArmors.length - 1; k >= 0; k--) {
 
-		const armor = baseArmors[k];
+		const armor = BaseArmors[k];
 		const slot = armor.slot as HumanSlot;
 
 		const list = armorBySlot[slot] ?? (armorBySlot[slot] = []);
@@ -153,7 +153,7 @@ export const genWeapon = (lvl: number) => {
 	if (mat === null) return null;
 
 	//console.log( 'weaps len: ' + baseWeapons.length );
-	const tmp = baseWeapons[Math.floor(baseWeapons.length * Math.random())];
+	const tmp = BaseWeapons[Math.floor(BaseWeapons.length * Math.random())];
 
 	if (!tmp) {
 		console.log('weapon template null.');
@@ -173,7 +173,7 @@ export const genArmor = (slot: HumanSlot | null = null, lvl: number = 0) => {
 	if (slot) {
 		tmp = getSlotRand(slot, lvl);
 	} else {
-		const list = baseArmors.filter((t: RawArmorData) => !t.level || t.level <= lvl);
+		const list = BaseArmors.filter((t: RawArmorData) => !t.level || t.level <= lvl);
 		tmp = list[Math.floor(list.length * Math.random())];
 	}
 
@@ -303,7 +303,7 @@ function initFeatures() {
 export const potsList = (level: number) => {
 
 	const a = potsByLevel[level];
-	if (!a) return 'No potions of level ' + level + '.';
+	if (!a) return `No potions of level ${level}.`;
 
 	const len = a.length;
 	//let p = a[0];

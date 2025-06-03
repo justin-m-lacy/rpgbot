@@ -1,7 +1,7 @@
 import { StrMod } from "@/data/mod-parser";
-import { type IMod, ModState, SymMod } from "@/model/imod";
-import type { Id, Numeric } from "@/model/types";
-import { Simple } from "@/model/values/simple";
+import { type IMod, ModState, SymMod } from "../imod";
+import { Simple } from "../simple";
+import type { Id, Numeric } from "../types";
 
 const AT_SYM = '?';
 

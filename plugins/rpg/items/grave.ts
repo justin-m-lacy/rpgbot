@@ -8,8 +8,8 @@ export class Grave extends Item {
 
 	/**
 	 *
-	 * @param {Char} char
-	 * @param {Char} slayer
+	 * @param char
+	 * @param slayer
 	 */
 	static MakeGrave(char: Char, slayer: Char) {
 		return new Grave(char.name, slayer.name, Grave.GetEpitaph(char, slayer));
@@ -46,13 +46,11 @@ export class Grave extends Item {
 
 	}
 
-	get epitaph() { return this._epitaph; }
-	set epitaph(v) { this._epitaph = v; }
 
 	private readonly char: string;
 	private readonly slayer: string;
 
-	private _epitaph: string;
+	private epitaph: string;
 
 	constructor(char: Char | string, slayer: Char | string, epitaph?: string) {
 
@@ -60,7 +58,7 @@ export class Grave extends Item {
 
 		this.char = typeof char === 'string' ? char : char.name;
 		this.slayer = typeof slayer === 'string' ? slayer : slayer.name;
-		this._epitaph = epitaph ?? '';
+		this.epitaph = epitaph ?? '';
 
 	}
 

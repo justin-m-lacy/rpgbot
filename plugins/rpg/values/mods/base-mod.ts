@@ -1,6 +1,5 @@
-import { SymMod, type IMod, type IModdable, type ModState } from '@/model/imod';
-import type { Id, Numeric } from '@/model/types';
-import { precise } from '@/util/format';
+import { SymMod, type IMod, type IModdable, type ModState } from '../imod';
+import type { Id, Numeric } from '../types';
 
 /**
  * A mod that adds a base amount times a source value,
@@ -17,7 +16,7 @@ export class BaseMod implements IMod {
   toJSON() { return this.value; }
 
   toString() {
-    return this.value !== 0 ? precise(this.value) : '';
+    return this.value !== 0 ? this.value.toString() : '';
   }
 
   /**

@@ -1,4 +1,5 @@
 import { EmbedBuilder, Message, type SendableChannels } from "discord.js";
+import type { Numeric } from "plugins/rpg/values/types";
 import { Char } from './char/char';
 
 export const blockText = (s: string) => '```' + s + '```';
@@ -25,6 +26,34 @@ export const echoChar = async function (chan: SendableChannels, char: Char, pref
 	const namestr = char.name + ' is a';
 	const desc = char.getLongDesc();
 	return chan.send(prefix + '```' + namestr + (isVowel(desc.charAt(0)) ? 'n ' : ' ') + desc + '```');
+
+}
+
+/**
+ * Format numeric value for display.
+ * @param v - number to display.
+ * @param n - maximum rounding digits to display.
+ */
+export const precise = (v: Numeric, n: number = 2): string => {
+
+	if (typeof v === 'object') v = v.value;
+
+	if (v === Math.floor(v)) return v.toFixed(n);
+
+	const maxDivide = Math.pow(10, n);
+
+	let abs = Math.abs(v);
+	let divide = 1;
+
+	while ((divide < maxDivide) && abs !== Math.floor(abs)) {
+
+		abs *= 10;
+		divide *= 10;
+
+	}
+
+	abs = Math.round(abs) / divide;
+	return (v >= 0 ? abs : -abs).toFixed(2);
 
 }
 

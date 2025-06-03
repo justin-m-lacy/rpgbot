@@ -1,5 +1,5 @@
-import { type IMod, ModState, SymMod } from "@/model/imod";
-import type { Numeric } from "@/model/types";
+import { type IMod, ModState, SymMod } from "../imod";
+import type { Numeric } from "../types";
 
 const PER_CHAR = ':';
 const PerRegEx = /^(\d+\.?\d*)?\:(\d+\.?\d*)?$/;

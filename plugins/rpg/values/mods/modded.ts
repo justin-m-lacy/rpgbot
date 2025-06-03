@@ -1,22 +1,17 @@
-import { IMod, type IModdable, SymModdable as SymModded } from '@/model/imod';
-import type { Id, Idable, ISimple, TValue } from "@/model/types";
-import { SymSimple } from "@/model/types";
-import { precise, smallNum } from "@/util/format";
-import { asProxy } from "@/util/proxy-utils";
-import { shallowRef } from 'vue';
+import { IMod, type IModdable, SymModdable as SymModded } from '../imod';
+import type { Id, Idable, TValue } from "../types";
 
 /// Create modded proxy for target.
 export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 	const modded = {
 
-		[SymSimple]: true as true,
 		[SymModded]: true as true,
 
 		[Symbol.toPrimitive]() {
-			return this._cached.value;
+			return this._cached;
 		},
 
-		toString() { return smallNum(this._cached.value) },
+		toString() { return this._cached.toString() },
 
 		toJSON() {
 			return (this.targ as any).toJSON?.() ?? this.base;
@@ -26,9 +21,9 @@ export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 		mods: new Map<Id, IMod>(),
 
 		/// cached value.
-		_cached: shallowRef(0),
+		_cached: 0,
 
-		get value(): number { return this._cached.value; },
+		get value(): number { return this._cached; },
 
 		/// Get underlying unmodded value.
 		get base() { return this.targ.value },
@@ -63,7 +58,7 @@ export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 
 			}
 
-			this._cached.value = (this.targ.value + state.bonus)
+			this._cached = (this.targ.value + state.bonus)
 				* (1 + state.pct * state.pctMult);
 
 		},
@@ -74,32 +69,29 @@ export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 }
 
 
-export class Modded implements TValue, ISimple, IModdable {
+export class Modded implements TValue, IModdable {
 
-	toJSON() { return this._base.value; }
+	toJSON() { return this._base; }
 
-	readonly [SymSimple] = true;
 	readonly [SymModded] = true;
 
-	[Symbol.toPrimitive]() { return this._cached.value; }
-	toString() { return precise(this.value); }
+	[Symbol.toPrimitive]() { return this._cached; }
+	toString() { return this.value.toString(); }
 
 	readonly mods = new Map<Id, IMod>();
 
-	private readonly _base = shallowRef(0);
-	get base() { return this._base.value }
-	set base(v) { this._base.value = v; }
-
-	private _busy = false;
+	private _base: number = 0;
+	get base() { return this._base }
+	set base(v) { this._base = v; }
 
 	/// cached value.
-	private _cached = shallowRef(0);
+	private _cached: number = 0;
 
-	get value(): number { return this._cached.value; }
+	get value(): number { return this._cached; }
 	set value(v: number) {
-		if (v !== this._base.value) {
-			this._base.value = v;
-			if (!this._busy) this.recalc();
+		if (v !== this._base) {
+			this._base = v;
+			this.recalc();
 		}
 	}
 
@@ -108,22 +100,19 @@ export class Modded implements TValue, ISimple, IModdable {
 	constructor(id: string, base: number = 0) {
 
 		this.id = id;
-		this._base.value = base;
+		this._base = base;
 
 	}
 	add(v: number): void {
-		this._base.value += v;
-		if (!this._busy) {
-			this.recalc();
-		}
+		this._base += v;
+		this.recalc();
+
 	}
 
 	addMod(m: IMod) {
 
 		this.mods.set(m.id, m);
-		if (!this._busy) {
-			this.recalc();
-		}
+		this.recalc();
 
 		return this;
 	}
@@ -134,16 +123,12 @@ export class Modded implements TValue, ISimple, IModdable {
 
 		this.mods.delete(m.id);
 
-		if (!this._busy) {
-			this.recalc();
-		}
+		this.recalc();
 
 	}
 
 
 	recalc() {
-
-		this._busy = true;
 
 		const state = {
 			pct: 0,
@@ -154,81 +139,10 @@ export class Modded implements TValue, ISimple, IModdable {
 			m.applyMod(this, state);
 		}
 
-		this._cached.value = (this._base.value + state.bonus)
+		this._cached = (this._base + state.bonus)
 			* (1 + state.pct * state.pctMult);
 
-		this._busy = false;
 
 	}
 
 }
-
-/**
- * Patch modding capability into an object
- * @param targ 
- * @returns 
- */
-/*export function PatchModding<T extends TValue & Idable>(targ: T): T & IModdable {
-
-	if (SymModdable in targ) return targ as T & IModdable;
-
-	const mods = new Map<Id, TMod>();
-	const _cached = shallowRef<number>(targ.value);
-
-	Object.defineProperty(targ, Symbol.toPrimitive, {
-		value: () => _cached.value
-	});
-
-	const recalc = () => {
-
-		const state = {
-			baseValue: targ.value,
-			pct: 0,
-			bonus: 0,
-			pctMult: 0
-		}
-		for (const mod of mods.values()) {
-			mod.applyMod(targ, state);
-		}
-
-		_cached.value = (targ.value + state.bonus)
-			* (1 + state.pct * state.pctMult);
-
-	}
-
-	Object.defineProperty(targ, 'addMod', {
-		value: (mod: TMod) => {
-			mods.set(mod.id, mod);
-			recalc();
-			return targ;
-		}
-	});
-
-	Object.defineProperty(targ, 'removeMod', {
-		value: function (mod: TMod) {
-
-			if (mods.delete(mod.id)) {
-				recalc();
-			}
-
-		}
-	});
-
-	if (!(SymSimple in targ)) {
-		Object.defineProperty(targ, SymSimple, {
-			value: true
-		});
-	}
-
-		toJSON() {
-			return (targ as any).toJSON?.() ?? this.base;
-		}
-
-		get value(): number { return _cached.value; },
-
-		/// Gets the underlying unmodded value.
-		get base() { return this.target.value },
-		set base(v: number) { this.target.value = v; }
-
-	return targ as T & IModdable;
-}*/

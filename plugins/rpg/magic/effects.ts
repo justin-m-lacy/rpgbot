@@ -1,5 +1,5 @@
 import { Formula } from 'formulic';
-import Actor from '../char/actor';
+import { Actor } from '../char/actor';
 import { Char } from '../char/char';
 import { StatMod, StatName } from '../char/stats';
 
