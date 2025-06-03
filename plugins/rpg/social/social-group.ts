@@ -4,13 +4,7 @@ import { Char } from '../char/char';
  * Any named group of players.
  * (Parties, Guilds, CombatGroups? etc)
  */
-export default class SocialGroup {
-
-	/**
-	 * @property {string} name - Name of group.
-	 */
-	get name() { return this._name; }
-	set name(v) { this._name = v; }
+export class SocialGroup {
 
 	/**
 	 * @property {string} leader - group leader.
@@ -30,18 +24,19 @@ export default class SocialGroup {
 	get invites() { return this._invites; }
 	set invites(v) { this._invites = v; }
 
-	get cache() { return this._cache }
-
-	private _name?: string;
+	/**
+	 * @property {string} name - Name of group.
+	 */
+	name?: string;
 	private _invites!: string[];
 	private _roster!: string[];
 	private _leader!: string;
 
-	private readonly _cache: Cache;
+	readonly cache: Cache<Char>;
 
-	constructor(cache: Cache) {
+	constructor(cache: Cache<Char>) {
 
-		this._cache = cache;
+		this.cache = cache;
 	}
 
 	/**
@@ -50,7 +45,7 @@ export default class SocialGroup {
 	 */
 	invite(char: Char | string) {
 
-		let name = typeof char === 'string' ? char : char.name;
+		const name = typeof char === 'string' ? char : char.name;
 
 		if (this._invites.includes(name) || this._roster.includes(name)) return;
 		this._invites.push(name);
@@ -64,12 +59,12 @@ export default class SocialGroup {
 	 */
 	acceptInvite(char: Char) {
 
-		let name = char.name;
+		const name = char.name;
 
 		// prevent double join errors, but return success.
 		if (this.roster.includes(name)) return true;
 
-		let ind = this.invites.indexOf(name);
+		const ind = this.invites.indexOf(name);
 		if (ind >= 0) {
 
 			this.invites.splice(ind, 1);
@@ -82,7 +77,7 @@ export default class SocialGroup {
 	}
 
 	async randChar() {
-		const char = await this._cache.fetch(
+		const char = await this.cache.fetch(
 			this.roster[Math.floor(this.roster.length * Math.random())]
 		);
 		return char as Char | undefined;
@@ -130,7 +125,7 @@ export default class SocialGroup {
 	}
 
 	getList() {
-		return this._name + ":\n" + this._roster.join('\n');
+		return this.name + ":\n" + this._roster.join('\n');
 	}
 
 }

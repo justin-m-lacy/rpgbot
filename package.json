@@ -12,9 +12,8 @@
     "minify": "node mterser --glob dist/**/*.js --compress --mangle",
     "copydata": "copyfiles plugins/**/*.png dist && copyfiles .env dist && copyfiles -f assets/* dist"
   },
-  "license": "ISC",
   "dependencies": {
-    "archcache": "^1.2.1",
+    "archcache": "link:../archcache",
     "archdice": "^1.1.0",
     "discord.js": "^14.19.3",
     "dotenv": "^16.3.1",

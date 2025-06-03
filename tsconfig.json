@@ -12,7 +12,7 @@
     "module": "nodenext",
     "allowJs": true,
     "useDefineForClassFields": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "strict": true,
     "skipLibCheck": true,
     "sourceMap": false,

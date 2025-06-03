@@ -2,7 +2,7 @@ import Cache from 'archcache';
 import { Actor } from '../char/actor';
 import { Char } from '../char/char';
 import { Coord } from '../world/loc';
-import SocialGroup from './socialGroup';
+import { SocialGroup } from './social-group';
 
 export class Party extends SocialGroup {
 
@@ -75,7 +75,7 @@ export class Party extends SocialGroup {
 
 		for (let i = roster.length - 1; i >= 0; i--) {
 
-			var char = await this.cache.fetch(roster[i]);
+			const char = await this.cache.fetch(roster[i]);
 			if (char) {
 				char.loc = coord;
 				if (char.isAlive()) char.recover();
@@ -87,14 +87,14 @@ export class Party extends SocialGroup {
 
 	async rest() {
 
+		const roster = this.roster;
+
 		let hp = 0;
 		let max = 0;
 
-		let roster = this.roster;
-
 		for (let i = roster.length - 1; i >= 0; i--) {
 
-			var char = await this.cache.fetch(roster[i]);
+			const char = await this.cache.fetch(roster[i]);
 			if (!char) continue;
 			if (char.isAlive()) char.rest();
 			hp += char.curHp;
@@ -107,11 +107,11 @@ export class Party extends SocialGroup {
 
 	async recover() {
 
-		let roster = this.roster;
+		const roster = this.roster;
 
 		for (let i = roster.length - 1; i >= 0; i--) {
 
-			var char = await this.cache.fetch(roster[i]);
+			const char = await this.cache.fetch(roster[i]);
 			//console.log( 'moving char: ' + char.name + ' to: ' + coord.toString() );
 			if (char && char.isAlive()) char.recover();
 
@@ -123,11 +123,11 @@ export class Party extends SocialGroup {
 
 		let res = this.name + ':';
 
-		let roster = this.roster;
-		let len = roster.length;
+		const roster = this.roster;
+		const len = roster.length;
 
 		for (let i = 0; i < len; i++) {
-			var char = await this.cache.fetch(roster[i]);
+			const char = await this.cache.fetch(roster[i]);
 			res += `\n${char.name}  ${char.getStatus()}`;
 		}
 
@@ -137,14 +137,14 @@ export class Party extends SocialGroup {
 
 	async addExp(exp: number) {
 
-		let count = this.roster.length;
+		const len = this.roster.length;
 
 		// add exp bonus for party members.
-		exp = Math.floor(exp * (1 + count * 0.15) / count);
+		exp = Math.floor(exp * (1 + len * 0.15) / len);
 
-		for (let i = count - 1; i >= 0; i--) {
+		for (let i = len - 1; i >= 0; i--) {
 
-			var c = await this.cache.fetch(this.roster[i]);
+			const c = await this.cache.fetch(this.roster[i]);
 			if (c) c.addExp(exp)
 
 		}
@@ -158,11 +158,11 @@ export class Party extends SocialGroup {
 
 		const len = this.roster.length;
 		let ind = Math.floor(Math.random() * len);
-		let start = ind;
+		const start = ind;
 
 		do {
 
-			var c = await this.cache.fetch(this.roster[ind]);
+			const c = await this.cache.fetch(this.roster[ind]);
 			if (c && c.state === 'alive') return c;
 
 			if (++ind >= len) ind = 0;
@@ -179,16 +179,15 @@ export class Party extends SocialGroup {
 	 */
 	async randTarget() {
 
-		let len = this.roster.length;
+		const len = this.roster.length;
 		let ind = Math.floor(Math.random() * len);
-		let start = ind;
+		const start = ind;
 
 		do {
 
-			var c = await this.cache.fetch(this.roster[ind]);
-			if (c && c.curHp > 0 && c.state === 'alive') return c as Actor;
+			const c = await this.cache.fetch(this.roster[ind]);
 
-			console.log(this.roster[ind] + ' NOT A VALID TARGEt.');
+			if (c && c.curHp > 0 && c.state === 'alive') return c as Actor;
 			if (++ind >= len) ind = 0;
 
 		} while (ind != start);

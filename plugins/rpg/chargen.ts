@@ -1,7 +1,8 @@
+import type { ModBlock } from 'plugins/rpg/values/imod';
 import { Char } from './char/char';
 import { CharClass } from './char/charclass';
 import { Race } from './char/race';
-import { StatBlock, StatMod, StatName } from './char/stats';
+import { StatBlock, StatName } from './char/stats';
 import * as Dice from './dice';
 import * as ItemGen from './items/itemgen';
 
@@ -29,7 +30,7 @@ const stat_rolls = {
 
 export const genChar = (owner: string, race: Race, charClass: CharClass, name: string, sex?: string) => {
 
-	console.log('generating character...');
+	console.log('gen char...');
 
 	const char = new Char(race, charClass, owner);
 	char.name = name;
@@ -53,7 +54,7 @@ export const genChar = (owner: string, race: Race, charClass: CharClass, name: s
 
 }
 
-function modStats(statMods: StatMod, destObj: any) {
+function modStats(statMods: ModBlock<Char>, destObj: any) {
 
 	let mod;
 	for (const stat in statMods) {

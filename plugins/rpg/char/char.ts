@@ -100,7 +100,7 @@ export class Char extends Actor {
 
 		if (json.inv) Inventory.FromJSON(json.inv, char._inv);
 
-		char.setBaseStats(char.baseStats);
+		char.setBaseStats(char.stats);
 
 		// SET AFTER BASE STATS.
 		if (json.effects) {
@@ -127,7 +127,7 @@ export class Char extends Actor {
 	private _statPoints: number;
 	private _spentPoints: number;
 	private _skillPts: number = 0;
-	private _owner: string;
+	owner: string;
 	private _exp: number = 0;
 
 	private _home?: Coord;
@@ -148,7 +148,7 @@ export class Char extends Actor {
 
 		this.history = { explored: 0, crafted: 0 };
 
-		this._owner = owner;
+		this.owner = owner;
 
 	}
 
@@ -217,7 +217,7 @@ export class Char extends Actor {
 			Math.floor(5 * Math.random()) + this.level.value);
 
 		resp = `You eat the ${item.name}. ${resp}.`;
-		if (amt > 0) resp += ` ${amt} hp healed. ${this.hp.value}/${this.hp.max.value} total.`;
+		if (amt > 0) resp += ` ${amt} hp healed. ${this.hp}/${this.hp.max} total.`;
 
 		return resp;
 	}

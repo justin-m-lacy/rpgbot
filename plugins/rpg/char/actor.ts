@@ -1,3 +1,5 @@
+import type { SexType } from 'plugins/rpg/social/gender';
+import type { ModBlock } from 'plugins/rpg/values/imod';
 import { parseRoll, roll } from '../dice';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
@@ -8,6 +10,14 @@ import { Race } from './race';
 import { IStatBlock, StatBlock, StatKey, StatName } from './stats';
 
 export type LifeState = 'alive' | 'dead';
+
+export type TCharInfo = {
+	height?: number,
+	weight?: number,
+	sex: SexType,
+	age: number,
+	gold: number
+}
 
 export class Actor implements IStatBlock {
 
@@ -54,12 +64,9 @@ export class Actor implements IStatBlock {
 
 	get sex() { return this._info.sex; }
 	set sex(s) { this._info.sex = s; }
-	get weight() { return this._info.weight; }
-	set weight(s) { this._info.weight = s; }
+
 	get age() { return this._info.age; }
 	set age(s) { this._info.age = s; }
-	get height() { return this._info.height; }
-	set height(s) { this._info.height = s; }
 
 	get armor() { return this.stats.armor; }
 
@@ -67,17 +74,14 @@ export class Actor implements IStatBlock {
 	get con() { return this.stats.con; }
 	set con(v) {
 
-		this.stats.con = v;
+		this.stats.con.setTo(v);
 		this.computeHp();
 
 	}
 
 	get dex() { return this.stats.dex; }
-
 	get int() { return this.stats.int; }
-
 	get wis() { return this.stats.wis; }
-
 	get cha() { return this.stats.cha; }
 
 
@@ -85,14 +89,8 @@ export class Actor implements IStatBlock {
 
 	get charClass() { return this._charClass }
 
-	/**
-	 * array of current stat mods.
-	 */
-	get statMods() { return this._statMods; }
-	set statMods(v) { this._statMods = v; }
-
 	get info() { return this._info; }
-	set info(v) { this._info = v; }
+	set info(v: TCharInfo) { this._info = v; }
 
 	get toHit() { return this.getModifier('dex'); }
 	get loc() { return this._loc; }
@@ -101,7 +99,7 @@ export class Actor implements IStatBlock {
 	name!: string;
 	private readonly _loc: Coord;
 	race: Race;
-	private _info: any;
+	_info: TCharInfo;
 	readonly stats: StatBlock = new StatBlock();
 	readonly effects: Effect[] = [];
 	private _charClass?: CharClass;
@@ -109,15 +107,21 @@ export class Actor implements IStatBlock {
 
 	guild?: string;
 
-	private _statMods: StatMod[];
+	/**
+	 * Current mods applied to char.
+	 */
+	readonly mods: ModBlock<typeof this>[] = [];
 	private _state: LifeState;
 
 	constructor(race: Race, rpgClass?: CharClass) {
 
 		this._charClass = rpgClass;
 
-		this._statMods = [];
-		this._info = {};
+		this._info = {
+			age: 1,
+			sex: 'm',
+			gold: 0
+		};
 
 		this.race = race;
 
@@ -217,15 +221,14 @@ export class Actor implements IStatBlock {
 	*/
 	computeHp() {
 
-		let level = this.stats.level;
-		let hp = this.stats.hp.max.value + level.value * this.getModifier('con');
-
-		if (hp < 1) hp = 1;
+		const hp =
+			Math.max(1,
+				this.stats.hp.max.value + this.stats.level.value * this.getModifier('con'));
 		this.hp.max.value = hp;
 
 	}
 
-	setBaseStats(base: StatBlock) {
+	setBaseStats(base: IStatBlock) {
 
 		this.stats = base;
 

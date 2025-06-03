@@ -14,7 +14,7 @@
     "composite": true,
     "moduleDetection": "auto",
     "useDefineForClassFields": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "strict": true,
     "skipLibCheck": true,
     "sourceMap": false,

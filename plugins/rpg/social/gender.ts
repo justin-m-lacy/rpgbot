@@ -1,4 +1,4 @@
-type SexType = 'm' | 'f';
+export type SexType = 'm' | 'f';
 
 type Pronoun =
 	// subject

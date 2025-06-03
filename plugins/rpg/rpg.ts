@@ -41,7 +41,7 @@ export class Rpg {
 		this.context = context;
 
 		this.cache = this.context.subcache(RPG_DIR);
-		this.charCache = this.cache.subcache(CHAR_DIR, Char.FromJSON);
+		this.charCache = this.cache.subcache<Char>(CHAR_DIR, Char.FromJSON);
 
 		this.world = new World(this.context.cache);
 		this.game = new Game(this, this.charCache, this.world);

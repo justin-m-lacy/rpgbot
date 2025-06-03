@@ -18,6 +18,10 @@ export class Maxable {
 
 	readonly max: Simple;
 
+	add(v: number) {
+		this.value += v;
+	}
+
 	setMax(base: number) {
 		this.max.setTo(base);
 	}

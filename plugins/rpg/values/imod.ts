@@ -23,6 +23,15 @@ export interface IMod {
 
 }
 
+/**
+ * Defines Mods for Moddable properties of an object.
+ */
+export type ModBlock<D extends object> = {
+	[K in keyof Partial<D>]: D[K] extends IModdable ? IMod : never
+}
+
+//Record<keyof D, IMod>;
+
 /// object handles addMod() and removeMod()
 export const SymModdable = Symbol('Moddable');
 export interface IModdable extends TValue {
@@ -30,10 +39,8 @@ export interface IModdable extends TValue {
 	id: string;
 	base: number;
 
-	[SymModdable]: true,
 	addMod(mod: IMod): void;
 	removeMod(mod: IMod): void;
-
 
 }
 

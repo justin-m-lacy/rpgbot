@@ -2,7 +2,7 @@ import Cache from 'archcache';
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Coord } from '../world/loc';
-import SocialGroup from './socialGroup';
+import { SocialGroup } from './social-group';
 
 /**
  * Can't use statics because static variables from
@@ -10,9 +10,9 @@ import SocialGroup from './socialGroup';
  */
 export class GuildManager {
 
-	readonly cache: Cache;
+	readonly cache: Cache<Guild>;
 
-	constructor(cache: Cache) {
+	constructor(cache: Cache<Guild>) {
 		this.cache = cache;
 	}
 
@@ -75,12 +75,12 @@ export class Guild extends SocialGroup {
 
 			name: this.name,
 			leader: this.leader,
-			desc: this._desc,
+			desc: this.desc,
 			roster: this.roster,
 			invites: this.invites,
 			inv: this.inv,
 			level: this._level,
-			loc: this._loc,
+			loc: this.loc,
 			created: this.createdAt,
 			exp: this._exp
 
@@ -88,27 +88,23 @@ export class Guild extends SocialGroup {
 
 	}
 
-	get desc() { return this._desc; }
-	set desc(v) { this._desc = v; }
-
 	get inv() { return this._inv; }
 	set inv(v) { this._inv = v; }
 
 	get level() { return this._level; }
 	set level(v) { this._level = v; }
 
-	get loc() { return this._loc; }
-	set loc(v) { this._loc.setTo(v); }
-
 	get exp() { return this._exp; }
 	set exp(v) { this._exp = v; }
 
 	private _level: number = 1;
 	private _exp: number = 0;
+
 	createdAt: number = 0;
-	private _desc?: string;
+	desc?: string;
+
 	private _inv?: Inventory;
-	private _loc: Coord = new Coord(0, 0);
+	readonly loc: Coord = new Coord(0, 0);
 
 	constructor(name: string, cache: Cache) {
 

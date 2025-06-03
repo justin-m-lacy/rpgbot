@@ -61,7 +61,7 @@ export class Game {
 
 	private readonly rpg: Rpg;
 	private readonly cache: Cache;
-	private readonly charCache: Cache;
+	private readonly charCache: Cache<Char>;
 	private readonly world: World
 
 	private readonly _charParties: { [char: string]: Party } = {};
@@ -74,7 +74,7 @@ export class Game {
 	 * @param charCache character cache.
 	 * @param world RPG world
 	 */
-	constructor(rpg: Rpg, charCache: Cache, world: World) {
+	constructor(rpg: Rpg, charCache: Cache<Char>, world: World) {
 
 		this.rpg = rpg;
 		this.world = world;
@@ -145,8 +145,8 @@ export class Game {
 		if (!char.hasTalent('hike')) r -= 20;
 
 		if (r < 0) {
-			char.hp -= Math.floor(Math.random() * d);
-			return char.output(`${char.name} was hurt trying to hike. hp: (${char.hp}/${char.maxHp})`);
+			char.hp.add(-Math.floor(Math.random() * d));
+			return char.output(`${char.name} was hurt trying to hike. hp: (${char.hp}/${char.hp.max})`);
 		}
 		else if (r < 10) return char.output('You failed to find your way.');
 
@@ -472,7 +472,7 @@ export class Game {
 
 		if (this.tick(char, 'revive') === false) return char.output();
 
-		let roll = this.skillRoll(char) + char.getModifier('wis') + (2 * targ.curHp) - 5 * +targ.level;
+		let roll = this.skillRoll(char) + char.getModifier('wis') + (2 * targ.hp.value) - 5 * +targ.level;
 		if (!char.hasTalent('revive')) roll -= 20;
 		if (roll < 10) return char.output(`You failed to revive ${targ.name}.`);
 
@@ -496,7 +496,7 @@ export class Game {
 
 		} else char.rest();
 
-		return char.output(`${char.name} rested. hp: ${char.curHp}/${char.maxHp}`);
+		return char.output(`${char.name} rested. hp: ${char.hp}/${char.hp.max}`);
 
 	}
 
