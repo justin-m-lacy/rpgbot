@@ -1,60 +1,42 @@
-import type { TCharInfo } from "rpg/char/actor";
 import type { Char } from "rpg/char/char";
-import type { ModBlock } from "rpg/values/imod";
+import type { IMod } from "rpg/values/imod";
 import type { TValue } from "rpg/values/types";
-
-
 
 export class Race {
 
-	static Create(name: string, hitdice: any, statMods = {}) {
-
-		const r = new Race(name);
-		r.hitdice = hitdice;
-		r.baseStats = statMods;
-
-		return r;
-
-	}
-
-	static Revive(json: any) {
-
-		const o = new Race(json.name);
-
-		if (json.hitdice) {
-			o.hitdice = json.hitdice;
-		}
-
-		o.desc = json.desc;
-
-		if (json.talents) o._talents = json.talents;
-
-		if (json.exp) o._expMod = json.exp;
-
-		// mod stats added to base. recomputed on load
-		// to allow for changes.
-		if (json.baseMods) o.baseStats = json.baseMods;
-
-		// absolute stats set once. gold, age, height, etc.
-		if (json.infoMods) o._infoMods = json.infoMods;
-
-		return o;
-
-	}
-
 	readonly id: string;
 	readonly name: string;
+
 	desc?: string;
 
-	private baseStats?: TValue[];
-	private _infoMods?: ModBlock<TCharInfo>;
+	/**
+	 * Initial values character. Not mods but
+	 * permanent changes like starting gold.
+	 */
+	private createVals?: TValue[];
+
+	private _mods?: Record<string, IMod>;
 	private hitdice: number = 0;
 	private _expMod: number = 1;
-	private _talents?: string[];
+	talents: string[] = [];
 
-	constructor(id: string) {
+	constructor(id: string, hitdice: number = 1) {
 
 		this.id = this.name = id;
+		this.hitdice = hitdice;
+
+	}
+
+	addCharMod(m: IMod) {
+		this._mods ??= {};
+		this._mods[m.id] = m;
+
+	}
+
+	addCreateValue(v: TValue) {
+
+		this.createVals ??= [];
+		this.createVals.push(v);
 
 	}
 
@@ -63,15 +45,15 @@ export class Race {
 	}
 
 	hasTalent(t: string) {
-		return this._talents && this._talents.includes(t);
+		return this.talents && this.talents.includes(t);
 	}
 
-	get talents() { return this._talents; }
-
-	get infoMods() { return this._infoMods; }
+	get infoMods() { return this.mods; }
 	get HD() { return this.hitdice; }
-	get baseMods() { }
+	get mods() { return this._mods }
 	get expMod() { return this._expMod; }
 
 }
 
+export const GClass = Race;
+export type GClass = InstanceType<typeof GClass>;

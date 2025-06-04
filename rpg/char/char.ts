@@ -410,7 +410,7 @@ export class Char extends Actor {
 		if (!this.charClass) return;
 		//if ( this._charClass.talents ) this.talents = this._charClass.talents.concat( this._talents );
 
-		super.applyBaseMods(this.charClass!.baseMods);
+		super.applyBaseMods(this.charClass!.mods);
 
 	}
 

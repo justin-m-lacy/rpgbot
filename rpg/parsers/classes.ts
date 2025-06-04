@@ -1,0 +1,115 @@
+import { ParseMod } from 'rpg/parsers/mods';
+import { TryParseValue } from 'rpg/parsers/values';
+import { Race, type GClass } from '../char/race';
+
+type RawRaceData = typeof import('../data/races.json')[number] | typeof import('../data/classes.json')[number];
+
+const races: Race[] = [];
+const raceByName: { [race: string]: Race } = {};
+
+let classes: GClass[];
+let classByName: { [name: string]: GClass };
+
+export const GetRace = (racename?: string) => {
+	return racename ? raceByName[racename.toLowerCase()] : undefined;
+}
+
+export const RandRace = (racename?: string) => {
+
+	if (racename) {
+		racename = racename.toLowerCase();
+		if (raceByName[racename] != null) return raceByName[racename];
+	}
+	return races[Math.floor(races.length * Math.random())];
+}
+
+export const GetClass = (id?: string) => {
+	return id ? classByName[id.toLowerCase()] : undefined;
+}
+
+export const RandClass = (id?: string) => {
+
+	if (id) {
+		id = id.toLowerCase();
+		if (classByName.hasOwnProperty(id)) return classByName[id];
+	}
+	return classes[Math.floor(classes.length * Math.random())];
+
+}
+
+const ParseRace = (raw: RawRaceData) => {
+
+	const race = new Race(raw.name, raw.hitdice);
+
+	race.desc = raw.desc;
+
+	if (raw.create) {
+
+		const base = raw.create;
+		let k: keyof typeof base;
+		for (k in base) {
+
+			const v = TryParseValue(k, base[k]);
+			if (v) race.addCreateValue(v);
+		}
+
+	}
+	const mods = raw.mod;
+	if (mods) {
+		let k: keyof typeof mods;
+		for (k in mods) {
+			const m = ParseMod(k, mods[k], 1);
+			if (m) race.addCharMod(m);
+		}
+
+	}
+
+	if (raw.talents) {
+		race.talents.push(...raw.talents);
+	}
+
+	return race;
+}
+
+export const InitRaces = async () => {
+
+	const raws = (await import('../data/races.json')).default;
+
+	for (let i = raws.length - 1; i >= 0; i--) {
+		try {
+			const race = ParseRace(raws[i]);
+
+			raceByName[race.name] = race;
+			races.push(race);
+
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
+
+}
+
+
+export const InitClasses = async () => {
+
+	classByName = {};
+	classes = [];
+
+	try {
+
+		const arr = (await import('../data/classes.json')).default;
+
+		for (let i = arr.length - 1; i >= 0; i--) {
+
+			const cls = ParseRace(arr[i]);
+			classByName[cls.name] = cls;
+			classes.push(cls);
+
+		}
+
+	} catch (e) {
+		console.log(e);
+	}
+
+}

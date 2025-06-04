@@ -6,7 +6,7 @@
 		"talents": [
 			"scribe"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "2d4",
 			"age": "3d25"
 		},
@@ -16,10 +16,10 @@
 		"name": "sorcerer",
 		"hitdice": 6,
 		"desc": "Sorcerers and wizards both use magic, but while Wizards study for endless years, poring over ancient tomes, sorcerers cram the night before, and squeeze through with a passing grade. They use magic intuitively, without understanding much of the theoretical implications, allowing them to cast their spells must more easily, but limiting the range of what they can learn.",
-		"infoMods": {
+		"create": {
 			"gold": "3d4"
 		},
-		"baseMods": {
+		"mod": {
 			"maxMp": 4
 		},
 		"exp": 1.2
@@ -32,7 +32,7 @@
 			"brew",
 			"cook"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "1d4+1"
 		}
 	},
@@ -43,7 +43,7 @@
 		"talents": [
 			"cook"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "2d4"
 		}
 	},
@@ -58,7 +58,7 @@
 			"cook",
 			"map"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "2d3"
 		},
 		"exp": 1.1
@@ -74,7 +74,7 @@
 			"appraise"
 		],
 		"desc": "Rogues run around dungeons stealing things. Other classes do the same thing, but it's not called stealing for some reason. Maybe it's the lockpicking involved.",
-		"infoMods": {
+		"create": {
 			"gold": "2d4"
 		}
 	},
@@ -88,7 +88,7 @@
 			"hike",
 			"revive"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "1d4"
 		}
 	},
@@ -99,7 +99,7 @@
 		"talents": [
 			"revive"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "2d4"
 		},
 		"exp": 1.2
@@ -114,7 +114,7 @@
 			"hike",
 			"track"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "1d4"
 		}
 	},
@@ -125,7 +125,7 @@
 		"talents": [
 			"revive"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "1d4+1"
 		}
 	},
@@ -138,7 +138,7 @@
 			"map",
 			"steal"
 		],
-		"infoMods": {
+		"create": {
 			"gold": "3d3"
 		}
 	},
@@ -150,7 +150,7 @@
 			"cook"
 		],
 		"desc": "Hands. Feet. Fist. Face. Anything can be a weapon to the mighty monk. After a youth of training in a secluded monastery, or under a demanding master, a monk needs no other weapon than their own fists in order to be a formidable opponent. Strict vows of poverty and celibacy leaves a monk intimately acquainted with the powers lying latent in his own hands.",
-		"infoMods": {
+		"create": {
 			"gold": "1d4"
 		}
 	}

@@ -1,4 +1,5 @@
 import { IsPercentData, ParsePercent } from "rpg/values/percent";
+import { IsRangeData, Range } from "rpg/values/range";
 import { Simple } from "rpg/values/simple";
 import type { TValue } from "rpg/values/types";
 
@@ -17,7 +18,7 @@ export const ParseValue = (v: any) => {
  * @param v 
  * @returns 
  */
-export const TryParseValue = (id: string, v: string | number | object): TValue | undefined => {
+export const TryParseValue = (id: string, v?: string | number | object): TValue | undefined => {
 
 	if (typeof v === 'number') return new Simple(id, v);
 

@@ -3,13 +3,13 @@
         "name": "elf",
         "hitdice": 7,
         "desc": "Elves are limber and flexy, have pointy ears, and tend to live in the woods. Their long lives incline them to laziness, and they seldom undertake adventures. Elves posses some intrinsic magic power, but few develop the talent.",
-        "baseStats": {
+        "create": {
             "age": "3d500+20"
         },
         "talents": [
             "track"
         ],
-        "baseMods": {
+        "mod": {
             "str": -2,
             "wis": 2,
             "dex": 2,
@@ -20,10 +20,10 @@
         "name": "half-elf",
         "hitdice": 8,
         "desc": "Half-elves are the result of dalliances between humans and elves. Their physiques and abilities lie somewhere between the two races.",
-        "baseStats": {
+        "create": {
             "age": "12d5+12"
         },
-        "baseMods": {
+        "mod": {
             "dex": 1,
             "wis": 1,
             "str": -1,
@@ -37,10 +37,10 @@
         "talents": [
             "appraise"
         ],
-        "baseStats": {
+        "create": {
             "age": "20d20+100"
         },
-        "baseMods": {
+        "mod": {
             "con": 2,
             "wis": 2,
             "dex": -2,
@@ -51,10 +51,10 @@
         "name": "human",
         "hitdice": 8,
         "desc": "Humans are short-lived, boring, creatures with little magic of their own. They spend most of their days farming, marking territories, fighting over boundaries, or in lascivious pursuits. The elf wit Vellaya once described them as 'Goblins with law degrees.' Qualities such as these have made humans the most successful and widespread of all the races, even if the others don't quite see the point of it all. Their active nature makes humans excellent wizards, though it does take a mortal a few hundred years just to master the basics.",
-        "baseStats": {
+        "create": {
             "age": "5d4+12"
         },
-        "baseMods": {
+        "mod": {
             "maxMp": 2
         }
     },
@@ -62,13 +62,13 @@
         "name": "gnome",
         "hitdice": 7,
         "desc": "A gnome is to magic and tinkering as a dwarf is to mining and smithwork.",
-        "baseStats": {
+        "create": {
             "age": "12d75+80"
         },
         "talents": [
             "cook"
         ],
-        "baseMods": {
+        "mod": {
             "str": -4,
             "int": 3,
             "con": 2,
@@ -79,13 +79,13 @@
         "name": "halfling",
         "hitdice": 6,
         "desc": "Although often mistaken for Hobbits, the difference is legally miles away. Still, if you wanted to learn something about halflings, you could do a lot worse than picking up a copy of The Hobbit, and making some educated guesses.",
-        "baseStats": {
+        "create": {
             "age": "5d7+30"
         },
         "talents": [
             "cook"
         ],
-        "baseMods": {
+        "mod": {
             "str": -2,
             "dex": 2,
             "int": 1,
@@ -98,10 +98,10 @@
         "name": "half-orc",
         "hitdice": 10,
         "desc": "",
-        "baseStats": {
+        "create": {
             "age": "10d5+7"
         },
-        "baseMods": {
+        "mod": {
             "str": 3,
             "int": -2,
             "chr": -2,
@@ -112,10 +112,10 @@
         "name": "orc",
         "hitdice": 14,
         "desc": "",
-        "baseStats": {
+        "create": {
             "age": "8d5+7"
         },
-        "baseMods": {
+        "mod": {
             "str": 3,
             "int": -3,
             "con": 2,
@@ -129,10 +129,10 @@
         "talents": [
             "hike"
         ],
-        "baseStats": {
+        "create": {
             "age": "9d10+10"
         },
-        "baseMods": {
+        "mod": {
             "str": 5,
             "con": 4,
             "int": -4,
@@ -144,10 +144,10 @@
         "name": "half-troll",
         "hitdice": 18,
         "desc": "",
-        "baseStats": {
+        "create": {
             "age": "3d10+12"
         },
-        "baseMods": {
+        "mod": {
             "str": 4,
             "con": 3,
             "int": -3,
@@ -159,10 +159,10 @@
         "name": "ogre",
         "hitdice": 16,
         "desc": "",
-        "baseStats": {
+        "create": {
             "age": "2d10+10"
         },
-        "baseMods": {
+        "mod": {
             "str": 4,
             "con": 2,
             "dex": -2,
@@ -176,10 +176,10 @@
         "name": "fairy",
         "hitdice": 4,
         "desc": "",
-        "baseStats": {
+        "create": {
             "age": "10d75+100"
         },
-        "baseMods": {
+        "mod": {
             "str": -6,
             "int": 4,
             "dex": 4,
@@ -191,10 +191,10 @@
         "name": "pixie",
         "hitdice": 2,
         "desc": "",
-        "baseStats": {
+        "create": {
             "age": "5d3+12"
         },
-        "baseMods": {
+        "mod": {
             "str": -8,
             "int": 2,
             "dex": 6,
@@ -206,10 +206,10 @@
         "name": "minotaur",
         "hitdice": 14,
         "desc": "",
-        "baseStats": {
+        "create": {
             "age": "10d20+30"
         },
-        "baseMods": {
+        "mod": {
             "str": 2,
             "con": 2,
             "int": -2,
@@ -223,13 +223,13 @@
         "name": "centaur",
         "hitdice": 2,
         "desc": "Centaurs have four legs like a horse, and human heads and torsos, for which fact they are made the butt of endless jokes; though logically it's the humans and horses we should be raising eyebrows at. Centaurs have a tendency towards the mystic, and many are able to read the stars like a book, albeit a dense and ponderous one.",
-        "baseStats": {
+        "create": {
             "age": "7d7+10"
         },
         "talents": [
             "track"
         ],
-        "baseMods": {
+        "mod": {
             "dex": 2,
             "wis": 2,
             "chr": -1
@@ -242,10 +242,10 @@
         "talents": [
             "cook"
         ],
-        "baseStats": {
+        "create": {
             "age": "3d4+10"
         },
-        "baseMods": {
+        "mod": {
             "str": -2,
             "wis": -3,
             "dex": 2,
@@ -258,10 +258,10 @@
         "name": "kobold",
         "hitdice": 6,
         "desc": "Goblins live in caves because they hate light, like to hide, and aren't much good at construction. Kobolds live in caves because all things considered, that's the only place they'd want to live; though some will settle for a swamp in a pinch.",
-        "baseStats": {
+        "create": {
             "age": "2d8+7"
         },
-        "baseMods": {
+        "mod": {
             "str": -2,
             "wis": -2,
             "dex": 3,
@@ -275,10 +275,10 @@
         "talents": [
             "revive"
         ],
-        "baseStats": {
+        "create": {
             "age": "30d500+250"
         },
-        "baseMods": {
+        "mod": {
             "str": 4,
             "con": 4,
             "dex": 4,
