@@ -5,10 +5,9 @@ import type { Numeric } from 'rpg/values/types';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { Effect, ProtoEffect } from '../magic/effects';
-import { parseRoll, roll } from '../values/dice';
+import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
-import { CharClass } from './charclass';
-import { Race } from './race';
+import { Race, type GClass } from './race';
 import { IStatValues, StatBlock, StatKey, type StatMod } from './stats';
 
 export type LifeState = 'alive' | 'dead';
@@ -97,7 +96,7 @@ export class Actor {
 
 	get HD() { return this._charClass ? Math.floor((this._charClass.HD + this.race.HD) / 2) : this.race.HD; }
 
-	get charClass() { return this._charClass }
+	get cls() { return this._charClass }
 
 	get info() { return this._info; }
 	set info(v: TCharInfo) { this._info = v; }
@@ -112,7 +111,7 @@ export class Actor {
 	_info: TCharInfo;
 	readonly stats: StatBlock = new StatBlock();
 	readonly effects: Effect[] = [];
-	private _charClass?: CharClass;
+	private _charClass?: GClass;
 	protected _talents?: string[];
 
 	readonly resists: Record<string, Numeric> = {};
@@ -125,7 +124,7 @@ export class Actor {
 	readonly mods: ModBlock<typeof this>[] = [];
 	private _state: LifeState;
 
-	constructor(race: Race, rpgClass?: CharClass) {
+	constructor(race: Race, rpgClass?: GClass) {
 
 		this._charClass = rpgClass;
 
@@ -269,7 +268,6 @@ export class Actor {
 
 		Object.assign(this.stats, base);
 
-		this.applyRace();
 		this.computeHp();
 
 	}
@@ -284,14 +282,6 @@ export class Actor {
 			+ roll(this.stats.level.value - 1, this.HD);
 
 		this.stats.hp.max.value = maxHp;
-
-	}
-
-	applyRace() {
-
-		if (!this.race) return;
-		//if ( this._race.talents ) this._talents = this._race.talents.concat( this._talents );
-		this.applyBaseMods(this.race.baseMods);
 
 	}
 
@@ -317,30 +307,6 @@ export class Actor {
 	}
 
 	applyBaseMods(mods?: StatMod) {
-
-		if (!mods) return;
-		const stats = this.stats;
-
-		let k: keyof StatMod;
-		for (k in mods) {
-
-			let mod = mods[k];
-			if (typeof (mod) === 'string') {
-				mod = parseRoll(mod);
-			}
-
-			let val = stats[k as StatKey];
-			if (val) {
-
-				val += mod;
-				if (val < 3) val = 3;
-				stats[k as StatKey] = val;
-
-			}
-			else stats[k as StatKey] = mod;
-
-		}
-
 	}
 
 } //cls

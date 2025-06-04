@@ -1,6 +1,9 @@
+import { SymSimple, type ISimple } from 'rpg/values/types';
 import { IMod } from './imod';
 
-export class Simple {
+export class Simple implements ISimple {
+
+	readonly [SymSimple] = true;
 
 	toJSON() { return this._base }
 	valueOf() { return this._value }

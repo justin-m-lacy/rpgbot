@@ -5,17 +5,17 @@ import { Inventory, ItemPicker } from '../inventory';
 import { Item, ItemType } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
 import { Effect } from '../magic/effects';
+import { GetClass, GetRace } from '../parsers/classes';
 import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
 import { Actor } from './actor';
-import { CharClass } from './charclass';
 import { Equip } from './equip';
 import { getNextExp, tryLevel } from './level';
-import { Race } from './race';
+import { Race, type GClass } from './race';
 import { getEvil, StatBlock, StatKey } from './stats';
 
 const statTypes = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
-const saveProps = ['name', 'exp', 'owner', 'state', 'info', 'stats', 'effects',
+const saveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
 	'loc', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
 
 
@@ -66,7 +66,7 @@ export class Char extends Actor {
 		json.equip = this._equip;
 
 		json.race = this.race.name;
-		json.charClass = this.charClass?.name;
+		json.cls = this.cls?.name;
 
 		return json;
 	}
@@ -76,8 +76,8 @@ export class Char extends Actor {
 		if (!json) return null;
 
 		const char = new Char(
-			Race.RandRace(json.race),
-			CharClass.RandClass(json.charClass),
+			GetRace(json.race)!,
+			GetClass(json.cls)!,
 			json.owner);
 
 		char.name = json.name;
@@ -137,9 +137,9 @@ export class Char extends Actor {
 	private _levelUp: boolean = false;
 	readonly history: History;
 
-	constructor(race: Race, charclass: CharClass, owner: string) {
+	constructor(race: Race, cls: GClass, owner: string) {
 
-		super(race, charclass);
+		super(race, cls);
 
 		this._statPoints = 0;
 		this._spentPoints = 0;
@@ -175,7 +175,7 @@ export class Char extends Actor {
 	}
 
 	hasTalent(t: string) {
-		return (this._talents?.includes(t)) || this.charClass!.hasTalent(t) || this.race.hasTalent(t);
+		return (this._talents?.includes(t)) || this.cls!.hasTalent(t) || this.race.hasTalent(t);
 	}
 
 	addHistory(evt: string) {
@@ -389,8 +389,8 @@ export class Char extends Actor {
 	*/
 	rollBaseHp() {
 
-		const maxHp = Math.floor((this.race.HD + this.charClass!.HD) / 2) +
-			roll(this.stats.level.value - 1, this.charClass!.HD);
+		const maxHp = Math.floor((this.race.HD + this.cls!.HD) / 2) +
+			roll(this.stats.level.value - 1, this.cls!.HD);
 
 		this.stats.hp.max.value = maxHp;
 
@@ -407,17 +407,17 @@ export class Char extends Actor {
 
 	applyClass() {
 
-		if (!this.charClass) return;
+		if (!this.cls) return;
 		//if ( this._charClass.talents ) this.talents = this._charClass.talents.concat( this._talents );
 
-		super.applyBaseMods(this.charClass!.mods);
+		super.applyBaseMods(this.cls!.mods);
 
 	}
 
 	getTalents() {
 
 		let s = new Set(this._talents);
-		if (this.charClass?.talents) this.charClass.talents.forEach((v: string) => s.add(v));
+		if (this.cls?.talents) this.cls.talents.forEach((v: string) => s.add(v));
 		if (this.race.talents) this.race.talents.forEach((v: string) => s.add(v));
 
 		if (s.size === 0) return `${this.name} has no talents.`;
@@ -449,7 +449,7 @@ export class Char extends Actor {
 
 	getLongDesc() {
 
-		let desc = `level ${this.level} ${getEvil(+this.evil)} ${this.race.name} ${this.charClass!.name} [${this.state}]`;
+		let desc = `level ${this.level} ${getEvil(+this.evil)} ${this.race.name} ${this.cls!.name} [${this.state}]`;
 		desc += `\nage: ${this.age} sex: ${this.sex} gold: ${this.gold} exp: ${this._exp}/ ${getNextExp(this)}`;
 		desc += `\nhp: ${this.hp}/${this.hp.max} armor: ${this.armor}\n`;
 		desc += this.getStatString();

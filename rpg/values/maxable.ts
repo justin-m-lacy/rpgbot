@@ -1,8 +1,11 @@
 import { Simple } from "rpg/values/simple";
+import { SymSimple, type ISimple } from "rpg/values/types";
 
-export class Maxable {
+export class Maxable implements ISimple {
 
 	readonly id: string;
+
+	readonly [SymSimple] = true;
 
 	toJSON() {
 		return this._value === this.max.value ? this._value : { v: this._value, m: this.max.toJSON() }
@@ -15,6 +18,8 @@ export class Maxable {
 	set value(v) {
 		this._value = Math.min(v, this.max.value);
 	}
+
+	get base() { return this._value; }
 
 	readonly max: Simple;
 

@@ -13,9 +13,9 @@ export class Race {
 	 * Initial values character. Not mods but
 	 * permanent changes like starting gold.
 	 */
-	private createVals?: TValue[];
+	private createVals: Record<string, TValue> = {};
 
-	private _mods?: Record<string, IMod>;
+	private _mods: Record<string, IMod> = {};
 	private hitdice: number = 0;
 	private _expMod: number = 1;
 	talents: string[] = [];
@@ -28,19 +28,26 @@ export class Race {
 	}
 
 	addCharMod(m: IMod) {
-		this._mods ??= {};
 		this._mods[m.id] = m;
 
 	}
 
-	addCreateValue(v: TValue) {
+	addCreateValue(k: string, v: TValue) {
+		this.createVals[k] = v;
+	}
 
-		this.createVals ??= [];
-		this.createVals.push(v);
-
+	onInitChar(char: Char) {
+		char.applyMods(this.mods);
 	}
 
 	onNewChar(char: Char) {
+
+		for (let k in this.createVals) {
+
+			const val = this.createVals[k];
+			char[k] += val.value;
+
+		}
 
 	}
 
@@ -48,7 +55,6 @@ export class Race {
 		return this.talents && this.talents.includes(t);
 	}
 
-	get infoMods() { return this.mods; }
 	get HD() { return this.hitdice; }
 	get mods() { return this._mods }
 	get expMod() { return this._expMod; }

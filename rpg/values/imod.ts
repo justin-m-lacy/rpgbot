@@ -1,3 +1,4 @@
+import type { Path } from "rpg/values/paths";
 import type { Id, TValue } from "./types";
 
 export type ModState = {
@@ -50,16 +51,14 @@ export const CanMod = (it: any | null | undefined): it is IModdable => {
 	return it != null && typeof it === 'object' && it[SymModdable] === true;
 }
 
-
-
 /**
- * Interface for objects such as a TagSet, which apply a path of mods to its subitems.
+ * Interface for objects that apply a path of mods to its subitems.
  */
-/*export interface IApplyMods {
+export interface IApplyMods {
 	applyMods(mods: Path<IMod>): void;
 	removeMods(mods: Path<IMod> | IMod): void;
 }
 
 export const CanApplyMods = (it: object): it is IApplyMods => {
 	return typeof (it as any).applyMods === 'function';
-}*/
+}

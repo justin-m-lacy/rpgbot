@@ -1,5 +1,5 @@
 import { precise } from "rpg/display";
-import { SymSimple, type Id } from "rpg/values/types";
+import { SymSimple, type Id, type ISimple } from "rpg/values/types";
 
 type PercentData = `${number}%`;
 
@@ -26,7 +26,7 @@ export const IsPercentData = (v?: unknown): v is PercentData => {
 	return typeof v === 'string' && PctTest.test(v);
 }
 
-export class Percent {
+export class Percent implements ISimple {
 
 	readonly [SymSimple] = true;
 

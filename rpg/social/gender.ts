@@ -1,4 +1,4 @@
-export type SexType = 'm' | 'f';
+export type SexType = 'm' | 'f' | 'n';
 
 type Pronoun =
 	// subject
@@ -43,12 +43,26 @@ let f: PronounMap = {
 	'child': 'girl'
 };
 
+let n: PronounMap = {
+	"sub": "it",
+	"ob": "its",
+	"adj": "its",
+	"pos": "its",
+	"ref": "itself",
+	"is": "it's",
+	'sex': 'none',
+	'adult': 'thing',
+	'child': 'thing'
+};
+
 let sexes: { [types: string]: PronounMap } = {
 
 	m,
 	male: m,
 	f,
-	female: f
+	female: f,
+	n,
+	none: n,
 }
 
 // grammatical replacement indicators.

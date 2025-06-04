@@ -79,6 +79,11 @@ export class StatBlock {
 	// damage reduction.
 	readonly dr: Simple = new Simple('dr');
 
+	height?: number;
+	weight?: number;
+
+	readonly evil: Simple = new Simple('evil', 0);
+
 	constructor() { }
 
 	static Revive(json: any) {

@@ -1,124 +1,94 @@
-import type { ModBlock } from 'rpg/values/imod';
+import { randElm } from '@/utils/jsutils';
 import { Char } from '../char/char';
-import { CharClass } from '../char/charclass';
-import { Race } from '../char/race';
-import { StatBlock, StatName } from '../char/stats';
+import { Race, type GClass } from '../char/race';
 import * as Dice from '../values/dice';
 import * as ItemGen from './itemgen';
 
 type ValueRoller = { rolls: number, die: number, mod: number, minVal?: number, maxVal?: number };
-type SetValues = { set: string[] }
+type PickValues = { pick: string[] }
 type StatList = { stat: string | string[] };
 
-type StatGen = (StatList & SetValues) | (StatList & ValueRoller);
+type StatGen = (StatList & PickValues) | (StatList & ValueRoller);
 
 // Defines rolling information for stats.
-const stat_rolls = {
+const statRolls = [
 
-	// base stat rolls
-	base: [
-		{ stat: ['str', 'dex', 'con', 'wis', 'int', 'cha'], rolls: 3, die: 6, mod: 0, minVal: 3, maxVal: undefined }
-	],
+	{ stat: ['str', 'dex', 'con', 'wis', 'int', 'cha'], rolls: 3, die: 6, mod: 0, min: 3, max: undefined },
+	{ stat: 'sex', pick: ['f', 'm'] },
+	{ stat: 'gold', rolls: 3, die: 4, mod: 1 }
 
-	// info rolls
-	info: [
-		{ stat: 'sex', set: ['f', 'm'] },
-		{ stat: 'gold', rolls: 3, die: 4, mod: 1 }
-	]
+];
 
-};
-
-export const genChar = (owner: string, race: Race, charClass: CharClass, name: string, sex?: string) => {
+export const genChar = (owner: string, race: Race, charClass: GClass, name: string, sex?: string) => {
 
 	console.log('gen char...');
 
 	const char = new Char(race, charClass, owner);
 	char.name = name;
 
-	const info = rollStats(stat_rolls.info, {});
-	if (race.infoMods) modStats(race.infoMods, info);
-	modStats(charClass.infoMods, info);
-	char.info = info;
-
-	const base = rollStats(stat_rolls.base, new StatBlock());
+	const statVals = rollStats(statRolls, {});
 
 	base.curHp = base.maxHp = char.HD;
 
 	char.setBaseStats(base);
+	char.info = statVals;
+
+	race.onNewChar(char);
+	charClass.onNewChar(char);
 
 	boundStats(char);
-
 	initItems(char);
 
 	return char;
 
 }
 
-function modStats(statMods: ModBlock<Char>, destObj: any) {
-
-	let mod;
-	for (const stat in statMods) {
-
-		const cur = destObj[stat];
-		mod = statMods[stat as StatName];
-		if (typeof mod === 'string') {
-			mod = Dice.parseRoll(mod);
-
-		} else {
-			mod = statMods[stat as StatName];
-		}
-
-		if (cur == null) destObj[stat] = mod;
-		else destObj[stat] = cur + mod;
-
-	}
-
-}
-
-function rollStats(statRolls: StatGen[], destObj: any) {
+function rollStats(statRolls: StatGen[], dest: Record<string, number>) {
 
 	for (let i = statRolls.length - 1; i >= 0; i--) {
 
 		const rollInfo = statRolls[i];
 		const stat = rollInfo.stat;
+
+		// roll array of stats.
 		if (Array.isArray(stat)) {
 
 			for (let j = stat.length - 1; j >= 0; j--) {
-				rollStat(destObj, stat[j], rollInfo);
+				rollStat(dest, stat[j], rollInfo);
 			}
 
 		} else {
 
-			rollStat(destObj, stat, rollInfo)
+			rollStat(dest, stat, rollInfo)
 
 		}
 
-
 	}
-	return destObj;
+
+	return dest;
 
 }
 
-function boundStat(dest: any, stat: string, info: { minVal?: number, maxVal?: number }) {
+function boundStat(dest: any, stat: string, info: { min?: number, max?: number }) {
 
 	const cur = dest[stat];
 	if (cur == null) return;
 
-	if (info.minVal != null && cur < info.minVal) {
-		dest[stat] = info.minVal;
-	} else if (info.maxVal != null && cur > info.maxVal) {
-		dest[stat] = info.maxVal;
+	if (info.min != null && cur < info.min) {
+		dest[stat] = info.min;
+	} else if (info.max != null && cur > info.max) {
+		dest[stat] = info.max;
 	}
 
 }
 
-const rollStat = (destObj: any, stat: string,
-	info: { set: any[] } | { rolls: number, die: number, mod: number }) => {
+const rollStat = (destObj: Record<string, number>, stat: string,
+	info: { pick: any[] } | { rolls: number, die: number, mod: number }) => {
 
-	if ('set' in info) {
+	if ('pick' in info) {
 		// choose from set.
 		if (destObj.hasOwnProperty(stat)) return;	// already set.
-		destObj[stat] = info.set[Math.floor(info.set.length * Math.random())];
+		destObj[stat] = randElm(info.pick);
 
 	} else {
 		destObj[stat] = Dice.roll(info.rolls, info.die, info.mod);
@@ -130,13 +100,13 @@ const rollStat = (destObj: any, stat: string,
  * Bound stats by stat definitions min/max.
  * @param {Char} char
  */
-export const boundStats = (char: Char) => {
+const boundStats = (char: Char) => {
 
-	const stats = stat_rolls.base;
+	const stats = statRolls;
 	for (let i = stats.length - 1; i >= 0; i--) {
 
 		const info = stats[i];
-		if (info.minVal == null && info.maxVal == null) continue;
+		if (info.min == null && info.max == null) continue;
 
 		const stat = info.stat;
 

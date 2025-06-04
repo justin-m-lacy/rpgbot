@@ -7,8 +7,8 @@ type RawRaceData = typeof import('../data/races.json')[number] | typeof import('
 const races: Race[] = [];
 const raceByName: { [race: string]: Race } = {};
 
-let classes: GClass[];
-let classByName: { [name: string]: GClass };
+const classes: GClass[] = [];
+const classByName: { [name: string]: GClass } = {};
 
 export const GetRace = (racename?: string) => {
 	return racename ? raceByName[racename.toLowerCase()] : undefined;
@@ -50,7 +50,7 @@ const ParseRace = (raw: RawRaceData) => {
 		for (k in base) {
 
 			const v = TryParseValue(k, base[k]);
-			if (v) race.addCreateValue(v);
+			if (v) race.addCreateValue(k, v);
 		}
 
 	}
@@ -87,29 +87,24 @@ export const InitRaces = async () => {
 		}
 	}
 
-
 }
 
 
 export const InitClasses = async () => {
 
-	classByName = {};
-	classes = [];
+	const raw = (await import('../data/classes.json')).default;
 
-	try {
+	for (let i = raw.length - 1; i >= 0; i--) {
 
-		const arr = (await import('../data/classes.json')).default;
-
-		for (let i = arr.length - 1; i >= 0; i--) {
-
-			const cls = ParseRace(arr[i]);
+		try {
+			const cls = ParseRace(raw[i]);
 			classByName[cls.name] = cls;
 			classes.push(cls);
 
+		} catch (e) {
+			console.log(e);
 		}
 
-	} catch (e) {
-		console.log(e);
 	}
 
 }
