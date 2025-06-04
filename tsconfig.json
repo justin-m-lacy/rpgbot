@@ -46,6 +46,7 @@
   "include": [
     "strip-package.ts",
     "archbot.ts",
+    "auth.json",
     "src/**/*.json",
     "config.json",
     "auth.json",

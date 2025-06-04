@@ -45,6 +45,10 @@
   "include": [
     "src/**/*.ts",
     "./*.ts",
+    "auth.json",
+    "config.json",
+    "rpg/**/*.ts",
+    "rpg/**/*.json",
     "plugins/**/*.ts",
     "plugins/**/*.json",
     "package.json"

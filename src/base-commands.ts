@@ -1,7 +1,7 @@
 import { Client, GuildMember, Message, PermissionFlagsBits } from 'discord.js';
 import { DiscordBot } from './bot/discordbot';
 
-import { parseRoll } from '../plugins/rpg/dice';
+import { parseRoll } from '../rpg/values/dice';
 import { getSenderName } from './utils/users';
 
 let bot: DiscordBot;

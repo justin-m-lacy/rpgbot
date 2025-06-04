@@ -69,7 +69,7 @@ async function loadConfig() {
 
 	try {
 
-		const config = (await import('../../config.json')).default;
+		const config = (await import('./config.json')).default;
 
 		if (process.env.NODE_ENV !== 'production' && config.dev) {
 			Object.assign(config, config.dev);

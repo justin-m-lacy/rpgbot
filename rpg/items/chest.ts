@@ -1,0 +1,90 @@
+import type { ItemIndex } from 'rpg/items/container';
+import { Inventory, SymInventory, type IInventory } from '../inventory';
+import { Item, ItemType } from "./item";
+
+/**
+ * Chest extends Item not Inventory to avoid multi-inheritance.
+ */
+export class Chest extends Item implements IInventory {
+
+	readonly [SymInventory] = true;
+
+	static Revive(json: any) {
+
+		const p = new Chest(Inventory.Revive(json.inv, Item.Revive));
+		p.size = json.size;
+
+		return super.Revive(json, p);
+
+	}
+
+	toJSON() {
+
+		const o = super.toJSON() as any;
+
+		o.size = this.size;
+		o.inv = this._inv;
+
+		return o;
+
+	}
+
+	get size() { return this._size; }
+	set size(v) { this._size = v; }
+
+	get inv() { return this._inv; }
+
+	get lock() { return this._lock; }
+	set lock(v) { this._lock = v; }
+
+	get count() { return this._inv.count; }
+
+	private _size: number = 0;
+	private _lock: number = 0;
+
+	private readonly _inv;
+
+	constructor(inv: Inventory) {
+		super('', '', ItemType.Chest);
+
+		this._inv = inv;
+
+	}
+
+	takeRange(start: number, end: number) {
+		return this._inv.takeRange(start, end);
+	}
+
+	getList() { return this._inv.getList(); }
+	getMenu() { return this._inv.getMenu(); }
+
+	getDetails() {
+		return this._inv.getMenu() + '\n' + super.getDetails();
+	}
+
+	/**
+	 * 
+	 * @param {string|number} wot 
+	 */
+	get(wot: ItemIndex) { return this._inv.get(wot); }
+
+	/**
+	 * 
+	 * @param {number|string|Item} wot 
+	 */
+	take(wot: ItemIndex) { return this._inv.take(wot); }
+
+	/**
+	 * 
+	 * @param {Item} it 
+	 */
+	add(it: Item) {
+
+		if (this.count < this.size) {
+			this._inv.add(it);
+		}
+		return null;
+
+	}
+
+}
