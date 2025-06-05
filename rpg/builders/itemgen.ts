@@ -25,15 +25,20 @@ let miscItems: RawItemData[];
 
 const armorBySlot: Partial<{ [Property in HumanSlot]: RawArmorData[] }> = {};
 
-initItems();
-initArmors();
-initPots();
-initScrolls();
-initChests();
+export const InitItems = async () => {
 
-Material.LoadMaterials();
+	return Promise.all([
+		initBasic(),
+		initArmors(),
+		initPots(),
+		initScrolls(),
+		initChests(),
+		Material.LoadMaterials()
+	]);
 
-async function initItems() {
+}
+
+async function initBasic() {
 
 	const items = (await import('../data/items/items.json')).default;
 	const spec = items.special;
@@ -133,10 +138,7 @@ export const Revive = (json: any) => {
 }
 
 export const genPot = (name: string) => {
-
-	const pot = allPots[name];
-	return pot ? Potion.Revive(pot) : null;
-
+	return allPots[name] ? Potion.Revive(allPots[name]) : null;
 }
 
 export const genWeapon = (lvl: number) => {
@@ -270,13 +272,13 @@ export const getMiscItem = () => {
 }
 
 
-export const potsList = (level: number) => {
+export const PotsList = (level: number) => {
 
 	const a = potsByLevel[level];
 	if (!a) return `No potions of level ${level}.`;
 
 	const len = a.length;
-	//let p = a[0];
+
 	let s = `${a[0].name}`;
 	for (let i = 1; i < len; i++) s += `, ${a[i].name}`;
 	s += '.';

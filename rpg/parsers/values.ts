@@ -6,19 +6,13 @@ import type { TValue } from "rpg/values/types";
 /// IdTest - Test for a simple id name.
 const IdTest = /^[A-Za-z_]+\w*$/;
 
-
-export const ParseValue = (v: any) => {
-
-
-
-}
 /**
  * Attempt to parse a simple value.
  * @param id 
  * @param v 
  * @returns 
  */
-export const TryParseValue = (id: string, v?: string | number | object): TValue | undefined => {
+export const ParseValue = (id: string, v?: string | number | object): TValue | undefined => {
 
 	if (typeof v === 'number') return new Simple(id, v);
 

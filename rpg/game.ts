@@ -288,7 +288,9 @@ export class Game {
 			return `${char.name} is not in a guild.`;
 		}
 
-		if (!g.isLeader(char)) return `You do not have permission to invite new members to ${g.name}.`;
+		if (!g.isLeader(char)) {
+			return `You do not have permission to invite members to ${g.name}.`;
+		}
 		g.invite(who);
 
 		return `${who.name} invited to guild '${g.name}'.`;
@@ -329,11 +331,10 @@ export class Game {
 		if (this.tick(char, 'equip') === false) return char.getLog();
 
 		let res = char.equip(wot);
-		if (res === true) res = char.name + ' equips ' + wot;	// TODO,echo slot used.
+		if (res === true) res = `${char.name} equips ${wot}`;	// TODO,echo slot used.
 		else if (typeof res === 'string') {
 			return res;
-		}
-		else res = char.name + ' does not have ' + wot;
+		} else res = `${char.name} does not have ${wot}`;
 
 		return char.output(res);
 

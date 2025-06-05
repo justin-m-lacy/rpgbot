@@ -1,14 +1,14 @@
 import { ParseMod } from 'rpg/parsers/mods';
-import { TryParseValue } from 'rpg/parsers/values';
+import { ParseValue } from 'rpg/parsers/values';
 import { Race, type GClass } from '../char/race';
 
 type RawRaceData = typeof import('../data/races.json')[number] | typeof import('../data/classes.json')[number];
 
 const races: Race[] = [];
-const raceByName: { [race: string]: Race } = {};
+const raceByName: Record<string, Race> = {};
 
 const classes: GClass[] = [];
-const classByName: { [name: string]: GClass } = {};
+const classByName: Record<string, GClass> = {};
 
 export const GetRace = (racename?: string) => {
 	return racename ? raceByName[racename.toLowerCase()] : undefined;
@@ -49,7 +49,7 @@ const ParseRace = (raw: RawRaceData) => {
 		let k: keyof typeof base;
 		for (k in base) {
 
-			const v = TryParseValue(k, base[k]);
+			const v = ParseValue(k, base[k]);
 			if (v) race.addCreateValue(k, v);
 		}
 

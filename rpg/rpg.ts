@@ -1,21 +1,20 @@
 import { BotContext } from '@/bot/botcontext';
 import { DiscordBot } from '@/bot/discordbot';
+import { replyEmbedUrl } from '@/embeds';
 import Cache from 'archcache';
 import { Message, User } from "discord.js";
 import { Formula } from 'formulic';
-import { Game, GetLore } from './game';
-import { HumanSlot } from './items/wearable';
-import { toDirection } from "./world/loc";
-
-import { replyEmbedUrl } from '@/embeds';
+import { GenChar } from 'rpg/builders/chargen';
 import { getHistory } from 'rpg/events';
-import { RandClass, RandRace } from 'rpg/parsers/classes';
-import * as CharGen from './builders/chargen';
-import * as ItemGen from './builders/itemgen';
+import { InitClasses, InitRaces, RandClass, RandRace } from 'rpg/parsers/classes';
+import { InitItems, PotsList } from './builders/itemgen';
 import { Char } from './char/char';
 import { Race } from './char/race';
 import * as Display from './display/display';
+import { Game, GetLore } from './game';
+import { HumanSlot } from './items/wearable';
 import * as Trade from './trade';
+import { toDirection } from "./world/loc";
 import { World } from './world/world';
 
 const RPG_DIR = 'rpg/';
@@ -473,7 +472,7 @@ export class Rpg {
 
 		if (!level) return m.reply('List potions for which level?');
 		if (typeof level === 'string') level = parseInt(level);
-		return m.reply(ItemGen.potsList(level));
+		return m.reply(PotsList(level));
 
 	}
 
@@ -801,7 +800,7 @@ export class Rpg {
 
 			} else charname = await this.uniqueName(race, sex);
 
-			const char = CharGen.GenChar(m.author.id, race, charCls, charname);
+			const char = GenChar(m.author.id, race, charCls, charname);
 			console.log('new char: ' + char.name);
 
 			await this.setUserChar(m.author, char);
@@ -888,7 +887,7 @@ export class Rpg {
 		const namegen = await import('./namegen.js');
 
 		do {
-			const name = namegen.genName(race.name, sex);
+			const name = namegen.GenName(race.name, sex);
 			if (name && !(await this.charExists(name))) return name;
 
 		} while (true);
@@ -897,7 +896,9 @@ export class Rpg {
 
 } // class
 
-export const initPlugin = (bot: DiscordBot) => {
+export const InitGame = async (bot: DiscordBot) => {
+
+	await Promise.all([InitRaces(), InitClasses(), InitItems()])
 
 	const proto = Rpg.prototype;
 

@@ -95,7 +95,7 @@ const rollStat = (destObj: Record<string, number>, stat: string,
 
 /**
  * Bound stats by stat definitions min/max.
- * @param {Char} char
+ * @param char
  */
 const boundStats = (char: Char) => {
 

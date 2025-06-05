@@ -8,30 +8,6 @@ import type { Id, Numeric } from "rpg/values/types";
 /// +D+P%
 export const ModTest = /^([\+\-]?\d+\.?\d*\b)?(?:([\+\-]?\d+\.?\d*)\%)?$/;
 
-
-class InvalidModData extends Error {
-
-	constructor(str: any, source?: Id) {
-
-		super(`${source?.toString()}: Invalid Mod Str: ${str}`);
-
-	}
-
-}
-
-class NaNError extends Error {
-
-	readonly value: unknown;
-	readonly source?: Id;
-
-	constructor(v: unknown, source?: Id) {
-		super(`${source?.toString()}: Value is NaN: ${v}`);
-		this.value = v;
-		this.source = source;
-	}
-
-}
-
 /*export const ParseMods = (mods: Record<string, any>, id: string, src: Numeric = 1) => {
 	return ParsePaths(
 		mods,
@@ -109,4 +85,28 @@ const parseBaseMod = (id: Id, v: number | string, source?: Numeric) => {
 	}
 
 	throw new InvalidModData(v, id);
+}
+
+
+class InvalidModData extends Error {
+
+	constructor(str: any, source?: Id) {
+
+		super(`${source?.toString()}: Invalid Mod Str: ${str}`);
+
+	}
+
+}
+
+class NaNError extends Error {
+
+	readonly value: unknown;
+	readonly source?: Id;
+
+	constructor(v: unknown, source?: Id) {
+		super(`${source?.toString()}: Value is NaN: ${v}`);
+		this.value = v;
+		this.source = source;
+	}
+
 }

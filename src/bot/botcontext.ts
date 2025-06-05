@@ -1,11 +1,10 @@
 import ArchCache from 'archcache';
 import { Channel, Guild, GuildMember, Message, PermissionResolvable, User, type SendableChannels } from 'discord.js';
+import * as afs from '../afs';
 import Access from './access';
+import BotFs from './botfs';
 import { Command } from './command';
 import { DiscordBot } from './discordbot';
-
-const fsys = require('./botfs');
-const afs = require('../afs');
 
 /**
  * A discord object associated with this bot context.
@@ -67,7 +66,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	set access(v) { this._access = v; }
 
 	get afs() { return afs; }
-	get botfs() { return fsys; }
+	get botfs() { return BotFs; }
 
 	private _access?: Access;
 
@@ -212,7 +211,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 */
 	isValidKey(s: string) {
 
-		const a = fsys.illegalChars;
+		const a = BotFs.illegalChars;
 		for (let i = a.length - 1; i >= 0; i--) {
 			if (s.indexOf(a[i]) >= 0) return false;
 		}
@@ -268,7 +267,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 */
 	async getDataList(path: string) {
 
-		const files = await afs.readfiles(fsys.BASE_DIR + this.cache.cacheKey + path);
+		const files = await afs.readfiles(BotFs.BaseDir + this.cache.cacheKey + path);
 		for (let i = files.length - 1; i >= 0; i--) {
 
 			files[i] = files[i].replace(/.[^/.]+$/, '');;

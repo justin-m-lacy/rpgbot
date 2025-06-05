@@ -1,22 +1,22 @@
 
+import { randElm } from '@/utils/jsutils';
 import FeatureData from '../data/world/features.json';
 import { Feature } from '../world/feature';
 
 const byName: { [key: string]: typeof FeatureData[number] } = {};
 
-initFeatures();
+InitFeatures();
 
 /**
  * Create named feature from data.
- * @param {string} s
+ * @param s
  */
 export const genFeature = (s: string) => {
-	const d = byName[s];
-	return d ? Feature.Revive(d) : null;
+	return byName[s] ? Feature.Revive(byName[s]) : null;
 }
 
 
-function initFeatures() {
+function InitFeatures() {
 
 	for (let i = FeatureData.length - 1; i >= 0; i--) {
 		byName[FeatureData[i].name] = FeatureData[i];
@@ -26,8 +26,5 @@ function initFeatures() {
 }
 
 export const randFeature = () => {
-
-	const data = FeatureData[Math.floor(FeatureData.length * Math.random())];
-	return Feature.Revive(data);
-
+	return Feature.Revive(randElm(FeatureData));
 }

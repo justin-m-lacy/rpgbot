@@ -26,7 +26,7 @@ type GenderNamer = {
 	[sex: string]: NameBuilder
 }
 
-var nameParts: { [race: string]: GenderNamer } = {
+const nameParts: { [race: string]: GenderNamer } = {
 
 	'dwarf': {
 
@@ -165,7 +165,7 @@ nameParts['hobbit'] = nameParts['halfling'];
  * @exported
  * @param {string} race
  */
-export const genName = (race: string = "human", sex?: string) => {
+export const GenName = (race: string = "human", sex?: string): string => {
 
 	sex = toSex(sex);
 	let ind = race.indexOf('half');
@@ -173,31 +173,25 @@ export const genName = (race: string = "human", sex?: string) => {
 
 		ind += 4;
 		if (race.length > ind && race.charAt(ind) === '-') ind++;
-		return getMixRace(race.slice(ind), sex);
-
-	}
-
-	if (race == null) race = 'human';
-
-	if (!nameParts.hasOwnProperty(race)) {
+		const name = getMixRace(race.slice(ind), sex);
+		if (name) return name;
 		race = 'human';
+
 	}
+
+	if (!nameParts[race]) race = 'human';
+
 	const lists = nameParts[race][sex];
-
-
 	return buildName(lists.parts, lists.roots, lists.ends);
 
 }
 
 const cmdRollName = (m: Message<true>, race?: string, sex?: string) => {
 
-	try {
-		const name = genName(race, toSex(sex));
-		if (name) {
-			m.channel.send(name);
-		}
-
-	} catch (e) { console.log(e); }
+	const name = GenName(race, toSex(sex));
+	if (name) {
+		m.channel.send(name);
+	}
 
 }
 

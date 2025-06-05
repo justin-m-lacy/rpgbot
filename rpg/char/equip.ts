@@ -106,7 +106,7 @@ export class Equip {
 
 	/**
 	 *
-	 * @param {Item} it
+	 * @param it
 	 */
 	remove(it: Wearable) {
 
@@ -140,7 +140,7 @@ export class Equip {
 
 	/**
 	 * Remove item from slot and return it.
-	 * @param {string} slot
+	 * @param slot
 	 */
 	removeSlot(slot: string | HumanSlot | null | undefined) {
 
@@ -213,7 +213,7 @@ export class Equip {
 
 			} else {
 
-				console.log('passing off hands.');
+				console.log('changing hands.');
 
 				// can't both be two-handed.
 				this.slots.right = it;
