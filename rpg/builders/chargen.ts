@@ -34,6 +34,8 @@ export const GenChar = (owner: string, race: Race, charClass: GClass, name: stri
 	charClass.onNewChar(char);
 
 	boundStats(char);
+	char.init();
+
 	initItems(char);
 
 	return char;

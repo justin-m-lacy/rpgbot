@@ -259,11 +259,15 @@ class GuildReactions {
 	 * @param {number} [page=1] - The page of text.
 	 * @returns {Promise}
 	 */
-	async cmdReacts(m: Message<true>, trig: string, page: number = 1) {
+	async cmdReacts(m: Message<true>, trig: string, page: string | number = 1) {
 
 		if (trig == '/') {
 			console.log(`returning regex reacts`);
 			return this.cmdRegexReacts(m, page);
+		}
+
+		if (typeof page == 'string') {
+			page = Number.parseInt(page);
 		}
 
 		const reacts = this.getReactions(trig);
@@ -285,9 +289,14 @@ class GuildReactions {
 
 	}
 
-	async cmdRegexReacts(m: Message<true>, page: number = 1) {
+	async cmdRegexReacts(m: Message<true>, page: number | string = 1) {
 
 		const reacts = this.getAllRegEx();
+
+		if (typeof page === 'string') {
+			page = Number.parseInt(page);
+		}
+		if (Number.isNaN(page)) page = 1;
 
 		if (reacts.length == 0) {
 			return m.channel.send('No regex reactions found.');
@@ -318,7 +327,12 @@ class GuildReactions {
 	 * @param {number} [page=1]
 	 * @returns {Promise}
 	 */
-	async cmdTriggers(m: Message<true>, page: number = 1) {
+	async cmdTriggers(m: Message<true>, page: number | string = 1) {
+
+		if (typeof page === 'string') {
+			page = Number.parseInt(page);
+		}
+		if (Number.isNaN(page)) page = 1;
 
 		// list of all triggers defined for server.
 		const triggers = this.getTriggers();

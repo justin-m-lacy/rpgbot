@@ -838,9 +838,9 @@ export class Rpg {
 
 		const key = this.getCharKey(charname);
 
-		const data = this.charCache.get(key) as Char | undefined;
-		return data ?? await this.charCache.fetch(key) as Char | undefined;
-
+		const data = (this.charCache.get(key) ?? await this.charCache.fetch(key)) as Char | undefined;
+		data?.init();
+		return data;
 	}
 
 	clearUserChar(uid: string) { delete this.lastChars[uid]; }

@@ -23,8 +23,6 @@ export class Char extends Actor {
 	get exp() { return this._exp; }
 	set exp(v) { this._exp = v; }
 
-	get inv() { return this._inv; }
-
 	get home() { return this._home; }
 	set home(v) { this._home = v; }
 
@@ -97,7 +95,7 @@ export class Char extends Actor {
 		char.statPoints = json.statPoints || char.stats.level;
 		char.spentPoints = json.spentPoints || 0;
 
-		if (json.inv) Inventory.Revive(json.inv, Item.Revive, char._inv);
+		if (json.inv) Inventory.Revive(json.inv, Item.Revive, char.inv);
 
 		// SET AFTER BASE STATS.
 		if (json.effects) {
@@ -119,7 +117,7 @@ export class Char extends Actor {
 	}
 
 	private readonly _log: Log = new Log();
-	private readonly _inv: Inventory;
+	readonly inv: Inventory;
 	private _equip: Equip;
 	private _statPoints: number;
 	private _spentPoints: number;
@@ -140,13 +138,18 @@ export class Char extends Actor {
 		this._statPoints = 0;
 		this._spentPoints = 0;
 
-		this._inv = new Inventory();
+		this.inv = new Inventory();
 		this._equip = new Equip();
 
 		this.history = { explored: 0, crafted: 0 };
 
 		this.owner = owner;
 
+	}
+
+	public init() {
+		this.race?.onInitChar(this);
+		this.cls?.onInitChar(this);
 	}
 
 	/**
@@ -198,12 +201,12 @@ export class Char extends Actor {
 	 */
 	eat(what: ItemIndex) {
 
-		const item = this._inv.get(what);
+		const item = this.inv.get(what);
 		if (!item) return 'Item not found.';
 
 		if (item.type !== ItemType.Food) return item.name + ' isn\'t food!';
 
-		this._inv.take(item);
+		this.inv.take(item);
 
 		const cook = require('../data/cooking.json');
 		this.addHistory('eat');
@@ -225,7 +228,7 @@ export class Char extends Actor {
 	 */
 	cook(what: ItemPicker) {
 
-		let item = what instanceof Item ? what : this._inv.get(what);
+		let item = what instanceof Item ? what : this.inv.get(what);
 		if (!item) return 'Item not found.';
 
 		if (item.type === ItemType.Food) return item.name + ' is already food.';
@@ -243,7 +246,7 @@ export class Char extends Actor {
 	 */
 	equip(what: ItemIndex) {
 
-		const item = this._inv.get(what);
+		const item = this.inv.get(what);
 		if (!item) return 'No such item.';
 
 		if (item instanceof Wearable) {
@@ -252,10 +255,10 @@ export class Char extends Actor {
 			if (typeof (removed) !== 'string') {
 
 				this.applyEquip(item);
-				this._inv.take(item);
+				this.inv.take(item);
 				if (removed) {
 					this.removeEquip(removed);
-					this._inv.add(removed);
+					this.inv.add(removed);
 				}
 
 				return true;
@@ -286,7 +289,7 @@ export class Char extends Actor {
 		if (!removed) return;
 
 		this.removeEquip(removed);
-		this._inv.add(removed);
+		this.inv.add(removed);
 
 		return removed;
 
@@ -350,14 +353,14 @@ export class Char extends Actor {
 	/**
 	 * Removes and returns a random item, or null.
 	 */
-	randItem() { return this._inv.randItem(); }
+	randItem() { return this.inv.randItem(); }
 
 	/**
 	 * Get an item from inventory without removing it.
 	 * @param {number|string|Item} which
 	 */
 	getItem(which: number | string, sub?: number | string) {
-		return this._inv.getSub(which, sub);
+		return this.inv.getSub(which, sub);
 	}
 
 	/**
@@ -365,7 +368,7 @@ export class Char extends Actor {
 	 * @param {Item|Item[]} it
 	 */
 	addItem(it?: Item | (Item | null | undefined)[] | null) {
-		return this._inv.add(it);
+		return this.inv.add(it);
 
 	}
 
@@ -375,10 +378,10 @@ export class Char extends Actor {
 	 * @returns {Item} Item removed or null.
 	 */
 	takeItem(which: number | string | Item, sub?: number | string) {
-		return this._inv.take(which, sub);
+		return this.inv.take(which, sub);
 	}
 
-	takeRange(start: ItemIndex, end: ItemIndex) { return this._inv.takeRange(start, end); }
+	takeRange(start: ItemIndex, end: ItemIndex) { return this.inv.takeRange(start, end); }
 
 	/**
 	 * reroll hp.

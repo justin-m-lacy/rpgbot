@@ -70,9 +70,9 @@ export class Actor {
 	get cha() { return this.stats.cha; }
 
 
-	get HD() { return this._charClass ? Math.floor((this._charClass.HD + this.race.HD) / 2) : this.race.HD; }
+	get HD() { return this._myClass ? Math.floor((this._myClass.HD + this.race.HD) / 2) : this.race.HD; }
 
-	get cls() { return this._charClass }
+	get cls() { return this._myClass }
 
 	get toHit() { return this.getModifier('dex'); }
 	get loc() { return this._loc; }
@@ -83,7 +83,7 @@ export class Actor {
 	race: Race;
 	readonly stats: StatBlock = new StatBlock();
 	readonly effects: Effect[] = [];
-	private _charClass?: GClass;
+	private _myClass?: GClass;
 	protected _talents?: string[];
 
 	readonly resists: Record<string, Numeric> = {};
@@ -102,7 +102,7 @@ export class Actor {
 
 		this.name = name;
 
-		this._charClass = rpgClass;
+		this._myClass = rpgClass;
 
 		this.race = race;
 
