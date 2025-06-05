@@ -10,12 +10,15 @@ export type TValue = {
 
 export type Numeric = TValue | number;
 
+export const IsValue = (t: any): t is TValue => {
+	return t && typeof t === 'object' && typeof (t as any).value === 'number';
+}
+
+export const IsSimple = (t: any): t is ISimple => {
+	return t && typeof t === 'object' && t[SymSimple] === true;
+}
 
 export const SymSimple = Symbol('Simple');
-
-export const IsValue = (t: object): t is TValue => {
-	return typeof (t as any).value === 'number';
-}
 
 export interface ISimple {
 

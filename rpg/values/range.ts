@@ -1,4 +1,4 @@
-import { precise } from "rpg/display";
+import { precise } from "rpg/util/format";
 import { CanMod, SymModdable, type IModdable } from "rpg/values/imod";
 import { SymSimple, type Id, type ISimple, type Numeric, type TValue } from "rpg/values/types";
 import { IMod } from './imod';

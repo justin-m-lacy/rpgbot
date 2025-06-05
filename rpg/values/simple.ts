@@ -1,4 +1,4 @@
-import { SymSimple, type ISimple } from 'rpg/values/types';
+import { SymSimple, type ISimple, type Numeric } from 'rpg/values/types';
 import { IMod } from './imod';
 
 export class Simple implements ISimple {
@@ -35,8 +35,8 @@ export class Simple implements ISimple {
 
 	}
 
-	setTo(v: number) {
-		this._base = v;
+	setTo(v: Numeric) {
+		this._base = +v;
 		this.recalc();
 	}
 

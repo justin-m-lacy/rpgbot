@@ -30,7 +30,9 @@ export const getEvil = (evil: number) => {
 
 };
 
-export const pointStats = ['str', 'con', 'dex', 'int', 'wis', 'char', 'armor'];
+export const StatIds = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+export const PointStats = ['str', 'con', 'dex', 'int', 'wis', 'char', 'armor'];
 
 export type StatName = 'evil' | 'str' | 'con' | 'dex' | 'int' | 'wis' | 'cha' | 'armor' | 'level' | 'dr' | 'age';
 
@@ -66,11 +68,11 @@ export class StatBlock {
 	readonly hp = new Maxable('hp');
 	readonly mp = new Maxable('mp');
 	readonly str = new Maxable('str');
-	readonly con = new Maxable('str');
-	readonly dex = new Maxable('str');
-	readonly wis = new Maxable('str');
-	readonly cha = new Maxable('str');
+	readonly con = new Maxable('con');
+	readonly dex = new Maxable('dex');
 	readonly int = new Maxable('int');
+	readonly wis = new Maxable('wis');
+	readonly cha = new Maxable('cha');
 
 	readonly level: Simple = new Simple('level');
 
@@ -81,6 +83,9 @@ export class StatBlock {
 
 	height?: number;
 	weight?: number;
+
+	readonly age: Simple = new Simple('age');
+	gold: number = 0;
 
 	readonly evil: Simple = new Simple('evil', 0);
 

@@ -1,6 +1,5 @@
 import type { SexType } from 'rpg/social/gender';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
-import { Simple } from 'rpg/values/simple';
 import type { Numeric } from 'rpg/values/types';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
@@ -8,27 +7,9 @@ import { Effect, ProtoEffect } from '../magic/effects';
 import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
 import { Race, type GClass } from './race';
-import { IStatValues, StatBlock, StatKey, type StatMod } from './stats';
+import { StatBlock, type StatMod } from './stats';
 
 export type LifeState = 'alive' | 'dead';
-
-export type TCharInfo = {
-	height?: number,
-	weight?: number,
-	evil: Simple,
-	sex: SexType,
-	age: number,
-	gold: number
-}
-
-function makeCharInfo(): TCharInfo {
-	return {
-		age: 1,
-		evil: new Simple('evil'),
-		sex: 'm',
-		gold: 0
-	};
-}
 
 export class Actor {
 
@@ -42,8 +23,8 @@ export class Actor {
 
 	}
 
-	// async for combat. TODO: make this better...
-	async getState() { return this._state; }
+	// used to abstract await state in combat.
+	getState() { return this._state; }
 
 	getStatus() { return `${this.hp.value}/${this.hp.max} [${this._state}]` }
 
@@ -51,8 +32,8 @@ export class Actor {
 	set state(v) { this._state = v; }
 	isAlive() { return this._state !== exports.Dead; }
 
-	get evil() { return this._info.evil.value; }
-	set evil(v) { this._info.evil.setTo(v); }
+	get evil() { return this.stats.evil; }
+	set evil(v: Numeric) { this.stats.evil.setTo(+v); }
 
 	// convenience for shorter formulas.
 	get hp() { return this.stats.hp; }
@@ -66,22 +47,17 @@ export class Actor {
 
 	get level() { return this.stats.level; }
 
-	get baseLevel() { return this.stats.level; }
+	get gold() { return this.stats.gold; }
+	set gold(g) { this.stats.gold = g < 0 ? 0 : g; }
 
-	get gold() { return this._info.gold; }
-	set gold(g) { this._info.gold = g < 0 ? 0 : g; }
-
-	get sex() { return this._info.sex; }
-	set sex(s) { this._info.sex = s; }
-
-	get age() { return this._info.age; }
-	set age(s) { this._info.age = s; }
+	get age() { return this.stats.age; }
+	set age(s: Numeric) { this.stats.age.setTo(s); }
 
 	get armor() { return this.stats.armor; }
 
 	get str() { return this.stats.str; }
 	get con() { return this.stats.con; }
-	set con(v) {
+	set con(v: Numeric) {
 
 		this.stats.con.setTo(v);
 		this.computeHp();
@@ -98,23 +74,21 @@ export class Actor {
 
 	get cls() { return this._charClass }
 
-	get info() { return this._info; }
-	set info(v: TCharInfo) { this._info = v; }
-
 	get toHit() { return this.getModifier('dex'); }
 	get loc() { return this._loc; }
 	set loc(v) { this._loc.setTo(v); }
 
-	name!: string;
+	readonly name: string;
 	private readonly _loc: Coord;
 	race: Race;
-	_info: TCharInfo;
 	readonly stats: StatBlock = new StatBlock();
 	readonly effects: Effect[] = [];
 	private _charClass?: GClass;
 	protected _talents?: string[];
 
 	readonly resists: Record<string, Numeric> = {};
+
+	sex: SexType = 'm';
 
 	guild?: string;
 
@@ -124,11 +98,11 @@ export class Actor {
 	readonly mods: ModBlock<typeof this>[] = [];
 	private _state: LifeState;
 
-	constructor(race: Race, rpgClass?: GClass) {
+	constructor(name: string, race: Race, rpgClass?: GClass) {
+
+		this.name = name;
 
 		this._charClass = rpgClass;
-
-		this._info = makeCharInfo();
 
 		this.race = race;
 
@@ -205,7 +179,7 @@ export class Actor {
 
 	rmEffect(e: Effect | ProtoEffect) { }
 
-	addGold(amt: number) { this._info.gold += amt; }
+	addGold(amt: number) { this.stats.gold += amt; }
 
 	/**
 	 * @param stat
@@ -256,19 +230,6 @@ export class Actor {
 			Math.max(1,
 				this.stats.hp.max.value + this.stats.level.value * this.getModifier('con'));
 		this.hp.max.value = hp;
-
-	}
-
-	setBaseStats(base: IStatValues) {
-
-		let k: StatKey
-		for (k in base) {
-			this.stats[k].setTo(+base[k]);
-		}
-
-		Object.assign(this.stats, base);
-
-		this.computeHp();
 
 	}
 

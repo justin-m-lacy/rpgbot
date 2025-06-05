@@ -39,7 +39,7 @@ export const RandClass = (id?: string) => {
 
 const ParseRace = (raw: RawRaceData) => {
 
-	const race = new Race(raw.name, raw.hitdice);
+	const race = new Race(raw.name, raw.hitdie);
 
 	race.desc = raw.desc;
 

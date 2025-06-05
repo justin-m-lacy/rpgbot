@@ -299,7 +299,7 @@ export class Monster {
 	addExp(exp: number) { }
 	updateState() { if (this._hp.value <= 0) this._state = 'dead'; }
 	// used in combat
-	async getState() { return this._state; }
+	getState() { return this._state; }
 
 	getWeapons() { return this._weap; }
 	getAttacks() { return this._attacks; }

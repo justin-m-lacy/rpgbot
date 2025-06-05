@@ -1,5 +1,4 @@
 import { romanize } from "romans";
-import { precise } from "rpg/display";
 import type { Numeric } from "rpg/values/types";
 
 /**
@@ -36,4 +35,32 @@ export const smallNum = (v: Numeric) => {
 
   const val = +(v);
   return (Math.floor(val) === val) ? val : precise(val);
+}
+
+/**
+ * Format numeric value for display.
+ * @param v - number to display.
+ * @param n - maximum rounding digits to display.
+ */
+export const precise = (v: Numeric, n: number = 2): string => {
+
+  if (typeof v === 'object') v = v.value;
+
+  if (v === Math.floor(v)) return v.toFixed(n);
+
+  const maxDivide = Math.pow(10, n);
+
+  let abs = Math.abs(v);
+  let divide = 1;
+
+  while ((divide < maxDivide) && abs !== Math.floor(abs)) {
+
+    abs *= 10;
+    divide *= 10;
+
+  }
+
+  abs = Math.round(abs) / divide;
+  return (v >= 0 ? abs : -abs).toFixed(2);
+
 }

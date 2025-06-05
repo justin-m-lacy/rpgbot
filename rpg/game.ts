@@ -1,11 +1,10 @@
 import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
 import type { ItemIndex } from 'rpg/items/container';
+import { GetClass, GetRace } from 'rpg/parsers/classes';
 import * as ItemGen from './builders/itemgen';
 import { Actor, LifeState } from './char/actor';
 import { Char } from './char/char';
-import { CharClass } from './char/charclass';
-import { Race } from "./char/race";
 import { Combat } from "./combat/combat";
 import { ItemPicker } from './inventory';
 import { Craft, Item } from './items/item';
@@ -20,11 +19,9 @@ import * as dice from './values/dice';
 import { DirVal, toDirection } from './world/loc';
 import { World } from "./world/world";
 
-const events = ['explored', 'crafted', 'levelup', 'died', 'pks', 'eaten'];
+export const GetLore = (wot?: string) => {
 
-export const getLore = (wot?: string) => {
-
-	const val = Race.GetRace(wot) ?? CharClass.GetClass(wot);
+	const val = GetRace(wot) ?? GetClass(wot);
 	if (val) return wot + ': ' + val.desc;
 
 	return 'Unknown entity: ' + wot;
@@ -34,7 +31,7 @@ export const getLore = (wot?: string) => {
 /**
  * actions not allowed for each player state.
 */
-const illegal_acts: Partial<{ [Property in LifeState]: any }> = {
+const BlockedActs: Partial<{ [Property in LifeState]: any }> = {
 	"dead": {
 		'brew': 1, 'map': 1, 'hike': 1, 'scout': 1,
 		"take": 1, "attack": 1, 'drop': 1, "equip": 1, "unequip": 1, "steal": 1, "craft": 1, "track": 1, "quaff": 1,
@@ -95,7 +92,7 @@ export class Game {
 	 * @param {string} act - action to attempt to perform.
 	 */
 	canAct(char: Char, act: string) {
-		const illegal = illegal_acts[char.state];
+		const illegal = BlockedActs[char.state];
 		if (illegal && illegal.hasOwnProperty(act)) {
 			char.log(`Cannot ${act} while ${char.state}.`);
 			return false;

@@ -1,4 +1,5 @@
 import { randElm } from '@/utils/jsutils';
+import { AddValues } from 'rpg/values/apply';
 import { Char } from '../char/char';
 import { Race, type GClass } from '../char/race';
 import * as Dice from '../values/dice';
@@ -19,19 +20,15 @@ const statRolls = [
 
 ];
 
-export const genChar = (owner: string, race: Race, charClass: GClass, name: string, sex?: string) => {
+export const GenChar = (owner: string, race: Race, charClass: GClass, name: string, sex?: string) => {
 
 	console.log('gen char...');
 
-	const char = new Char(race, charClass, owner);
-	char.name = name;
+	const char = new Char(name, race, charClass, owner);
 
-	const statVals = rollStats(statRolls, {});
+	const statVals = rollStats(statRolls);
 
-	base.curHp = base.maxHp = char.HD;
-
-	char.setBaseStats(base);
-	char.info = statVals;
+	AddValues(char, statVals);
 
 	race.onNewChar(char);
 	charClass.onNewChar(char);
@@ -43,7 +40,7 @@ export const genChar = (owner: string, race: Race, charClass: GClass, name: stri
 
 }
 
-function rollStats(statRolls: StatGen[], dest: Record<string, number>) {
+function rollStats(statRolls: StatGen[], dest: Record<string, number> = {}) {
 
 	for (let i = statRolls.length - 1; i >= 0; i--) {
 

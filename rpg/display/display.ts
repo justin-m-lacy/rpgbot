@@ -1,0 +1,65 @@
+import { EmbedBuilder, Message, type SendableChannels } from "discord.js";
+import { getNextExp } from "rpg/char/level";
+import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
+import { Char } from '../char/char';
+
+export const BlockText = (s: string) => '```' + s + '```';
+
+export const SendEmbed = async (m: Message, s: string, e: string) => m.reply({
+	content: '```' + s + '```',
+	embeds: [new EmbedBuilder({ image: { url: e } })]
+});
+
+export const SendBlock = async (m: Message, s: string) => m.reply('```' + s + '```');
+
+/**
+ * Checks if character is a vowel.
+ * @param c character to test. 
+ */
+export const IsVowel = (c: string) => {
+
+	c = c.toLowerCase();
+	return c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u';
+}
+
+export const echoChar = async function (chan: SendableChannels, char: Char, prefix: string = '') {
+
+	const desc = CharLongDesc(char);
+	return chan.send(
+		prefix + '```' + `${char.name} is a` +
+		(IsVowel(desc.charAt(0)) ? 'n ' : ' ') +
+		desc + '```'
+	);
+
+}
+
+export const CharLongDesc = (char: Char) => {
+
+	let desc = `level ${char.level} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
+	desc += `\nage: ${char.age} sex: ${char.sex} gold: ${char.gold} exp: ${char.exp}/ ${getNextExp(char)}`;
+	desc += `\nhp: ${char.hp}/${char.hp.max} armor: ${char.armor}\n`;
+	desc += statString(char);
+
+	if (char.spentPoints < char.statPoints) desc += '\n' + (char.statPoints - char.spentPoints) + ' stat points available.';
+
+	return desc;
+
+}
+
+const statString = (char: Char) => {
+
+	let stat = StatIds[0];
+	let str = stat + ': ' + (char.stats[stat as StatKey] ?? 0);
+
+	const len = StatIds.length;
+
+	for (let i = 1; i < len; i++) {
+
+		stat = StatIds[i];
+		str += '\n' + stat + ': ' + (char.stats[stat as StatKey] ?? 0);
+
+	}
+	return str;
+
+}
+

@@ -1,7 +1,9 @@
 import { Formula } from 'formulic';
+import type { IMod } from 'rpg/values/imod';
+import { ApplyMods, RemoveMods } from 'rpg/values/modding';
+import type { Path } from 'rpg/values/paths';
 import { Actor } from '../char/actor';
 import { Char } from '../char/char';
-import { StatMod, StatName } from '../char/stats';
 
 // effect types. loading at bottom.
 const effects: { [name: string]: ProtoEffect } = {};
@@ -23,9 +25,6 @@ const loadEffects = async () => {
  */
 export class ProtoEffect {
 
-	get mods() { return this._mods; }
-	set mods(v) { this._mods = v; }
-
 	get dot() {
 
 		// convert to form before return.
@@ -43,7 +42,7 @@ export class ProtoEffect {
 	set time(v) { this._time = v; }
 
 	readonly name: string;
-	private _mods: any;
+	mods: Path<IMod> | null = null;
 	private _dot: any;
 	private _time: any;
 
@@ -51,7 +50,7 @@ export class ProtoEffect {
 
 		this.name = data.name;
 		if (data.dot) this._dot = Formula.TryParse(data.dot);
-		if (data.mods) this._mods = data.mods;
+		if (data.mods) this.mods = data.mods;
 		this._time = data.time ?? 0;
 
 	}
@@ -59,7 +58,7 @@ export class ProtoEffect {
 	toJSON() {
 
 		const o = {
-			mods: this._mods,
+			mods: this.mods,
 			dot: this._dot,			// formulas have toJSON()?
 			time: this._time
 		};
@@ -74,8 +73,9 @@ export class Effect {
 	get name() { return this._effect.name; }
 
 	get effect() { return this._effect; }
-	get mods() { return this._effect.mods; }
 	get dot() { return this._effect.dot; }
+
+	get mods() { return this._effect.mods }
 
 	get time() { return this._time; }
 
@@ -119,17 +119,16 @@ export class Effect {
 		}
 
 		if (this.mods) {
-			console.log('apply mods');
-			this.applyMod(this.mods, char);
+			ApplyMods(char, this.mods);
 		};
 
 	}
 
 	end(char: Char) {
 
-		char.log(`${char.name} ${this.name} has worn off.`);
+		char.log(`${char.name}: ${this.name} has worn off.`);
 		if (this.mods) {
-			this.removeMod(this.mods, char);
+			RemoveMods(char, this.mods);
 		};
 
 	}
@@ -170,37 +169,6 @@ export class Effect {
 			return (this._time <= 0);
 		}
 		return false;
-
-	}
-
-	applyMod(m: StatMod, char: Actor) {
-
-		for (const k in m) {
-
-			const cur = char[k as keyof (typeof char)];
-			if (cur) {
-				char[k as StatName] = cur + m[k as StatName];
-				if (char instanceof Char) {
-					char.log(`${char.name} ${k}: ${char[k as keyof (typeof char)]}`);
-				}
-			}
-
-		}
-
-	}
-
-	removeMod(m: StatMod, char: Actor) {
-
-		for (const k in m) {
-
-			if (char[k as keyof Actor]) {
-				char[k as StatName] -= m[k as StatName] ?? 0;
-				if (char instanceof Char) {
-					char.log(`${char.name} ${k}: ${char[k as keyof Char]}`);
-				}
-			}
-
-		}
 
 	}
 

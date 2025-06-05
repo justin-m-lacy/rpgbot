@@ -1,4 +1,4 @@
-import { precise } from 'rpg/display';
+import { precise } from 'rpg/util/format';
 import { IMod, IModdable, ModState, SymMod } from '../imod';
 import { Id, Numeric } from '../types';
 

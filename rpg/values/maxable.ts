@@ -1,5 +1,5 @@
 import { Simple } from "rpg/values/simple";
-import { SymSimple, type ISimple } from "rpg/values/types";
+import { SymSimple, type ISimple, type Numeric } from "rpg/values/types";
 
 export class Maxable implements ISimple {
 
@@ -8,7 +8,8 @@ export class Maxable implements ISimple {
 	readonly [SymSimple] = true;
 
 	toJSON() {
-		return this._value === this.max.value ? this._value : { v: this._value, m: this.max.toJSON() }
+		return this._value === this.max.value ?
+			this._value : { v: this._value, m: this.max.toJSON() }
 	}
 
 	valueOf() { return this._value }
@@ -27,12 +28,12 @@ export class Maxable implements ISimple {
 		this.value += v;
 	}
 
-	setMax(base: number) {
+	setMax(base: Numeric) {
 		this.max.setTo(base);
 	}
-	setTo(v: number) {
-		this.max.value = v;
-		this.value = v;
+	setTo(v: Numeric) {
+		this.max.value = +v;
+		this.value = +v;
 	}
 
 	constructor(id: string) {

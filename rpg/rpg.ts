@@ -3,18 +3,18 @@ import { DiscordBot } from '@/bot/discordbot';
 import Cache from 'archcache';
 import { Message, User } from "discord.js";
 import { Formula } from 'formulic';
-import { Game } from './game';
+import { Game, GetLore } from './game';
 import { HumanSlot } from './items/wearable';
 import { toDirection } from "./world/loc";
 
 import { replyEmbedUrl } from '@/embeds';
+import { getHistory } from 'rpg/events';
+import { RandClass, RandRace } from 'rpg/parsers/classes';
 import * as CharGen from './builders/chargen';
 import * as ItemGen from './builders/itemgen';
 import { Char } from './char/char';
-import { CharClass } from './char/charclass';
 import { Race } from './char/race';
-import * as display from './display';
-import * as gamejs from './game';
+import * as Display from './display/display';
 import * as Trade from './trade';
 import { World } from './world/world';
 
@@ -88,7 +88,7 @@ export class Rpg {
 			if (!t) return;
 		}
 
-		return display.sendBlock(m, await this.game.party(char, t));
+		return Display.SendBlock(m, await this.game.party(char, t));
 
 	}
 
@@ -103,13 +103,13 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		let t;
+		let t: Char | undefined;
 		if (who) {
 			t = await this.loadChar(who);
 			if (!t) return;
 		}
 
-		return display.sendBlock(m, this.game.setLeader(char, t));
+		return Display.SendBlock(m, this.game.setLeader(char, t));
 
 	}
 
@@ -123,7 +123,7 @@ export class Rpg {
 		const t = who ? await this.loadChar(who) : char;
 		if (!t) return;
 
-		await display.sendBlock(m, this.game.revive(char, t));
+		await Display.SendBlock(m, this.game.revive(char, t));
 
 	}
 
@@ -132,7 +132,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		await display.sendBlock(m, this.game.leaveParty(char));
+		await Display.SendBlock(m, this.game.leaveParty(char));
 	}
 
 	async cmdMkGuild(m: Message, gname: string) {
@@ -141,7 +141,7 @@ export class Rpg {
 			const char = await this.userCharOrErr(m, m.author);
 			if (!char) return;
 
-			await display.sendBlock(m, await this.game.mkGuild(char, gname));
+			await Display.SendBlock(m, await this.game.mkGuild(char, gname));
 		} catch (e) { console.log(e); }
 
 	}
@@ -151,7 +151,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		await display.sendBlock(m, await this.game.joinGuild(char, gname));
+		await Display.SendBlock(m, await this.game.joinGuild(char, gname));
 
 	}
 
@@ -160,7 +160,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		await display.sendBlock(m, await this.game.leaveGuild(char));
+		await Display.SendBlock(m, await this.game.leaveGuild(char));
 
 	}
 
@@ -172,7 +172,7 @@ export class Rpg {
 		const t = who ? await this.loadChar(who) : char;
 		if (!t) return;
 
-		return display.sendBlock(m, await this.game.guildInv(char, t));
+		return Display.SendBlock(m, await this.game.guildInv(char, t));
 
 	}
 
@@ -181,7 +181,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		let t = await this.loadChar(who);
+		const t = await this.loadChar(who);
 		if (!t) return;
 		return m.reply(t.name + ' is at ' + t.loc.toString());
 
@@ -247,7 +247,7 @@ export class Rpg {
 
 		if (!wot) return m.reply('What do you want to know about?');
 
-		return display.sendBlock(m, gamejs.getLore(wot));
+		return Display.SendBlock(m, GetLore(wot));
 
 	}
 
@@ -277,7 +277,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		return display.sendBlock(m, await this.world.explored(char));
+		return Display.SendBlock(m, await this.world.explored(char));
 
 	}
 
@@ -288,8 +288,8 @@ export class Rpg {
 
 		const info = await this.world.view(char, what);
 
-		if (typeof (info) === 'string') await display.sendBlock(m, info);
-		else display.sendEmbed(m, info[0], info[1]);
+		if (typeof (info) === 'string') await Display.SendBlock(m, info);
+		else Display.SendEmbed(m, info[0], info[1]);
 
 	}
 
@@ -298,7 +298,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		await display.sendBlock(m, await this.world.examine(char, what));
+		await Display.SendBlock(m, await this.world.examine(char, what));
 
 	}
 
@@ -307,7 +307,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		return display.sendBlock(m, await this.world.look(char, what));
+		return Display.SendBlock(m, await this.world.look(char, what));
 
 	}
 
@@ -316,7 +316,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		return display.sendBlock(m, await this.world.useLoc(char, wot));
+		return Display.SendBlock(m, await this.world.useLoc(char, wot));
 	}
 
 	async cmdHike(m: Message, dir: string) {
@@ -326,7 +326,7 @@ export class Rpg {
 			const char = await this.userCharOrErr(m, m.author);
 			if (!char) return;
 
-			await display.sendBlock(m, await this.game.hike(char, toDirection(dir)));
+			await Display.SendBlock(m, await this.game.hike(char, toDirection(dir)));
 			this.checkLevel(m, char);
 
 		} catch (e) { console.log(e); }
@@ -338,7 +338,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		await display.sendBlock(m, await this.game.move(char, dir));
+		await Display.SendBlock(m, await this.game.move(char, dir));
 		this.checkLevel(m, char);
 
 	}
@@ -350,9 +350,9 @@ export class Rpg {
 	async cmdRollDmg(m: Message) {
 
 		const char = await this.userCharOrErr(m, m.author)
-		if (!char) return;
-
-		return m.reply('Weapon roll for ' + char.name + ': ' + char.testDmg());
+		if (char) {
+			return m.reply('Weapon roll for ' + char.name + ': ' + char.testDmg());
+		}
 
 	}
 
@@ -363,9 +363,9 @@ export class Rpg {
 	async cmdRollWeap(m: Message) {
 
 		const char = await this.userCharOrErr(m, m.author)
-		if (!char) return;
-
-		await display.sendBlock(m, Trade.rollWeap(char));
+		if (char) {
+			await Display.SendBlock(m, Trade.rollWeap(char));
+		}
 
 	}
 
@@ -376,9 +376,9 @@ export class Rpg {
 	async cmdRollArmor(m: Message, slot?: string) {
 
 		const char = await this.userCharOrErr(m, m.author)
-		if (!char) return;
-
-		await display.sendBlock(m, Trade.rollArmor(char, slot));
+		if (char) {
+			await Display.SendBlock(m, Trade.rollArmor(char, slot));
+		}
 
 	}
 
@@ -396,9 +396,9 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author)
 		if (!char) return;
 
-		if (!wot) return display.sendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
+		if (!wot) return Display.SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
 
-		return display.sendBlock(m, this.game.equip(char, wot));
+		return Display.SendBlock(m, this.game.equip(char, wot));
 
 	}
 
@@ -408,7 +408,7 @@ export class Rpg {
 
 		if (char) {
 			if (!wot) return m.reply('Compare what item?');
-			return display.sendBlock(m, this.game.compare(char, wot));
+			return Display.SendBlock(m, this.game.compare(char, wot));
 		}
 
 	}
@@ -417,7 +417,7 @@ export class Rpg {
 
 		const char = await this.userCharOrErr(m, m.author)
 		if (!char) return;
-		if (!slot) await display.sendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
+		if (!slot) await Display.SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
 		else {
 
 			const item = char.getEquip(slot);
@@ -440,18 +440,18 @@ export class Rpg {
 	async cmdEat(m: Message, wot: string | number) {
 
 		const char = await this.userCharOrErr(m, m.author)
-		if (!char) return;
-
-		return m.reply(this.game.eat(char, wot));
+		if (char) {
+			return m.reply(this.game.eat(char, wot));
+		}
 
 	}
 
 	async cmdQuaff(m: Message, wot: string | number) {
 
 		const char = await this.userCharOrErr(m, m.author)
-		if (!char) return;
-
-		return m.reply(this.game.quaff(char, wot));
+		if (char) {
+			return m.reply(this.game.quaff(char, wot));
+		}
 
 	}
 
@@ -463,9 +463,9 @@ export class Rpg {
 	async cmdCook(m: Message, what: string | number) {
 
 		const char = await this.userCharOrErr(m, m.author);
-		if (!char) return;
-
-		return m.reply(this.game.cook(char, what));
+		if (char) {
+			return m.reply(this.game.cook(char, what));
+		}
 
 	}
 
@@ -536,7 +536,7 @@ export class Rpg {
 
 	async cmdCraft(m: Message, itemName?: string, desc?: string) {
 
-		if (!itemName) return m.reply('Crafted item must have name.');
+		if (!itemName) return m.reply('Crafted items must have names.');
 		if (!desc) return m.reply('Crafted items require a description.');
 
 		const char = await this.userCharOrErr(m, m.author)
@@ -545,7 +545,7 @@ export class Rpg {
 		const a = m.attachments.first();
 		const res = a ? this.game.craft(char, itemName, desc, a.proxyURL) : this.game.craft(char, itemName, desc);
 
-		return display.sendBlock(m, res);
+		return Display.SendBlock(m, res);
 
 	}
 
@@ -559,7 +559,7 @@ export class Rpg {
 		const a = m.attachments.first();
 		const res = a ? this.game.brew(char, potName, a.proxyURL) : this.game.brew(char, potName);
 
-		return display.sendBlock(m, res);
+		return Display.SendBlock(m, res);
 
 	}
 
@@ -580,7 +580,7 @@ export class Rpg {
 
 		}
 
-		return display.sendBlock(m, `${char.name} Inventory:\n${char.inv.getMenu()}`);
+		return Display.SendBlock(m, `${char.name} Inventory:\n${char.inv.getMenu()}`);
 
 	}
 
@@ -589,7 +589,7 @@ export class Rpg {
 		const src = await this.userCharOrErr(m, m.author);
 		if (!src) return;
 
-		return display.sendBlock(m, this.game.sell(src, first, end));
+		return Display.SendBlock(m, this.game.sell(src, first, end));
 	}
 
 	async cmdGive(m: Message, who: string, expr: string) {
@@ -609,7 +609,7 @@ export class Rpg {
 		const char = await this.userCharOrErr(m, m.author);
 		if (!char) return;
 
-		await display.sendBlock(m, this.game.scout(char));
+		await Display.SendBlock(m, this.game.scout(char));
 
 	}
 
@@ -621,7 +621,7 @@ export class Rpg {
 		const dest = await this.loadChar(who);
 		if (!dest) return m.reply(`'${who}' does not exist.`);
 
-		await display.sendBlock(m, this.game.track(src, dest));
+		await Display.SendBlock(m, this.game.track(src, dest));
 
 	}
 
@@ -647,7 +647,7 @@ export class Rpg {
 			}
 
 
-			await display.sendBlock(m, res);
+			await Display.SendBlock(m, res);
 
 		} catch (e) { console.log(e); }
 
@@ -662,7 +662,7 @@ export class Rpg {
 		if (!dest) return m.reply(`'${who}' not found on server.`);
 
 		const result = await this.game.steal(src, dest, wot);
-		await display.sendBlock(m, result);
+		await Display.SendBlock(m, result);
 
 	}
 
@@ -701,7 +701,7 @@ export class Rpg {
 			char = await this.loadChar(charname);
 			if (!char) return m.reply(charname + ' not found on server. D:');
 		}
-		return display.echoChar(m.channel, char);
+		return Display.echoChar(m.channel, char);
 
 	}
 
@@ -727,7 +727,7 @@ export class Rpg {
 			if (!char) return m.reply(charname + ' not found on server. D:');
 		}
 
-		await display.sendBlock(m, char.getTalents());
+		await Display.SendBlock(m, char.getTalents());
 
 	}
 
@@ -740,10 +740,10 @@ export class Rpg {
 			if (!char) return;
 		} else {
 			char = await this.loadChar(charname);
-			if (!char) return m.reply(charname + ' not found on server. D:');
+			if (!char) return m.reply(charname + ' not found on server. :O');
 		}
 
-		await display.sendBlock(m, char.getHistory());
+		await Display.SendBlock(m, getHistory(char));
 
 	}
 
@@ -776,7 +776,7 @@ export class Rpg {
 				prefix = 'Active character set.\n';
 			}
 
-			return display.echoChar(m.channel, char, prefix);
+			return Display.echoChar(m.channel, char, prefix);
 
 		} catch (e) { console.log(e); }
 
@@ -786,11 +786,11 @@ export class Rpg {
 
 		try {
 
-			const race = Race.RandRace(racename);
+			const race = RandRace(racename);
 			if (!race) return await m.reply('Race ' + racename + ' not found.');
 
-			const charclass = CharClass.RandClass(classname);
-			if (!charclass) return await m.reply('Class ' + classname + ' not found.');
+			const charCls = RandClass(classname);
+			if (!charCls) return await m.reply('Class ' + classname + ' not found.');
 
 			if (!sex) sex = Math.random() < 0.5 ? 'm' : 'f';
 
@@ -801,11 +801,11 @@ export class Rpg {
 
 			} else charname = await this.uniqueName(race, sex);
 
-			const char = CharGen.genChar(m.author.id, race, charclass, charname);
+			const char = CharGen.GenChar(m.author.id, race, charCls, charname);
 			console.log('new char: ' + char.name);
 
 			await this.setUserChar(m.author, char);
-			display.echoChar(m.channel, char);
+			Display.echoChar(m.channel, char);
 			await this.saveChar(char, true);
 
 		} catch (e) { console.log(e); }

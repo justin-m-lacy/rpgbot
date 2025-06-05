@@ -1,4 +1,4 @@
-import { precise } from "rpg/display";
+import { precise } from "rpg/util/format";
 import { SymSimple, type Id, type ISimple } from "rpg/values/types";
 
 type PercentData = `${number}%`;

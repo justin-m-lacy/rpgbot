@@ -1,4 +1,5 @@
 import type { Char } from "rpg/char/char";
+import { AddValues } from "rpg/values/apply";
 import type { IMod } from "rpg/values/imod";
 import type { TValue } from "rpg/values/types";
 
@@ -16,14 +17,14 @@ export class Race {
 	private createVals: Record<string, TValue> = {};
 
 	private _mods: Record<string, IMod> = {};
-	private hitdice: number = 0;
+	private hitDie: number = 0;
 	private _expMod: number = 1;
 	talents: string[] = [];
 
-	constructor(id: string, hitdice: number = 1) {
+	constructor(id: string, hitDie: number = 1) {
 
 		this.id = this.name = id;
-		this.hitdice = hitdice;
+		this.hitDie = hitDie;
 
 	}
 
@@ -42,12 +43,10 @@ export class Race {
 
 	onNewChar(char: Char) {
 
-		for (let k in this.createVals) {
+		const cur = char.hp.max.base;
+		char.hp.setTo(cur + this.hitDie);
 
-			const val = this.createVals[k];
-			char[k] += val.value;
-
-		}
+		AddValues(char, this.createVals);
 
 	}
 
@@ -55,7 +54,7 @@ export class Race {
 		return this.talents && this.talents.includes(t);
 	}
 
-	get HD() { return this.hitdice; }
+	get HD() { return this.hitDie; }
 	get mods() { return this._mods }
 	get expMod() { return this._expMod; }
 

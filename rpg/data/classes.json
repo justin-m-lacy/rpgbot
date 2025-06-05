@@ -1,7 +1,7 @@
 [
 	{
 		"name": "wizard",
-		"hitdice": 6,
+		"hitdie": 6,
 		"desc": "",
 		"talents": [
 			"scribe"
@@ -14,7 +14,7 @@
 	},
 	{
 		"name": "sorcerer",
-		"hitdice": 6,
+		"hitdie": 6,
 		"desc": "Sorcerers and wizards both use magic, but while Wizards study for endless years, poring over ancient tomes, sorcerers cram the night before, and squeeze through with a passing grade. They use magic intuitively, without understanding much of the theoretical implications, allowing them to cast their spells must more easily, but limiting the range of what they can learn.",
 		"create": {
 			"gold": "3d4"
@@ -26,7 +26,7 @@
 	},
 	{
 		"name": "witch",
-		"hitdice": 6,
+		"hitdie": 6,
 		"desc": "",
 		"talents": [
 			"brew",
@@ -38,7 +38,7 @@
 	},
 	{
 		"name": "fighter",
-		"hitdice": 10,
+		"hitdie": 10,
 		"desc": "",
 		"talents": [
 			"cook"
@@ -49,7 +49,7 @@
 	},
 	{
 		"name": "ranger",
-		"hitdice": 8,
+		"hitdie": 8,
 		"desc": "",
 		"talents": [
 			"track",
@@ -65,7 +65,7 @@
 	},
 	{
 		"name": "rogue",
-		"hitdice": 6,
+		"hitdie": 6,
 		"talents": [
 			"track",
 			"scout",
@@ -80,7 +80,7 @@
 	},
 	{
 		"name": "druid",
-		"hitdice": 8,
+		"hitdie": 8,
 		"desc": "",
 		"talents": [
 			"brew",
@@ -94,7 +94,7 @@
 	},
 	{
 		"name": "paladin",
-		"hitdice": 8,
+		"hitdie": 8,
 		"desc": "",
 		"talents": [
 			"revive"
@@ -106,7 +106,7 @@
 	},
 	{
 		"name": "barbarian",
-		"hitdice": 12,
+		"hitdie": 12,
 		"desc": "",
 		"talents": [
 			"scout",
@@ -120,7 +120,7 @@
 	},
 	{
 		"name": "priest",
-		"hitdice": 6,
+		"hitdie": 6,
 		"desc": "Priests channel divine powers to heal the sick and destroy evil.",
 		"talents": [
 			"revive"
@@ -131,7 +131,7 @@
 	},
 	{
 		"name": "bard",
-		"hitdice": 6,
+		"hitdie": 6,
 		"desc": "",
 		"talents": [
 			"cook",
@@ -144,7 +144,7 @@
 	},
 	{
 		"name": "monk",
-		"hitdice": 8,
+		"hitdie": 8,
 		"talents": [
 			"hike",
 			"cook"

@@ -1,6 +1,6 @@
 import type { ItemIndex } from 'rpg/items/container';
-import { Log } from '../display';
 import { History } from '../display/history';
+import { Log } from '../display/log';
 import { Inventory, ItemPicker } from '../inventory';
 import { Item, ItemType } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
@@ -10,12 +10,11 @@ import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
 import { Actor } from './actor';
 import { Equip } from './equip';
-import { getNextExp, tryLevel } from './level';
+import { tryLevel } from './level';
 import { Race, type GClass } from './race';
-import { getEvil, StatBlock, StatKey } from './stats';
+import { StatKey } from './stats';
 
-const statTypes = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
-const saveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
+const SaveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
 	'loc', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
 
 
@@ -41,8 +40,8 @@ export class Char extends Actor {
 	get skillPts() { return this._skillPts; }
 	set skillPts(v) { this._skillPts = v; }
 
-	get evil() { return +this._info.evil.value; }
-	set evil(v) { this._info.evil.setTo(v); }
+	get evil() { return +this.stats.evil.value; }
+	set evil(v) { this.stats.evil.setTo(v); }
 
 	get talents() { return this._talents; }
 	set talents(v) { this._talents = v; }
@@ -57,8 +56,8 @@ export class Char extends Actor {
 	toJSON() {
 
 		const json: any = {};
-		for (let i = saveProps.length - 1; i >= 0; i--) {
-			json[saveProps[i]] = this[saveProps[i] as keyof Char];
+		for (let i = SaveProps.length - 1; i >= 0; i--) {
+			json[SaveProps[i]] = this[SaveProps[i] as keyof Char];
 		}
 
 		if (this._home) json.home = this._home;
@@ -76,11 +75,11 @@ export class Char extends Actor {
 		if (!json) return null;
 
 		const char = new Char(
+			json.name,
 			GetRace(json.race)!,
 			GetClass(json.cls)!,
 			json.owner);
 
-		char.name = json.name;
 		char.exp = Math.floor(json.exp) || 0;
 		char.evil = json.evil || 0;
 
@@ -91,7 +90,6 @@ export class Char extends Actor {
 		if (json.home) char._home = new Coord(json.home.x, json.home.y);
 
 		if (json.stats) Object.assign(char.stats, json.stats);
-		if (json.info) Object.assign(char.info, json.info);
 		if (json.loc) Object.assign(char.loc, json.loc);
 
 		if (json.state) char.state = json.state;
@@ -100,8 +98,6 @@ export class Char extends Actor {
 		char.spentPoints = json.spentPoints || 0;
 
 		if (json.inv) Inventory.Revive(json.inv, Item.Revive, char._inv);
-
-		char.setBaseStats(char.stats);
 
 		// SET AFTER BASE STATS.
 		if (json.effects) {
@@ -137,9 +133,9 @@ export class Char extends Actor {
 	private _levelUp: boolean = false;
 	readonly history: History;
 
-	constructor(race: Race, cls: GClass, owner: string) {
+	constructor(name: string, race: Race, cls: GClass, owner: string) {
 
-		super(race, cls);
+		super(name, race, cls);
 
 		this._statPoints = 0;
 		this._spentPoints = 0;
@@ -396,36 +392,10 @@ export class Char extends Actor {
 
 	}
 
-	setBaseStats(base: StatBlock) {
-
-		super.setBaseStats(base);
-		this.applyClass();
-		this.computeHp();
-
-	}
-
-
-	applyClass() {
-
-		if (!this.cls) return;
-		//if ( this._charClass.talents ) this.talents = this._charClass.talents.concat( this._talents );
-
-		super.applyBaseMods(this.cls!.mods);
-
-	}
-
 	getTalents() {
 
-		let s = new Set(this._talents);
-		if (this.cls?.talents) this.cls.talents.forEach((v: string) => s.add(v));
-		if (this.race.talents) this.race.talents.forEach((v: string) => s.add(v));
-
-		if (s.size === 0) return `${this.name} has no talents.`;
-
-		let res = this.name + "'s Talents:";
-		for (let t of s) res += '\n' + t;
-
-		return res;
+		if (!this._talents || this._talents.length == 0) return `${this.name} has no talents.`;
+		return this.name + "'s Talents:" + this._talents.join('\n');
 
 	}
 
@@ -447,58 +417,10 @@ export class Char extends Actor {
 
 	}
 
-	getLongDesc() {
-
-		let desc = `level ${this.level} ${getEvil(+this.evil)} ${this.race.name} ${this.cls!.name} [${this.state}]`;
-		desc += `\nage: ${this.age} sex: ${this.sex} gold: ${this.gold} exp: ${this._exp}/ ${getNextExp(this)}`;
-		desc += `\nhp: ${this.hp}/${this.hp.max} armor: ${this.armor}\n`;
-		desc += this.getStatString();
-
-		if (this.spentPoints < this.statPoints) desc += '\n' + (this.statPoints - this.spentPoints) + ' stat points available.';
-
-		return desc;
-
-	}
-
-	getStatString() {
-
-		let str = '';
-		const len = statTypes.length;
-
-		let stat = statTypes[0];
-		str += stat + ': ' + (this.stats[stat as StatKey] ?? 0);
-
-		for (let i = 1; i < len; i++) {
-
-			stat = statTypes[i];
-			str += '\n' + stat + ': ' + (this.stats[stat as StatKey] ?? 0);
-
-		}
-		return str;
-
-	}
-
 	log(str: string) { this._log.log(str); }
 	getLog() { return this._log.text; }
 	output(str = '') { return this._log.output(str); }
 
 	clearLog() { this._log.clear(); }
-
-	getHistory() {
-
-		let resp = (this.history.explored || 0) + ' locations discovered.\n';
-		resp += (this.history.crafted || 0) + ' items crafted.\n';
-		resp += (this.history.slay || 0) + ' monsters slain.\n';
-		resp += (this.history.pk || 0) + ' players killed.\n';
-		resp += (this.history.stolen || 0) + ' items stolen.\n'
-		resp += (this.history.cook || 0) + ' objects cooked.\n';
-		resp += (this.history.inscribe || 0) + ' items inscribed.\n';
-		resp += (this.history.eat || 0) + ' things eaten.\n';
-		resp += (this.history.quaff || 0) + ' potions quaffed.\n';
-		resp += (this.history.brew || 0) + ' potions brewed.';
-
-		return resp;
-
-	}
 
 }
