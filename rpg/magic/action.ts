@@ -1,11 +1,12 @@
-import { ParseResult, type RawRequire, type RawResult, type Result, type TRequire } from 'rpg/magic/results';
+import { TestRequire, type TRequire } from 'rpg/handlers/requires';
+import { ParseResult, type RawIf, type RawResult, type Result } from 'rpg/handlers/results';
 import { Char } from '../char/char';
 import * as dice from '../values/dice';
 
 type RawAction = {
 	id: string,
 	name?: string,
-	require?: RawRequire,
+	require?: RawIf,
 	result?: RawResult[]
 
 }
@@ -34,7 +35,7 @@ class Action {
 
 	private err?: string;
 
-	private require?: TRequire;
+	private need?: TRequire<Char>;
 
 	constructor(id: string, name?: string) {
 
@@ -43,7 +44,16 @@ class Action {
 
 	}
 
-	tryApply(char: Char) {
+	/**
+	 * Apply action to target.
+	 * @param char 
+	 * @returns 
+	 */
+	apply(char: Char) {
+
+		if (this.need && !TestRequire(char, this.need)) {
+			return false;
+		}
 
 		// effects with different conditions for each one.
 		if (this.result) {
@@ -52,7 +62,7 @@ class Action {
 			for (let i = 0; i < len; i++) {
 
 				const e = this.result[i];
-				if (this.checkRequire(char, e.require)) {
+				if (TestRequire(char, e.need)) {
 					return this.applyResult(char, e);
 				}
 				if (e.err) return e.err.replace('%c', char.name);
@@ -60,20 +70,13 @@ class Action {
 
 		} else {
 
-			if (this.checkRequire(char, this.require)) {
+			if (TestRequire(char, this.need)) {
 				//return this.applyResult(char, this);
 			}
 
 		}
 
 		if (this.err) return this.err.replace('%c', char.name);
-	}
-
-	checkRequire(char: Char, req: any) {
-		for (const k in req) {
-			if (char[k as keyof Char] !== req[k]) return false;
-		}
-		return true;
 	}
 
 	applyResult(char: Char, res: Result) {

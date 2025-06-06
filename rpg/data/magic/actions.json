@@ -3,10 +3,10 @@
         "id": "revive",
         "result": [
             {
-                "require": {
+                "if": {
                     "state": "dead"
                 },
-                "apply": {
+                "set": {
                     "state": "alive",
                     "curHp": 1
                 },
@@ -19,18 +19,18 @@
         "id": "switch",
         "result": [
             {
-                "require": {
+                "if": {
                     "sex": "m"
                 },
-                "apply": {
+                "set": {
                     "sex": "f"
                 }
             },
             {
-                "require": {
+                "if": {
                     "sex": "f"
                 },
-                "apply": {
+                "set": {
                     "sex": "m"
                 }
             }
@@ -44,7 +44,7 @@
         "id": "heal",
         "result": [
             {
-                "apply": {
+                "set": {
                     "curHp": {
                         "roll": "4d5"
                     }
@@ -57,7 +57,7 @@
         "id": "hurt",
         "result": [
             {
-                "apply": {
+                "set": {
                     "curHp": {
                         "roll": "-3d4"
                     }
