@@ -1,10 +1,27 @@
+import { ParsePaths } from "rpg/values/paths";
 import { IsPercentData, ParsePercent } from "rpg/values/percent";
 import { IsRangeData, Range } from "rpg/values/range";
 import { Simple } from "rpg/values/simple";
 import type { TValue } from "rpg/values/types";
+import { JoinPath } from '../values/paths';
 
 /// IdTest - Test for a simple id name.
 const IdTest = /^[A-Za-z_]+\w*$/;
+
+
+/**
+ * 
+ * @param id - if of base object.
+ * @param subId - id of values subobject.
+ * @param obj 
+ */
+export const ParseValues = (id: string, subId: string, obj: Record<string, any>) => {
+
+	return ParsePaths(obj, subId, (path, orig) => {
+		return ParseValue(JoinPath(id, path), orig)
+	});
+
+}
 
 /**
  * Attempt to parse a simple value.

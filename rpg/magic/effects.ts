@@ -1,12 +1,36 @@
-import { Formula } from 'formulic';
+import { ParseValues } from 'rpg/parsers/values';
 import type { IMod } from 'rpg/values/imod';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import type { Path } from 'rpg/values/paths';
 import { Actor } from '../char/actor';
 import { Char } from '../char/char';
+import { ParseMods } from '../parsers/mods';
+import { type TValue } from '../values/types';
+
+type RawEffect = {
+	id: string,
+	name?: string,
+	dot?: Record<string, any>,
+	time?: number
+} &
+	typeof import('../data/magic/effects.json')[number];
 
 // effect types. loading at bottom.
 const effects: { [name: string]: ProtoEffect } = {};
+
+
+const parseEffect = (raw: RawEffect) => {
+
+	return new ProtoEffect({
+		id: raw.id,
+		name: raw.name,
+		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
+		dot: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
+		time: raw.time,
+	});
+
+
+}
 
 const loadEffects = async () => {
 
@@ -14,7 +38,7 @@ const loadEffects = async () => {
 	for (let i = efx.length - 1; i >= 0; i--) {
 
 		//console.log('parsing effect: ' + e.name );
-		effects[efx[i].name] = new ProtoEffect(efx[i]);
+		effects[efx[i].id] = parseEffect(efx[i] as any);
 
 	} //for
 
@@ -25,45 +49,40 @@ const loadEffects = async () => {
  */
 export class ProtoEffect {
 
-	get dot() {
-
-		// convert to form before return.
-		if (typeof (this._dot) === 'string') {
-			this._dot = Formula.TryParse(this._dot);
-			return this._dot;
-		}
-		return this._dot;
-
-	}
-
-	set dot(v) { this._dot = v; }
-
 	get time() { return this._time; }
 	set time(v) { this._time = v; }
 
+	readonly id: string;
 	readonly name: string;
-	mods: Path<IMod> | null = null;
-	private _dot: any;
+	readonly mods: Path<IMod> | null;
+	readonly dot: Path<TValue | undefined> | null;
 	private _time: any;
 
-	constructor(data: any) {
+	constructor(data: {
+		id: string,
+		name?: string,
+		mods?: Path<IMod> | null,
+		dot?: Path<TValue | undefined> | null,
+		time?: number
+	}) {
 
-		this.name = data.name;
-		if (data.dot) this._dot = Formula.TryParse(data.dot);
-		if (data.mods) this.mods = data.mods;
+		this.id = data.id;
+		this.name = data.name ?? data.id;
+		this.dot = data.dot ?? null;
+		this.mods = data.mods ?? null;
+
 		this._time = data.time ?? 0;
 
 	}
 
 	toJSON() {
 
-		const o = {
+		return {
 			mods: this.mods,
-			dot: this._dot,			// formulas have toJSON()?
+			dot: this.dot,			// formulas have toJSON()?
 			time: this._time
 		};
 
-		return o;
 	}
 
 }

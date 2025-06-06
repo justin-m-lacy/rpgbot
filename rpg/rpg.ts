@@ -795,7 +795,7 @@ export class Rpg {
 
 			if (charname) {
 
-				if (!this.context.isValidKey(charname)) return m.reply(`'${charname}' contains illegal characters.`);
+				if (!this.context.isValidKey(charname)) return m.reply(`'${charname}' contains illegal letters.`);
 				if (await this.charExists(charname)) return m.reply(`Character '${charname}' already exists.`);
 
 			} else charname = await this.uniqueName(race, sex);
@@ -827,7 +827,7 @@ export class Rpg {
 			return null;
 
 		} else if (char.owner !== user.id) {
-			m.reply(`You are not the owner of '${charname}'`);
+			m.reply(`You do not control '${charname}'`);
 			return null;
 		}
 		return char;

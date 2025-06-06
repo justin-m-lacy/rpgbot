@@ -1,13 +1,7 @@
 import fs from 'fs';
-const fsPromises = fs.promises;
 
 /**
- * @note the else-conditions are required since a promise callback is not a return.
- */
-
-/**
- * @function
- * Attempts to delete a file.
+ * Attempts to delete a file, with error catching.
  * @param {string} path - file location.
  * @returns {Promise<boolean,NodeJS.ErrnoException>}
  * @
@@ -15,26 +9,21 @@ const fsPromises = fs.promises;
 export const deleteFile = (path: string) => new Promise((res, rej) => {
 
 	fs.unlink(path, (err) => {
-
 		err ? rej(err) : res(true);
-
 	});
 
 });
 
 /**
- * @function
- * Determines if file exists at path.
- * @param {string} path
+ * Determines if file exists at path, without throwing exceptions.
+ * @param path
  * @returns {Promise<boolean>}
  */
 export const exists = (path: string): Promise<boolean> => new Promise((res) => {
 
-	fs.access(path,
-
-		(err) => {
-			res(!err);
-		});
+	fs.access(path, (err) => {
+		res(!err);
+	});
 
 });
 
@@ -45,7 +34,7 @@ export const exists = (path: string): Promise<boolean> => new Promise((res) => {
  * @param {?Object|string} [options=null] Encoding used as the encoding of the result. If not provided, `'utf8'` is used.
  * @returns {Promise<string[],NodeJS.ErrnoException>}
  */
-const readdir = fsPromises.readdir;
+const readdir = fs.promises.readdir;
 
 /**
  * @function
@@ -84,7 +73,7 @@ export const readfiles = (path: string) => new Promise<string[]>((res, rej) => {
  */
 export const mkdir = (path: string) => {
 
-	return fsPromises.stat(path).then(
+	return fs.promises.stat(path).then(
 
 		stat => {
 
@@ -95,21 +84,19 @@ export const mkdir = (path: string) => {
 		() => {
 
 			// file does not exist. this is intended.
-			return fsPromises.mkdir(path, { recursive: true });
+			return fs.promises.mkdir(path, { recursive: true });
 		}
 	);
 
 };
 
 /**
- * @function
  * @param {string} path
  * @returns {Promise<*,NodeJS.ErrnoException>}
  */
-export const readFile = fsPromises.readFile;
+export const readFile = fs.promises.readFile;
 
 /**
- * @function
  * @param {string} path
  * @returns {Promise<Object,Error>}
  */
@@ -118,7 +105,7 @@ export const readJSON = (path: string) => new Promise((res, rej) => {
 	fs.readFile(path, 'utf8', (err, data) => {
 
 		if (err) rej(err);
-		else if (data === undefined || data === null) rej('File is null.');
+		else if (data === undefined || data === null) rej('File null.');
 		else {
 
 			if (data === '') res(null);

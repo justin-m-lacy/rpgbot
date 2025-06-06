@@ -106,6 +106,7 @@ export const NewPath = <T extends any = TValue>(path: string) => {
  * { key0:{key1:{...keyN:Value}}}
  * Converter converts the original values before inserted into end of path.
  * @param srcVals - Values stored at the leaves of path.
+ * @param id - id of Path object.
  * @param converter - Optional converter for each original value item.
  * @returns 
  */
