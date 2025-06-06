@@ -1,3 +1,4 @@
+import type { Numeric, TValue } from 'rpg/values/types';
 import { Dice } from './values/dice';
 
 export class DamageSrc {
@@ -21,27 +22,21 @@ export class DamageSrc {
 		}
 	}
 
-	toJSON() { return { dmg: this.roller.toString(), type: this.type }; }
+	toJSON() { return { dmg: this.value.toString(), type: this.type }; }
 
-	get bonus() { return this.roller.bonus; }
-	set bonus(v) { this.roller.bonus = v; }
-	get sides() { return this.roller.sides; }
-	//set sides(v) { this.roller.sides = v; }
-	get count() { return this.roller.n; }
-	//set count(v) { this.roller.count = v; }
-
-	roller: Dice;
+	bonus: number = 0;
+	value: Numeric;
 	type: string;
 
-	constructor(roller?: Dice | null, type?: string) {
+	constructor(value?: TValue | null, type?: string) {
 
-		this.roller = roller ?? new Dice(0, 1, 0);
+		this.value = value ?? 0;
 		this.type = type ?? '';
 
 	}
 
-	toString() { return this.roller.toString() + ' ' + this.type; }
+	toString() { return this.value.toString() + ' ' + this.type; }
 
-	roll() { return this.roller.valueOf(); }
+	roll() { return this.value.valueOf(); }
 
 }

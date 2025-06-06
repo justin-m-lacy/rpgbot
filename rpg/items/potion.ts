@@ -64,7 +64,7 @@ export class Potion extends Item {
 
 			if (typeof (this._effect) === 'string') {
 
-				let e = Effects.getEffect(this._effect);
+				let e = Effects.GetEffect(this._effect);
 				if (!e) {
 					console.log('effect not found: ' + this._effect);
 					return;

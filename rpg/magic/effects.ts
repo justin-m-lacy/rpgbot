@@ -32,15 +32,12 @@ const parseEffect = (raw: RawEffect) => {
 
 }
 
-const loadEffects = async () => {
+export const LoadEffects = async () => {
 
 	const efx = (await import('../data/magic/effects.json')).default;
 	for (let i = efx.length - 1; i >= 0; i--) {
-
-		//console.log('parsing effect: ' + e.name );
 		effects[efx[i].id] = parseEffect(efx[i] as any);
-
-	} //for
+	}
 
 }
 
@@ -193,6 +190,4 @@ export class Effect {
 
 }
 
-loadEffects();
-
-export const getEffect = (s: string) => effects[s];
+export const GetEffect = (s: string) => effects[s];

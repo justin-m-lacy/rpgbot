@@ -5,6 +5,7 @@ export type Idable = {
 }
 
 export type TValue = {
+	valueOf(): number;
 	value: number;
 }
 

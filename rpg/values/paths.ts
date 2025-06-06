@@ -121,13 +121,13 @@ export const ParsePaths = <T extends any, C extends any = T>(
   for (const path in srcVals) {
 
     const orig = srcVals[path];
-    let convert: C | undefined | Path<C> = converter?.(path, orig);
-    if (convert == null && orig != null && typeof orig === 'object') {
-      convert = ParsePaths(orig as any, path, converter,);
-      if (convert == null) continue;
+    let val: C | undefined | Path<C> = converter?.(path, orig);
+    if (val == null && orig != null && typeof orig === 'object') {
+      val = ParsePaths(orig as any, path, converter,);
+      if (val == null) continue;
     }
 
-    splitToPath(dest, path, convert);
+    splitToPath(dest, path, val);
 
   }
 

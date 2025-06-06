@@ -22,7 +22,7 @@ export const IsVowel = (c: string) => {
 	return c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u';
 }
 
-export const echoChar = async function (chan: SendableChannels, char: Char, prefix: string = '') {
+export const EchoChar = async function (chan: SendableChannels, char: Char, prefix: string = '') {
 
 	const desc = CharLongDesc(char);
 	return chan.send(

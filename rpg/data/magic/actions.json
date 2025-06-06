@@ -1,25 +1,69 @@
 {
-    "revive":{ "name":"revive", "effects":[ {"require":{"state":"dead"}, "apply":{ "state":"alive", "curHp":1 },
-        "fb":"%c has been revived.", "err":"%c is already alive."}]
+    "revive": {
+        "id": "revive",
+        "result": [
+            {
+                "require": {
+                    "state": "dead"
+                },
+                "apply": {
+                    "state": "alive",
+                    "curHp": 1
+                },
+                "fb": "%c has been revived.",
+                "err": "%c is already alive."
+            }
+        ]
     },
-
-    "sexswitch":{ "name":"switch", "effects":[
-
-        { "require":{ "sex":"m"}, "apply":{ "sex":"f"} },
-        { "require":{ "sex":"f"}, "apply":{"sex":"m"}}
-
-    ]},
-
-    "gate":{ "name":"gate", "effects":[]},
-
-    "heal":{ "name":"heal", "effects":
-    [{"apply":{"curHp":{ "roll":"4d5"}},
-        "fb":"%c feels slightly better."}
-    ]},
-
-    "hurt":{ "name":"hurt", "effects":[
-        {"apply":
-            {"curHp":{ "roll":"-3d4"}}, "fb":"%c is struck by evil lightnings."
-        }] }
-
+    "sexswitch": {
+        "id": "switch",
+        "result": [
+            {
+                "require": {
+                    "sex": "m"
+                },
+                "apply": {
+                    "sex": "f"
+                }
+            },
+            {
+                "require": {
+                    "sex": "f"
+                },
+                "apply": {
+                    "sex": "m"
+                }
+            }
+        ]
+    },
+    "gate": {
+        "id": "gate",
+        "result": []
+    },
+    "heal": {
+        "id": "heal",
+        "result": [
+            {
+                "apply": {
+                    "curHp": {
+                        "roll": "4d5"
+                    }
+                },
+                "fb": "%c feels slightly better."
+            }
+        ]
+    },
+    "hurt": {
+        "id": "hurt",
+        "result": [
+            {
+                "apply": {
+                    "curHp": {
+                        "roll": "-3d4"
+                    }
+                },
+                "fb": "%c is struck by evil lightnings."
+            }
+        ]
+    }
 }

@@ -89,7 +89,7 @@ export class Wearable extends Item {
 
 	toJSON() {
 
-		const json = super.toJSON();
+		const json = super.toJSON() as any;
 
 		json.armor = this._armor;
 		json.slot = this._slot;

@@ -32,7 +32,7 @@ export const GetLore = (wot?: string) => {
  * actions not allowed for each player state.
 */
 const BlockedActs: Partial<{ [Property in LifeState]: any }> = {
-	"dead": {
+	dead: {
 		'brew': 1, 'map': 1, 'hike': 1, 'scout': 1,
 		"take": 1, "attack": 1, 'drop': 1, "equip": 1, "unequip": 1, "steal": 1, "craft": 1, "track": 1, "quaff": 1,
 		'give': 1, 'eat': 1, 'cook': 1, "sell": 1, "destroy": 1, "inscribe": 1, "revive": 1

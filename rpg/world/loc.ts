@@ -87,14 +87,14 @@ export class Coord {
 	}
 
 	/**
-	 * @returns {number} absolute distance from origin.
+	 * @returns absolute distance from origin.
 	 */
 	abs() { return Math.abs(this.x) + Math.abs(this.y); }
 
 	/**
 	 * Get distance to another coordinate.
 	 * @param {Coord} c - second coordinate
-	 * @returns {number}
+	 * @returns
 	 */
 	dist(c: Coord) { return Math.abs(c.x - this.x) + Math.abs(c.y - this.y); }
 
@@ -124,22 +124,13 @@ export class Loc {
 	get desc() { return this._desc; }
 	set desc(v) { this._desc = v; }
 
-	get npcs() { return this._npcs; }
-
 	/**
 	 * @property {Coord} coord
 	*/
 	get coord() { return this._coord; }
-	set coord(v) {
-		this._coord = v;
-		this._key = v.toString();
-	}
 
 	get time() { return this._time; }
 	set time(v) { this._time = v; }
-
-	get exits() { return this._exits; }
-	set exits(v) { this._exits = v; }
 
 	get key() { return this._key; }
 
@@ -171,20 +162,20 @@ export class Loc {
 	private _features: Inventory;
 
 	private _key!: string;
-	private _coord: Coord;
-	private _npcs: any[];
-	private _exits: Partial<Record<DirVal, Exit>> = {};
-	private readonly _inv: Inventory;
+	readonly _coord: Coord;
+	readonly npcs: Array<Char | Monster> = [];
+	readonly exits: Partial<Record<DirVal, Exit>> = {};
+	private readonly inv: Inventory;
 
 	constructor(coord: Coord, biome: string) {
 
 		this._coord = coord;
 		this._biome = biome;
 
-		this._npcs = [];
+		this.npcs = [];
 
 		this._features = new Inventory();
-		this._inv = new Inventory();
+		this.inv = new Inventory();
 
 	}
 
@@ -213,7 +204,7 @@ export class Loc {
 		if (json.attach) loc._attach = json.attach;
 
 		if (json.inv) {
-			Inventory.Revive(json.inv, Item.Revive, loc._inv);
+			Inventory.Revive(json.inv, Item.Revive, loc.inv);
 		}
 
 		loc.name = json.name;
@@ -247,13 +238,13 @@ export class Loc {
 
 		return {
 			coord: this._coord,
-			exits: this._exits,
-			inv: this._inv,
+			exits: this.exits,
+			inv: this.inv,
 			desc: this._desc,
 			areaName: this._areaName,
 			name: this._name,
 			biome: this._biome,
-			npcs: this._npcs ?? undefined,
+			npcs: this.npcs ?? undefined,
 			features: this._features ?? undefined,
 			attach: this._attach ?? undefined,
 			maker: this._maker ?? undefined,
@@ -278,7 +269,7 @@ export class Loc {
 	}
 
 	hasExit(dir: DirVal) {
-		return this._exits.hasOwnProperty(dir);
+		return this.exits.hasOwnProperty(dir);
 	}
 
 	/**
@@ -287,7 +278,7 @@ export class Loc {
 	 */
 	addExit(exit: Exit) {
 		//console.log( 'adding exit ' + exit);
-		this._exits[exit.dir] = exit;
+		this.exits[exit.dir] = exit;
 	}
 
 	/**
@@ -295,7 +286,7 @@ export class Loc {
 	 * @param dir
 	 */
 	getExit(dir: DirVal) {
-		return this._exits[dir];
+		return this.exits[dir];
 	}
 
 	/**
@@ -306,7 +297,7 @@ export class Loc {
 	 */
 	reverseExit(fromDir: DirVal) {
 		const reverse = reverses[fromDir];
-		return reverse ? this._exits[reverse] : undefined;
+		return reverse ? this.exits[reverse] : undefined;
 	}
 
 	/**
@@ -318,9 +309,9 @@ export class Loc {
 	getExitTo(coord: Coord) {
 
 		let k: DirVal;
-		for (k in this._exits) {
-			if (this._exits[k]?.to.equals(coord)) {
-				return this._exits[k];
+		for (k in this.exits) {
+			if (this.exits[k]?.to.equals(coord)) {
+				return this.exits[k];
 			}
 		}
 		return null;
@@ -340,15 +331,15 @@ export class Loc {
 		r += '\n' + this._desc;
 
 		if (this._features.count > 0) r += '\nFeatures: ' + this._features.getList();
-		r += '\nOn ground: ' + this._inv.getList();
+		r += '\nOn ground: ' + this.inv.getList();
 
-		if (this._npcs.length > 0) {
+		if (this.npcs.length > 0) {
 			r += '\nCreatures: ';
 			r += this.npcList();
 		}
 
 		r += '\nPaths:'
-		for (let k in this._exits) {
+		for (let k in this.exits) {
 			r += '\t' + k;
 		}
 
@@ -377,7 +368,7 @@ export class Loc {
 
 	lookFeatures() { return 'Features: ' + this._features.getList(); }
 
-	lookItems() { return 'On ground: ' + this._inv.getList(); }
+	lookItems() { return 'On ground: ' + this.inv.getList(); }
 
 	/**
 	 *
@@ -394,57 +385,57 @@ export class Loc {
 	/**
 	 * Get item data without taking it.
 	 */
-	get(item: ItemIndex) { return this._inv.get(item); }
+	get(item: ItemIndex) { return this.inv.get(item); }
 
 	/**
 	 *
 	 * @param {Item|Item[]} item
 	 */
-	drop(item: Item | Item[]) { return this._inv.add(item); }
+	drop(item: Item | Item[]) { return this.inv.add(item); }
 
 	takeRange(start: number, end: number) {
-		return this._inv.takeRange(start, end);
+		return this.inv.takeRange(start, end);
 	}
 
 	/**
 	 *
 	 * @param {string} what
 	 */
-	take(what: string | number) { return this._inv.take(what); }
+	take(what: string | number) { return this.inv.take(what); }
 
 	getNpc(wot: string | number) {
 
 		if (typeof wot === 'string') {
 			let ind = Number.parseInt(wot);
 			if (Number.isNaN(ind)) {
-				return this._npcs.find((m) => m.name === wot);
+				return this.npcs.find((m) => m.name === wot);
 
 			} else {
 				wot = ind;
 			}
 		}
-		return this._npcs[wot - 1];
+		return this.npcs[wot - 1];
 	}
 
-	addNpc(m: Monster) { this._npcs.push(m); }
+	addNpc(m: Monster) { this.npcs.push(m); }
 
 	removeNpc(m: Monster) {
 
-		let ind = this._npcs.indexOf(m);
+		let ind = this.npcs.indexOf(m);
 		console.log('removing npc at: ' + ind);
-		if (ind >= 0) return this._npcs.splice(ind, 1)[0];
+		if (ind >= 0) return this.npcs.splice(ind, 1)[0];
 		return null;
 
 	}
 
 	npcList() {
 
-		let len = this._npcs.length;
+		let len = this.npcs.length;
 		if (len === 0) return 'none';
-		if (len === 1) return this._npcs[0].name;
+		if (len === 1) return this.npcs[0].name;
 
-		let s = this._npcs[0].name;
-		for (let i = 1; i < len; i++) s += ', ' + this._npcs[i].name;
+		let s = this.npcs[0].name;
+		for (let i = 1; i < len; i++) s += ', ' + this.npcs[i].name;
 		return s;
 
 	}

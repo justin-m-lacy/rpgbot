@@ -1,6 +1,7 @@
 import { ParsePaths } from "rpg/values/paths";
 import { IsPercentData, ParsePercent } from "rpg/values/percent";
 import { IsRangeData, Range } from "rpg/values/range";
+import { Setter } from "rpg/values/setter";
 import { Simple } from "rpg/values/simple";
 import type { TValue } from "rpg/values/types";
 import { JoinPath } from '../values/paths';
@@ -8,6 +9,9 @@ import { JoinPath } from '../values/paths';
 /// IdTest - Test for a simple id name.
 const IdTest = /^[A-Za-z_]+\w*$/;
 
+const IsSetterData = (str: string) => {
+	return str.startsWith('=:');
+}
 
 /**
  * 
@@ -35,6 +39,7 @@ export const ParseValue = (id: string, v?: string | number | object): TValue | u
 
 	if (typeof v === 'string') {
 
+		if (IsSetterData(v)) return ParseSetter(id, v);
 		if (IsPercentData(v)) return ParsePercent(v, id);
 		//if (IsPctValue(v)) return ParsePctValue(v, id);
 		if (IsRangeData(v)) return new Range(v, id);
@@ -42,5 +47,14 @@ export const ParseValue = (id: string, v?: string | number | object): TValue | u
 		return undefined;
 	}
 	return undefined;
+
+}
+
+
+export const ParseSetter = (id: string, str: string) => {
+
+	// slice start chars.
+	const v = ParseValue(id, str.slice(2));
+	return v ? new Setter(id, v) : undefined;
 
 }

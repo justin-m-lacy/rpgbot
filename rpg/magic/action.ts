@@ -1,11 +1,26 @@
+import { ParseResult, type RawRequire, type RawResult, type Result, type TRequire } from 'rpg/magic/results';
 import { Char } from '../char/char';
 import * as dice from '../values/dice';
 
+type RawAction = {
+	id: string,
+	name?: string,
+	require?: RawRequire,
+	result?: RawResult[]
+
+}
+
+const actions: Record<string, Action> = {};
+
 class Action {
 
-	static Revive(json: any) {
+	static Revive(json: RawAction & object) {
 
-		const a = new Action(json.name);
+		const a = new Action(json.id, json.name);
+
+		if (json.result) {
+			a.result = json.result.map(ParseResult);
+		}
 
 		return Object.assign(a, json);
 
@@ -13,30 +28,32 @@ class Action {
 
 	toJSON() { return this; }
 
+	readonly id: string;
 	private readonly name: string;
-	private effects?: Effect[];
+	private result?: Result[];
 
 	private err?: string;
 
-	private require?: any;
+	private require?: TRequire;
 
-	constructor(name: string) {
+	constructor(id: string, name?: string) {
 
-		this.name = name;
+		this.id = id;
+		this.name = name ?? id;
 
 	}
 
 	tryApply(char: Char) {
 
 		// effects with different conditions for each one.
-		if (this.effects) {
+		if (this.result) {
 
-			const len = this.effects.length;
+			const len = this.result.length;
 			for (let i = 0; i < len; i++) {
 
-				const e = this.effects[i];
+				const e = this.result[i];
 				if (this.checkRequire(char, e.require)) {
-					return this.applyEffect(char, e);
+					return this.applyResult(char, e);
 				}
 				if (e.err) return e.err.replace('%c', char.name);
 			}
@@ -44,7 +61,7 @@ class Action {
 		} else {
 
 			if (this.checkRequire(char, this.require)) {
-				return this.applyEffect(char, this);
+				//return this.applyResult(char, this);
 			}
 
 		}
@@ -59,9 +76,9 @@ class Action {
 		return true;
 	}
 
-	applyEffect(char: Char, eff: any) {
+	applyResult(char: Char, res: Result) {
 
-		const apply = eff.apply;
+		const apply = res.apply;
 		for (const k in apply) {
 
 			const val = apply[k];
@@ -78,15 +95,14 @@ class Action {
 
 		}
 
-		if (eff.fb) return eff.fb.replace('%c', char.name);
+		if (res.fb) return res.fb.replace('%c', char.name);
 		return '';
 
 	}
 
 }
 
-const actions: { [name: string]: Action } = {};
-const loadActions = async () => {
+export const LoadActions = async () => {
 
 	const data = (await import('../data/magic/actions.json')).default;
 
@@ -94,26 +110,6 @@ const loadActions = async () => {
 	for (k in data) {
 		actions[k] = Action.Revive(data[k]);
 	}
-}
-loadActions();
-
-
-class Effect {
-
-	err?: string;
-	fb?: string;
-	apply: any;
-	require: any;
-
-	constructor(require?: any, apply?: any, fb?: string, err?: string) {
-
-		this.require = require;
-		this.apply = apply;
-		this.fb = fb;
-		this.err = err;
-
-	}
-
 }
 
 export const GetAction = (s: string) => {

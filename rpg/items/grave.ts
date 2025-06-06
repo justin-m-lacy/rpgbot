@@ -15,7 +15,7 @@ export class Grave extends Item {
 		return new Grave(char.name, slayer.name, Grave.GetEpitaph(char, slayer));
 	}
 
-	static Revive(json: ItemData & { char: string, slayer: string, epitaph?: string }) {
+	static Revive(json: ItemData & { char: string, slayer?: string, epitaph?: string }) {
 
 		const p = new Grave(json.char, json.slayer, json.epitaph);
 
@@ -36,7 +36,7 @@ export class Grave extends Item {
 
 	toJSON() {
 
-		const s = super.toJSON();
+		const s = super.toJSON() as any;
 
 		s.char = this.char;
 		s.epitaph = this.epitaph;
@@ -52,12 +52,12 @@ export class Grave extends Item {
 
 	private epitaph: string;
 
-	constructor(char: Char | string, slayer: Char | string, epitaph?: string) {
+	constructor(char: Char | string, slayer: Char | string = 'nothing', epitaph?: string) {
 
 		super(`${char}'s Gravestone`, `Here lies ${char}, slain by ${slayer}.`, ItemType.Grave);
 
 		this.char = typeof char === 'string' ? char : char.name;
-		this.slayer = typeof slayer === 'string' ? slayer : slayer.name;
+		this.slayer = typeof slayer === 'string' ? slayer : slayer?.name;
 		this.epitaph = epitaph ?? '';
 
 	}

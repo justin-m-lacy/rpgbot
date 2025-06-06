@@ -34,8 +34,8 @@ export class World {
 
 	/**
 	 * Change location description.
-	 * @param {Char} char
-	 * @param {string} desc
+	 * @param char
+	 * @param desc
 	 */
 	async setDesc(char: Char, desc?: string, attach?: string) {
 
@@ -74,8 +74,8 @@ export class World {
 
 	/**
 	 * Attempt to use a feature at the location.
-	 * @param {Char} char
-	 * @param {*} wot
+	 * @param char
+	 * @param wot
 	 */
 	async useLoc(char: Char, wot: string | number | Feature) {
 
@@ -93,8 +93,8 @@ export class World {
 
 	/**
 	 * Attempt to take an item from cur location.
-	 * @param {Char} char
-	 * @param {string|number|Item} first
+	 * @param char
+	 * @param first
 	 */
 	async take(char: Char, first: string | number, end?: string | number) {
 
@@ -158,8 +158,8 @@ export class World {
 
 	/**
 	 *
-	 * @param {Char} char
-	 * @returns {string} description of loc maker and time, or error message.
+	 * @param char
+	 * @returns description of loc maker and time, or error message.
 	 */
 	async explored(char: Char) {
 
@@ -188,8 +188,8 @@ export class World {
 
 	/**
 	 * Examine world at character location.
-	 * @param {Char} char
-	 * @param {string|number} what
+	 * @param char
+	 * @param what
 	 */
 	async examine(char: Char, what: string | number) {
 
@@ -219,7 +219,7 @@ export class World {
 
 	/**
 	 *
-	 * @param {*} char
+	 * @param char
 	 * @param {Item} what
 	 */
 	async put(char: Char, what: Item) {
@@ -234,7 +234,7 @@ export class World {
 
 	/**
 	 * Attempt to drop an item at cur location.
-	 * @param {Char} char
+	 * @param char
 	 * @param  what
 	 */
 	async drop(char: Char, what: ItemPicker, end?: string | number) {
@@ -253,7 +253,7 @@ export class World {
 
 	/**
 	 *
-	 * @param {Char} char
+	 * @param char
 	 */
 	setHome(char: Char) {
 
@@ -266,22 +266,19 @@ export class World {
 	}
 
 	/**
-	 *
-	 * @param {Char} char
+	 * @param char
 	 */
 	goHome(char: Char) {
 
-		const coord = char.home ?? new Coord(0, 0);
-
-		Object.assign(char.loc, coord);
+		char.loc.setTo(char.home ?? new Coord(0, 0));
 		return char.name + ' has travelled home.';
 
 	}
 
 	/**
 	 * Return the new location after moving from the given coordinate.
-	 * @param {Coord} coord - current coordinate.
-	 * @param {string} dir - move direction.
+	 * @param coord - current coordinate.
+	 * @param dir - move direction.
 	 * @returns new Loc or error string.
 	 */
 	async tryMove(coord: Coord, dir: DirVal, char: Char): Promise<Loc | string> {
@@ -323,7 +320,7 @@ export class World {
 
 	/**
 	 * Attempt to spawn a monster at the given location.
-	 * @param {Loc} loc
+	 * @param loc
 	 */
 	trySpawn(loc: Loc) {
 
@@ -414,18 +411,13 @@ export class World {
 		return x + ',' + y;
 	}
 
-	/**
-	 *
-	 * @param {number} x
-	 * @param {number} y
-	 */
 	coordKey(coord: Coord) {
 		return coord.x + ',' + coord.y;
 	}
 	/**
 	 *
-	 * @param {number} x
-	 * @param {number} y
+	 * @param x
+	 * @param y
 	 */
 	getBKey(x: number, y: number) {
 		return 'rpg/blocks/' + Math.floor(x / BLOCK_SIZE) + ',' + Math.floor(y / BLOCK_SIZE);
@@ -434,9 +426,9 @@ export class World {
 
 	/**
 	 *
-	 * @param {number} x
-	 * @param {number} y
-	 * @returns {Loc.Exit[]} - all exits allowed from this location.
+	 * @param x
+	 * @param y
+	 * @returns all exits allowed from this location.
 	 */
 	async getRandExits(x: number, y: number) {
 		return Promise.all([this.getExitTo(new Coord(x - 1, y), 'w'),
@@ -450,9 +442,9 @@ export class World {
 	/**
 	 * Returns an exit to the given dest coordinate when arriving
 	 * from the given direction.
-	 * @param {Loc.Coord} dest - destination coordinate.
-	 * @param {string} fromDir - arriving from direction.
-	 * @returns {Loc.Exit|null}
+	 * @param dest - destination coordinate.
+	 * @param fromDir - arriving from direction.
+	 * @returns
 	 */
 	async getExitTo(dest: Coord, fromDir: DirVal) {
 		const loc = await this.getLoc(dest.x, dest.y);
@@ -468,13 +460,15 @@ export class World {
 
 	/**
 	* All existing locations adjacent to x,y.
-	* @param {number} x
-	* @param {number} y
+	* @param x
+	* @param y
 	*/
 	async getNear(x: number, y: number) {
 
-		return [await this.getLoc(x - 1, y), await this.getLoc(x + 1, y),
-		await this.getLoc(x, y - 1), await this.getLoc(x, y + 1)].filter(v => v != null);
+		return [await this.getLoc(x - 1, y),
+		await this.getLoc(x + 1, y),
+		await this.getLoc(x, y - 1),
+		await this.getLoc(x, y + 1)].filter(v => v != null);
 
 	}
 

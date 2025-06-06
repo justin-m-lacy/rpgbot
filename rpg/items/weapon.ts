@@ -19,7 +19,7 @@ export class Weapon extends Wearable {
 
 	static Revive(json: any) {
 
-		let w = new Weapon(json.name, json.desc);
+		const w = new Weapon(json.name, json.desc);
 
 		if (json.material) w.material = json.material;
 
@@ -50,7 +50,7 @@ export class Weapon extends Wearable {
 
 		const damage = DamageSrc.FromString(tmp.dmg, tmp.type);
 
-		let w = new Weapon(tmp.name, damage);
+		const w = new Weapon(tmp.name, damage);
 
 		if (tmp.hands) w.hands = tmp.hands;
 		if (tmp.mods) w.mods = Object.assign({}, tmp.mods);
@@ -72,9 +72,6 @@ export class Weapon extends Wearable {
 
 	get toHit() { return this._toHit; }
 	set toHit(v) { this._toHit = v; }
-
-	get bonus() { return this.damage.bonus; }
-	set bonus(v) { if (v < 0) v = 0; this.damage.bonus = v; }
 
 	get dmgType() { return this.damage.type; }
 	set dmgType(s: string) { this.damage.type = s; }

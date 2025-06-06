@@ -420,6 +420,12 @@ export class Char extends Actor {
 
 	}
 
+	getDetails() {
+
+		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.stats.evil}]\nhp:${this.hp}/${this.hp.max} armor:${this.armor}`;
+
+	}
+
 	log(str: string) { this._log.log(str); }
 	getLog() { return this._log.text; }
 	output(str = '') { return this._log.output(str); }

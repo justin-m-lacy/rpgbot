@@ -1,14 +1,20 @@
 const rollex = /^([\+\-]?\d*)?d(\d*)([\+\-]?\d+)?/;
 
+const MaxRoll = 99999;
+const MaxBonus = 999999;
+
+const minmax = (v: number, min: number, max: number) => {
+	return (v < min) ? min : (v > max ? max : v);
+}
 
 export const parseRoll = (str: string) => {
 
 	const res = rollex.exec(str);
 	if (res === null) return roll(1, 6);
 
-	let num = parseInt(res[1]);
-	let sides = parseInt(res[2]);
-	let bonus = parseInt(res[3]);
+	let num = minmax(parseInt(res[1]), -MaxRoll, MaxRoll);
+	let sides = minmax(parseInt(res[2]), -MaxBonus, MaxBonus);
+	let bonus = minmax(parseInt(res[3]), -MaxBonus, MaxBonus);
 
 	if (Number.isNaN(num)) num = 1;
 	if (Number.isNaN(sides)) sides = 6;

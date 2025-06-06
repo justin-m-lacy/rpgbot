@@ -6,6 +6,9 @@ import { Message, User } from "discord.js";
 import { Formula } from 'formulic';
 import { GenChar } from 'rpg/builders/chargen';
 import { getHistory } from 'rpg/events';
+import { LoadActions } from 'rpg/magic/action';
+import { LoadEffects } from 'rpg/magic/effects';
+import { Monster } from 'rpg/monster/monster';
 import { InitClasses, InitRaces, RandClass, RandRace } from 'rpg/parsers/classes';
 import { InitItems, PotsList } from './builders/itemgen';
 import { Char } from './char/char';
@@ -633,8 +636,12 @@ export class Rpg {
 			let targ = await this.world.getNpc(src, who ?? 1);
 			let res;
 
-			if (targ) res = await this.game.attackNpc(src, targ);
-			else if (typeof who === 'string') {
+			if (targ) {
+				res = await (targ instanceof Monster ?
+					this.game.attackNpc(src, targ)
+					: this.game.attack(src, targ)
+				);
+			} else if (typeof who === 'string') {
 
 				targ = await this.loadChar(who);
 				if (!targ) return m.reply(`'${who}' not found.`);
@@ -700,7 +707,7 @@ export class Rpg {
 			char = await this.loadChar(charname);
 			if (!char) return m.reply(charname + ' not found on server. D:');
 		}
-		return Display.echoChar(m.channel, char);
+		return Display.EchoChar(m.channel, char);
 
 	}
 
@@ -775,7 +782,7 @@ export class Rpg {
 				prefix = 'Active character set.\n';
 			}
 
-			return Display.echoChar(m.channel, char, prefix);
+			return Display.EchoChar(m.channel, char, prefix);
 
 		} catch (e) { console.log(e); }
 
@@ -804,7 +811,7 @@ export class Rpg {
 			console.log('new char: ' + char.name);
 
 			await this.setUserChar(m.author, char);
-			Display.echoChar(m.channel, char);
+			Display.EchoChar(m.channel, char);
 			await this.saveChar(char, true);
 
 		} catch (e) { console.log(e); }
@@ -898,7 +905,7 @@ export class Rpg {
 
 export const InitGame = async (bot: DiscordBot) => {
 
-	await Promise.all([InitRaces(), InitClasses(), InitItems()])
+	await Promise.all([InitRaces(), InitClasses(), InitItems(), LoadEffects(), LoadActions()])
 
 	const proto = Rpg.prototype;
 
