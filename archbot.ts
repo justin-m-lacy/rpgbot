@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 
 import { Auth } from '@/bot/auth';
 import "dotenv/config";
+import { InitGame } from 'rpg/rpg';
 import { initBasicCommands } from './src/base-commands';
 import { DiscordBot } from './src/bot/discordbot';
 
@@ -42,13 +43,15 @@ console.log('client created.');
 
 const initBot = async () => {
 
-	const auth = (await import('./auth.json', { with: { type: 'json' } })).default as Auth;
+	const auth = (await import('./auth.json', { assert: { type: 'json' } })).default as Auth;
 	const config = await loadConfig();
 
 	console.log(`base directory: ${__dirname}`);
 	try {
 		const bot = new DiscordBot(client, auth, config, __dirname);
 		initBasicCommands(bot);
+		await InitGame(bot);
+
 		tryLogin(auth);
 
 		return bot;
@@ -69,7 +72,7 @@ async function loadConfig() {
 
 	try {
 
-		const config = (await import('./config.json', { with: { type: 'json' } })).default;
+		const config = (await import('./config.json', { assert: { type: 'json' } })).default;
 
 		if (process.env.NODE_ENV !== 'production' && config.dev) {
 			Object.assign(config, config.dev);

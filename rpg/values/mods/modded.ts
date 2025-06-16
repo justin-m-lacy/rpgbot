@@ -1,8 +1,8 @@
 import { IMod, type IModdable, SymModdable as SymModded } from '../imod';
-import type { Id, Idable, TValue } from "../types";
+import type { Id, TValue } from "../types";
 
 /// Create modded proxy for target.
-export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
+/*export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 	const modded = {
 
 		[SymModded]: true as true,
@@ -66,7 +66,7 @@ export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 	}
 
 	return asProxy(modded, targ);
-}
+}*/
 
 
 export class Modded implements TValue, IModdable {
@@ -75,7 +75,7 @@ export class Modded implements TValue, IModdable {
 
 	readonly [SymModded] = true;
 
-	[Symbol.toPrimitive]() { return this._cached; }
+	valueOf() { return this._cached; }
 	toString() { return this.value.toString(); }
 
 	readonly mods = new Map<Id, IMod>();

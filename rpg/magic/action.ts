@@ -98,7 +98,7 @@ const ParseAction = (data: RawAction) => {
 
 export const LoadActions = async () => {
 
-	const data = (await import('../data/magic/actions.json', { with: { type: 'json' } })).default;
+	const data = (await import('../data/magic/actions.json', { assert: { type: 'json' } })).default;
 
 	let k: keyof typeof data;
 	for (k in data) {

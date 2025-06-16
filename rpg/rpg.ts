@@ -891,7 +891,7 @@ export class Rpg {
 
 	async uniqueName(race: Race, sex?: string): Promise<string> {
 
-		const namegen = await import('./namegen.js', { with: { type: 'json' } });
+		const namegen = await import('./namegen.js', { assert: { type: 'json' } });
 
 		do {
 			const name = namegen.GenName(race.name, sex);

@@ -73,7 +73,7 @@ const ParseRace = (raw: RawRaceData) => {
 
 export const InitRaces = async () => {
 
-	const raws = (await import('../data/races.json', { with: { type: 'json' } })).default;
+	const raws = (await import('../data/races.json', { assert: { type: 'json' } })).default;
 
 	for (let i = raws.length - 1; i >= 0; i--) {
 		try {
@@ -92,7 +92,7 @@ export const InitRaces = async () => {
 
 export const InitClasses = async () => {
 
-	const raw = (await import('../data/classes.json', { with: { type: 'json' } })).default;
+	const raw = (await import('../data/classes.json', { assert: { type: 'json' } })).default;
 
 	for (let i = raw.length - 1; i >= 0; i--) {
 

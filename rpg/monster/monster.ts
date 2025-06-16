@@ -17,7 +17,7 @@ const byLevel: (MonsterTemplate[])[] = [];
 
 const initTemplates = async () => {
 
-	const raw = (await import('../data/npc/monster.json', { with: { type: 'json' } })).default;
+	const raw = (await import('../data/npc/monster.json', { assert: { type: 'json' } })).default;
 
 	for (let k = raw.length - 1; k >= 0; k--) {
 
