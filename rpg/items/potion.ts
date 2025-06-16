@@ -20,7 +20,7 @@ export class Potion extends Item {
 
 	toJSON() {
 
-		let s = super.toJSON();
+		const s = super.toJSON() as any;
 
 		//if (this._spell) s.spell = this._spell;
 		if (this._effect) s.effect = this._effect;
