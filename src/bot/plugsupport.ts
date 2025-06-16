@@ -1,6 +1,6 @@
-import { DiscordBot } from "./discordbot";
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import { DiscordBot } from "./discordbot";
 
 const ParseExtensions = ['', '.js', '.ts'];
 

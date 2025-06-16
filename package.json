@@ -17,6 +17,7 @@
     "archdice": "^1.1.0",
     "discord.js": "^14.19.3",
     "dotenv": "^16.3.1",
+    "eventemitter3": "^5.0.1",
     "formulic": "^2.0.3",
     "romans": "^3.1.0"
   },

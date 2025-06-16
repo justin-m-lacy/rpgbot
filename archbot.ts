@@ -42,7 +42,7 @@ console.log('client created.');
 
 const initBot = async () => {
 
-	const auth = (await import('./auth.json')).default as Auth;
+	const auth = (await import('./auth.json', { with: { type: 'json' } })).default as Auth;
 	const config = await loadConfig();
 
 	console.log(`base directory: ${__dirname}`);
@@ -69,7 +69,7 @@ async function loadConfig() {
 
 	try {
 
-		const config = (await import('./config.json')).default;
+		const config = (await import('./config.json', { with: { type: 'json' } })).default;
 
 		if (process.env.NODE_ENV !== 'production' && config.dev) {
 			Object.assign(config, config.dev);

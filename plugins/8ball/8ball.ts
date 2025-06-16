@@ -10,7 +10,7 @@ export const initPlugin = (bot: DiscordBot) => {
 const cmd8Ball = async (m: Message<true>) => {
 
 	if (!answers) {
-		answers = (await import('./answers.json')).default
+		answers = (await import('./answers.json', { with: { type: 'json' } })).default
 	}
 	if (answers.length === 0) return;
 

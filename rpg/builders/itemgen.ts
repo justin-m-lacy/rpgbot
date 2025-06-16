@@ -12,9 +12,9 @@ import { Monster } from '../monster/monster';
 
 type RawArmorData = (typeof BaseArmors)[number];
 type RawWeaponData = (typeof BaseWeapons)[number];
-type RawPotionData = (typeof import('../data/items/potions.json'))[number] & { type?: "potion" };
-type RawChestsData = (typeof import('../data/items/chests.json'))[number] & { type?: "chest" };
-type RawItemData = (typeof import('../data/items/items.json')['misc' | 'special'][number])
+type RawPotionData = (typeof import('../data/items/potions.json', { with: { type: 'json' } }))[number] & { type?: "potion" };
+type RawChestsData = (typeof import('../data/items/chests.json', { with: { type: 'json' } }))[number] & { type?: "chest" };
+type RawItemData = (typeof import('../data/items/items.json', { with: { type: 'json' } })['misc' | 'special'][number])
 
 const allItems: { [str: string]: RawItemData | RawPotionData | RawChestsData } = {};
 const allPots: { [name: string]: RawPotionData } = {};
@@ -40,7 +40,7 @@ export const InitItems = async () => {
 
 async function initBasic() {
 
-	const items = (await import('../data/items/items.json')).default;
+	const items = (await import('../data/items/items.json', { with: { type: 'json' } })).default;
 	const spec = items.special;
 
 	miscItems = items.misc;
@@ -57,7 +57,7 @@ async function initBasic() {
 
 async function initPots() {
 
-	const pots = (await import('../data/items/potions.json')).default;
+	const pots = (await import('../data/items/potions.json', { with: { type: 'json' } })).default;
 
 	for (let i = pots.length - 1; i >= 0; i--) {
 
@@ -78,7 +78,7 @@ async function initPots() {
 
 async function initChests() {
 
-	const packs = (await import('../data/items/chests.json')).default;
+	const packs = (await import('../data/items/chests.json', { with: { type: 'json' } })).default;
 
 	for (let i = packs.length - 1; i >= 0; i--) {
 
