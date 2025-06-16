@@ -17,7 +17,7 @@ export class Range implements IModdable, ISimple {
 	readonly [SymSimple] = true;
 	readonly [SymModdable] = true;
 
-	[Symbol.toPrimitive]() {
+	valueOf() {
 		return this.value;
 	}
 

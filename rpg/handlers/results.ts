@@ -1,40 +1,46 @@
-import { TestEqual, type TRequire } from "rpg/handlers/requires";
+import { TestEqual, type RawIf, type TRequire } from "rpg/handlers/requires";
+import { ParseValue } from "rpg/parsers/values";
+import { AddPath } from "rpg/values/apply";
+import { ParsePaths, type Path } from "rpg/values/paths";
+import type { TValue } from "rpg/values/types";
 
-export type RawIf = Record<string, any>;
 export type RawResult = {
-	require?: RawIf,
+	if?: RawIf,
 	set?: Record<string, any>,
+	add: Record<string, any>,
 	fb?: string,
 	err?: string
 }
 
-export type TIf = Record<string, any>;
-
-type BaseResult = {
+type BaseResult<T extends object> = {
 	// condition for result to apply.
-	if?: TIf,
-	fb?: string,
-	err?: string
-}
-
-export type TResult = {
-
-	if?: TIf,
-	set?: Record<string, any>,
+	if?: RawIf,
 	fb?: string,
 	err?: string,
-	apply: <T extends object>(targ: T) => boolean | undefined;
+	apply: (targ: T, dt?: number) => boolean;
+}
+
+export type TResult<T extends object> = {
+
+	if?: TRequire<T>,
+	set?: Path<TValue>,
+	add?: Path<TValue>,
+	fb?: string,
+	err?: string,
+	apply: (targ: T, dt?: number) => boolean;
 
 }
 
-export const ParseResult = (raw: RawResult) => {
+export const ParseResult = <T extends object>(raw: RawResult): TResult<T> => {
 
+	return new Result<T>({
 
-	return {
-
+		if: raw.if,
+		set: raw.set ? ParsePaths(raw.set, 'set', ParseValue) : undefined,
+		add: raw.add ? ParsePaths(raw.add, 'set', ParseValue) : undefined,
 		fb: raw.fb,
-		err: raw.err
-	}
+		err: raw.err,
+	});
 
 }
 
@@ -42,32 +48,43 @@ export class Result<T extends object> {
 
 	err?: string;
 	fb?: string;
-	need?: TRequire<T>;
-	set?: Record<string, any>
+	if?: TRequire<T>;
+	set?: Path<TValue>;
+	add?: Path<TValue>
 
-	constructor(require?: any, apply?: any, fb?: string, err?: string) {
+	constructor(opts: {
+		if?: TRequire<T>,
+		set?: Path<TValue>,
+		add?: Path<TValue>,
+		fb?: string, err?: string
+	}) {
 
-		this.need = require;
-		this.apply = apply;
-		this.fb = fb;
-		this.err = err;
+		this.if = opts.if;
+		this.set = opts.set;
+		this.add = opts.add;
+		this.fb = opts.fb;
+		this.err = opts.err;
 
 	}
 
-	apply(targ: T) {
+	apply(targ: T, dt: number = 1): boolean {
 
-		if (this.need) {
+		if (this.if) {
 
-			if (typeof this.need === 'function') {
+			if (typeof this.if === 'function') {
 
-				if (!this.need(targ)) {
+				if (!this.if(targ)) {
 					return false;
 				}
 
-			} else if (!TestEqual(targ, this.need)) {
+			} else if (!TestEqual(targ, this.if)) {
 
 			}
 
+		}
+
+		if (this.add) {
+			AddPath(targ, this.add, dt);
 		}
 
 		if (this.set) {
@@ -76,6 +93,7 @@ export class Result<T extends object> {
 			}
 		}
 
+		return true;
 
 	}
 

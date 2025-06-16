@@ -1,5 +1,4 @@
-import type { TIf } from "rpg/handlers/results";
-
+export type RawIf = Record<string, any>;
 
 export type TestFunc<T extends object> = (targ: T) => boolean;
 
@@ -28,7 +27,7 @@ export const TestRequire = <T extends object>(targ: T, req: TRequire<T>) => {
  * @param req 
  * @returns 
  */
-export const TestEqual = (targ: Record<string, any>, req?: TIf) => {
+export const TestEqual = (targ: Record<string, any>, req?: RawIf) => {
 
 	if (!req) return true;
 

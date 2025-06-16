@@ -426,7 +426,13 @@ export class Char extends Actor {
 
 	}
 
-	log(str: string) { this._log.log(str); }
+	/**
+	 * Log character string, replacing %c with character name.
+	 * @param str 
+	 */
+	log(str: string) {
+		this._log.log(str.replace('%c', this.name));
+	}
 	getLog() { return this._log.text; }
 	output(str = '') { return this._log.output(str); }
 

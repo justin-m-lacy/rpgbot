@@ -1,4 +1,5 @@
 import { ParseValues } from 'rpg/parsers/values';
+import { AddPath } from 'rpg/values/apply';
 import type { IMod } from 'rpg/values/imod';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import type { Path } from 'rpg/values/paths';
@@ -18,29 +19,6 @@ type RawEffect = {
 // effect types. loading at bottom.
 const effects: { [name: string]: ProtoEffect } = {};
 
-
-const parseEffect = (raw: RawEffect) => {
-
-	return new ProtoEffect({
-		id: raw.id,
-		name: raw.name,
-		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
-		dot: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
-		time: raw.time,
-	});
-
-
-}
-
-export const LoadEffects = async () => {
-
-	const efx = (await import('../data/magic/effects.json')).default;
-	for (let i = efx.length - 1; i >= 0; i--) {
-		effects[efx[i].id] = parseEffect(efx[i] as any);
-	}
-
-}
-
 /**
  * Effect info only. Effect is effect in progress.
  */
@@ -52,14 +30,14 @@ export class ProtoEffect {
 	readonly id: string;
 	readonly name: string;
 	readonly mods: Path<IMod> | null;
-	readonly dot: Path<TValue | undefined> | null;
+	readonly dot: Path<TValue> | null;
 	private _time: any;
 
 	constructor(data: {
 		id: string,
 		name?: string,
 		mods?: Path<IMod> | null,
-		dot?: Path<TValue | undefined> | null,
+		dot?: Path<TValue> | null,
 		time?: number
 	}) {
 
@@ -156,38 +134,62 @@ export class Effect {
 	 */
 	tick(char: Char) {
 
-		if (this._time) {
-			this._time--;
+		if (!this._time) return false;
 
-			const v = this.dot;
-			if (v) {
+		this._time--;
 
-				let s = `${char.name} affected by ${this.name}.`;
-				v.eval(char);
+		const v = this.dot;
+		if (v) {
 
-				let len = v.setProps.size;
-				if (len > 0) {
+			let s = `${char.name} affected by ${this.name}.`;
 
-					s += ' ( ';
-					for (const k of v.setProps.keys()) {
-						if (--len > 0) s += `${k}: ${char[k as keyof Char]}, `;
-						else s += `${k}: ${char[k as keyof Char]}`;
-					}
-					s += ' )';
+			AddPath(char, v, 1);
 
+			/// TODO: logging for dot?
+			/*let len = v.setProps.size;
+			if (len > 0) {
+
+				s += ' ( ';
+				for (const k of v.setProps.keys()) {
+					if (--len > 0) s += `${k}: ${char[k as keyof Char]}, `;
+					else s += `${k}: ${char[k as keyof Char]}`;
 				}
+				s += ' )';
 
-				char.log(s);
+			}*/
+
+			char.log(s);
 
 
-			}
-
-			return (this._time <= 0);
 		}
-		return false;
+
+		return (this._time <= 0);
 
 	}
 
 }
+
+const parseEffect = (raw: RawEffect) => {
+
+	return new ProtoEffect({
+		id: raw.id,
+		name: raw.name,
+		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
+		dot: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
+		time: raw.time,
+	});
+
+
+}
+
+export const LoadEffects = async () => {
+
+	const efx = (await import('../data/magic/effects.json')).default;
+	for (let i = efx.length - 1; i >= 0; i--) {
+		effects[efx[i].id] = parseEffect(efx[i] as any);
+	}
+
+}
+
 
 export const GetEffect = (s: string) => effects[s];

@@ -30,7 +30,7 @@ export class Percent implements ISimple {
 
 	readonly [SymSimple] = true;
 
-	[Symbol.toPrimitive]() {
+	valueOf() {
 		return this.value;
 	}
 

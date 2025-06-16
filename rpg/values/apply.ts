@@ -2,6 +2,30 @@ import { IsPath, type Path } from "rpg/values/paths";
 import { Simple } from "rpg/values/simple";
 import { IsSimple, IsValue, type Numeric, type TValue } from "rpg/values/types";
 
+export const SetValues = (targ: any & object, apply: Path<TValue>) => {
+
+
+	for (const k in apply) {
+
+		const subVal = apply[k];
+
+		if (IsPath(subVal)) {
+
+			if (!targ[k]) {
+				SetValues(targ[k] = {}, subVal);
+			} else if (typeof targ[k] === 'object') {
+				SetValues(targ[k], subVal);
+			}
+
+		} else {
+			targ[k] = subVal.value;
+		}
+
+
+	}
+
+}
+
 export const AddValues = (dest: Record<string, any>, vals: Record<string, Numeric>) => {
 
 	for (let k in vals) {

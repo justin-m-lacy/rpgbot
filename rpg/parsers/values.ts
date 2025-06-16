@@ -22,13 +22,13 @@ const IsSetterData = (str: string) => {
 export const ParseValues = (id: string, subId: string, obj: Record<string, any>) => {
 
 	return ParsePaths(obj, subId, (path, orig) => {
-		return ParseValue(JoinPath(id, path), orig)
+		return ParseValue(JoinPath(id, path), orig);
 	});
 
 }
 
 /**
- * Attempt to parse a simple value.
+ * Attempt to parse a simple number or value.
  * @param id 
  * @param v 
  * @returns 

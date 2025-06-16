@@ -26,10 +26,9 @@ export class Weapon extends Wearable {
 		if (json.mods) w.mods = json.mods;
 
 		if (json.dmg) {
-			//console.log( 'parsing weap damage.');
 			w.damage = DamageSrc.Revive(json.dmg);
 		} else {
-			console.log('Error parsing weap dmg. no dmg found.')
+			console.log('Error weap dmg. no dmg found.')
 			w.damage = new DamageSrc(null, json.dmgType);
 		}
 

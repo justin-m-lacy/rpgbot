@@ -113,7 +113,7 @@ export const NewPath = <T extends any = TValue>(path: string) => {
 export const ParsePaths = <T extends any, C extends any = T>(
   srcVals: Record<string, T>,
   id: string,
-  converter?: (path: string, orig: T) => C,
+  converter?: (path: string, orig: T) => C | undefined,
 ) => {
 
   const dest = NewPath<C>(id);

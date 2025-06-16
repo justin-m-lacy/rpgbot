@@ -8,7 +8,9 @@ export class Setter implements ISimple {
 
 	readonly id: string;
 
-	get value() { return +this._value; }
+	valueOf() { return this._value.valueOf() }
+
+	get value() { return this._value.valueOf(); }
 	set value(v) { this._value = v; }
 
 	get base() {
