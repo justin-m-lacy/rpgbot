@@ -245,8 +245,11 @@ export class DiscordBot {
 
 		});
 
-		this.client.on(Events.InteractionCreate, action => {
+		this.client.on(Events.InteractionCreate, it => {
 
+			if (!it.isChatInputCommand()) return;
+
+			const b = it;
 		});
 
 	}

@@ -229,7 +229,7 @@ export function GetCommands() {
 
 	CreateCommand('unequip', 'unequip [equip slot]\t\tRemoves a worn item.',
 		cmdUnequip, list, { minArgs: 1, maxArgs: 1 });
-	CreateCommand('worn', 'worn [equip slot]\t\tInspect an equipped item.', cmdWorn, Rpg, { maxArgs: 1 });
+	CreateCommand('worn', 'worn [equip slot]\t\tInspect an equipped item.', cmdWorn, list, { maxArgs: 1 });
 	CreateCommand('compare', 'compare <pack item> - Compare inventory item to worn item.',
 		cmdCompare, list, { minArgs: 1, maxArgs: 1 });
 
@@ -237,7 +237,7 @@ export function GetCommands() {
 	CreateCommand('destroy', 'destroy <item_number|item_name>\t\tDestroys an item. This action cannot be undone.',
 		cmdDestroy, list, { minArgs: 1, maxArgs: 2 });
 	CreateCommand('inspect', 'inspect <item_number|item_name>', cmdInspect, list, { maxArgs: 1 });
-	CreateCommand('viewitem', 'viewitem <item_number|item_name> : View an item.', cmdViewItem, Rpg, { maxArgs: 1 });
+	CreateCommand('viewitem', 'viewitem <item_number|item_name> : View an item.', cmdViewItem, list, { maxArgs: 1 });
 	CreateCommand('inv', 'inv [player]', cmdInv, list, { maxArgs: 1 });
 	CreateCommand('give', 'give <charname> <what>', cmdGive, list, { minArgs: 2, maxArgs: 2, group: "right" });
 	CreateCommand('sell', 'sell <wot> OR !sell <start> <end>', cmdSell, list, { minArgs: 1, maxArgs: 2 });

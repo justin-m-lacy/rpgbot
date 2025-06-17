@@ -10,7 +10,7 @@ export const SendEmbed = async (m: Message, s: string, e: string) => m.reply({
 	embeds: [new EmbedBuilder({ image: { url: e } })]
 });
 
-export const SendBlock = async (m: Message, s: string) => m.reply('```' + s + '```');
+export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) => m.reply('```' + s + '```');
 
 /**
  * Checks if character is a vowel.
@@ -22,10 +22,10 @@ export const IsVowel = (c: string) => {
 	return c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u';
 }
 
-export const EchoChar = async function (chan: SendableChannels, char: Char, prefix: string = '') {
+export const EchoChar = async function (chan: SendableChannels | null, char: Char, prefix: string = '') {
 
 	const desc = CharLongDesc(char);
-	return chan.send(
+	return chan?.send(
 		prefix + '```' + `${char.name} is a` +
 		(IsVowel(desc.charAt(0)) ? 'n ' : ' ') +
 		desc + '```'

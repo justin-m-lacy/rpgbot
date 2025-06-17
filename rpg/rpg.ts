@@ -1,17 +1,15 @@
 import { BotContext } from '@/bot/botcontext';
-import { DiscordBot } from '@/bot/discordbot';
+import type { ChatCommand } from '@/bot/command';
 import { replyEmbedUrl } from '@/embeds';
 import Cache from 'archcache';
-import { Message, User } from "discord.js";
+import { User } from "discord.js";
 import { Formula } from 'formulic';
 import { GenChar } from 'rpg/builders/chargen';
 import { getHistory } from 'rpg/events';
-import { LoadActions } from 'rpg/magic/action';
-import { LoadEffects } from 'rpg/magic/effects';
 import { Monster } from 'rpg/monster/monster';
 import { GenName } from 'rpg/namegen';
-import { InitClasses, InitRaces, RandClass, RandRace } from 'rpg/parsers/classes';
-import { InitItems, PotsList } from './builders/itemgen';
+import { RandClass, RandRace } from 'rpg/parsers/classes';
+import { PotsList } from './builders/itemgen';
 import { Char } from './char/char';
 import { Race } from './char/race';
 import * as Display from './display/display';
@@ -62,7 +60,7 @@ export class Rpg {
 	 * @param uname 
 	 * @returns 
 	 */
-	async cmdAllChars(m: Message, uname?: string) {
+	async cmdAllChars(m: ChatCommand, uname?: string) {
 
 		try {
 			const list = await this.context.getDataList(RPG_DIR + '/chars');
@@ -81,9 +79,9 @@ export class Rpg {
 	 * @param who 
 	 * @returns 
 	 */
-	async cmdParty(m: Message, who?: string) {
+	async cmdParty(m: ChatCommand, who?: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		let t: Char | undefined;
@@ -102,9 +100,9 @@ export class Rpg {
 	 * @param who 
 	 * @returns 
 	 */
-	async cmdLeader(m: Message, who?: string) {
+	async cmdLeader(m: ChatCommand, who?: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		let t: Char | undefined;
@@ -117,11 +115,11 @@ export class Rpg {
 
 	}
 
-	async cmdRevive(m: Message, who?: string) {
+	async cmdRevive(m: ChatCommand, who?: string) {
 
 		if (!who) return;
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const t = who ? await this.loadChar(who) : char;
@@ -131,18 +129,18 @@ export class Rpg {
 
 	}
 
-	async cmdLeaveParty(m: Message) {
+	async cmdLeaveParty(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		await Display.SendBlock(m, this.game.leaveParty(char));
 	}
 
-	async cmdMkGuild(m: Message, gname: string) {
+	async cmdMkGuild(m: ChatCommand, gname: string) {
 
 		try {
-			const char = await this.userCharOrErr(m, m.author);
+			const char = await this.userCharOrErr(m, m.user);
 			if (!char) return;
 
 			await Display.SendBlock(m, await this.game.mkGuild(char, gname));
@@ -150,27 +148,27 @@ export class Rpg {
 
 	}
 
-	async cmdJoinGuild(m: Message, gname: string) {
+	async cmdJoinGuild(m: ChatCommand, gname: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		await Display.SendBlock(m, await this.game.joinGuild(char, gname));
 
 	}
 
-	async cmdLeaveGuild(m: Message) {
+	async cmdLeaveGuild(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		await Display.SendBlock(m, await this.game.leaveGuild(char));
 
 	}
 
-	async cmdGuildInv(m: Message, who?: string) {
+	async cmdGuildInv(m: ChatCommand, who?: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const t = who ? await this.loadChar(who) : char;
@@ -180,9 +178,9 @@ export class Rpg {
 
 	}
 
-	async cmdWhere(m: Message, who: string) {
+	async cmdWhere(m: ChatCommand, who: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const t = await this.loadChar(who);
@@ -191,21 +189,21 @@ export class Rpg {
 
 	}
 
-	async cmdNerf(m: Message, who: string) {
+	async cmdNerf(m: ChatCommand, who: string) {
 
 		const char = await this.loadChar(who);
 		if (!char) return;
 
-		if (!this.context.isOwner(m.author)) return m.reply('You do not have permission to do that.');
+		if (!this.context.isOwner(m.user)) return m.reply('You do not have permission to do that.');
 
 		return m.reply(Trade.nerfItems(char));
 
 	}
 
-	async cmdFormula(m: Message, str: string) {
+	async cmdFormula(m: ChatCommand, str: string) {
 
-		if (!this.context.isOwner(m.author)) return m.reply('You do not have permission to do that.');
-		const char = await this.userCharOrErr(m, m.author);
+		if (!this.context.isOwner(m.user)) return m.reply('You do not have permission to do that.');
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		try {
@@ -219,27 +217,27 @@ export class Rpg {
 
 	}
 
-	async cmdSetHome(m: Message) {
+	async cmdSetHome(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		return m.reply(this.world.setHome(char));
 
 	}
 
-	async cmdGoHome(m: Message) {
+	async cmdGoHome(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		return m.reply(this.game.goHome(char));
 
 	}
 
-	async cmdLocDesc(m: Message, desc: string) {
+	async cmdLocDesc(m: ChatCommand, desc: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const resp = await this.world.setDesc(char, desc, m.attachments?.first()?.proxyURL);
@@ -247,7 +245,7 @@ export class Rpg {
 
 	}
 
-	async cmdLore(m: Message, wot?: string) {
+	async cmdLore(m: ChatCommand, wot?: string) {
 
 		if (!wot) return m.reply('What do you want to know about?');
 
@@ -255,39 +253,39 @@ export class Rpg {
 
 	}
 
-	async cmdTake(m: Message<true>, first: string, end: string) {
+	async cmdTake(m: ChatCommand, first: string, end: string) {
 
 		try {
 
-			const char = await this.userCharOrErr(m, m.author)
+			const char = await this.userCharOrErr(m, m.user)
 			if (!char) return;
 
-			await m.channel.send(await this.game.take(char, first, end));
+			await m.reply(await this.game.take(char, first, end));
 
 		} catch (e) { console.log(e); }
 	}
 
-	async cmdDrop(m: Message<true>, what: string, end?: string) {
+	async cmdDrop(m: ChatCommand, what: string, end?: string) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
-		return m.channel.send(await this.game.drop(char, what, end));
+		return m.reply(await this.game.drop(char, what, end));
 
 	}
 
-	async cmdExplored(m: Message) {
+	async cmdExplored(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		return Display.SendBlock(m, await this.world.explored(char));
 
 	}
 
-	async cmdViewLoc(m: Message, what: string | number) {
+	async cmdViewLoc(m: ChatCommand, what: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const info = await this.world.view(char, what);
@@ -297,37 +295,37 @@ export class Rpg {
 
 	}
 
-	async cmdExamine(m: Message, what: string) {
+	async cmdExamine(m: ChatCommand, what: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		await Display.SendBlock(m, await this.world.examine(char, what));
 
 	}
 
-	async cmdLook(m: Message, what: string) {
+	async cmdLook(m: ChatCommand, what: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		return Display.SendBlock(m, await this.world.look(char, what));
 
 	}
 
-	async cmdUseLoc(m: Message, wot: string) {
+	async cmdUseLoc(m: ChatCommand, wot: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		return Display.SendBlock(m, await this.world.useLoc(char, wot));
 	}
 
-	async cmdHike(m: Message, dir: string) {
+	async cmdHike(m: ChatCommand, dir: string) {
 
 		try {
 
-			const char = await this.userCharOrErr(m, m.author);
+			const char = await this.userCharOrErr(m, m.user);
 			if (!char) return;
 
 			await Display.SendBlock(m, await this.game.hike(char, toDirection(dir)));
@@ -337,9 +335,9 @@ export class Rpg {
 
 	}
 
-	async cmdMove(m: Message, dir: string) {
+	async cmdMove(m: ChatCommand, dir: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		await Display.SendBlock(m, await this.game.move(char, dir));
@@ -351,9 +349,9 @@ export class Rpg {
 	 * Roll damage test with current weapon.
 	 * @param {*} m
 	 */
-	async cmdRollDmg(m: Message) {
+	async cmdRollDmg(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (char) {
 			return m.reply('Weapon roll for ' + char.name + ': ' + char.testDmg());
 		}
@@ -364,9 +362,9 @@ export class Rpg {
 	 * Roll a new armor for testing.
 	 * @param {*} m
 	 */
-	async cmdRollWeap(m: Message) {
+	async cmdRollWeap(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (char) {
 			await Display.SendBlock(m, Trade.rollWeap(char));
 		}
@@ -377,27 +375,27 @@ export class Rpg {
 	 * Roll a new armor for testing.
 	 * @param {Message} m
 	 */
-	async cmdRollArmor(m: Message, slot?: string) {
+	async cmdRollArmor(m: ChatCommand, slot?: string) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (char) {
 			await Display.SendBlock(m, Trade.rollArmor(char, slot));
 		}
 
 	}
 
-	async cmdUnequip(m: Message, slot: HumanSlot) {
+	async cmdUnequip(m: ChatCommand, slot: HumanSlot) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		return m.reply(this.game.unequip(char, slot));
 
 	}
 
-	async cmdEquip(m: Message, wot: string | number) {
+	async cmdEquip(m: ChatCommand, wot: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		if (!wot) return Display.SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
@@ -406,9 +404,9 @@ export class Rpg {
 
 	}
 
-	async cmdCompare(m: Message, wot: string | number) {
+	async cmdCompare(m: ChatCommand, wot: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 
 		if (char) {
 			if (!wot) return m.reply('Compare what item?');
@@ -417,9 +415,9 @@ export class Rpg {
 
 	}
 
-	async cmdWorn(m: Message, slot: HumanSlot) {
+	async cmdWorn(m: ChatCommand, slot: HumanSlot) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 		if (!slot) await Display.SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
 		else {
@@ -441,39 +439,39 @@ export class Rpg {
 
 	}
 
-	async cmdEat(m: Message, wot: string | number) {
+	async cmdEat(m: ChatCommand, wot: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (char) {
 			return m.reply(this.game.eat(char, wot));
 		}
 
 	}
 
-	async cmdQuaff(m: Message, wot: string | number) {
+	async cmdQuaff(m: ChatCommand, wot: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (char) {
 			return m.reply(this.game.quaff(char, wot));
 		}
 
 	}
 
-	async cmdRest(m: Message) {
-		const char = await this.userCharOrErr(m, m.author);
+	async cmdRest(m: ChatCommand) {
+		const char = await this.userCharOrErr(m, m.user);
 		if (char) return m.reply(await this.game.rest(char));
 	}
 
-	async cmdCook(m: Message, what: string | number) {
+	async cmdCook(m: ChatCommand, what: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (char) {
 			return m.reply(this.game.cook(char, what));
 		}
 
 	}
 
-	cmdPotList(m: Message, level?: string | number) {
+	cmdPotList(m: ChatCommand, level?: string | number) {
 
 		if (!level) return m.reply('List potions for which level?');
 		if (typeof level === 'string') level = parseInt(level);
@@ -481,9 +479,9 @@ export class Rpg {
 
 	}
 
-	async cmdInscribe(m: Message, wot?: string | number, inscrip?: string) {
+	async cmdInscribe(m: ChatCommand, wot?: string | number, inscrip?: string) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		if (!wot) return m.reply('Inscribe which inventory item?');
@@ -494,9 +492,9 @@ export class Rpg {
 
 	}
 
-	async cmdDestroy(m: Message, first?: string, end?: string) {
+	async cmdDestroy(m: ChatCommand, first?: string, end?: string) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		if (!first) return m.reply('Destroy which inventory item?');
@@ -505,9 +503,9 @@ export class Rpg {
 
 	}
 
-	async cmdViewItem(m: Message, which?: string | number) {
+	async cmdViewItem(m: ChatCommand, which?: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		if (!which) return m.reply('View which inventory item?');
@@ -524,9 +522,9 @@ export class Rpg {
 
 	}
 
-	async cmdInspect(m: Message, wot?: string | number) {
+	async cmdInspect(m: ChatCommand, wot?: string | number) {
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		if (!wot) return m.reply('Inspect which inventory item?');
@@ -538,12 +536,12 @@ export class Rpg {
 
 	}
 
-	async cmdCraft(m: Message, itemName?: string, desc?: string) {
+	async cmdCraft(m: ChatCommand, itemName?: string, desc?: string) {
 
 		if (!itemName) return m.reply('Crafted items must have names.');
 		if (!desc) return m.reply('Crafted items require a description.');
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		const a = m.attachments.first();
@@ -553,11 +551,11 @@ export class Rpg {
 
 	}
 
-	async cmdBrew(m: Message, potName?: string) {
+	async cmdBrew(m: ChatCommand, potName?: string) {
 
 		if (!potName) return m.reply('Brew what potion?');
 
-		const char = await this.userCharOrErr(m, m.author)
+		const char = await this.userCharOrErr(m, m.user)
 		if (!char) return;
 
 		const a = m.attachments.first();
@@ -567,7 +565,7 @@ export class Rpg {
 
 	}
 
-	async cmdInv(m: Message, who?: string) {
+	async cmdInv(m: ChatCommand, who?: string) {
 
 		let char;
 
@@ -579,7 +577,7 @@ export class Rpg {
 
 		} else {
 
-			char = await this.userCharOrErr(m, m.author);
+			char = await this.userCharOrErr(m, m.user);
 			if (!char) return;
 
 		}
@@ -588,17 +586,17 @@ export class Rpg {
 
 	}
 
-	async cmdSell(m: Message, first: string | number, end?: string | number) {
+	async cmdSell(m: ChatCommand, first: string | number, end?: string | number) {
 
-		const src = await this.userCharOrErr(m, m.author);
+		const src = await this.userCharOrErr(m, m.user);
 		if (!src) return;
 
 		return Display.SendBlock(m, this.game.sell(src, first, end));
 	}
 
-	async cmdGive(m: Message, who: string, expr: string) {
+	async cmdGive(m: ChatCommand, who: string, expr: string) {
 
-		const src = await this.userCharOrErr(m, m.author);
+		const src = await this.userCharOrErr(m, m.user);
 		if (!src) return;
 
 		const dest = await this.loadChar(who);
@@ -608,18 +606,18 @@ export class Rpg {
 
 	}
 
-	async cmdScout(m: Message) {
+	async cmdScout(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		await Display.SendBlock(m, this.game.scout(char));
 
 	}
 
-	async cmdTrack(m: Message, who: string) {
+	async cmdTrack(m: ChatCommand, who: string) {
 
-		const src = await this.userCharOrErr(m, m.author);
+		const src = await this.userCharOrErr(m, m.user);
 		if (!src) return;
 
 		const dest = await this.loadChar(who);
@@ -629,10 +627,10 @@ export class Rpg {
 
 	}
 
-	async cmdAttack(m: Message, who?: string | number) {
+	async cmdAttack(m: ChatCommand, who?: string | number) {
 
 		try {
-			const src = await this.userCharOrErr(m, m.author);
+			const src = await this.userCharOrErr(m, m.user);
 			if (!src) return;
 
 			let targ = await this.world.getNpc(src, who ?? 1);
@@ -661,9 +659,9 @@ export class Rpg {
 
 	}
 
-	async cmdSteal(m: Message, who: string, wot?: string) {
+	async cmdSteal(m: ChatCommand, who: string, wot?: string) {
 
-		const src = await this.userCharOrErr(m, m.author);
+		const src = await this.userCharOrErr(m, m.user);
 		if (!src) return;
 
 		const dest = await this.loadChar(who);
@@ -674,7 +672,7 @@ export class Rpg {
 
 	}
 
-	async cmdRmChar(m: Message, charname?: string) {
+	async cmdRmChar(m: ChatCommand, charname?: string) {
 
 		if (!charname) return m.reply('Must specify character to delete.');
 
@@ -683,7 +681,7 @@ export class Rpg {
 			const char = await this.loadChar(charname);
 			if (!char) return m.reply(`'${charname}' not found on server.`);
 
-			if (!char.owner || char.owner === m.author.id) {
+			if (!char.owner || char.owner === m.user.id) {
 
 				await this.charCache.delete(this.getCharKey(charname));
 
@@ -698,12 +696,12 @@ export class Rpg {
 
 	}
 
-	async cmdViewChar(m: Message<true>, charname?: string) {
+	async cmdViewChar(m: ChatCommand, charname?: string) {
 
 		let char;
 
 		if (!charname) {
-			char = await this.userCharOrErr(m, m.author);
+			char = await this.userCharOrErr(m, m.user);
 			if (!char) return;
 		} else {
 			char = await this.loadChar(charname);
@@ -713,9 +711,9 @@ export class Rpg {
 
 	}
 
-	async cmdAddStat(m: Message<true>, stat: string) {
+	async cmdAddStat(m: ChatCommand, stat: string) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const res = char.addStat(stat);
@@ -723,12 +721,12 @@ export class Rpg {
 
 	}
 
-	async cmdTalents(m: Message, charname?: string) {
+	async cmdTalents(m: ChatCommand, charname?: string) {
 
 		let char;
 
 		if (!charname) {
-			char = await this.userCharOrErr(m, m.author);
+			char = await this.userCharOrErr(m, m.user);
 			if (!char) return;
 		} else {
 			char = await this.loadChar(charname);
@@ -739,12 +737,12 @@ export class Rpg {
 
 	}
 
-	async cmdCharStats(m: Message, charname?: string) {
+	async cmdCharStats(m: ChatCommand, charname?: string) {
 
 		let char;
 
 		if (!charname) {
-			char = await this.userCharOrErr(m, m.author);
+			char = await this.userCharOrErr(m, m.user);
 			if (!char) return;
 		} else {
 			char = await this.loadChar(charname);
@@ -755,9 +753,9 @@ export class Rpg {
 
 	}
 
-	async cmdSaveChar(m: Message) {
+	async cmdSaveChar(m: ChatCommand) {
 
-		const char = await this.userCharOrErr(m, m.author);
+		const char = await this.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		await this.saveChar(char, true);
@@ -765,9 +763,9 @@ export class Rpg {
 
 	}
 
-	async cmdLoadChar(m: Message<true>, charname?: string) {
+	async cmdLoadChar(m: ChatCommand, charname?: string) {
 
-		if (!charname) charname = m.author.username;
+		if (!charname) charname = m.user.username;
 
 		try {
 
@@ -776,11 +774,11 @@ export class Rpg {
 
 			let prefix;
 
-			if (char.owner !== m.author.id) {
+			if (char.owner !== m.user.id) {
 				prefix = 'This is NOT your character.\n';
 			} else {
 
-				await this.setUserChar(m.author, char);
+				await this.setUserChar(m.user, char);
 				prefix = 'Active character set.\n';
 			}
 
@@ -790,7 +788,7 @@ export class Rpg {
 
 	}
 
-	async cmdRollChar(m: Message<true>, charname?: string, racename?: string, classname?: string, sex?: string) {
+	async cmdRollChar(m: ChatCommand, charname?: string, racename?: string, classname?: string, sex?: string) {
 
 		try {
 
@@ -809,9 +807,9 @@ export class Rpg {
 
 			} else charname = await this.uniqueName(race, sex);
 
-			const char = GenChar(m.author.id, race, charCls, charname);
+			const char = GenChar(m.user.id, race, charCls, charname);
 
-			await this.setUserChar(m.author, char);
+			await this.setUserChar(m.user, char);
 			Display.EchoChar(m.channel, char);
 			await this.saveChar(char, true);
 
@@ -821,7 +819,7 @@ export class Rpg {
 
 	async charExists(charname: string) { return this.charCache.exists(this.getCharKey(charname)); }
 
-	async userCharOrErr(m: Message, user: User) {
+	async userCharOrErr(m: ChatCommand, user: User) {
 
 		const charname = this.lastChars[user.id];
 		if (!charname) {
@@ -872,7 +870,7 @@ export class Rpg {
 
 	}
 
-	checkLevel(m: Message, char: Char) {
+	checkLevel(m: ChatCommand, char: Char) {
 		if (char.levelFlag) {
 			m.reply(char.name + ' has leveled up.');
 			char.levelFlag = false;
@@ -902,7 +900,7 @@ export class Rpg {
 
 } // class
 
-export const InitGame = async (bot: DiscordBot) => {
+/*export const InitGame = async (bot: DiscordBot) => {
 
 	await Promise.all([InitRaces(), InitClasses(), InitItems(), LoadEffects(), LoadActions()])
 
@@ -1014,16 +1012,4 @@ export const InitGame = async (bot: DiscordBot) => {
 	bot.addContextCmd('west', 'west', proto.cmdMove, Rpg, { maxArgs: 0, args: ['west'], alias: 'w' });
 	bot.addContextCmd('hike', 'hike <direction>', proto.cmdHike, Rpg, { minArgs: 1, maxArgs: 1 });
 
-}
-
-/*
-	async cmdChanges(m) {
-	let changes = require('./data/changelog.json');
-	let list = '';
-
-	for( const k in changes ) {
-		list += k + '\n' + changes[k].join('\n') + '\n\n';
-	}
-
-	await display.sendBlock( m, list )
 }*/
