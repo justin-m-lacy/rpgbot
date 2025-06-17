@@ -2,20 +2,41 @@ import { PermissionResolvable, SlashCommandBuilder, type Interaction } from "dis
 
 export type CommandFunc = (it: Interaction) => Promise<any> | void;
 
-export type CommandInfo = ReturnType<typeof CreateCommand>;
+export type CommandInfo = {
+	name: string,
+	data: SlashCommandBuilder,
+	exec: CommandFunc
+}
 
-export function CreateCommand(name: string, desc: string, handler: CommandFunc, ...rest: any[]) {
+export function CreateCommand(name: string, desc: string, handler: CommandFunc,
+	into?: CommandInfo[], ...rest: any) {
 
-	const cmd = new SlashCommandBuilder().setName(name).setDescription(desc);
+	const b = new SlashCommandBuilder().setName(name).setDescription(desc);
 
-	return {
-		desc: cmd,
+	const cmd = {
+		name,
+		data: b,
 		exec: handler
 	}
 
+	into?.push(cmd);
+
+
+	return cmd;
+
 }
 
+export type CommandModule = {
+	GetCommands(): CommandInfo[]
+}
 
+/**
+ * Check if loaded js module has command creation function.
+ * @param module 
+ */
+export const HasCommands = (module?: any): module is CommandModule => {
+	return module && typeof module === 'object' && typeof module.GetCommands === 'function';
+}
 
 export class Command<F extends Function = Function> {
 

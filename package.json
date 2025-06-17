@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node .",
     "dev": "cross-env NODE_ENV=production ts-node index.ts",
     "devtx": "cross-env NODE_ENV=production tsx index.ts",
+    "deploy-commands": "ts-node scripts/deploy-commands.ts",
     "serve": "cross-env NODE_ENV=production ts-node index.ts ----transpile-only",
     "build": "rimraf dist && tsc && tsc-alias && pnpm run minify && pnpm run copydata && pnpm run copypackage",
     "copypackage": "ts-node --project tsconfig.node.json strip-package.ts",
