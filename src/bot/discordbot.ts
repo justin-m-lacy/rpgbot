@@ -1,7 +1,7 @@
 import Cache from 'archcache';
-import { Channel, ChannelType, Client, Guild, GuildMember, Message, PermissionFlagsBits, PermissionResolvable, User, type SendableChannels } from 'discord.js';
+import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, PermissionFlagsBits, PermissionResolvable, User, type SendableChannels } from 'discord.js';
 import path from 'path';
-import { Display } from '../display';
+import { Display } from '../utils/display';
 import { Auth } from './auth';
 import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './botcontext';
 import fsys from './botfs';
@@ -49,7 +49,7 @@ export class DiscordBot {
 	/**
 	 * classes to instantiate for each context.
 	 */
-	private readonly contextClasses: ContextClass<ContextSource>[] = [];
+	private readonly ctxClasses: ContextClass<ContextSource>[] = [];
 
 	/**
 	 * prefix that indicates an archbot command.
@@ -88,14 +88,12 @@ export class DiscordBot {
 		this.baseDir = mainDir || process.cwd();
 
 		// classes to instantiate for each context.
-		this.contextClasses = [];
+		this.ctxClasses = [];
 
 		this.client = client;
 
 		this._spamblock = config.spamblock ?? {};
 		this.cmdPrefix = config.cmdprefix ?? '!';
-
-		console.dir(config);
 
 		this.pluginDir = path.join(this.baseDir, config.pluginsdir ?? 'plugins');
 		this.saveDir = path.join(this.baseDir, config.savedir || '/savedata/');
@@ -149,7 +147,7 @@ export class DiscordBot {
 		this.addCmd('archleave', 'archleave', (m: Message) => this.cmdLeaveGuild(m), {
 			access: PermissionFlagsBits.Administrator
 		});
-		this.addCmd('archkill', 'archkill', (m: Message) => this.cmdBotQuit(m), { immutable: true });
+		this.addCmd('botkill', 'botkill', (m: Message) => this.cmdBotQuit(m), { immutable: true });
 		this.addCmd('proxyme', 'proxyme', (m: Message) => this.cmdProxy(m));
 		this.addCmd('access', 'access cmd [permissions|roles]',
 			(m: Message, cmd: string, perm: PermissionResolvable) => this.cmdAccess(m, cmd, perm),
@@ -214,7 +212,7 @@ export class DiscordBot {
 	 */
 	addContextClass(cls: ContextClass<ContextSource>) {
 
-		this.contextClasses.push(cls);
+		this.ctxClasses.push(cls);
 
 		// ensure context for every guild.
 		if (this.client) {
@@ -234,16 +232,20 @@ export class DiscordBot {
 	initClient() {
 
 		// NOTE: 'this' for events is always client.
-		this.client.on('ready', () => this.initContexts());
-		this.client.on('guildUnavailable', onGuildUnavail)
+		this.client.on(Events.ClientReady, () => this.initContexts());
+		this.client.on(Events.GuildUnavailable, onGuildUnavail)
 
 		this.client.on('resume', onResume);
 
-		this.client.on('messageCreate', m => {
+		this.client.on(Events.MessageCreate, m => {
 			if (m.author.id === this.client.user!.id) return;
 			if (!m.channel.isSendable()) return;
 			if (this.spamblock(m)) return;
 			this.onMessage(m as Message<true>);
+
+		});
+
+		this.client.on(Events.InteractionCreate, action => {
 
 		});
 
@@ -255,7 +257,7 @@ export class DiscordBot {
 			+ this.client.user?.id + ')');
 
 		try {
-			const classes = this.contextClasses;
+			const classes = this.ctxClasses;
 			if (classes.length === 0) {
 				return;
 			}
@@ -296,7 +298,7 @@ export class DiscordBot {
 
 	/**
 	 *
-	 * @param {Message} m
+	 * @param m
 	 */
 	private async onMessage(m: Message<true>) {
 
@@ -360,9 +362,8 @@ export class DiscordBot {
 	}
 
 	/**
-	 * Returns true if the given discord user is the bot owner.
-	 * @param {Discord.User|string} u
-	 * @returns {boolean}
+	 * Returns true if discord user is the bot owner.
+	 * @param u
 	 */
 	isOwner(u: User | string) {
 
@@ -373,8 +374,8 @@ export class DiscordBot {
 	/**
 	 * Backup unsaved cache items.
 	 * @async
-	 * @param {Message} m
-	 * @returns {Promise}
+	 * @param m
+	 * @returns
 	 */
 	private async cmdBackup(m: Message) {
 
@@ -666,7 +667,7 @@ export class DiscordBot {
 		}
 
 		if (context) {
-			await context.init(this.contextClasses);
+			await context.init(this.ctxClasses);
 			this.contexts.set(idobj.id, context);
 		}
 

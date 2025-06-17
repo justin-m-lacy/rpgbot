@@ -1,4 +1,4 @@
-const Display = require('./display');
+import { Display } from './display';
 
 const ms_per_day: number = 1000 * 3600 * 24;
 const ms_per_hr: number = 1000 * 3600;
@@ -46,11 +46,9 @@ export default {
 				}
 
 
-			} else {
-
 			}
 
-		} //
+		} // for
 
 		return new Date();
 
@@ -126,8 +124,8 @@ export default {
 	/**
 	 * Returns a date string formatted for a date/time appropriate
 	 * to the intervening time scale.
-	 * @param {Date|number} date
-	 * @returns {string}
+	 * @param date
+	 * @returns
 	 */
 	dateString(date: Date | number) {
 
@@ -149,8 +147,8 @@ export default {
 
 	/**
 	 * Returns a string for a date within the given day.
-	 * @param {Date} date
-	 * @returns {string}
+	 * @param date
+	 * @returns
 	 */
 	getDayString(date: Date) {
 		return date.getHours() + ':' + date.getMinutes();
@@ -158,8 +156,8 @@ export default {
 
 	/**
 	 * Gets a date string for dates less than a month away.
-	 * @param {Date} date
-	 * @returns {string}
+	 * @param date
+	 * @returns
 	 */
 	getMonthDate(date: Date) {
 		return Display.capitalize(months[date.getMonth()] + ' ' + date.getDate() + ' at ' + date.getHours() + ':' + date.getMinutes());
@@ -167,8 +165,8 @@ export default {
 
 	/**
 	 * Returns a date string for dates less than a week away.
-	 * @param {Date} date
-	 * @returns {string}
+	 * @param date
+	 * @returns
 	 */
 	getWeekDate(date: Date) {
 		return Display.capitalize(days[date.getDay()] + ' ' + date.getMonth() + '/'
@@ -177,8 +175,8 @@ export default {
 
 	/**
 	 * Gets a date string for times very far away.
-	 * @param {Date} date
-	 * @returns {string}
+	 * @param date
+	 * @returns
 	 */
 	getFarDate(date: Date) {
 		return Display.capitalize(months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear());

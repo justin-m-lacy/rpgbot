@@ -1,4 +1,21 @@
-import { PermissionResolvable } from "discord.js";
+import { PermissionResolvable, SlashCommandBuilder, type Interaction } from "discord.js";
+
+export type CommandFunc = (it: Interaction) => Promise<any> | void;
+
+export type CommandInfo = ReturnType<typeof CreateCommand>;
+
+export function CreateCommand(name: string, desc: string, handler: CommandFunc, ...rest: any[]) {
+
+	const cmd = new SlashCommandBuilder().setName(name).setDescription(desc);
+
+	return {
+		desc: cmd,
+		exec: handler
+	}
+
+}
+
+
 
 export class Command<F extends Function = Function> {
 

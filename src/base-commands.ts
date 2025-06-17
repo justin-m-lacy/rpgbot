@@ -1,39 +1,34 @@
-import { Client, GuildMember, Message, PermissionFlagsBits } from 'discord.js';
+import { GuildMember, Message, PermissionFlagsBits } from 'discord.js';
 import { DiscordBot } from './bot/discordbot';
 
 import { parseRoll } from '../rpg/values/dice';
-import { getSenderName } from './utils/users';
 
 let bot: DiscordBot;
-let client: Client;
 
-const DefaultModule = 'default';
 
-export function initBasicCommands(b: DiscordBot) {
+export function initBaseCommands(b: DiscordBot) {
+
+    const DefaultModule = 'default';
 
     bot = b;
-    client = b.client;
     const cmds = b.dispatch;
 
     cmds.add('help', 'help <cmd>', cmdHelp, { maxArgs: 2, module: DefaultModule });
     cmds.add('roll', '!roll [n]d[s]', cmdRoll, { maxArgs: 1, module: DefaultModule });
 
-    cmds.add('uid', 'uid <username>', cmdUid, { maxArgs: 1, module: DefaultModule });
     cmds.add('uname', "uname <nickname> - get user's username", cmdUName, { maxArgs: 1, module: DefaultModule });
     cmds.add('nick', "nick <displayName> - get user's nickname", cmdNick, { maxArgs: 1, module: DefaultModule });
     cmds.add('displayname', "displayname <user> - get user's display name.", cmdDisplayName, { maxArgs: 1, module: DefaultModule });
 
     cmds.add('say', '', cmdSay, { maxArgs: 1, module: DefaultModule, hidden: true, access: PermissionFlagsBits.Administrator });
 
-    cmds.add('test', 'test [ping message]', cmdTest, { maxArgs: 1, module: DefaultModule });
-
 }
 
 /**
  * @async
- * @param {Message} msg
- * @param {string} name
- * @returns {Promise}
+ * @param msg
+ * @param name
+ * @returns
  */
 const cmdUName = async (msg: Message<true>, name: string) => {
 
@@ -45,9 +40,9 @@ const cmdUName = async (msg: Message<true>, name: string) => {
 
 /**
  * @async
- * @param {Message} msg
- * @param {string} name
- * @returns {Promise}
+ * @param msg
+ * @param name
+ * @returns
  */
 const cmdNick = async (msg: Message<true>, name: string) => {
 
@@ -68,8 +63,8 @@ const cmdDisplayName = async (msg: Message<true>, name: string) => {
 }
 /**
  *
- * @param {Message} msg
- * @param {string} [cmd] command to get help for.
+ * @param  msg
+ * @param cmd command to get help for.
  */
 const cmdHelp = (msg: Message<true>, cmd?: string, page?: string) => {
 
@@ -88,23 +83,9 @@ const cmdHelp = (msg: Message<true>, cmd?: string, page?: string) => {
 
 /**
  * @async
- * @param {Message} msg
- * @param {string} name
- * @returns {Promise}
- */
-const cmdUid = async (msg: Message<true>, name: string) => {
-
-    const gMember = bot.userOrSendErr(msg.channel, name);
-    if (!gMember || !(gMember instanceof GuildMember)) return;
-    return msg.channel.send(name + ' uid: ' + gMember.user.id)
-
-}
-
-/**
- * @async
  * @param msg
- * @param {string} dicestr - roll formatted string.
- * @returns {Promise}
+ * @param dicestr - roll formatted string.
+ * @returns
  */
 const cmdRoll = async (msg: Message<true>, dicestr: string) => {
 
@@ -127,14 +108,4 @@ const cmdRoll = async (msg: Message<true>, dicestr: string) => {
 const cmdSay = (msg: Message<true>, what: string) => {
 
     return msg.channel.send(`[ ${what} ]`);
-}
-
-/**
- *
- * @param {Message} msg
- * @param {string} reply
- */
-const cmdTest = (msg: Message<true>, reply: string) => {
-    if (reply == null) return msg.channel.send('eh?');
-    else if (msg.member) return msg.channel.send(reply + ' yourself, ' + getSenderName(msg));
 }

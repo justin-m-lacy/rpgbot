@@ -3,7 +3,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import { Auth } from '@/bot/auth';
 import "dotenv/config";
 import { InitGame } from 'rpg/rpg';
-import { initBasicCommands } from './src/base-commands';
+import { initBaseCommands } from './src/base-commands';
 import { DiscordBot } from './src/bot/discordbot';
 
 // Ensure current working directory is directory of the base script.
@@ -49,7 +49,7 @@ const initBot = async () => {
 	console.log(`base directory: ${__dirname}`);
 	try {
 		const bot = new DiscordBot(client, auth, config, __dirname);
-		initBasicCommands(bot);
+		initBaseCommands(bot);
 		await InitGame(bot);
 
 		tryLogin(auth);
