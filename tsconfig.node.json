@@ -45,6 +45,7 @@
   "include": [
     "src/**/*.ts",
     "./*.ts",
+    "archcache",
     "auth.json",
     "config.json",
     "rpg/**/*.ts",

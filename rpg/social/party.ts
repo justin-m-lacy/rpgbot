@@ -48,7 +48,7 @@ export class Party extends SocialGroup {
 
 		for (let i = this.roster.length - 1; i >= 0; i--) {
 
-			const char = await this.cache.fetch(this.roster[i]) as Char | undefined;
+			const char = await this.cache.fetch(this.roster[i]);
 			if (char && char.isAlive()) return 'alive';
 
 		} //
@@ -74,7 +74,7 @@ export class Party extends SocialGroup {
 
 		for (let i = roster.length - 1; i >= 0; i--) {
 
-			const char = await this.cache.fetch<Char>(roster[i]) as Char;
+			const char = await this.cache.fetch(roster[i]);
 			if (char) {
 				char.loc = coord;
 				if (char.isAlive()) char.recover();
@@ -93,7 +93,7 @@ export class Party extends SocialGroup {
 
 		for (let i = roster.length - 1; i >= 0; i--) {
 
-			const char = await this.cache.fetch(roster[i]) as Char;
+			const char = await this.cache.fetch(roster[i]);
 			if (!char) continue;
 			if (char.isAlive()) char.rest();
 			hp += char.hp.value;
@@ -110,7 +110,7 @@ export class Party extends SocialGroup {
 
 		for (let i = roster.length - 1; i >= 0; i--) {
 
-			const char = await this.cache.fetch(roster[i]) as Char;
+			const char = await this.cache.fetch(roster[i]);
 			//console.log( 'moving char: ' + char.name + ' to: ' + coord.toString() );
 			if (char && char.isAlive()) char.recover();
 
@@ -126,8 +126,10 @@ export class Party extends SocialGroup {
 		const len = roster.length;
 
 		for (let i = 0; i < len; i++) {
-			const char = await this.cache.fetch(roster[i]) as Char;
-			res += `\n${char.name}  ${char.getStatus()}`;
+			const char = await this.cache.fetch(roster[i]);
+			if (char) {
+				res += `\n${char.name}  ${char.getStatus()}`;
+			}
 		}
 
 		return res;
@@ -143,7 +145,7 @@ export class Party extends SocialGroup {
 
 		for (let i = len - 1; i >= 0; i--) {
 
-			const c = await this.cache.fetch(this.roster[i]) as Char;
+			const c = await this.cache.fetch(this.roster[i]);
 			if (c) c.addExp(exp)
 
 		}
@@ -161,7 +163,7 @@ export class Party extends SocialGroup {
 
 		do {
 
-			const c = await this.cache.fetch(this.roster[ind]) as Char;
+			const c = await this.cache.fetch(this.roster[ind]);
 			if (c && c.state === 'alive') return c;
 
 			if (++ind >= len) ind = 0;
@@ -184,7 +186,7 @@ export class Party extends SocialGroup {
 
 		do {
 
-			const c = await this.cache.fetch(this.roster[ind]) as Char;
+			const c = await this.cache.fetch(this.roster[ind]);
 
 			if (c && c.hp.value > 0 && c.state === 'alive') return c as Actor;
 			if (++ind >= len) ind = 0;
