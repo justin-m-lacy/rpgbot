@@ -1,7 +1,8 @@
 import * as jsutils from '@/utils/jsutils';
+import type { ItemIndex } from 'rpg/items/container';
 import * as ItemGen from './builders/itemgen';
 import { Char } from "./char/char";
-import { ItemIndex, ItemPicker } from './inventory';
+import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Material } from "./items/material";
 import { Wearable, toSlot } from './items/wearable';
@@ -22,7 +23,7 @@ const rollCost = (lvl: number) => {
 
 export const rollWeap = (char: Char) => {
 
-	let level = char.level;
+	let level = char.level.valueOf();
 	const cost = rollCost(level);
 	if (!char.payOrFail(cost))
 		return `${char.name} cannot afford to roll a new weapon. (${cost} gold)`;
@@ -42,7 +43,7 @@ export const rollWeap = (char: Char) => {
 
 export const rollArmor = (char: Char, slot?: string) => {
 
-	let level = char.level;
+	let level = char.level.valueOf();
 	const cost = rollCost(level);
 	if (!char.payOrFail(cost))
 		return `${char.name} cannot afford to roll new armor. (${cost} gold)`;
@@ -66,7 +67,7 @@ export const sellRange = (src: Char, start: ItemIndex, end: ItemIndex) => {
 	if (arr === null) return 'Invalid item range.';
 	if (arr.length === 0) return 'No items in range.';
 
-	const mod = Math.max(src.level + src.getModifier('cha'), 0);
+	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
 
 	let gold = 0;
 
@@ -90,7 +91,7 @@ export const sell = (src: Char, wot: ItemPicker, end?: ItemIndex) => {
 	const it = src.takeItem(wot) as Item | null;
 	if (!it) return 'Item not found.';
 
-	const mod = Math.max(src.level + src.getModifier('cha'), 0);
+	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
 
 	const gold = isNaN(it.cost) ? (Math.random() < 0.5 ? mod : 0) : it.cost + mod;
 	src.addGold(gold);
@@ -140,7 +141,7 @@ const xferGold = (src: Char, dest: Char, count: number | string) => {
 
 export const nerfItems = (char: Char) => {
 
-	const maxLevel = char.level + 1;
+	const maxLevel = char.level.valueOf() + 1;
 
 	const test = (it: Item) => {
 
