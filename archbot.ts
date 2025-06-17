@@ -77,7 +77,7 @@ async function loadConfig() {
 		if (process.env.NODE_ENV !== 'production' && config.dev) {
 			Object.assign(config, config.dev);
 		}
-		return {}
+		return config;
 
 	} catch (e) {
 		return {};

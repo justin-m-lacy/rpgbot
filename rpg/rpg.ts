@@ -9,6 +9,7 @@ import { getHistory } from 'rpg/events';
 import { LoadActions } from 'rpg/magic/action';
 import { LoadEffects } from 'rpg/magic/effects';
 import { Monster } from 'rpg/monster/monster';
+import { GenName } from 'rpg/namegen';
 import { InitClasses, InitRaces, RandClass, RandRace } from 'rpg/parsers/classes';
 import { InitItems, PotsList } from './builders/itemgen';
 import { Char } from './char/char';
@@ -20,9 +21,9 @@ import * as Trade from './trade';
 import { toDirection } from "./world/loc";
 import { World } from './world/world';
 
-const RPG_DIR = 'rpg/';
-const CHAR_DIR = 'chars/';
+const RPG_DIR = 'rpg';
 const LAST_CHARS = '`lastchars`';
+
 // created for each bot context.
 export class Rpg {
 
@@ -43,10 +44,11 @@ export class Rpg {
 		this.context = context;
 
 		this.cache = this.context.subcache(RPG_DIR);
-		this.charCache = this.cache.subcache<Char>(CHAR_DIR, Char.Revive as any);
 
-		this.world = new World(this.context.cache);
-		this.game = new Game(this, this.charCache, this.world);
+		this.game = new Game(this.cache);
+
+		this.charCache = this.game.charCache;
+		this.world = this.game.world;
 
 	}
 
@@ -63,7 +65,7 @@ export class Rpg {
 	async cmdAllChars(m: Message, uname?: string) {
 
 		try {
-			const list = await this.context.getDataList(RPG_DIR + CHAR_DIR);
+			const list = await this.context.getDataList(RPG_DIR + '/chars');
 			if (!list) return m.reply('Could not get char list.');
 
 			return m.reply(list.join(', '));
@@ -808,7 +810,6 @@ export class Rpg {
 			} else charname = await this.uniqueName(race, sex);
 
 			const char = GenChar(m.author.id, race, charCls, charname);
-			console.log('new char: ' + char.name);
 
 			await this.setUserChar(m.author, char);
 			Display.EchoChar(m.channel, char);
@@ -891,10 +892,8 @@ export class Rpg {
 
 	async uniqueName(race: Race, sex?: string): Promise<string> {
 
-		const namegen = await import('./namegen.js', { assert: { type: 'json' } });
-
 		do {
-			const name = namegen.GenName(race.name, sex);
+			const name = GenName(race.name, sex);
 			if (name && !(await this.charExists(name))) return name;
 
 		} while (true);

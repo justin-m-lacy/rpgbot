@@ -6,6 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node .",
     "dev": "cross-env NODE_ENV=production ts-node archbot.ts",
+    "devtx": "cross-env NODE_ENV=production tsx archbot.ts",
     "serve": "cross-env NODE_ENV=production ts-node archbot.ts ----transpile-only",
     "build": "rimraf dist && tsc && tsc-alias && pnpm run minify && pnpm run copydata && pnpm run copypackage",
     "copypackage": "ts-node --project tsconfig.node.json strip-package.ts",
@@ -29,6 +30,7 @@
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.7",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.1.6"
   },
   "keywords": [

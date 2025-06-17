@@ -22,8 +22,6 @@ const statRolls = [
 
 export const GenChar = (owner: string, race: Race, charClass: GClass, name: string, sex?: string) => {
 
-	console.log('gen char...');
-
 	const char = new Char(name, race, charClass, owner);
 
 	const statVals = rollStats(statRolls);

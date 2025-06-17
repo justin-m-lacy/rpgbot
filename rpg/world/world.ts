@@ -10,7 +10,7 @@ import * as Gen from './worldgen';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching of existing world data.
-const BLOCK_SIZE = 8;
+const BLOCK_SIZE = 16;
 
 export class World {
 

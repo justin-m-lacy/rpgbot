@@ -58,7 +58,7 @@ export class Party extends SocialGroup {
 
 	/**
 	 *
-	 * @param {string} name
+	 * @param name
 	 */
 	async getChar(name: string) { return this.cache.fetch(name) as Promise<Char | undefined>; }
 

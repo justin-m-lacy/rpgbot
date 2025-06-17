@@ -2,6 +2,7 @@ import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
 import type { ItemIndex } from 'rpg/items/container';
 import { GetClass, GetRace } from 'rpg/parsers/classes';
+import type Block from 'rpg/world/block';
 import * as ItemGen from './builders/itemgen';
 import { Actor, LifeState } from './char/actor';
 import { Char } from './char/char';
@@ -11,7 +12,6 @@ import { Craft, Item } from './items/item';
 import { Potion } from './items/potion';
 import { Wearable } from './items/wearable';
 import { Monster } from './monster/monster';
-import { Rpg } from "./rpg";
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
@@ -43,12 +43,6 @@ const BlockedActs: Partial<{ [Property in LifeState]: any }> = {
 const rest_acts = { 'move': 1, 'cook': 1, 'drop': 1 };
 const party_acts = ['attack', 'move'];
 
-const eventFb = {
-	levelup: '%c has leveled up.',
-	explored: '%c has found a new area.',
-	died: '%c has died.'
-};
-
 const eventExp = {
 	explored: 2,
 	crafted: 1
@@ -56,9 +50,8 @@ const eventExp = {
 
 export class Game {
 
-	private readonly rpg: Rpg;
 	private readonly cache: Cache;
-	private readonly charCache: Cache<Char>;
+	readonly charCache: Cache<Char>;
 	readonly world: World
 
 	private readonly _charParties: { [char: string]: Party } = {};
@@ -68,18 +61,16 @@ export class Game {
 	/**
 	 *
 	 * @param rpg
-	 * @param charCache character cache.
-	 * @param world RPG world
 	 */
-	constructor(rpg: Rpg, charCache: Cache<Char>, world: World) {
+	constructor(cache: Cache<any>) {
 
-		this.rpg = rpg;
-		this.world = world;
+		this.cache = cache;
 
-		this.cache = this.rpg.cache;
-		this.charCache = charCache;
+		this.world = new World(cache.subcache<Block>('world'));
 
-		this.guilds = new GuildManager(this.cache.subcache('guilds'));
+		this.charCache = cache.subcache<Char>('chars', Char.Revive as any);;
+
+		this.guilds = new GuildManager(cache.subcache('guilds'));
 
 	}
 

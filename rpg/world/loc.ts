@@ -110,23 +110,9 @@ export class Coord {
 
 export class Loc {
 
-	get name() { return this._name; }
-	set name(v) { this._name = v; }
-
-	get areaName() { return this._areaName; }
-
-	/**
-	 * @property {string} - name of the biome.
-	 */
 	get biome() { return this._biome; }
 	set biome(v) { this._biome = v; }
 
-	get desc() { return this._desc; }
-	set desc(v) { this._desc = v; }
-
-	/**
-	 * @property {Coord} coord
-	*/
 	get coord() { return this._coord; }
 
 	get time() { return this._time; }
@@ -140,7 +126,6 @@ export class Loc {
 	get norm() { return Math.abs(this._coord.x) + Math.abs(this._coord.y); }
 
 	get maker() { return this._maker; }
-	set maker(v) { this._maker = v; }
 
 	get attach() { return this._attach; }
 	set attach(v) { this._attach = v; }
@@ -148,16 +133,14 @@ export class Loc {
 	get owner() { return this._owner; }
 	set owner(v) { this._owner = v; }
 
-	private _name?: string;
-	private _desc?: string;
+	name?: string;
+	desc?: string;
 
 	private _biome: string;
 	private _maker?: string;
 	private _attach: any;
 	private _owner?: string;
 	private _time?: number;
-
-	private _areaName?: string;
 
 	private _features: Inventory;
 
@@ -209,7 +192,6 @@ export class Loc {
 
 		loc.name = json.name;
 		loc.desc = json.desc;
-		loc._areaName = json.areaName;
 
 		if (json.npcs) Loc.ParseNpcs(json.npcs, loc);
 
@@ -240,9 +222,8 @@ export class Loc {
 			coord: this._coord,
 			exits: this.exits,
 			inv: this.inv,
-			desc: this._desc,
-			areaName: this._areaName,
-			name: this._name,
+			desc: this.desc,
+			name: this.name,
 			biome: this._biome,
 			npcs: this.npcs ?? undefined,
 			features: this._features ?? undefined,
@@ -274,7 +255,7 @@ export class Loc {
 
 	/**
 	 * Add a new exit from this location.
-	 * @param {Exit} exit
+	 * @param exit
 	 */
 	addExit(exit: Exit) {
 		//console.log( 'adding exit ' + exit);
@@ -292,7 +273,7 @@ export class Loc {
 	/**
 	 * Returns the exit that leads back from the given direction.
 	 * e.g. fromDir == 'west' returns the 'east' exit, if it exists.
-	 * @param {*} fromDir - direction arriving from.
+	 * @param fromDir - direction arriving from.
 	 * @returns {Exit|null}
 	 */
 	reverseExit(fromDir: DirVal) {
@@ -303,10 +284,10 @@ export class Loc {
 	/**
 	 * Returns exit leading to coord, or null
 	 * if none exists.
-	 * @param {Coord} coord
-	 * @returns {Exit|null}
+	 * @param coord
+	 * @returns
 	 */
-	getExitTo(coord: Coord) {
+	getExitTo(coord: Coord): Exit | undefined {
 
 		let k: DirVal;
 		for (k in this.exits) {
@@ -314,7 +295,7 @@ export class Loc {
 				return this.exits[k];
 			}
 		}
-		return null;
+		return undefined;
 
 	}
 
@@ -328,7 +309,7 @@ export class Loc {
 
 		let r = in_prefix[this._biome as Biome] + this._biome;//+ ' (' + this._coord.toString() + ')';
 		if (this._attach && imgTag) r += ' [img]';
-		r += '\n' + this._desc;
+		r += '\n' + this.desc;
 
 		if (this._features.count > 0) r += '\nFeatures: ' + this._features.getList();
 		r += '\nOn ground: ' + this.inv.getList();
@@ -349,8 +330,8 @@ export class Loc {
 
 	/**
 	 *
-	 * @param {Char} char
-	 * @param {Feature|string|number} wot
+	 * @param char
+	 * @param wot
 	 */
 	use(char: Char, wot: string | number | Feature) {
 
@@ -399,7 +380,7 @@ export class Loc {
 
 	/**
 	 *
-	 * @param {string} what
+	 * @param what
 	 */
 	take(what: string | number) { return this.inv.take(what); }
 

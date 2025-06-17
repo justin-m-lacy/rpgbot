@@ -28,7 +28,7 @@ export const genNew = (coord: Coord) => {
  * @param  from - location arriving from.
  * @param  adj - all allowed exits.
  */
-export const genLoc = (coord: Coord, from: Loc, exits: Exit[]) => {
+export const genLoc = (coord: Coord, from: Loc, exits: Exit[]): Loc => {
 
 	const biomeName = from ? randBiome(from.biome as BiomeName) : Biome.TOWN;
 	const loc = makeBiomeLoc(coord, biomeName as BiomeName);
@@ -78,7 +78,7 @@ export const makeBiomeLoc = (coord: Coord, biomeName: keyof typeof Biomes = Biom
 
 /**
  * 
- * @param {string} prevBiome - name of previous biome.
+ * @param prevBiome - name of previous biome.
  */
 function randBiome(prevBiome: keyof typeof Biomes) {
 
@@ -106,9 +106,9 @@ function randBiome(prevBiome: keyof typeof Biomes) {
 
 /**
 * Returns and caches total weights in biome-transitions object.
-* @param {*} trans 
+* @param trans 
 */
-function getTransMax(trans: any) {
+function getTransMax(trans: Record<string, number>) {
 
 	if (trans.max) return trans.max;
 	let max = 0;

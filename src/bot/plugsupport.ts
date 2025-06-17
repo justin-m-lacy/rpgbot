@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import { DiscordBot } from "./discordbot";
 
 const ParseExtensions = ['', '.js', '.ts'];
@@ -51,7 +52,7 @@ const loadPlugs = async (dirPath: string, results: PluginFile[]) => {
 			const ext = path.extname(file.name).toLowerCase();
 			if (!file.isFile() || !ParseExtensions.includes(ext)) continue;
 
-			const plug = await import(path.resolve(dirPath, file.name));
+			const plug = await import(pathToFileURL(path.resolve(dirPath, file.name)).href);
 			if (isPlugin(plug)) {
 				results.push(plug);
 			}

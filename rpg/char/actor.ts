@@ -54,8 +54,11 @@ export class Actor {
 	set age(s: Numeric) { this.stats.age.setTo(s); }
 
 	get armor() { return this.stats.armor; }
+	set armor(v: Numeric) { this.stats.armor.setTo(v) }
 
 	get str() { return this.stats.str; }
+	set str(v: Numeric) { this.stats.str.value = v.valueOf() }
+
 	get con() { return this.stats.con; }
 	set con(v: Numeric) {
 
@@ -65,10 +68,14 @@ export class Actor {
 	}
 
 	get dex() { return this.stats.dex; }
-	get int() { return this.stats.int; }
-	get wis() { return this.stats.wis; }
-	get cha() { return this.stats.cha; }
+	set dex(v: Numeric) { this.stats.dex.value = v.valueOf() }
 
+	get int() { return this.stats.int; }
+	set int(v: Numeric) { this.stats.int.value = v.valueOf() }
+	get wis() { return this.stats.wis; }
+	set wis(v: Numeric) { this.stats.wis.value = v.valueOf() }
+	get cha() { return this.stats.cha; }
+	set cha(v: Numeric) { this.stats.cha.value = v.valueOf() }
 
 	get HD() { return this._myClass ? Math.floor((this._myClass.HD + this.race.HD) / 2) : this.race.HD; }
 

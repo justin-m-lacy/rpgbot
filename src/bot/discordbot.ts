@@ -94,7 +94,10 @@ export class DiscordBot {
 
 		this._spamblock = config.spamblock ?? {};
 		this.cmdPrefix = config.cmdprefix ?? '!';
-		this.pluginDir = path.join(this.baseDir, config.pluginsdir ?? '');
+
+		console.dir(config);
+
+		this.pluginDir = path.join(this.baseDir, config.pluginsdir ?? 'plugins');
 		this.saveDir = path.join(this.baseDir, config.savedir || '/savedata/');
 
 		fsys.setBaseDir(this.saveDir);
