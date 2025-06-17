@@ -1,4 +1,4 @@
-import * as ItemGen from '../builders/itemgen';
+import { randFeature } from 'rpg/builders/features';
 import Biomes from '../data/world/biomes.json';
 import { Biome, Coord, Exit, Loc } from './loc';
 
@@ -11,7 +11,12 @@ export const genNew = (coord: Coord) => {
 
 	// note that a new coord must be used to avoid references.
 	const loc = makeBiomeLoc(new Coord(coord.x, coord.y), Biome.TOWN);
-	loc.exits = genExits(coord.x, coord.y);
+
+	const exits = genExits(coord.x, coord.y);
+	let k: keyof typeof exits;
+	for (k in exits) {
+		loc.exits[k] = exits[k];
+	}
 
 	return loc;
 
@@ -19,9 +24,9 @@ export const genNew = (coord: Coord) => {
 
 /**
  * 
- * @param {Loc.Coord} coord 
- * @param {Loc.Loc} from - location arriving from.
- * @param {Loc.Exit[]} adj - all allowed exits.
+ * @param  coord 
+ * @param  from - location arriving from.
+ * @param  adj - all allowed exits.
  */
 export const genLoc = (coord: Coord, from: Loc, exits: Exit[]) => {
 
@@ -33,7 +38,7 @@ export const genLoc = (coord: Coord, from: Loc, exits: Exit[]) => {
 	}
 
 	while (Math.random() < 0.1) {
-		loc.addFeature(ItemGen.randFeature());
+		loc.addFeature(randFeature());
 	}
 
 	return loc;
