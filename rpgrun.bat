@@ -1,2 +1,2 @@
 SET NODE_ENV="development"
-cmd /k node archbot.js
+cmd /k node index.js

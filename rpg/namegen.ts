@@ -1,11 +1,23 @@
-import { CreateCommand, type ChatAction } from '@/bot/command';
-import { DiscordBot } from '@/bot/discordbot';
+import { NewCommand, StrChoices, type ChatAction } from '@/bot/command';
 
-export const GetCommands = (bot: DiscordBot) => {
+export default {
 
-	return [
-		CreateCommand('rollname', 'rollname [<race>] [m|f]', cmdRollName)
-	];
+	data: NewCommand('rollname', 'Get a random name',
+		[
+			StrChoices('sex', 'Sex of character', [
+				{ name: 'Male', value: 'm' }, { name: 'Female', value: 'f' }
+			])
+		]
+	),
+	exec: (m: ChatAction) => {
+		const name = GenName(
+			m.options.getString('race') ?? undefined,
+			toSex(m.options.getString('sex') ?? undefined)
+		);
+		if (name) {
+			m.reply(name);
+		}
+	}
 
 }
 
@@ -185,15 +197,6 @@ export const GenName = (race: string = "human", sex?: string): string => {
 
 	const lists = nameParts[race][sex];
 	return buildName(lists.parts, lists.roots, lists.ends);
-
-}
-
-const cmdRollName = (m: ChatAction, race?: string, sex?: string) => {
-
-	const name = GenName(race, toSex(sex));
-	if (name) {
-		m.reply(name);
-	}
 
 }
 

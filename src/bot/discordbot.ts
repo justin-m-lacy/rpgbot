@@ -1,5 +1,5 @@
 import Cache from 'archcache';
-import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, PermissionFlagsBits, PermissionResolvable, User, type Interaction, type SendableChannels } from 'discord.js';
+import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, PermissionFlagsBits, PermissionResolvable, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
 import { Display } from '../utils/display';
 import { Auth } from './auth';
@@ -741,17 +741,20 @@ export class DiscordBot {
 	 * @param cmdname
 	 * @returns
 	 */
-	async printCommand(chan: SendableChannels, cmdname: string, page: number = 0) {
+	async printCommand(chan: ChatAction, cmdname: string, page: number = 0) {
 
-		const cmdInfo = this.dispatch.commands[cmdname];
+		const cmdInfo = this.commands[cmdname];
 		if (cmdInfo) {
 
 			const usage = cmdInfo.usage;
-			if (!usage) return chan.send('No usage information found for command \'' + cmdname + '\'.');
-			else return chan.send(cmdname + ' usage: ' + cmdInfo.usage);
+			if (!usage) return chan.reply({
+				content: 'No usage information found for command \'' + cmdname + '\'.',
+				flags: MessageFlags.Ephemeral
+			});
+			else return chan.reply(cmdname + ' usage: ' + cmdInfo.usage);
 
 
-		} else return chan.send('Command \'' + cmdname + '\' not found.');
+		} else return chan.reply('Command \'' + cmdname + '\' not found.');
 
 	}
 
@@ -761,13 +764,13 @@ export class DiscordBot {
 	 * @param chan
 	 * @returns
 	 */
-	async printCommands(chan: SendableChannels, page: number = 0) {
+	async printCommands(chan: ChatAction, page: number = 0) {
 
 		const parts: string[] = [
 			`Use ${this.cmdPrefix}help [command] for more information.\nAvailable commands:\n`
 		];
 
-		const cmds = this.dispatch.commands;
+		const cmds = this.commands;
 
 		if (cmds) {
 

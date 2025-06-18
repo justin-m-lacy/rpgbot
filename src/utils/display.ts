@@ -1,4 +1,5 @@
-import { EmbedBuilder, Message, type SendableChannels } from 'discord.js';
+import type { ChatAction } from '@/bot/command';
+import { EmbedBuilder, Message, MessageFlags, type SendableChannels } from 'discord.js';
 
 export const Display = {
 
@@ -54,8 +55,8 @@ export const Display = {
 	/**
  * Gets the total number of pages that would be required to display
  * the text, given the maximum message size.
- * @param {string} text
- * @returns {number} one-based page count.
+ * @param text
+ * @returns one-based page count.
  */
 	pageCount(text: string) {
 		return Math.floor(text.length / this.CONTENT_MAX) + 1;
@@ -63,8 +64,8 @@ export const Display = {
 
 	/**
 	 * Makes a standard page count string for the given text.
-	 * @param {string} text
-	 * @returns {string} Information about the number of pages required.
+	 * @param text
+	 * @returns Information about the number of pages required.
 	 */
 	pageFooter(text: string) {
 		const count = this.pageCount(text);
@@ -74,9 +75,9 @@ export const Display = {
 	/**
 	 * Break the text into pages based on the maximum content length,
 	 * and return the indicated page of text.
-	 * @param {string} text
-	 * @param {number} page - zero-based page index.
-	 * @returns {string} - a single page of text out of the total.
+	 * @param text
+	 * @param page - zero-based page index.
+	 * @returns - a single page of text out of the total.
 	 */
 	getPageText(text: string, page: number = 0) {
 		return text.slice(this.CONTENT_MAX * page, this.CONTENT_MAX * (page + 1));
@@ -84,19 +85,24 @@ export const Display = {
 
 	/**
 	 * Break a message text into pages, and send it to the required message channel.
-	 * @param {Discord.Message} m
-	 * @param {string} text - text to paginate and send.
-	 * @param {number} page - zero-based page of text to be sent.
+	 * @param m
+	 * @param text - text to paginate and send.
+	 * @param page - zero-based page of text to be sent.
 	 */
-	async sendPage(chan: SendableChannels, text: string, page: number = 0) {
-		return chan.send(this.getPageText(text, page) + '\n\n' + this.pageFooter(text));
+	async sendPage(chan: ChatAction, text: string, page: number = 0) {
+		return chan.reply(
+			{
+				content: this.getPageText(text, page) + '\n\n' + this.pageFooter(text),
+				flags: MessageFlags.Ephemeral
+			}
+		);
 	},
 
 	/**
 	 * Break a message text into pages, and reply the page to the given message.
-	 * @param {Message} m
-	 * @param {string} text - text to paginate and reply.
-	 * @param {number} page - zero-based page of text to reply.
+	 * @param m
+	 * @param text - text to paginate and reply.
+	 * @param page - zero-based page of text to reply.
 	 */
 	async replyPage(m: Message, text: string, page: number = 0) {
 		return m.reply(this.getPageText(text, page) + '\n\n' + this.pageFooter(text));

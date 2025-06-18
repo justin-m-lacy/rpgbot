@@ -1,7 +1,8 @@
 import type { BotContext } from "@/bot/botcontext";
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption, type ApplicationCommandOptionBase, type SlashCommandOptionsOnlyBuilder } from "discord.js";
+import type { DiscordBot } from "@/bot/discordbot";
+import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type SlashCommandOptionsOnlyBuilder } from "discord.js";
 
-type BaseCommandFunc = (it: ChatAction) => Promise<any> | void | undefined;
+type BaseCommandFunc = (it: ChatAction, bot: DiscordBot) => Promise<any> | void | undefined;
 
 export type CommandFunc<T extends object> = (it: ChatAction, cls: T) => Promise<any> | void | undefined;
 
@@ -30,11 +31,13 @@ type TypedCommand<T extends object> = BaseCommand & {
 
 export type CommandData<T extends object | undefined = undefined> = T extends Object ? TypedCommand<T> : UntypedCommand;
 
-export const StrOpt = (name: string, desc: string) => new SlashCommandStringOption().setName(name).setDescription(desc);
+export const StrOpt = (name: string, desc: string, required: boolean = false) => new SlashCommandStringOption().setName(name).setDescription(desc).setRequired(required);
 
 export const StrChoices = (name: string, desc: string, choices: Array<{ name: string, value: string }>) => {
 	return new SlashCommandStringOption().setName(name).setDescription(desc).addChoices(...choices);
 }
+
+export const NumOpt = (name: string, desc: string, min: number = 0) => new SlashCommandNumberOption().setName(name).setDescription(desc).setMinValue(min);
 
 export const NewCommand = (name: string, desc: string, opts?: ApplicationCommandOptionBase[]
 ) => {

@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 
 import { Auth } from '@/bot/auth';
 import "dotenv/config";
-import { initBaseCommands } from './src/base-commands';
+import { initBaseCommands } from './commands/basic/base-commands';
 import { DiscordBot } from './src/bot/discordbot';
 
 // Ensure current working directory is directory of the base script.
