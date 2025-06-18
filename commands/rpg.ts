@@ -1,31 +1,15 @@
 import { CreateCommand, type ChatAction, type CommandInfo } from '@/bot/command';
 import type { DiscordBot } from '@/bot/discordbot';
-import { GenChar } from 'rpg/builders/chargen';
+import { Formula } from 'formulic';
 import type { Char } from 'rpg/char/char';
+import { GetLore } from 'rpg/game';
+import { Monster } from 'rpg/monster/monster';
+import { toDirection } from 'rpg/world/loc';
 import { InitItems } from '../rpg/builders/itemgen';
 import { LoadActions } from '../rpg/magic/action';
 import { LoadEffects } from '../rpg/magic/effects';
-import { InitClasses, InitRaces, RandClass, RandRace } from '../rpg/parsers/classes';
+import { InitClasses, InitRaces } from '../rpg/parsers/classes';
 import { Rpg } from '../rpg/rpg';
-
-
-/**
-	 * Command to list all chars in instance..
-	 * @param m 
-	 * @param uname 
-	 * @returns 
-	 */
-async function cmdAllChars(rpg: Rpg, m: ChatAction, uname?: string) {
-
-	try {
-		const list = await rpg.context.getDataList(RPG_DIR + '/chars');
-		if (!list) return m.reply('Could not get char list.');
-
-		return m.reply(list.join(', '));
-
-	} catch (e) { console.log(e); }
-
-}
 
 /**
  * Get status of current party, or invite char to user party,
@@ -34,10 +18,12 @@ async function cmdAllChars(rpg: Rpg, m: ChatAction, uname?: string) {
  * @param who 
  * @returns 
  */
-async function cmdParty(rpg: Rpg, m: ChatAction, who?: string) {
+async function cmdParty(m: ChatAction, rpg: Rpg) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
+
+	const who = m.options.getString('who');
 
 	let t: Char | undefined;
 	if (who) {
@@ -55,10 +41,12 @@ async function cmdParty(rpg: Rpg, m: ChatAction, who?: string) {
  * @param who 
  * @returns 
  */
-async function cmdLeader(rpg: Rpg, m: ChatAction, who?: string) {
+async function cmdLeader(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
+
+	const who = m.options.getString('who');
 
 	let t: Char | undefined;
 	if (who) {
@@ -70,12 +58,15 @@ async function cmdLeader(rpg: Rpg, m: ChatAction, who?: string) {
 
 }
 
-async function cmdRevive(rpg: Rpg, m: ChatAction, who?: string) {
+async function cmdRevive(m: ChatAction) {
 
+	const who = m.options.getString('who');
 	if (!who) return;
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
+
+
 
 	const t = who ? await rpg.loadChar(who) : char;
 	if (!t) return;
@@ -84,7 +75,7 @@ async function cmdRevive(rpg: Rpg, m: ChatAction, who?: string) {
 
 }
 
-async function cmdLeaveParty(rpg: Rpg, m: ChatAction) {
+async function cmdLeaveParty(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -92,9 +83,11 @@ async function cmdLeaveParty(rpg: Rpg, m: ChatAction) {
 	await Display.SendBlock(m, rpg.game.leaveParty(char));
 }
 
-async function cmdMkGuild(rpg: Rpg, m: ChatAction, gname: string) {
+async function cmdMkGuild(m: ChatAction, gname: string) {
 
 	try {
+		const gname = m.options.getString('guild', true);
+
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
@@ -103,7 +96,9 @@ async function cmdMkGuild(rpg: Rpg, m: ChatAction, gname: string) {
 
 }
 
-async function cmdJoinGuild(rpg: Rpg, m: ChatAction, gname: string) {
+async function cmdJoinGuild(m: ChatAction) {
+
+	const gname = m.options.getString('guild', true);
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -112,7 +107,7 @@ async function cmdJoinGuild(rpg: Rpg, m: ChatAction, gname: string) {
 
 }
 
-async function cmdLeaveGuild(rpg: Rpg, m: ChatAction) {
+async function cmdLeaveGuild(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -121,11 +116,12 @@ async function cmdLeaveGuild(rpg: Rpg, m: ChatAction) {
 
 }
 
-async function cmdGuildInv(rpg: Rpg, m: ChatAction, who?: string) {
+async function cmdGuildInv(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
 
+	const who = m.options.getString('who');
 	const t = who ? await rpg.loadChar(who) : char;
 	if (!t) return;
 
@@ -133,7 +129,9 @@ async function cmdGuildInv(rpg: Rpg, m: ChatAction, who?: string) {
 
 }
 
-async function cmdWhere(rpg: Rpg, m: ChatAction, who: string) {
+async function cmdWhere(m: ChatAction) {
+
+	const who = m.options.getString('who', true);
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -144,7 +142,9 @@ async function cmdWhere(rpg: Rpg, m: ChatAction, who: string) {
 
 }
 
-async function cmdNerf(rpg: Rpg, m: ChatAction, who: string) {
+async function cmdNerf(m: ChatAction) {
+
+	const who = m.options.getString('who', true);
 
 	const char = await rpg.loadChar(who);
 	if (!char) return;
@@ -155,13 +155,14 @@ async function cmdNerf(rpg: Rpg, m: ChatAction, who: string) {
 
 }
 
-async function cmdFormula(rpg: Rpg, m: ChatAction, str: string) {
+async function cmdFormula(m: ChatAction) {
 
 	if (!rpg.context.isOwner(m.user)) return m.reply('You do not have permission to do that.');
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
 
 	try {
+		const str = m.options.getString('formula', true);
 		const f = Formula.TryParse(str);
 		if (!f) return m.reply('Incantation malformed.');
 
@@ -172,7 +173,7 @@ async function cmdFormula(rpg: Rpg, m: ChatAction, str: string) {
 
 }
 
-async function cmdSetHome(rpg: Rpg, m: ChatAction) {
+async function cmdSetHome(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -181,7 +182,7 @@ async function cmdSetHome(rpg: Rpg, m: ChatAction) {
 
 }
 
-async function cmdGoHome(rpg: Rpg, m: ChatAction) {
+async function cmdGoHome(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -190,46 +191,55 @@ async function cmdGoHome(rpg: Rpg, m: ChatAction) {
 
 }
 
-async function cmdLocDesc(rpg: Rpg, m: ChatAction, desc: string) {
+async function cmdLocDesc(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
+
+	const desc = m.options.getString('desc', true);
 
 	const resp = await rpg.world.setDesc(char, desc, m.attachments?.first()?.proxyURL);
 	if (resp) return m.reply(resp);
 
 }
 
-async function cmdLore(rpg: Rpg, m: ChatAction, wot?: string) {
+async function cmdLore(m: ChatAction) {
 
-	if (!wot) return m.reply('What do you want to know about?');
+	const what = m.options.getString('what');
+	if (!what) return m.reply('What do you want to know about?');
 
-	return Display.SendBlock(m, GetLore(wot));
+	return Display.SendBlock(m, GetLore(what));
 
 }
 
-async function cmdTake(rpg: Rpg, m: ChatAction, first: string, end: string) {
+async function cmdTake(m: ChatAction, rpg: Rpg) {
 
 	try {
+
+		const start = m.options.getString('start', true);
+		const end = m.options.getString('end');
 
 		const char = await rpg.userCharOrErr(m, m.user)
 		if (!char) return;
 
-		await m.reply(await rpg.game.take(char, first, end));
+		await m.reply(await rpg.game.take(char, start, end));
 
 	} catch (e) { console.log(e); }
 }
 
-async function cmdDrop(rpg: Rpg, m: ChatAction, what: string, end?: string) {
+async function cmdDrop(m: ChatAction, rpg: Rpg) {
 
-	const char = await rpg.userCharOrErr(m, m.user)
+	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
 
-	return m.reply(await rpg.game.drop(char, what, end));
+	const start = m.options.getString('start', true);
+	const end = m.options.getString('end');
+
+	return m.reply(await rpg.game.drop(char, start, end));
 
 }
 
-async function cmdExplored(rpg: Rpg, m: ChatAction) {
+async function cmdExplored(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -238,10 +248,12 @@ async function cmdExplored(rpg: Rpg, m: ChatAction) {
 
 }
 
-async function cmdViewLoc(rpg: Rpg, m: ChatAction, what: string | number) {
+async function cmdViewLoc(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
+
+	const what = m.options.getString('what', true);
 
 	const info = await rpg.world.view(char, what);
 
@@ -250,38 +262,44 @@ async function cmdViewLoc(rpg: Rpg, m: ChatAction, what: string | number) {
 
 }
 
-async function cmdExamine(rpg: Rpg, m: ChatAction, what: string) {
+async function cmdExamine(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
-
+	const what = m.options.getString('what', true);
 	await Display.SendBlock(m, await rpg.world.examine(char, what));
 
 }
 
-async function cmdLook(rpg: Rpg, m: ChatAction, what: string) {
+async function cmdLook(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
+
+	const what = m.options.getString('what', true);
 
 	return Display.SendBlock(m, await rpg.world.look(char, what));
 
 }
 
-async function cmdUseLoc(rpg: Rpg, m: ChatAction, wot: string) {
+async function cmdUseLoc(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
 
-	return Display.SendBlock(m, await rpg.world.useLoc(char, wot));
+	const what = m.options.getString('what', true);
+
+	return Display.SendBlock(m, await rpg.world.useLoc(char, what));
 }
 
-async function cmdHike(rpg: Rpg, m: ChatAction, dir: string) {
+async function cmdHike(m: ChatAction) {
 
 	try {
 
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
+
+		const dir = m.options.getString('dir', true);
 
 		await Display.SendBlock(m, await rpg.game.hike(char, toDirection(dir)));
 		rpg.checkLevel(m, char);
@@ -290,10 +308,12 @@ async function cmdHike(rpg: Rpg, m: ChatAction, dir: string) {
 
 }
 
-async function cmdMove(rpg: Rpg, m: ChatAction, dir: string) {
+async function cmdMove(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
+
+	const dir = m.options.getString('dir', true);
 
 	await Display.SendBlock(m, await rpg.game.move(char, dir));
 	rpg.checkLevel(m, char);
@@ -304,7 +324,7 @@ async function cmdMove(rpg: Rpg, m: ChatAction, dir: string) {
  * Roll damage test with current weapon.
  * @param {*} m
  */
-async function cmdRollDmg(rpg: Rpg, m: ChatAction) {
+async function cmdRollDmg(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (char) {
@@ -317,7 +337,7 @@ async function cmdRollDmg(rpg: Rpg, m: ChatAction) {
  * Roll a new armor for testing.
  * @param {*} m
  */
-async function cmdRollWeap(rpg: Rpg, m: ChatAction) {
+async function cmdRollWeap(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (char) {
@@ -330,50 +350,59 @@ async function cmdRollWeap(rpg: Rpg, m: ChatAction) {
  * Roll a new armor for testing.
  * @param {Message} m
  */
-async function cmdRollArmor(rpg: Rpg, m: ChatAction, slot?: string) {
+async function cmdRollArmor(m: ChatAction) {
 
-	const char = await rpg.userCharOrErr(m, m.user)
+	const char = await rpg.userCharOrErr(m, m.user);
+	const slot = m.options.getString('slot');
 	if (char) {
 		await Display.SendBlock(m, Trade.rollArmor(char, slot));
 	}
 
 }
 
-async function cmdUnequip(rpg: Rpg, m: ChatAction, slot: HumanSlot) {
+async function cmdUnequip(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
+
+	const slot = m.options.getString('slot', true);
 
 	return m.reply(rpg.game.unequip(char, slot));
 
 }
 
-async function cmdEquip(rpg: Rpg, m: ChatAction, wot: string | number) {
+async function cmdEquip(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
 
-	if (!wot) return Display.SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
+	const what = m.options.getString('what', true);
 
-	return Display.SendBlock(m, rpg.game.equip(char, wot));
+	if (!what) return Display.SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
+
+	return Display.SendBlock(m, rpg.game.equip(char, what));
 
 }
 
-async function cmdCompare(rpg: Rpg, m: ChatAction, wot: string | number) {
+async function cmdCompare(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 
 	if (char) {
-		if (!wot) return m.reply('Compare what item?');
-		return Display.SendBlock(m, rpg.game.compare(char, wot));
+		const what = m.options.getString('what', true);
+
+		if (!what) return m.reply('Compare what item?');
+		return Display.SendBlock(m, rpg.game.compare(char, what));
 	}
 
 }
 
-async function cmdWorn(rpg: Rpg, m: ChatAction, slot: HumanSlot) {
+async function cmdWorn(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
+
+	const slot = m.options.getString('slot', true);
 	if (!slot) await Display.SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
 	else {
 
@@ -394,39 +423,44 @@ async function cmdWorn(rpg: Rpg, m: ChatAction, slot: HumanSlot) {
 
 }
 
-async function cmdEat(rpg: Rpg, m: ChatAction, wot: string | number) {
+async function cmdEat(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (char) {
-		return m.reply(rpg.game.eat(char, wot));
+		const what = m.options.getString('what', true);
+		return m.reply(rpg.game.eat(char, what));
 	}
 
 }
 
-async function cmdQuaff(rpg: Rpg, m: ChatAction, wot: string | number) {
+async function cmdQuaff(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (char) {
-		return m.reply(rpg.game.quaff(char, wot));
+		const what = m.options.getString('what', true);
+		return m.reply(rpg.game.quaff(char, what));
 	}
 
 }
 
-async function cmdRest(rpg: Rpg, m: ChatAction) {
+async function cmdRest(m: ChatAction) {
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (char) return m.reply(await rpg.game.rest(char));
 }
 
-async function cmdCook(rpg: Rpg, m: ChatAction, what: string | number) {
+async function cmdCook(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (char) {
+		const what = m.options.getString('what', true);
 		return m.reply(rpg.game.cook(char, what));
 	}
 
 }
 
-function cmdPotList(rpg: Rpg, m: ChatAction, level?: string | number) {
+function cmdPotList(m: ChatAction) {
+
+	let level = m.options.getString('level', true);
 
 	if (!level) return m.reply('List potions for which level?');
 	if (typeof level === 'string') level = parseInt(level);
@@ -434,34 +468,40 @@ function cmdPotList(rpg: Rpg, m: ChatAction, level?: string | number) {
 
 }
 
-async function cmdInscribe(rpg: Rpg, m: ChatAction, wot?: string | number, inscrip?: string) {
+async function cmdInscribe(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
 
-	if (!wot) return m.reply('Inscribe which inventory item?');
-	/// allow clearing existing inscription
-	if (!inscrip) inscrip = '';
+	const what = m.options.getString('what', true);
+	const script = m.options.getString('inscription') ?? '';
 
-	return m.reply(rpg.game.inscribe(char, wot, inscrip));
+	if (!what) return m.reply('Inscribe which inventory item?');
+
+	return m.reply(rpg.game.inscribe(char, what, script));
 
 }
 
-async function cmdDestroy(rpg: Rpg, m: ChatAction, first?: string, end?: string) {
+async function cmdDestroy(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
 
-	if (!first) return m.reply('Destroy which inventory item?');
+	const start = m.options.getString('start');
+	const end = m.options.getString('end');
 
-	return m.reply(rpg.game.destroy(char, first, end));
+	if (!start) return m.reply('Destroy which inventory item?');
+
+	return m.reply(rpg.game.destroy(char, start, end));
 
 }
 
-async function cmdViewItem(rpg: Rpg, m: ChatAction, which?: string | number) {
+async function cmdViewItem(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
+
+	const which = m.options.getString('which');
 
 	if (!which) return m.reply('View which inventory item?');
 
@@ -477,52 +517,61 @@ async function cmdViewItem(rpg: Rpg, m: ChatAction, which?: string | number) {
 
 }
 
-async function cmdInspect(rpg: Rpg, m: ChatAction, wot?: string | number) {
+async function cmdInspect(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
 
-	if (!wot) return m.reply('Inspect which inventory item?');
+	const what = m.options.getString('what');
+	if (!what) return m.reply('Inspect which inventory item?');
 
-	let item = char.getItem(wot);
+	let item = char.getItem(what);
 	if (Array.isArray(item)) item = item[0];
 	if (!item) return m.reply('Item not found.');
 	return m.reply(item.getDetails());
 
 }
 
-async function cmdCraft(rpg: Rpg, m: ChatAction, itemName?: string, desc?: string) {
+async function cmdCraft(m: ChatAction) {
 
-	if (!itemName) return m.reply('Crafted items must have names.');
+	const what = m.options.getString('what', true);
+	const desc = m.options.getString('desc', true);
+
+	if (!what) return m.reply('Crafted item must have a name.');
 	if (!desc) return m.reply('Crafted items require a description.');
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
 
 	const a = m.attachments.first();
-	const res = a ? rpg.game.craft(char, itemName, desc, a.proxyURL) : rpg.game.craft(char, itemName, desc);
+	const res = a ? rpg.game.craft(char, what, desc, a.proxyURL) :
+		rpg.game.craft(char, what, desc);
 
 	return Display.SendBlock(m, res);
 
 }
 
-async function cmdBrew(rpg: Rpg, m: ChatAction, potName?: string) {
+async function cmdBrew(m: ChatAction) {
 
-	if (!potName) return m.reply('Brew what potion?');
+	const potion = m.options.getString('potion', true);
+
+	if (!potion) return m.reply('Brew what potion?');
 
 	const char = await rpg.userCharOrErr(m, m.user)
 	if (!char) return;
 
 	const a = m.attachments.first();
-	const res = a ? rpg.game.brew(char, potName, a.proxyURL) : rpg.game.brew(char, potName);
+	const res = a ? rpg.game.brew(char, potion, a.proxyURL) : rpg.game.brew(char, potion);
 
 	return Display.SendBlock(m, res);
 
 }
 
-async function cmdInv(rpg: Rpg, m: ChatAction, who?: string) {
+async function cmdInv(m: ChatAction) {
 
 	let char;
+
+	const who = m.options.getString('who');
 
 	if (who) {
 
@@ -541,27 +590,33 @@ async function cmdInv(rpg: Rpg, m: ChatAction, who?: string) {
 
 }
 
-async function cmdSell(rpg: Rpg, m: ChatAction, first: string | number, end?: string | number) {
+async function cmdSell(m: ChatAction) {
+
+	const start = m.options.getString('start', true);
+	const end = m.options.getString('end');
 
 	const src = await rpg.userCharOrErr(m, m.user);
 	if (!src) return;
 
-	return Display.SendBlock(m, rpg.game.sell(src, first, end));
+	return Display.SendBlock(m, rpg.game.sell(src, start, end));
 }
 
-async function cmdGive(rpg: Rpg, m: ChatAction, who: string, expr: string) {
+async function cmdGive(m: ChatAction, rpg: Rpg) {
 
 	const src = await rpg.userCharOrErr(m, m.user);
 	if (!src) return;
+
+	const who = m.options.getString('who', true);
+	const what = m.options.getString('what', true);
 
 	const dest = await rpg.loadChar(who);
 	if (!dest) return m.reply(`'${who}' does not exist.`);
 
-	return m.reply(rpg.game.give(src, dest, expr));
+	return m.reply(rpg.game.give(src, dest, what));
 
 }
 
-async function cmdScout(rpg: Rpg, m: ChatAction) {
+async function cmdScout(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -570,10 +625,12 @@ async function cmdScout(rpg: Rpg, m: ChatAction) {
 
 }
 
-async function cmdTrack(rpg: Rpg, m: ChatAction, who: string) {
+async function cmdTrack(m: ChatAction) {
 
 	const src = await rpg.userCharOrErr(m, m.user);
 	if (!src) return;
+
+	const who = m.options.getString('who', true);
 
 	const dest = await rpg.loadChar(who);
 	if (!dest) return m.reply(`'${who}' does not exist.`);
@@ -582,9 +639,11 @@ async function cmdTrack(rpg: Rpg, m: ChatAction, who: string) {
 
 }
 
-async function cmdAttack(rpg: Rpg, m: ChatAction, who?: string | number) {
+async function cmdAttack(m: ChatAction) {
 
 	try {
+		const who = m.options.getString('who');
+
 		const src = await rpg.userCharOrErr(m, m.user);
 		if (!src) return;
 
@@ -614,20 +673,25 @@ async function cmdAttack(rpg: Rpg, m: ChatAction, who?: string | number) {
 
 }
 
-async function cmdSteal(rpg: Rpg, m: ChatAction, who: string, wot?: string) {
+async function cmdSteal(m: ChatAction) {
 
 	const src = await rpg.userCharOrErr(m, m.user);
 	if (!src) return;
 
+	const who = m.options.getString('who', true);
+	const what = m.options.getString('what');
+
 	const dest = await rpg.loadChar(who);
 	if (!dest) return m.reply(`'${who}' not found on server.`);
 
-	const result = await rpg.game.steal(src, dest, wot);
+	const result = await rpg.game.steal(src, dest, what);
 	await Display.SendBlock(m, result);
 
 }
 
-async function cmdRmChar(rpg: Rpg, m: ChatAction, charname?: string) {
+async function cmdRmChar(m: ChatAction) {
+
+	const charname = m.options.getString('who', true);
 
 	if (!charname) return m.reply('Must specify character to delete.');
 
@@ -651,9 +715,11 @@ async function cmdRmChar(rpg: Rpg, m: ChatAction, charname?: string) {
 
 }
 
-async function cmdViewChar(rpg: Rpg, m: ChatAction, charname?: string) {
+async function cmdViewChar(m: ChatAction) {
 
 	let char;
+
+	const charname = m.options.getString('who');
 
 	if (!charname) {
 		char = await rpg.userCharOrErr(m, m.user);
@@ -666,7 +732,9 @@ async function cmdViewChar(rpg: Rpg, m: ChatAction, charname?: string) {
 
 }
 
-async function cmdAddStat(rpg: Rpg, m: ChatAction, stat: string) {
+async function cmdAddStat(m: ChatAction) {
+
+	const stat = m.options.getString('stat', true);
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -676,39 +744,43 @@ async function cmdAddStat(rpg: Rpg, m: ChatAction, stat: string) {
 
 }
 
-async function cmdTalents(rpg: Rpg, m: ChatAction, charname?: string) {
+async function cmdTalents(m: ChatAction) {
 
 	let char;
 
-	if (!charname) {
+	const who = m.options.getString('who');
+
+	if (!who) {
 		char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 	} else {
-		char = await rpg.loadChar(charname);
-		if (!char) return m.reply(charname + ' not found on server. D:');
+		char = await rpg.loadChar(who);
+		if (!char) return m.reply(who + ' not found on server. D:');
 	}
 
 	await Display.SendBlock(m, char.getTalents());
 
 }
 
-async function cmdCharStats(rpg: Rpg, m: ChatAction, charname?: string) {
+async function cmdCharStats(m: ChatAction) {
 
 	let char;
 
-	if (!charname) {
+	const who = m.options.getString('who');
+
+	if (!who) {
 		char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 	} else {
-		char = await rpg.loadChar(charname);
-		if (!char) return m.reply(charname + ' not found on server. :O');
+		char = await rpg.loadChar(who);
+		if (!char) return m.reply(who + ' not found on server. :O');
 	}
 
 	await Display.SendBlock(m, getHistory(char));
 
 }
 
-async function cmdSaveChar(rpg: Rpg, m: ChatAction) {
+async function cmdSaveChar(m: ChatAction) {
 
 	const char = await rpg.userCharOrErr(m, m.user);
 	if (!char) return;
@@ -718,9 +790,10 @@ async function cmdSaveChar(rpg: Rpg, m: ChatAction) {
 
 }
 
-async function cmdLoadChar(rpg: Rpg, m: ChatAction, charname?: string) {
+async function cmdLoadChar(m: ChatAction, rpg: Rpg) {
 
-	if (!charname) charname = m.user.username;
+
+	const charname = m.options.getString('char') ?? m.user.username;
 
 	try {
 
@@ -743,40 +816,9 @@ async function cmdLoadChar(rpg: Rpg, m: ChatAction, charname?: string) {
 
 }
 
-async function cmdRollChar(rpg: Rpg, m: ChatAction, charname?: string, racename?: string, classname?: string, sex?: string) {
-
-	try {
-
-		const race = RandRace(racename);
-		if (!race) return await m.reply('Race ' + racename + ' not found.');
-
-		const charCls = RandClass(classname);
-		if (!charCls) return await m.reply('Class ' + classname + ' not found.');
-
-		if (!sex) sex = Math.random() < 0.5 ? 'm' : 'f';
-
-		if (charname) {
-
-			if (!rpg.context.isValidKey(charname)) return m.reply(`'${charname}' contains illegal letters.`);
-			if (await rpg.charExists(charname)) return m.reply(`Character '${charname}' already exists.`);
-
-		} else charname = await rpg.uniqueName(race, sex);
-
-		const char = GenChar(m.user.id, race, charCls, charname);
-
-		await rpg.setUserChar(m.user, char);
-		Display.EchoChar(m.channel, char);
-		await rpg.saveChar(char, true);
-
-	} catch (e) { console.log(e); }
-
-}
-
 export function GetCommands() {
 
 	const list: CommandInfo[] = [];
-
-	CreateCommand('rollchar', 'rollchar [charname] [racename] [classname]', cmdRollChar, list);
 
 	CreateCommand('loadchar', 'loadchar <charname>', cmdLoadChar, list, { maxArgs: 1 });
 	CreateCommand('savechar', 'savechar', cmdSaveChar, list, { maxArgs: 0 });

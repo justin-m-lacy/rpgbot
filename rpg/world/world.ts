@@ -96,7 +96,7 @@ export class World {
 	 * @param char
 	 * @param first
 	 */
-	async take(char: Char, first: string | number, end?: string | number) {
+	async take(char: Char, first: string | number, end?: string | number | null) {
 
 		const loc = await this.getOrGen(char.loc, char);
 
@@ -237,7 +237,7 @@ export class World {
 	 * @param char
 	 * @param  what
 	 */
-	async drop(char: Char, what: ItemPicker, end?: string | number) {
+	async drop(char: Char, what: ItemPicker, end?: ItemIndex | null) {
 
 		const it = end ? char.takeRange(what as ItemIndex, end) : char.takeItem(what);
 		if (!it) return 'Invalid item.';

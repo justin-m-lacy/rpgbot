@@ -377,11 +377,11 @@ export class Game {
 
 	}
 
-	give(src: Char, dest: Char, expr: string) {
+	give(src: Char, dest: Char, what: string) {
 
 		if (this.tick(src, 'give') === false) return src.output();
 
-		return src.output(Trade.transfer(src, dest, expr));
+		return src.output(Trade.transfer(src, dest, what));
 
 	}
 
@@ -437,7 +437,7 @@ export class Game {
 
 	}
 
-	async drop(char: Char, what: ItemPicker, end?: ItemIndex) {
+	async drop(char: Char, what: ItemPicker, end?: ItemIndex | null) {
 
 		if (this.tick(char, 'drop') === false) return char.output();
 
@@ -445,7 +445,7 @@ export class Game {
 
 	}
 
-	async take(char: Char, first: ItemIndex, end?: ItemIndex) {
+	async take(char: Char, first: ItemIndex, end?: ItemIndex | null) {
 
 		if (this.tick(char, 'take') === false) return char.output();
 
