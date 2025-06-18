@@ -139,18 +139,18 @@ export class DiscordBot {
 		this.addCommand('backup', 'backup', (m: ChatAction) => this.cmdBackup(m),
 			{ access: PermissionFlagsBits.Administrator, immutable: true, module: 'default' });
 
-		this.addCommand('botleave', 'botleave', (m: ChatAction) => this.cmdLeaveGuild(m), {
+		this.addCommand('botleave', 'botleave', (m: ChatAction) => this.leaveGuild(m), {
 			access: PermissionFlagsBits.Administrator
 		});
 
-		this.addCommand('botkill', 'botkill', (m: ChatAction) => this.cmdBotQuit(m), { immutable: true });
+		this.addCommand('botkill', 'botkill', (m: ChatAction) => this.shutdown(m), { immutable: true });
 		this.addCommand('proxyme', 'proxyme', (m: ChatAction) => this.cmdProxy(m));
 		this.addCommand('access', 'access cmd [permissions|roles]',
 			(m: Message, cmd: string, perm: PermissionResolvable) => this.cmdAccess(m, cmd, perm),
 			{ minArgs: 1, access: PermissionFlagsBits.Administrator, immutable: true }
 		);
 		this.addCommand('resetaccess', 'resetaccess cmd',
-			(m: Message, cmd: string) => this.cmdResetAccess(m, cmd),
+			(m: Message, cmd: string) => this.resetCommandAccess(m, cmd),
 			{ minArgs: 1, maxArgs: 1, access: PermissionFlagsBits.Administrator }
 		);
 	}
@@ -248,9 +248,6 @@ export class DiscordBot {
 	 */
 	private async onMessage(m: Message<true>) {
 
-		const command = this.dispatch.parseLine(m.content);
-		if (!command) return;
-
 		// check command access.
 		const context = await this.getMsgContext(m);
 		if (context && !this.canUseCmd(m, command, context)) {
@@ -288,7 +285,7 @@ export class DiscordBot {
 	 * Returns true if discord user is the bot owner.
 	 * @param u
 	 */
-	isOwner(u: User | string) {
+	public isOwner(u: User | string) {
 
 		if (typeof u !== 'string') u = u.id;
 		return u === this.owner || this.admins?.includes(u);
@@ -300,16 +297,17 @@ export class DiscordBot {
 	 * @param m
 	 * @returns
 	 */
-	private async cmdBackup(m: ChatAction) {
+	public async backup(u: User) {
 
-		if (this.isOwner(m.user.id)) {
+		if (this.isOwner(u)) {
 			await this.cache.backup(0);
-			return m.reply('backup complete.');
+			return true;
 		} else {
 			/// per-context backup?
 			//let context = this.getMsgContext(m);
 			//if (context) await context.doBackup();
 		}
+		return false;
 
 	}
 
@@ -319,12 +317,13 @@ export class DiscordBot {
 	 * @param m
 	 * @returns
 	 */
-	private async cmdBotQuit(m: Message) {
+	public async shutdown(u: User) {
 
-		if (this.isOwner(m.author.id)) {
+		if (this.isOwner(u)) {
 			this.client.destroy();
+			return true;
 		}
-		return this.sendNoPerm(m);
+		return false;
 
 	}
 
@@ -334,12 +333,13 @@ export class DiscordBot {
 	 * @param m
 	 * @returns
 	 */
-	async cmdLeaveGuild(m: ChatAction) {
+	public async leaveGuild(m: ChatAction) {
 
 		if (this.isOwner(m.user.id) && m.guild) {
-			return m.guild.leave();
+			await m.guild.leave();
+			return true;
 		}
-		return this.sendNoPerm(m);
+		return false;
 
 	}
 
@@ -357,20 +357,21 @@ export class DiscordBot {
 	}
 
 	/**
-	 * Proxy the current context to the user's DM.
+	 * Proxy current context to the user's DM.
 	 * @async
 	 * @param m
 	 * @returns
 	 */
-	async cmdProxy(m: ChatAction) {
+	public async makeProxy(m: ChatAction) {
 
 		// get context of the guild/channel to be proxied to user.
 		const context = await this.getCmdContext(m);
 
 		if (context) {
 			this.setProxy(m.user, context as GuildContext | BotContext<Channel>);
-			return m.user.send('Proxy created.');
+			return true;
 		}
+		return false;
 
 	}
 
@@ -381,15 +382,16 @@ export class DiscordBot {
 	 * @param cmd - name of command.
 	 * @returns
 	 */
-	async cmdResetAccess(it: ChatAction, cmd: string) {
+	async resetCommandAccess(it: ChatAction, cmd: string) {
 
 		const context = await this.getCmdContext(it);
 
 		if (context) {
 			// unset any custom access.
 			context.unsetAccess(cmd);
-			return it.reply('Access reset.');
+			return true;
 		}
+		return false;
 
 	}
 
@@ -412,7 +414,7 @@ export class DiscordBot {
 	 * @param user
 	 * @param context
 	 */
-	private setProxy(user: User, context: BotContext<Guild | Channel>) {
+	public setProxy(user: User, context: BotContext<Guild | Channel>) {
 
 		//this._contexts.set(user.id, context);
 		this._proxies.set(user.id, context.sourceID);

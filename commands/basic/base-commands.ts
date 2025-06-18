@@ -1,15 +1,107 @@
 import { DiscordBot } from '../../src/bot/discordbot';
 
 import { NewCommand, NumOpt, StrOpt, type ChatAction, type CommandData } from '@/bot/command';
+import { MessageFlags } from 'discord.js';
 import { parseRoll } from '../../rpg/values/dice';
 
-export function GetCommands(b: DiscordBot) {
+export function GetCommands() {
 
     return [
         CmdRoll, CmdSay
     ]
 
 }
+
+/**
+* Backup unsaved cache items.
+*/
+const CmdBackup = {
+    data: NewCommand('backup', 'Force backup bot data'),
+    exec: async (m: ChatAction, bot: DiscordBot) => {
+
+        if (await bot.backup(m.user)) {
+            return m.reply('backup complete.');
+        }
+    }
+}
+
+/**
+ * Shutdown the bot program. Owner only.
+ */
+const CmdShutdown = {
+    data: NewCommand('shutdown', 'Shutdown bot'),
+    exex: async (m: ChatAction, bot: DiscordBot) => {
+        await bot.shutdown(m.user);
+    }
+}
+
+/**
+ * Make Bot leave guild.
+ * @async
+ * @param m
+ * @returns
+ */
+const CmdLeaveGuild = {
+    desc: NewCommand('guildleave', 'Remove bot from guild'),
+    exec: async (m: ChatAction, bot: DiscordBot) => {
+
+        if (m.guild && await bot.leaveGuild(m)) {
+            m.reply({
+                content: 'Left guild ' + m.guild.name,
+                flags: MessageFlags.Ephemeral
+            });
+        } else {
+            m.reply({
+                content: 'Leave guild failed',
+                flags: MessageFlags.Ephemeral
+            });
+        }
+
+    }
+}
+
+
+/**
+ * Proxy the current context to the user's DM.
+ */
+const CmdProxy = {
+
+    desc: NewCommand('proxy', 'Proxy this room to your private chat'),
+    exec: async (m: ChatAction, bot: DiscordBot) => {
+
+        if (await bot.makeProxy(m)) {
+            return m.user.send('Proxy created.');
+        } else {
+            m.reply({
+                content: 'Create proxy failed',
+                flags: MessageFlags.Ephemeral
+            })
+        }
+    }
+}
+
+/**
+ * Reset command's permissions to default.
+ */
+const CmdResetAccess = {
+    data: NewCommand('cmdreset', 'Reset command permissions', [
+        StrOpt('cmd', 'Command name', true)
+    ]),
+    exec: async (it: ChatAction, bot: DiscordBot) => {
+
+        const cmd = it.options.getString('cmd', true);
+        if (await bot.resetCommandAccess(it, cmd)) {
+            return it.reply({
+                content: 'Access reset.',
+                flags: MessageFlags.Ephemeral
+            });
+        } else {
+
+        }
+
+    }
+}
+
 
 const CmdHelp: CommandData = {
 
