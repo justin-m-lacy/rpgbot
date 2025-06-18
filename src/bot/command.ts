@@ -19,6 +19,7 @@ type CommandClass<T extends object> = {
 
 type BaseCommand = {
 	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+	hidden?: boolean
 }
 type UntypedCommand = BaseCommand & {
 	exec: BaseCommandFunc,

@@ -7,7 +7,7 @@ import { parseRoll } from '../../rpg/values/dice';
 export function GetCommands() {
 
     return [
-        CmdRoll, CmdSay
+        CmdBackup, CmdLeaveGuild, CmdProxy, CmdShutdown, CmdRoll, CmdSay
     ]
 
 }
@@ -42,7 +42,7 @@ const CmdShutdown = {
  * @returns
  */
 const CmdLeaveGuild = {
-    desc: NewCommand('guildleave', 'Remove bot from guild'),
+    desc: NewCommand('botleave', 'Remove bot from guild'),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (m.guild && await bot.leaveGuild(m)) {

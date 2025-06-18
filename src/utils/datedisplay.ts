@@ -1,4 +1,4 @@
-import { Display } from './display';
+import { Capitalize } from './display';
 
 const ms_per_day: number = 1000 * 3600 * 24;
 const ms_per_hr: number = 1000 * 3600;
@@ -12,6 +12,9 @@ const fullMonths = ['january', 'february', 'march', 'april', 'may', 'june',
 const days = ['sun', 'mon', 'tues', 'wed', 'thr', 'fri', 'sat'];
 const fullDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
+/**
+ * js date formatters are slow.
+ */
 export default {
 
 	parse(str: string) {
@@ -160,7 +163,7 @@ export default {
 	 * @returns
 	 */
 	getMonthDate(date: Date) {
-		return Display.capitalize(months[date.getMonth()] + ' ' + date.getDate() + ' at ' + date.getHours() + ':' + date.getMinutes());
+		return Capitalize(months[date.getMonth()] + ' ' + date.getDate() + ' at ' + date.getHours() + ':' + date.getMinutes());
 	},
 
 	/**
@@ -169,7 +172,7 @@ export default {
 	 * @returns
 	 */
 	getWeekDate(date: Date) {
-		return Display.capitalize(days[date.getDay()] + ' ' + date.getMonth() + '/'
+		return Capitalize(days[date.getDay()] + ' ' + date.getMonth() + '/'
 			+ date.getDate() + ' at ' + date.getHours() + ':' + date.getMinutes());
 	},
 
@@ -179,7 +182,7 @@ export default {
 	 * @returns
 	 */
 	getFarDate(date: Date) {
-		return Display.capitalize(months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear());
+		return Capitalize(months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear());
 	},
 
 	/**

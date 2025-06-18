@@ -1,5 +1,5 @@
 import Cache from 'archcache';
-import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, PermissionFlagsBits, PermissionResolvable, User, type Interaction, type SendableChannels } from 'discord.js';
+import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
 import { Display } from '../utils/display';
 import { Auth } from './auth';
@@ -136,23 +136,11 @@ export class DiscordBot {
 
 		this.initClient();
 
-		this.addCommand('backup', 'backup', (m: ChatAction) => this.cmdBackup(m),
-			{ access: PermissionFlagsBits.Administrator, immutable: true, module: 'default' });
-
-		this.addCommand('botleave', 'botleave', (m: ChatAction) => this.leaveGuild(m), {
-			access: PermissionFlagsBits.Administrator
-		});
-
-		this.addCommand('botkill', 'botkill', (m: ChatAction) => this.shutdown(m), { immutable: true });
-		this.addCommand('proxyme', 'proxyme', (m: ChatAction) => this.cmdProxy(m));
-		this.addCommand('access', 'access cmd [permissions|roles]',
+		/*this.addCommand('access', 'access cmd [permissions|roles]',
 			(m: Message, cmd: string, perm: PermissionResolvable) => this.cmdAccess(m, cmd, perm),
 			{ minArgs: 1, access: PermissionFlagsBits.Administrator, immutable: true }
-		);
-		this.addCommand('resetaccess', 'resetaccess cmd',
-			(m: Message, cmd: string) => this.resetCommandAccess(m, cmd),
-			{ minArgs: 1, maxArgs: 1, access: PermissionFlagsBits.Administrator }
-		);
+		);*/
+
 	}
 
 	/**
@@ -206,7 +194,11 @@ export class DiscordBot {
 
 			const ctx = await this.getCmdContext(it);
 
-			await cmd.exec(it, undefined);
+			if ('cls' in cmd) {
+
+			} else {
+				await cmd.exec(it, this);
+			}
 
 
 		});
@@ -240,45 +232,6 @@ export class DiscordBot {
 	 */
 	public addCommand(cmd: CommandData) {
 		this.commands.set(cmd.data.name, cmd);
-	}
-
-	/**
-	 *
-	 * @param m
-	 */
-	private async onMessage(m: Message<true>) {
-
-		// check command access.
-		const context = await this.getMsgContext(m);
-		if (context && !this.canUseCmd(m, command, context)) {
-			return this.sendNoPerm(m, command);
-		}
-
-		if (command.isDirect === true) {
-
-			const res = this.dispatch.dispatch(command, [m]);
-			if (res instanceof Promise) {
-				res.catch(e => console.error(e));
-			}
-
-		} else if (context) {
-
-			// context command.
-			const err = this.dispatch.routeCmd(context, command, [m]);
-
-			if (!err) return;
-			else if (err instanceof Promise) {
-
-				err.then(s => { if (s && typeof s === 'string') m.channel.send(s); }).catch(e => console.error(e));
-
-			} else if (typeof err === 'string') {
-
-				return m.channel.send(err);
-
-			}
-
-		}
-
 	}
 
 	/**
@@ -392,20 +345,6 @@ export class DiscordBot {
 			return true;
 		}
 		return false;
-
-	}
-
-	/**
-	 * Send a no-permission message.
-	 * @async
-	 * @param m
-	 * @param [cmd=null]
-	 * @returns
-	 */
-	async sendNoPerm(m: ChatAction, cmd?: Command) {
-
-		if (cmd) return m.reply(`You do not have permission to use the command '${cmd.name}'`);
-		return m.reply('You do not have permission to use that command.');
 
 	}
 
@@ -745,18 +684,24 @@ export class DiscordBot {
 	 */
 	async printCommand(chan: ChatAction, cmdname: string, page: number = 0) {
 
-		const cmdInfo = this.commands[cmdname];
+		const cmdInfo = this.commands.get(cmdname);
 		if (cmdInfo) {
 
-			const usage = cmdInfo.usage;
+			const usage = cmdInfo.data.description;
 			if (!usage) return chan.reply({
 				content: 'No usage information found for command \'' + cmdname + '\'.',
 				flags: MessageFlags.Ephemeral
 			});
-			else return chan.reply(cmdname + ' usage: ' + cmdInfo.usage);
+			else return chan.reply({
+				content: cmdname + ' usage: ' + usage,
+				flags: MessageFlags.Ephemeral
+			});
 
 
-		} else return chan.reply('Command \'' + cmdname + '\' not found.');
+		} else return chan.reply({
+			content: 'Command \'' + cmdname + '\' not found.',
+			flags: MessageFlags.Ephemeral
+		});
 
 	}
 
@@ -772,21 +717,15 @@ export class DiscordBot {
 			`Use ${this.cmdPrefix}help [command] for more information.\nAvailable commands:\n`
 		];
 
-		const cmds = this.commands;
+		const sep = ': ' + this.cmdPrefix;
 
-		if (cmds) {
+		for (const [k, cmd] of this.commands.entries()) {
 
-			const sep = ': ' + this.dispatch.prefix;
+			if (!cmd.hidden) parts.push(k + sep + cmd.data.description);
 
-			for (const k in cmds) {
+		} //
 
-				if (!cmds[k].hidden) parts.push(k + sep + cmds[k].desc);
-
-			} //
-
-			return Display.sendPage(chan, parts.join('\n'), page);
-
-		}
+		return Display.sendPage(chan, parts.join('\n'), page);
 
 
 	}
