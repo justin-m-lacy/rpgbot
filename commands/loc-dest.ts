@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('locdesc', 'Set location description')
 		.addStringOption(StrOpt('desc', 'Description of location').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('steal', 'Attempt to steal from character')
 		.addStringOption(StrOpt('who', 'Character to steal from').setRequired(true))
 		.addStringOption(StrOpt('what', 'What to steal')),

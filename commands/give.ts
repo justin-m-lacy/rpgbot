@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('give', 'Give item to another character')
 		.addStringOption(StrOpt('who', 'Character to give item to').setRequired(true))
 		.addStringOption(StrOpt('what', 'Which item to give')),

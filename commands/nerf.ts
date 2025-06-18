@@ -3,6 +3,7 @@ import { Rpg } from "rpg/rpg";
 import { nerfItems } from "rpg/trade";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('nerf', 'Nerf character.')
 		.addStringOption(StrOpt('who', 'Character to make leader.').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

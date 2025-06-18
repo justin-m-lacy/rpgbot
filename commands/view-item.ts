@@ -3,6 +3,7 @@ import { ReplyEmbed } from "@/embeds";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('viewitem', 'View item in inventory')
 		.addStringOption(StrOpt('what', 'Item to view').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

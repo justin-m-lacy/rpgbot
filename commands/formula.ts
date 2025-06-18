@@ -3,6 +3,7 @@ import { Formula } from "formulic";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('formula', 'Test formula')
 		.addStringOption(StrOpt('formula', 'Formula to compute').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

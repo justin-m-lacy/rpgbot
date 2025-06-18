@@ -3,6 +3,7 @@ import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('setchar', 'Set active character')
 		.addStringOption(StrOpt('name', 'Character name')),
 	async exec(m: ChatAction, rpg: Rpg) {

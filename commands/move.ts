@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('move', 'Move in given direction')
 		.addStringOption(StrOpt('dir', 'Direction to move').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

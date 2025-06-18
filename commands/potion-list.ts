@@ -3,6 +3,7 @@ import { PotsList } from "rpg/builders/itemgen";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('potlist', 'Get list of available potions')
 		.addStringOption(StrOpt('level', 'Level of potions to list').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

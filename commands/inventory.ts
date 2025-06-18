@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('inv', 'View a character\'s inventory')
 		.addStringOption(StrOpt('who', 'Character inventory to view. Defaults to own inventory').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

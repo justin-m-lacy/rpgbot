@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('quaff', 'Quaff potion or drink from inventory')
 		.addStringOption(StrOpt('what', 'Potion to quaff')),
 	async exec(m: ChatAction, rpg: Rpg) {

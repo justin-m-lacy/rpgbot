@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('useloc', 'Use feature at current location')
 		.addStringOption(StrOpt('what', 'Feature to use.').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

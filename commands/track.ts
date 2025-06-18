@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('track', 'Track another character')
 		.addStringOption(StrOpt('who', 'Character to track').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

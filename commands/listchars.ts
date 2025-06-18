@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('listchars', 'list all characters')
 		.addStringOption(StrOpt('user', 'user name to list characters for')),
 	async exec(m: ChatAction, rpg: Rpg) {

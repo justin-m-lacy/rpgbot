@@ -4,6 +4,7 @@ import { Monster } from "rpg/monster/monster";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('ex', 'Attack character or monster')
 		.addStringOption(StrOpt('who', 'Who or what to attack')),
 	async exec(m: ChatAction, rpg: Rpg) {

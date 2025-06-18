@@ -2,9 +2,10 @@ import { NewCommand, StrChoices, StrOpt, type ChatAction, type CommandData } fro
 import { GenChar } from "rpg/builders/chargen";
 import { EchoChar } from "rpg/display/display";
 import { RandClass, RandRace } from "rpg/parsers/classes";
-import type { Rpg } from "rpg/rpg";
+import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('rollchar', 'roll new character')
 		.addStringOption(StrOpt('name', 'character name'))
 		.addStringOption(StrOpt('race', 'character race'))

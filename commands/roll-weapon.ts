@@ -4,6 +4,7 @@ import { Rpg } from "rpg/rpg";
 import { rollWeap } from "rpg/trade";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('rollweap', 'Roll for new weapon'),
 	async exec(m: ChatAction, rpg: Rpg) {
 

@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('take', 'Take single item or range of items from ground.')
 		.addStringOption(StrOpt('start', 'Starting item to take').setRequired(true))
 		.addStringOption(StrOpt('end', 'End item to take')),

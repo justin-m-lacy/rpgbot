@@ -4,6 +4,7 @@ import { getHistory } from "rpg/events";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('charstats', 'View a character\'s stats')
 		.addStringOption(StrOpt('who', 'Character whose stats to view')),
 	async exec(m: ChatAction, rpg: Rpg) {

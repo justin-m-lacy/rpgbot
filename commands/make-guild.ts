@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('mkguild', 'Create new guild')
 		.addStringOption(StrOpt('guild', 'New guild name').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('inscribe', 'Inscribe inventory item with a message')
 		.addStringOption(StrOpt('what', 'Item to inscribe').setRequired(true))
 		.addStringOption(StrOpt('text', 'Text to inscribe')),

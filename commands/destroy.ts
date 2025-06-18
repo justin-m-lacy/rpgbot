@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('destroy', 'Destroy item or range of items from inventory.')
 		.addStringOption(StrOpt('start', 'Starting item to destroy').setRequired(true))
 		.addStringOption(StrOpt('end', 'End item to destroy')),

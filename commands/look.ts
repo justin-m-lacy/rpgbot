@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('look', 'Look at item on ground.')
 		.addStringOption(StrOpt('what', 'Item on ground to look at.').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

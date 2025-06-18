@@ -2,6 +2,7 @@ import { NewCommand, type ChatAction, type CommandData } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('savechar', 'Force save current character'),
 	async exec(m: ChatAction, rpg: Rpg) {
 

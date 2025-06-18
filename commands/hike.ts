@@ -4,6 +4,7 @@ import { Rpg } from "rpg/rpg";
 import { toDirection } from "rpg/world/loc";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('hike', 'Attempt to hike in a given direction')
 		.addStringOption(StrOpt('dir', 'Direction to hike').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

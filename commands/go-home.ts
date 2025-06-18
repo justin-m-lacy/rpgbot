@@ -2,6 +2,7 @@ import { NewCommand, type ChatAction, type CommandData } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('gohome', 'Return home.'),
 	async exec(m: ChatAction, rpg: Rpg) {
 

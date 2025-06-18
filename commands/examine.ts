@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('ex', 'Examine character or monster.')
 		.addStringOption(StrOpt('what', 'Character or monster to examine.').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('talents', 'View a character\'s talents')
 		.addStringOption(StrOpt('who', 'Character to view')),
 	async exec(m: ChatAction, rpg: Rpg) {

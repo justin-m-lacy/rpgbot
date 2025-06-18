@@ -3,6 +3,7 @@ import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('viewchar', 'View character or self')
 		.addStringOption(StrOpt('who', 'Character to view')),
 	async exec(m: ChatAction, rpg: Rpg) {

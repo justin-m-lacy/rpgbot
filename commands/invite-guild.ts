@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('invite', 'Invite character to guild')
 		.addStringOption(StrOpt('who', 'Character to invite to guild').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

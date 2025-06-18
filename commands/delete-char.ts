@@ -2,6 +2,7 @@ import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/com
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('deletechar', 'Delete one of your characters')
 		.addStringOption(StrOpt('name', 'Name of character to delete').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {

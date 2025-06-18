@@ -1,7 +1,9 @@
 import type { BotContext } from "@/bot/botcontext";
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption, type ApplicationCommandOptionBase } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption, type ApplicationCommandOptionBase, type SlashCommandOptionsOnlyBuilder } from "discord.js";
 
-export type CommandFunc<T extends object | undefined = undefined> = (it: ChatAction, cls: T) => Promise<any> | void;
+type BaseCommandFunc = (it: ChatAction) => Promise<any> | void | undefined;
+
+export type CommandFunc<T extends object> = (it: ChatAction, cls: T) => Promise<any> | void | undefined;
 
 export type ChatAction = ChatInputCommandInteraction;
 
@@ -14,11 +16,19 @@ type CommandClass<T extends object> = {
 	load?(): Promise<void>;
 }
 
-export type CommandData<T extends object | undefined = undefined> = {
-	data: SlashCommandBuilder,
-	exec: CommandFunc<T>,
-	cls?: T extends object ? CommandClass<T> : undefined
+type BaseCommand = {
+	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
 }
+type UntypedCommand = BaseCommand & {
+	exec: BaseCommandFunc,
+}
+
+type TypedCommand<T extends object> = BaseCommand & {
+	exec: CommandFunc<T>,
+	cls: T extends object ? CommandClass<T> : never;
+}
+
+export type CommandData<T extends object | undefined = undefined> = T extends Object ? TypedCommand<T> : UntypedCommand;
 
 export const StrOpt = (name: string, desc: string) => new SlashCommandStringOption().setName(name).setDescription(desc);
 
@@ -37,8 +47,10 @@ export const NewCommand = (name: string, desc: string, opts?: ApplicationCommand
 
 }
 
-export function CreateCommand<T extends object | undefined>(name: string, desc: string, handler: CommandFunc<T>,
-	into?: CommandData<T>[], ...rest: any) {
+export function CreateCommand(
+	name: string, desc: string,
+	handler: BaseCommandFunc,
+	into?: CommandData[], ...rest: any) {
 
 	const b = new SlashCommandBuilder().setName(name).setDescription(desc);
 

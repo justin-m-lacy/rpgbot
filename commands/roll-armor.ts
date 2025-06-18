@@ -4,6 +4,7 @@ import { Rpg } from "rpg/rpg";
 import { rollArmor } from "rpg/trade";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('rollarmor', 'Roll for new armor')
 		.addStringOption(StrOpt('slot', 'Slot to roll new armor for')),
 	async exec(m: ChatAction, rpg: Rpg) {

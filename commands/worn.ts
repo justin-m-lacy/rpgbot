@@ -3,7 +3,8 @@ import { SendBlock } from "rpg/display/display";
 import type { HumanSlot } from "rpg/items/wearable";
 import { Rpg } from "rpg/rpg";
 
-export default {
+const Cmd: CommandData<Rpg> = {
+	cls: Rpg,
 	data: NewCommand('worn', 'Get list of worn items or view equipped item')
 		.addStringOption(StrOpt('slot', 'equipment slot to view')),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -31,4 +32,5 @@ export default {
 		} //
 
 	}
-} as CommandData<Rpg>
+}
+export default Cmd;

@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('sell', 'Sell items from inventory')
 		.addStringOption(StrOpt('start', 'Starting item to sell').setRequired(true))
 		.addStringOption(StrOpt('end', 'End item to sell')),

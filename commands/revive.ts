@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('revive', 'Attempt to revive character.')
 		.addStringOption(StrOpt('who', 'Character to revive.')),
 	async exec(m: ChatAction, rpg: Rpg) {

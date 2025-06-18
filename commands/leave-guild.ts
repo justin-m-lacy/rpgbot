@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('leaveguild', 'Leave current guild.'),
 	async exec(m: ChatAction, rpg: Rpg) {
 

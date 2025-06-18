@@ -4,6 +4,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('leader', 'Set party leader or get name of current leader.')
 		.addStringOption(StrOpt('who', 'Character to make leader.')),
 	async exec(m: ChatAction, rpg: Rpg) {

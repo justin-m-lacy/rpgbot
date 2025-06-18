@@ -3,6 +3,7 @@ import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
+	cls: Rpg,
 	data: NewCommand('explored', 'Get number of locations discovered by character.'),
 	async exec(m: ChatAction, rpg: Rpg) {
 
