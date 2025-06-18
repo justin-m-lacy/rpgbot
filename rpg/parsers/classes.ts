@@ -14,7 +14,7 @@ export const GetRace = (racename?: string) => {
 	return racename ? raceByName[racename.toLowerCase()] : undefined;
 }
 
-export const RandRace = (racename?: string) => {
+export const RandRace = (racename?: string | null) => {
 
 	if (racename) {
 		racename = racename.toLowerCase();
@@ -27,7 +27,7 @@ export const GetClass = (id?: string) => {
 	return id ? classByName[id.toLowerCase()] : undefined;
 }
 
-export const RandClass = (id?: string) => {
+export const RandClass = (id?: string | null) => {
 
 	if (id) {
 		id = id.toLowerCase();

@@ -1,16 +1,24 @@
-import { ChatInputCommandInteraction, PermissionResolvable, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, PermissionResolvable, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 
-export type CommandFunc = (it: ChatAction) => Promise<any> | void;
+export type CommandFunc<T extends any> = (it: ChatAction, cls: T) => Promise<any> | void;
 
 export type ChatAction = ChatInputCommandInteraction;
 
 export type CommandInfo = {
 	name: string,
 	data: SlashCommandBuilder,
-	exec: CommandFunc
+	exec: CommandFunc<any>
 }
 
-export function CreateCommand(name: string, desc: string, handler: CommandFunc,
+export const StrOpt = (name: string, desc: string) => new SlashCommandStringOption().setName(name).setDescription(desc);
+
+export const StrChoices = (name: string, desc: string, choices: Array<{ name: string, value: string }>) => {
+	return new SlashCommandStringOption().setName(name).setDescription(desc).addChoices(...choices);
+}
+
+export const NewCommand = (name: string, desc: string) => new SlashCommandBuilder().setName(name).setDescription(desc);
+
+export function CreateCommand<T extends any>(name: string, desc: string, handler: CommandFunc<T>,
 	into?: CommandInfo[], ...rest: any) {
 
 	const b = new SlashCommandBuilder().setName(name).setDescription(desc);
