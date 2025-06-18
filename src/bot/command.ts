@@ -1,8 +1,8 @@
-import { ChatInputCommandInteraction, PermissionResolvable, SlashCommandBuilder, type Interaction } from "discord.js";
+import { ChatInputCommandInteraction, PermissionResolvable, SlashCommandBuilder } from "discord.js";
 
-export type CommandFunc = (it: Interaction) => Promise<any> | void;
+export type CommandFunc = (it: ChatAction) => Promise<any> | void;
 
-export type ChatCommand = ChatInputCommandInteraction;
+export type ChatAction = ChatInputCommandInteraction;
 
 export type CommandInfo = {
 	name: string,

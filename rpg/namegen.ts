@@ -1,9 +1,11 @@
+import { CreateCommand, type ChatAction, type CommandInfo } from '@/bot/command';
 import { DiscordBot } from '@/bot/discordbot';
-import { Message } from 'discord.js';
 
-export const initPlugin = (bot: DiscordBot) => {
+export const GetCommands = (bot: DiscordBot) => {
 
-	bot.addCmd('rollname', 'rollname [<race>] [m|f]', cmdRollName, { minArgs: 0, maxArgs: 2 });
+	const list: CommandInfo[] = [];
+
+	CreateCommand('rollname', 'rollname [<race>] [m|f]', cmdRollName, list, { minArgs: 0, maxArgs: 2 });
 
 }
 
@@ -186,11 +188,11 @@ export const GenName = (race: string = "human", sex?: string): string => {
 
 }
 
-const cmdRollName = (m: Message<true>, race?: string, sex?: string) => {
+const cmdRollName = (m: ChatAction, race?: string, sex?: string) => {
 
 	const name = GenName(race, toSex(sex));
 	if (name) {
-		m.channel.send(name);
+		m.reply(name);
 	}
 
 }

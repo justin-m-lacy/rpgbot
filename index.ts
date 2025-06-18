@@ -2,7 +2,6 @@ import { Client, GatewayIntentBits } from 'discord.js';
 
 import { Auth } from '@/bot/auth';
 import "dotenv/config";
-import { InitGame } from 'rpg/rpg';
 import { initBaseCommands } from './src/base-commands';
 import { DiscordBot } from './src/bot/discordbot';
 
@@ -50,7 +49,8 @@ const initBot = async () => {
 	try {
 		const bot = new DiscordBot(client, auth, config, __dirname);
 		initBaseCommands(bot);
-		await InitGame(bot);
+
+		//await InitGame(bot);
 
 		tryLogin(auth);
 

@@ -1,13 +1,13 @@
 import Cache from 'archcache';
-import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, PermissionFlagsBits, PermissionResolvable, User, type SendableChannels } from 'discord.js';
+import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, PermissionFlagsBits, PermissionResolvable, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
 import { Display } from '../utils/display';
 import { Auth } from './auth';
 import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './botcontext';
 import fsys from './botfs';
-import { Command } from './command';
+import { Command, type ChatAction } from './command';
+import { CommandMap } from './command-map';
 import CmdDispatch, { CommandOpts } from './dispatch';
-import { loadPlugins, PluginFile } from "./plugsupport";
 
 export type TBotConfig = {
 
@@ -67,12 +67,12 @@ export class DiscordBot {
 	 */
 	private readonly saveDir: string;
 
-	private readonly pluginDir: string = 'plugins';
-
 	private readonly owner: string;
 	private readonly admins?: string[];
 
 	private readonly _spamblock: Record<string, Record<string, boolean>>;
+
+	private readonly commands: ReturnType<typeof CommandMap> = CommandMap();
 
 	/**
 	 *
@@ -95,7 +95,6 @@ export class DiscordBot {
 		this._spamblock = config.spamblock ?? {};
 		this.cmdPrefix = config.cmdprefix ?? '!';
 
-		this.pluginDir = path.join(this.baseDir, config.pluginsdir ?? 'plugins');
 		this.saveDir = path.join(this.baseDir, config.savedir || '/savedata/');
 
 		fsys.setBaseDir(this.saveDir);
@@ -115,7 +114,7 @@ export class DiscordBot {
 		this.owner = auth.owner;
 
 		this.restoreProxies();
-		this.loadPlugins().then(() => this.initBotEvents());
+		this.initBotEvents();
 
 	}
 
@@ -142,13 +141,15 @@ export class DiscordBot {
 
 		this.initClient();
 
-		this.addCmd('backup', 'backup', (m: Message) => this.cmdBackup(m),
+		this.addCmd('backup', 'backup', (m: ChatAction) => this.cmdBackup(m),
 			{ access: PermissionFlagsBits.Administrator, immutable: true, module: 'default' });
-		this.addCmd('archleave', 'archleave', (m: Message) => this.cmdLeaveGuild(m), {
+
+		this.addCmd('archleave', 'archleave', (m: ChatAction) => this.cmdLeaveGuild(m), {
 			access: PermissionFlagsBits.Administrator
 		});
-		this.addCmd('botkill', 'botkill', (m: Message) => this.cmdBotQuit(m), { immutable: true });
-		this.addCmd('proxyme', 'proxyme', (m: Message) => this.cmdProxy(m));
+
+		this.addCmd('botkill', 'botkill', (m: ChatAction) => this.cmdBotQuit(m), { immutable: true });
+		this.addCmd('proxyme', 'proxyme', (m: ChatAction) => this.cmdProxy(m));
 		this.addCmd('access', 'access cmd [permissions|roles]',
 			(m: Message, cmd: string, perm: PermissionResolvable) => this.cmdAccess(m, cmd, perm),
 			{ minArgs: 1, access: PermissionFlagsBits.Administrator, immutable: true }
@@ -160,22 +161,6 @@ export class DiscordBot {
 	}
 
 	/**
-	 * Load Plugins.
-	 */
-	private async loadPlugins() {
-
-		if (this.pluginDir) {
-
-			try {
-
-				const plugins = await loadPlugins(this.pluginDir);
-				this.addPlugins(plugins);
-
-			} catch (e) { console.error(e); }
-		}
-	}
-
-	/**
 	 * @async
 	 */
 	private async onShutdown() {
@@ -184,25 +169,6 @@ export class DiscordBot {
 			this.client.destroy();
 		}
 		process.exit(1);
-	}
-
-	/**
-	 *
-	 * @param {Object[]} plug_files
-	 */
-	addPlugins(plug_files: PluginFile[]) {
-
-		for (let i = plug_files.length - 1; i >= 0; i--) {
-
-			try {
-				const plug = plug_files[i];
-				plug.initPlugin(this);
-			} catch (err) {
-				console.warn(`error initializing plugin: ${err}`);
-			}
-
-		}
-
 	}
 
 	/**
@@ -299,6 +265,10 @@ export class DiscordBot {
 		this.dispatch.addContextCmd(name, desc, func, plugClass, opts);
 	}
 
+	private async onCommand(it: Interaction) {
+
+	}
+
 	/**
 	 *
 	 * @param m
@@ -380,9 +350,9 @@ export class DiscordBot {
 	 * @param m
 	 * @returns
 	 */
-	private async cmdBackup(m: Message) {
+	private async cmdBackup(m: ChatAction) {
 
-		if (this.isOwner(m.author.id)) {
+		if (this.isOwner(m.user.id)) {
 			await this.cache.backup(0);
 			return m.reply('backup complete.');
 		} else {
@@ -411,12 +381,12 @@ export class DiscordBot {
 	/**
 	 * Make Archbot leave guild.
 	 * @async
-	 * @param {Message} m
+	 * @param m
 	 * @returns
 	 */
-	async cmdLeaveGuild(m: Message) {
+	async cmdLeaveGuild(m: ChatAction) {
 
-		if (this.isOwner(m.author.id) && m.guild) {
+		if (this.isOwner(m.user.id) && m.guild) {
 			return m.guild.leave();
 		}
 		return this.sendNoPerm(m);
@@ -428,28 +398,28 @@ export class DiscordBot {
 	 * @param m
 	 * @returns return true to block guild/channel message.
 	 */
-	spamblock(m: Message) {
+	spamblock(m: ChatAction) {
 
 		if (!m.guild) return false;
-		const allow = this._spamblock[m.guild.id];
-		return (allow && !allow[m.channel.id]);
+		const block = this._spamblock[m.guild.id];
+		return (block && m.channel && !block[m.channel.id]);
 
 	}
 
 	/**
 	 * Proxy the current context to the user's DM.
 	 * @async
-	 * @param {Message} m
-	 * @returns {Promise}
+	 * @param m
+	 * @returns
 	 */
-	async cmdProxy(m: Message) {
+	async cmdProxy(m: ChatAction) {
 
 		// get context of the guild/channel to be proxied to user.
-		const context = await this.getMsgContext(m);
+		const context = await this.getCmdContext(m);
 
 		if (context) {
-			this.setProxy(m.author, context as GuildContext | BotContext<Channel>);
-			return m.author.send('Proxy created.');
+			this.setProxy(m.user, context as GuildContext | BotContext<Channel>);
+			return m.user.send('Proxy created.');
 		}
 
 	}
@@ -457,36 +427,36 @@ export class DiscordBot {
 	/**
 	 * Reset command's permissions to default.
 	 * @async
-	 * @param {Message} m
-	 * @param {string} cmd - name of command.
-	 * @returns {Promise}
+	 * @param it
+	 * @param cmd - name of command.
+	 * @returns
 	 */
-	async cmdResetAccess(m: Message, cmd: string) {
+	async cmdResetAccess(it: ChatAction, cmd: string) {
 
-		const context = await this.getMsgContext(m);
+		const context = await this.getCmdContext(it);
 
 		if (context) {
 			// unset any custom access.
 			context.unsetAccess(cmd);
-			return m.reply('Access reset.');
+			return it.reply('Access reset.');
 		}
 
 	}
 
 	/**
 	 * @async
-	 * @param {Message} m
-	 * @param {string} cmdName - name of command.
-	 * @param {string} [perm=undefined]
-	 * @returns {Promise}
+	 * @param  m
+	 * @param  cmdName - name of command.
+	 * @param  [perm=undefined]
+	 * @returns 
 	 */
-	async cmdAccess(m: Message, cmdName: string, perm?: PermissionResolvable) {
+	async cmdAccess(m: ChatAction, cmdName: string, perm?: PermissionResolvable) {
 
 		const cmd = this.dispatch.getCommand(cmdName);
 		if (!cmd) return m.reply(`Command '${cmdName}' not found.`);
 		else if (cmd.immutable) return m.reply(`The access level of '${this.dispatch.prefix}${cmdName}' cannot be changed.`);
 
-		const context = await this.getMsgContext(m);
+		const context = await this.getCmdContext(m);
 		if (context == null) {
 
 		} else if (perm === undefined || perm === null) {
@@ -516,11 +486,11 @@ export class DiscordBot {
 	/**
 	 * Send a no-permission message.
 	 * @async
-	 * @param {Message} m
-	 * @param {Command} [cmd=null]
-	 * @returns {Promise}
+	 * @param m
+	 * @param [cmd=null]
+	 * @returns
 	 */
-	async sendNoPerm(m: Message, cmd?: Command) {
+	async sendNoPerm(m: ChatAction, cmd?: Command) {
 
 		if (cmd) return m.reply(`You do not have permission to use the command '${cmd.name}'`);
 		return m.reply('You do not have permission to use that command.');
@@ -568,6 +538,29 @@ export class DiscordBot {
 		}
 		catch (err) {
 			console.warn(`Error restoring proxies: ${err}`);
+		}
+
+	}
+
+	async getCmdContext(it: Interaction) {
+
+		const type = it.channel?.type;
+		let idobj;
+
+		if (type === ChannelType.GuildText) {
+			idobj = it.guild;
+		} else {
+
+			idobj = it.user;
+			//check proxy
+			if (this._proxies.has(idobj.id)) {
+				return this.getProxiedCtx(idobj);
+			}
+
+		}
+
+		if (idobj != null) {
+			return this.contexts.get(idobj.id) ?? this.makeContext(idobj);
 		}
 
 	}

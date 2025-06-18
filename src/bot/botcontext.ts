@@ -415,9 +415,9 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * @async
-	 * @param {Command} cmd
-	 * @param {Array} args
-	 * @returns {Promise}
+	 * @param cmd
+	 * @param args
+	 * @returns
 	 */
 	async routeCommand(cmd: Command, args: any[]) {
 
