@@ -1,4 +1,4 @@
-import { NewCommand, StrChoices, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrChoices, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { GenChar } from "rpg/builders/chargen";
 import { EchoChar } from "rpg/display/display";
 import { RandClass, RandRace } from "rpg/parsers/classes";
@@ -40,4 +40,4 @@ export default {
 
 		} catch (e) { console.log(e); }
 	}
-}
+} as CommandData<Rpg>

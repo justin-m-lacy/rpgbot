@@ -1,15 +1,15 @@
-import type { CommandFunc } from "@/bot/command";
+import type { CommandData } from "@/bot/command";
 
 
 
 export const CommandMap = () => {
 
-	const commands = new Map<string, CommandFunc<any>>();
+	const commands = new Map<string, CommandData>();
 
 
 	return {
 		get(k: string) { return commands.get(k) },
-		set(k: string, f: CommandFunc<any>) { commands.set(k, f) }
+		set(k: string, cmd: CommandData) { commands.set(k, cmd) }
 	}
 
 

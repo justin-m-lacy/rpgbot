@@ -1,4 +1,4 @@
-import { NewCommand, type ChatAction } from "@/bot/command";
+import { NewCommand, type ChatAction, type CommandData } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -11,4 +11,4 @@ export default {
 
 		await SendBlock(m, rpg.game.leaveParty(char));
 	}
-}
+} as CommandData<Rpg>

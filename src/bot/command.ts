@@ -1,19 +1,23 @@
-import { ChatInputCommandInteraction, PermissionResolvable, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
+import type { BotContext } from "@/bot/botcontext";
+import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption, type ApplicationCommandOptionBase } from "discord.js";
 
-export type CommandFunc<T extends any> = (it: ChatAction, cls: T) => Promise<any> | void;
+export type CommandFunc<T extends object | undefined = undefined> = (it: ChatAction, cls: T) => Promise<any> | void;
 
 export type ChatAction = ChatInputCommandInteraction;
 
-export type CommandModule<T extends any> = {
-
-	data: SlashCommandBuilder,
-	exec: CommandFunc<T>
+export type CommandModule = {
+	GetCommands(): CommandData[]
 }
 
-export type CommandInfo = {
-	name: string,
+type CommandClass<T extends object> = {
+	new(context: BotContext): T
+	load?(): Promise<void>;
+}
+
+export type CommandData<T extends object | undefined = undefined> = {
 	data: SlashCommandBuilder,
-	exec: CommandFunc<any>
+	exec: CommandFunc<T>,
+	cls?: T extends object ? CommandClass<T> : undefined
 }
 
 export const StrOpt = (name: string, desc: string) => new SlashCommandStringOption().setName(name).setDescription(desc);
@@ -22,15 +26,23 @@ export const StrChoices = (name: string, desc: string, choices: Array<{ name: st
 	return new SlashCommandStringOption().setName(name).setDescription(desc).addChoices(...choices);
 }
 
-export const NewCommand = (name: string, desc: string) => new SlashCommandBuilder().setName(name).setDescription(desc);
+export const NewCommand = (name: string, desc: string, opts?: ApplicationCommandOptionBase[]
+) => {
 
-export function CreateCommand<T extends any>(name: string, desc: string, handler: CommandFunc<T>,
-	into?: CommandInfo[], ...rest: any) {
+	const cmd = new SlashCommandBuilder().setName(name).setDescription(desc);
+	if (opts) {
+		cmd.options.push(...opts)
+	}
+	return cmd;
+
+}
+
+export function CreateCommand<T extends object | undefined>(name: string, desc: string, handler: CommandFunc<T>,
+	into?: CommandData<T>[], ...rest: any) {
 
 	const b = new SlashCommandBuilder().setName(name).setDescription(desc);
 
 	const cmd = {
-		name,
 		data: b,
 		exec: handler
 	}
@@ -42,138 +54,10 @@ export function CreateCommand<T extends any>(name: string, desc: string, handler
 
 }
 
-export type ModuleCommands = {
-	GetCommands(): CommandInfo[]
-}
-
 /**
  * Check if loaded js module has command creation function.
  * @param module 
  */
-export const HasCommands = (module?: any): module is ModuleCommands => {
+export const IsCommandModule = (module?: any): module is CommandModule => {
 	return module && typeof module === 'object' && typeof module.GetCommands === 'function';
-}
-
-export class Command<F extends Function = Function> {
-
-	/**
-	 * @property {string}
-	 */
-	readonly name: string = '';
-
-	/**
-	 * @property {string|string[]}
-	 */
-	readonly alias: string | string[] | null = null;
-
-	/**
-	 * @property Whether the command is implemented as a direct function call.
-	 */
-	get isDirect(): boolean { return this.instClass == null; }
-
-	/**
-	 * @property Whether the command is linked to a context class.
-	 */
-	get isContext(): boolean { return this.instClass != null; }
-
-	/**
-	 * @property {Object} Object class to instantiate for every bot context.
-	 */
-	readonly instClass?: any;
-
-	_module?: string | null;
-
-	/**
-	 * @property {string} name of module that the command belongs to.
-	 */
-	get module() {
-		return this._module ?? (this.instClass ? this.instClass.constructor.name : 'unknown');
-	}
-	set module(v: string | null) {
-		this._module = v;
-	}
-
-	readonly func: F;
-
-	_usage?: string;
-
-	/**
-	 * @property {string} Detailed command usage information.
-	 */
-	get usage() { return this._usage || this.desc; }
-	set usage(v: string) { this._usage = v; }
-
-	/**
-	 * @property {string} short description of command.
-	 */
-	readonly desc: string = 'Unknown';
-
-	/**
-	 * The way command line words are grouped into commmand arguments.
-	 * Valid options are 'left' or 'right'.
-	 */
-	readonly group?: string;
-
-	/**
-	 *  Hidden commands are not displayed in the help list.
-	 */
-	readonly hidden: boolean = false;
-
-	/**
-	 * Additional args to pass to command function.
-	 */
-	readonly args?: any[];
-
-	/**
-	 * minimum arguments which must be supplied with the command.
-	 */
-	readonly minArgs: number = 0;
-
-	/**
-	 * maximum number of arguments that can be supplied to the command.
-	 */
-	readonly maxArgs: number | null = null;
-
-	/**
-	 * Default permissions required to use this command.
-	 * Can be overridden by BotContext Access.
-	 */
-	readonly access?: PermissionResolvable;
-
-	/**
-	 * immutable commands cannot have their access level changed.
-	 */
-	readonly immutable: boolean = false;
-
-	/**
-	 * 
-	 * @param name 
-	 * @param func 
-	 * @param opts
-	 */
-	constructor(name: string, func: F, opts?: Partial<Command>) {
-
-		this.name = name;
-		this.func = func;
-
-		if (opts) Object.assign(this, opts);
-
-	}
-
-	/**
-	 * 
-	 * @param {string} cmd
-	 * @returns {boolean}
-	 */
-	isMatch(cmd: string) {
-
-		if (this.name === cmd) return true;
-
-		if (this.alias) {
-			if (typeof (this.alias) === 'string') return cmd === this.alias;
-			return this.alias.includes(cmd);
-		}
-
-	}
-
 }

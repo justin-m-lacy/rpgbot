@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
 export default {
@@ -18,4 +18,4 @@ export default {
 		return m.reply(item.getDetails());
 
 	}
-}
+} as CommandData<Rpg>

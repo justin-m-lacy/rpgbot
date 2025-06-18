@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -21,4 +21,4 @@ export default {
 		return EchoChar(m, char);
 
 	}
-}
+} as CommandData<Rpg>

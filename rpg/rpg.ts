@@ -31,7 +31,7 @@ export class Rpg {
 
 		this.context = context;
 
-		this.cache = this.context.subcache(RPG_DIR);
+		this.cache = this.context.subcache(Rpg.RpgDir);
 
 		this.game = new Game(this.cache);
 
@@ -40,11 +40,11 @@ export class Rpg {
 
 	}
 
-	getLastChar(owner: string) { return this.lastChars[owner] }
-
 	async load() {
 		await this.loadLastChars();
 	}
+
+	getLastChar(owner: string) { return this.lastChars[owner] }
 
 	async charExists(charname: string) { return this.charCache.exists(this.getCharKey(charname)); }
 

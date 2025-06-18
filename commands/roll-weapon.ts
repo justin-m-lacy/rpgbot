@@ -1,4 +1,4 @@
-import { NewCommand, type ChatAction } from "@/bot/command";
+import { NewCommand, type ChatAction, type CommandData } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { rollWeap } from "rpg/trade";
@@ -13,4 +13,4 @@ export default {
 		}
 
 	}
-}
+} as CommandData<Rpg>

@@ -5,9 +5,8 @@ import { Display } from '../utils/display';
 import { Auth } from './auth';
 import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './botcontext';
 import fsys from './botfs';
-import { Command, type ChatAction } from './command';
+import { type ChatAction, type CommandData } from './command';
 import { CommandMap } from './command-map';
-import CmdDispatch, { CommandOpts } from './dispatch';
 
 export type TBotConfig = {
 
@@ -28,8 +27,6 @@ export type TCmdFunc<S extends string = string> = (m: Message<true>, ...rest: S[
 export class DiscordBot {
 
 	readonly client: Client;
-
-	readonly dispatch: CmdDispatch;
 
 	private readonly cache: Cache;
 
@@ -108,8 +105,6 @@ export class DiscordBot {
 
 		});
 
-		this.dispatch = new CmdDispatch(this.cmdPrefix);
-
 		this.admins = auth.admins;
 		this.owner = auth.owner;
 
@@ -141,20 +136,20 @@ export class DiscordBot {
 
 		this.initClient();
 
-		this.addCmd('backup', 'backup', (m: ChatAction) => this.cmdBackup(m),
+		this.addCommand('backup', 'backup', (m: ChatAction) => this.cmdBackup(m),
 			{ access: PermissionFlagsBits.Administrator, immutable: true, module: 'default' });
 
-		this.addCmd('botleave', 'botleave', (m: ChatAction) => this.cmdLeaveGuild(m), {
+		this.addCommand('botleave', 'botleave', (m: ChatAction) => this.cmdLeaveGuild(m), {
 			access: PermissionFlagsBits.Administrator
 		});
 
-		this.addCmd('botkill', 'botkill', (m: ChatAction) => this.cmdBotQuit(m), { immutable: true });
-		this.addCmd('proxyme', 'proxyme', (m: ChatAction) => this.cmdProxy(m));
-		this.addCmd('access', 'access cmd [permissions|roles]',
+		this.addCommand('botkill', 'botkill', (m: ChatAction) => this.cmdBotQuit(m), { immutable: true });
+		this.addCommand('proxyme', 'proxyme', (m: ChatAction) => this.cmdProxy(m));
+		this.addCommand('access', 'access cmd [permissions|roles]',
 			(m: Message, cmd: string, perm: PermissionResolvable) => this.cmdAccess(m, cmd, perm),
 			{ minArgs: 1, access: PermissionFlagsBits.Administrator, immutable: true }
 		);
-		this.addCmd('resetaccess', 'resetaccess cmd',
+		this.addCommand('resetaccess', 'resetaccess cmd',
 			(m: Message, cmd: string) => this.cmdResetAccess(m, cmd),
 			{ minArgs: 1, maxArgs: 1, access: PermissionFlagsBits.Administrator }
 		);
@@ -201,21 +196,19 @@ export class DiscordBot {
 		this.client.on(Events.ClientReady, () => this.initContexts());
 		this.client.on(Events.GuildUnavailable, onGuildUnavail)
 
-		this.client.on('resume', onResume);
+		this.client.on(Events.ShardResume, onResume);
 
-		this.client.on(Events.MessageCreate, m => {
-			if (m.author.id === this.client.user!.id) return;
-			if (!m.channel.isSendable()) return;
-			if (this.spamblock(m)) return;
-			this.onMessage(m as Message<true>);
-
-		});
-
-		this.client.on(Events.InteractionCreate, it => {
+		this.client.on(Events.InteractionCreate, async (it) => {
 
 			if (!it.isChatInputCommand()) return;
+			const cmd = this.commands.get(it.commandName);
+			if (!cmd) return;
 
-			const b = it;
+			const ctx = await this.getCmdContext(it);
+
+			await cmd.exec(it, undefined);
+
+
 		});
 
 	}
@@ -243,30 +236,10 @@ export class DiscordBot {
 	 * @param  name
 	 * @param desc
 	 * @param  func
-	 * @param  [opts=null]
+	 * @param
 	 */
-	public addCmd(name: string, desc: string, func: Function, opts?: CommandOpts) {
-		this.dispatch.add(name, desc, func, opts);
-	}
-
-	/**
-	 * Add a command with a plugin class that is instantiated for each chat context.
-	 * @param  name
-	 * @param  desc
-	 * @param  func
-	 * @param  plugClass
-	 * @param  opts=null
-	 */
-	public addContextCmd<S extends string>(name: string,
-		desc: string,
-		func: TCmdFunc<S>,
-		plugClass: ContextClass<ContextSource>,
-		opts?: CommandOpts) {
-		this.dispatch.addContextCmd(name, desc, func, plugClass, opts);
-	}
-
-	private async onCommand(it: Interaction) {
-
+	public addCommand(cmd: CommandData) {
+		this.commands.set(cmd.data.name, cmd);
 	}
 
 	/**
@@ -307,29 +280,6 @@ export class DiscordBot {
 
 			}
 
-		}
-
-	}
-
-	/**
-	 * Test if current user has permission To use a command.
-	 * @param m
-	 * @param cmd
-	 * @param context
-	 * @returns
-	 */
-	private canUseCmd(m: Message, cmd: Command, context: BotContext<ContextSource>) {
-
-		if (m.member) {
-			const allowed = context.canAccess(cmd.name, m.member);
-			if (allowed === undefined) {
-
-				// check default access.
-				if (!cmd.access) return true;
-				return m.member.permissions.has(cmd.access);
-
-			}
-			return allowed;
 		}
 
 	}
@@ -439,46 +389,6 @@ export class DiscordBot {
 			// unset any custom access.
 			context.unsetAccess(cmd);
 			return it.reply('Access reset.');
-		}
-
-	}
-
-	/**
-	 * @async
-	 * @param  m
-	 * @param  cmdName - name of command.
-	 * @param  [perm=undefined]
-	 * @returns 
-	 */
-	async cmdAccess(m: ChatAction, cmdName: string, perm?: PermissionResolvable) {
-
-		const cmd = this.dispatch.getCommand(cmdName);
-		if (!cmd) return m.reply(`Command '${cmdName}' not found.`);
-		else if (cmd.immutable) return m.reply(`The access level of '${this.dispatch.prefix}${cmdName}' cannot be changed.`);
-
-		const context = await this.getCmdContext(m);
-		if (context == null) {
-
-		} else if (perm === undefined || perm === null) {
-
-			const info = context.accessInfo(cmdName);
-			if (!info && info !== 0 && info !== '0') {
-
-				// return default command access.
-				if (!cmd.access) return m.reply('Anyone can use this command.');
-				return m.reply(`Access for ${cmdName}: ${cmd.access}`);
-
-			} else {
-
-				return m.reply(`Access for ${cmdName}: ${info}`);
-
-			}
-
-		} else {
-
-			context.setAccess(cmdName, perm);
-			return m.reply('Access set.');
-
 		}
 
 	}

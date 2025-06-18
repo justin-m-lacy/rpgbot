@@ -42,7 +42,7 @@ const readdir = fs.promises.readdir;
  * @param {string} path
  * @returns {Promise<string[], NodeJS.ErrnoException>}
  */
-export const readfiles = (path: string) => new Promise<string[]>((res, rej) => {
+export const readFiles = (path: string) => new Promise<string[]>((res, rej) => {
 
 	if (path.charAt(path.length - 1) != '/') path += '/'; // might be unncessary now?
 

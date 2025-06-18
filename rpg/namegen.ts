@@ -1,9 +1,9 @@
-import { CreateCommand, type ChatAction, type CommandInfo } from '@/bot/command';
+import { CreateCommand, type ChatAction, type CommandData } from '@/bot/command';
 import { DiscordBot } from '@/bot/discordbot';
 
 export const GetCommands = (bot: DiscordBot) => {
 
-	const list: CommandInfo[] = [];
+	const list: CommandData[] = [];
 
 	CreateCommand('rollname', 'rollname [<race>] [m|f]', cmdRollName, list, { minArgs: 0, maxArgs: 2 });
 

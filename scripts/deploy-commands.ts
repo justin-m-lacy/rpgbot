@@ -1,4 +1,4 @@
-import { HasCommands } from '@/bot/command';
+import { IsCommandModule } from '@/bot/command';
 import { REST, Routes, type RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import * as fs from 'fs';
 import path from 'path';
@@ -34,7 +34,7 @@ async function findCommands() {
 			).href
 		);
 
-		if (HasCommands(fileImport)) {
+		if (IsCommandModule(fileImport)) {
 
 			const newCommands = fileImport.GetCommands().map(cmd => cmd.data.toJSON());
 			commands.push(...newCommands);

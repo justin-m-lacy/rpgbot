@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { ReplyEmbed } from "@/embeds";
 import { Rpg } from "rpg/rpg";
 
@@ -26,4 +26,4 @@ export default {
 
 
 	}
-}
+} as CommandData<Rpg>

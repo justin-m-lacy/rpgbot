@@ -1,9 +1,11 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
 export default {
-	data: NewCommand('addstat', 'Assign stat point')
-		.addStringOption(StrOpt('stat', 'Stat to increase').setRequired(true)),
+	cls: Rpg,
+	data: NewCommand('addstat', 'Assign stat point', [
+		StrOpt('stat', 'Stat to increase').setRequired(true)
+	]),
 	async exec(m: ChatAction, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
@@ -16,4 +18,4 @@ export default {
 
 
 	}
-}
+} as CommandData<Rpg>

@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -15,4 +15,4 @@ export default {
 		return SendBlock(m, await rpg.world.look(char, what));
 
 	}
-}
+} as CommandData<Rpg>

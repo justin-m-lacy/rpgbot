@@ -3,7 +3,7 @@ import { Channel, Guild, GuildMember, Message, PermissionResolvable, User, type 
 import * as afs from '../afs';
 import Access from './access';
 import BotFs from './botfs';
-import { Command } from './command';
+import { type ChatAction, type CommandData } from './command';
 import { DiscordBot } from './discordbot';
 
 /**
@@ -30,7 +30,7 @@ export type ContextClass<T extends ContextSource> = {
 export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
-	 * @property {string} type - 'guild', 'user', 'dm', 'channel'
+	 * @property type - 'guild', 'user', 'dm', 'channel'
 	 */
 	get type() { return 'unknown'; }
 
@@ -43,12 +43,12 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	get idObject() { return this._idobj; }
 
 	/**
-	 * @property {string} sourceID - id of the discord object associated with this context.
+	 * @property sourceID - id of the discord object associated with this context.
 	 */
 	get sourceID() { return this._idobj.id; }
 
 	/**
-	 * @property {DisordBot} bot
+	 * @property bot
 	 */
 	readonly bot: DiscordBot;
 
@@ -60,7 +60,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	readonly _instances: Map<string, InstanceType<ContextClass<ContextSource>>> = new Map();
 
 	/**
-	 * @property {Access} access - Information about access to settings and commands.
+	 * @property access - Information about access to settings and commands.
 	 */
 	get access() { return this._access; }
 	set access(v) { this._access = v; }
@@ -71,10 +71,10 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	private _access?: Access;
 
 	/**
-	 * @param {DiscordBot} bot
-	 * @param {discord object} idobj - guild, channel, or user
+	 * @param bot
+	 * @param idobj - guild, channel, or user
 	 * that acts as the basis for the context.
-	 * @param {Cache} cache
+	 * @param cache
 	 */
 	constructor(bot: DiscordBot, idobj: T, cache: ArchCache) {
 
@@ -89,13 +89,13 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * Load Context preferences, init Context classes required
 	 * by plugins.
 	 * @async
-	 * @param {ContextClass<T>[]} plugClasses
-	 * @returns {Promise}
+	 * @param classes
+	 * @returns
 	 */
-	async init(plugClasses: ContextClass<ContextSource>[]) {
+	async init(classes: ContextClass<ContextSource>[]) {
 
-		for (let i = plugClasses.length - 1; i >= 0; i--) {
-			this.addClass(plugClasses[i]);
+		for (let i = classes.length - 1; i >= 0; i--) {
+			this.addClass(classes[i]);
 		}
 
 		const roomPerms = await this.cache.fetch('access');
@@ -106,17 +106,15 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	/**
 	 * Backup the Context's cache.
 	 * @async
-	 * @param {Message} m
-	 * @returns {Promise}
+	 * @param m
+	 * @returns
 	 */
-	async doBackup() {
-		return this.cache.backup(0);
-	}
+	async doBackup() { return this.cache.backup(0); }
 
 	/**
 	 * Return access permission string for the given command.
-	 * @param {string} cmd
-	 * @returns {string}
+	 * @param cmd
+	 * @returns
 	 */
 	accessInfo(cmd: string) {
 		return this.access?.accessInfo(cmd);
@@ -124,7 +122,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 *
-	 * @param {string} cmd
+	 * @param cmd
 	 */
 	unsetAccess(cmd: string) {
 		this.access?.unsetAccess(cmd);
@@ -132,9 +130,9 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 *
-	 * @param {string} cmd
-	 * @param {number|string} perm
-	 * @returns {boolean}
+	 * @param cmd
+	 * @param perm
+	 * @returns
 	 */
 	setAccess(cmd: string, perm: PermissionResolvable) {
 		return this.access?.setAccess(cmd, perm);
@@ -150,9 +148,9 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 *
-	 * @param {string} cmd
-	 * @param {GuildMember} gm
-	 * @returns {boolean}
+	 * @param cmd
+	 * @param gm
+	 * @returns
 	 */
 	canAccess(cmd: string, gm: GuildMember) {
 		return this._access?.canAccess(cmd, gm);
@@ -161,7 +159,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	/**
 	 * Save this context's command permissions.
 	 * @async
-	 * @returns {Promise}
+	 * @returns
 	 */
 	async savePerms() {
 		await this.cache.store('access', this.access);
@@ -191,9 +189,9 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * @async
-	 * @param {string} key
-	 * @param {string} defaultset - value to return if setting not found.
-	 * @returns {Promise<*|undefined>}
+	 * @param key
+	 * @param defaultset - value to return if setting not found.
+	 * @returns
 	 */
 	async getSetting(key: string, defaultset?: string) {
 
@@ -206,8 +204,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Tests if a file name or cache-key is illegal.
-	 * @param {string} s
-	 * @returns {boolean}
+	 * @param s
+	 * @returns
 	 */
 	isValidKey(s: string) {
 
@@ -227,50 +225,21 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	isOwner(u: User | string) { return this.bot.isOwner(u); }
 
 	/**
-	 * Register message event with Discord client.
-	 * @param {function} listener
-	 */
-	onMsg(listener: (m: Message<true>) => void) {
-
-		this.bot.client.on('messageCreate', (m: Message) => {
-
-			if (m.author.id === m.client.user?.id) return;
-
-			if (this.bot.spamblock(m)) return;
-
-			// ignore bot commands. (commands routed separately)
-			if (m.content.charAt(0) === this.bot.cmdPrefix) return;
-
-			const t = this.type;
-			if (t === 'guild') {
-				if (!m.guild || m.guild.id !== this._idobj.id) return;
-			} else if (t === 'channel') {
-				if (m.channel.id !== this._idobj.id) return;
-			} else if (t === 'user') {
-				if (m.author.id !== this._idobj.id) return;
-			}
-
-			if (m.channel.isSendable()) {
-				listener(m as Message<true>);
-			}
-
-		});
-	}
-
-	/**
 	 * Returns an array of all files stored at a data path.
 	 * ( path is relative to the context's save directory. )
 	 * File extensions are not included.
 	 * @async
-	 * @param {string} path
-	 * @returns {Promise<string[]>}
+	 * @param path
+	 * @returns
 	 */
-	async getDataList(path: string) {
+	async getDataList(path: string): Promise<string[]> {
 
-		const files = await afs.readfiles(BotFs.BaseDir + this.cache.cacheKey + path);
+		const extRegex = /.[^/.]+$/;
+		const files = await afs.readFiles(BotFs.BaseDir + this.cache.cacheKey + path);
 		for (let i = files.length - 1; i >= 0; i--) {
 
-			files[i] = files[i].replace(/.[^/.]+$/, '');;
+			// remove file extension.
+			files[i] = files[i].replace(extRegex, '');
 
 		}
 
@@ -419,21 +388,20 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param args
 	 * @returns
 	 */
-	async routeCommand(cmd: Command, args: any[]) {
+	async routeCommand(it: ChatAction, cmd: CommandData, args: any[]) {
 
 		//console.time( cmd.name );
 
-		let target = this._instances.get(cmd.instClass.name);
+		let target = this._instances.get(cmd.cls?.name);
 		if (!target) {
-			target = await this.addClass(cmd.instClass);
+			target = await this.addClass(cmd.cls);
 			if (!target) {
-				console.error('Missing command target: ' + cmd.instClass);
+				console.error('Missing command target: ' + cmd.cls);
 				return null;
 			}
 		}
 
-		return cmd.func.apply(target, args);
-
+		return cmd.exec(it, cls, ...args);
 		//console.timeEnd( cmd.name );
 
 	}

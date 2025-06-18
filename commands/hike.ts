@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { toDirection } from "rpg/world/loc";
@@ -17,4 +17,4 @@ export default {
 		rpg.checkLevel(m, char);
 
 	}
-}
+} as CommandData<Rpg>

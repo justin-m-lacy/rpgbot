@@ -1,4 +1,4 @@
-import { CreateCommand, type CommandInfo } from '@/bot/command';
+import { CreateCommand, type CommandData } from '@/bot/command';
 import type { DiscordBot } from '@/bot/discordbot';
 import { InitItems } from '../rpg/builders/itemgen';
 import { LoadActions } from '../rpg/magic/action';
@@ -9,7 +9,7 @@ import { Rpg } from '../rpg/rpg';
 
 export function GetCommands() {
 
-	const list: CommandInfo[] = [];
+	const list: CommandData[] = [];
 
 	// MOVE
 	CreateCommand('move', 'move <direction>', cmdMove, list, { maxArgs: 1 });

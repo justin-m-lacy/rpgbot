@@ -1,11 +1,13 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default {
-	data: NewCommand('craft', 'Attempt to craft object')
-		.addStringOption(StrOpt('what', 'What to craft').setRequired(true))
-		.addStringOption(StrOpt('desc', 'Description of item')),
+	cls: Rpg,
+	data: NewCommand('craft', 'Attempt to craft object', [
+		StrOpt('what', 'What to craft').setRequired(true),
+		StrOpt('desc', 'Description of item')
+	]),
 	async exec(m: ChatAction, rpg: Rpg) {
 
 		const what = m.options.getString('what', true);
@@ -24,4 +26,4 @@ export default {
 
 
 	}
-}
+} as CommandData<Rpg>
