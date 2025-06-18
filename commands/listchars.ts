@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
 export default {
@@ -15,4 +15,4 @@ export default {
 		} catch (e) { console.log(e); }
 
 	}
-} as CommandData<Rpg>
+} as Command<Rpg>

@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import type { HumanSlot } from "rpg/items/wearable";
 import { Rpg } from "rpg/rpg";
 
-const Cmd: CommandData<Rpg> = {
+const Cmd: Command<Rpg> = {
 	cls: Rpg,
 	data: NewCommand('worn', 'Get list of worn items or view equipped item')
 		.addStringOption(StrOpt('slot', 'equipment slot to view')),

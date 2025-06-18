@@ -1,4 +1,4 @@
-import { type CommandData } from '@/bot/command';
+import { type Command } from '@/bot/command';
 import type { DiscordBot } from '@/bot/discordbot';
 import { InitItems } from '../rpg/builders/itemgen';
 import { LoadActions } from '../rpg/magic/action';
@@ -8,7 +8,7 @@ import { InitClasses, InitRaces } from '../rpg/parsers/classes';
 
 export function GetCommands() {
 
-	const list: CommandData[] = [];
+	const list: Command[] = [];
 
 	// MOVE
 	/*CreateCommand('move', 'move <direction>', cmdMove, list, { maxArgs: 1 });

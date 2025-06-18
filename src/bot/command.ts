@@ -1,4 +1,4 @@
-import type { BotContext } from "@/bot/botcontext";
+import type { BotContext, ContextSource } from "@/bot/botcontext";
 import type { DiscordBot } from "@/bot/discordbot";
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type SlashCommandOptionsOnlyBuilder } from "discord.js";
 
@@ -9,11 +9,11 @@ export type CommandFunc<T extends object> = (it: ChatAction, cls: T) => Promise<
 export type ChatAction = ChatInputCommandInteraction;
 
 export type CommandModule = {
-	GetCommands(): CommandData[]
+	GetCommands(): Command[]
 }
 
 type CommandClass<T extends object> = {
-	new(context: BotContext): T
+	new(context: BotContext<ContextSource>): T
 	load?(): Promise<void>;
 }
 
@@ -30,7 +30,7 @@ type TypedCommand<T extends object> = BaseCommand & {
 	cls: T extends object ? CommandClass<T> : never;
 }
 
-export type CommandData<T extends object | undefined = undefined> = T extends Object ? TypedCommand<T> : UntypedCommand;
+export type Command<T extends object | undefined = undefined> = T extends Object ? TypedCommand<T> : UntypedCommand;
 
 export const StrOpt = (name: string, desc: string, required: boolean = false) => new SlashCommandStringOption().setName(name).setDescription(desc).setRequired(required);
 
@@ -54,7 +54,7 @@ export const NewCommand = (name: string, desc: string, opts?: ApplicationCommand
 export function CreateCommand(
 	name: string, desc: string,
 	handler: BaseCommandFunc,
-	into?: CommandData[], ...rest: any) {
+	into?: Command[], ...rest: any) {
 
 	const b = new SlashCommandBuilder().setName(name).setDescription(desc);
 
@@ -70,6 +70,11 @@ export function CreateCommand(
 
 }
 
+export const IsCommand = (module?: any): module is Command => {
+	return module && typeof module === 'object' &&
+		('exec' in module && typeof module.exec === 'function') &&
+		('data' in module && module.data instanceof SlashCommandBuilder);
+}
 /**
  * Check if loaded js module has command creation function.
  * @param module 

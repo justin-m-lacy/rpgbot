@@ -1,4 +1,4 @@
-import { BotContext } from '@/bot/botcontext';
+import { BotContext, type ContextSource } from '@/bot/botcontext';
 import type { ChatAction } from '@/bot/command';
 import Cache from 'archcache';
 import { User } from "discord.js";
@@ -27,7 +27,7 @@ export class Rpg {
 	 */
 	private lastChars!: { [id: string]: string };
 
-	constructor(context: BotContext<any>) {
+	constructor(context: BotContext<ContextSource>) {
 
 		this.context = context;
 

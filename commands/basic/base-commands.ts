@@ -1,10 +1,10 @@
 import { DiscordBot } from '../../src/bot/discordbot';
 
-import { NewCommand, NumOpt, StrOpt, type ChatAction, type CommandData } from '@/bot/command';
+import { NewCommand, NumOpt, StrOpt, type ChatAction, type Command } from '@/bot/command';
 import { MessageFlags } from 'discord.js';
 import { parseRoll } from '../../rpg/values/dice';
 
-export function GetCommands() {
+export function GetCommands(): Command[] {
 
     return [
         CmdBackup, CmdLeaveGuild, CmdProxy, CmdShutdown, CmdRoll, CmdSay
@@ -30,7 +30,7 @@ const CmdBackup = {
  */
 const CmdShutdown = {
     data: NewCommand('shutdown', 'Shutdown bot'),
-    exex: async (m: ChatAction, bot: DiscordBot) => {
+    exec: async (m: ChatAction, bot: DiscordBot) => {
         await bot.shutdown(m.user);
     }
 }
@@ -42,7 +42,7 @@ const CmdShutdown = {
  * @returns
  */
 const CmdLeaveGuild = {
-    desc: NewCommand('botleave', 'Remove bot from guild'),
+    data: NewCommand('botleave', 'Remove bot from guild'),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (m.guild && await bot.leaveGuild(m)) {
@@ -66,7 +66,7 @@ const CmdLeaveGuild = {
  */
 const CmdProxy = {
 
-    desc: NewCommand('proxy', 'Proxy this room to your private chat'),
+    data: NewCommand('proxy', 'Proxy this room to your private chat'),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (await bot.makeProxy(m)) {
@@ -103,7 +103,7 @@ const CmdResetAccess = {
 }
 
 
-const CmdHelp: CommandData = {
+const CmdHelp: Command = {
 
     data: NewCommand('help', 'Get command help',
         [

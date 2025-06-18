@@ -1,4 +1,4 @@
-import { NewCommand, type ChatAction, type CommandData } from "@/bot/command";
+import { NewCommand, type ChatAction, type Command } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
 export default {
@@ -13,4 +13,4 @@ export default {
 		return m.reply(char.name + ' saved.');
 
 	}
-} as CommandData<Rpg>
+} as Command<Rpg>

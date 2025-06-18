@@ -3,7 +3,7 @@ import { Channel, Guild, GuildMember, Message, PermissionResolvable, User, type 
 import * as afs from '../afs';
 import Access from './access';
 import BotFs from './botfs';
-import { type ChatAction, type CommandData } from './command';
+import { type ChatAction, type Command } from './command';
 import { DiscordBot } from './discordbot';
 
 /**
@@ -19,8 +19,8 @@ export type ContextSource = Channel | Guild | User;
  * which pairs them to an underlying discord object such as a User, Guild, or Channel.
  * [ContextClass instances] <-> BotContext <-> ContextSource
  */
-export type ContextClass<T extends ContextSource> = {
-	new(context: BotContext<T>): any,
+export type ContextClass<S extends ContextSource> = {
+	new(context: BotContext<S>): any,
 	load?(): any
 };
 
@@ -34,18 +34,16 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 */
 	get type() { return 'unknown'; }
 
-	private _idobj: T;
-
 	/**
 	 *
-	 * idObject - discord obj whose id serves as context base.
+	 * idObject - discord obj that serves as the base of the context.
 	 */
-	get idObject() { return this._idobj; }
+	protected readonly idObject: T;
 
 	/**
 	 * @property sourceID - id of the discord object associated with this context.
 	 */
-	get sourceID() { return this._idobj.id; }
+	get sourceID() { return this.idObject.id; }
 
 	/**
 	 * @property bot
@@ -57,7 +55,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	/**
 	 * Maps class-names to class instances.
 	 */
-	readonly _instances: Map<string, InstanceType<ContextClass<ContextSource>>> = new Map();
+	readonly instances: Map<string, InstanceType<ContextClass<T>>> = new Map();
 
 	/**
 	 * @property access - Information about access to settings and commands.
@@ -79,7 +77,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	constructor(bot: DiscordBot, idobj: T, cache: ArchCache) {
 
 		this.bot = bot;
-		this._idobj = idobj;
+		this.idObject = idobj;
 
 		this.cache = cache;
 
@@ -92,14 +90,14 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param classes
 	 * @returns
 	 */
-	async init(classes: ContextClass<ContextSource>[]) {
+	async init(classes: ContextClass<T>[]) {
 
 		for (let i = classes.length - 1; i >= 0; i--) {
 			this.addClass(classes[i]);
 		}
 
-		const roomPerms = await this.cache.fetch('access');
-		this.access = new Access(roomPerms);
+		//const roomPerms = await this.cache.fetch('access');
+		//this.access = new Access(roomPerms);
 
 	}
 
@@ -354,11 +352,11 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param {class} cls
 	 * @returns {Promise<Object>}
 	 */
-	async addClass(cls: ContextClass<ContextSource>): Promise<InstanceType<ContextClass<ContextSource>>> {
+	async addClass(cls: ContextClass<T>): Promise<InstanceType<ContextClass<T>>> {
 
-		if (this._instances.get(cls.name)) {
+		if (this.instances.get(cls.name)) {
 			console.log('class ' + cls.name + ' already exists for ' + this.idObject.id);
-			return this._instances.get(cls.name)!;
+			return this.instances.get(cls.name)!;
 		}
 
 		const inst = new cls(this);
@@ -367,7 +365,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 			await inst.load();
 		}
 
-		this._instances.set(cls.name, inst);
+		this.instances.set(cls.name, inst);
 
 		return inst;
 
@@ -379,7 +377,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param {Object} inst - plugin instance for this context.
 	 */
 	addInstance(inst: ContextClass<T>) {
-		this._instances.set(inst.constructor.name, inst);
+		this.instances.set(inst.constructor.name, inst);
 	}
 
 	/**
@@ -388,11 +386,11 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param args
 	 * @returns
 	 */
-	async routeCommand(it: ChatAction, cmd: CommandData, args: any[]) {
+	async routeCommand(it: ChatAction, cmd: Command<object>, args: any[]) {
 
 		//console.time( cmd.name );
 
-		let target = this._instances.get(cmd.cls?.name);
+		let target = this.instances.get(cmd.cls.name);
 		if (!target) {
 			target = await this.addClass(cmd.cls);
 			if (!target) {
@@ -401,7 +399,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 			}
 		}
 
-		return cmd.exec(it, cls, ...args);
+		return cmd.exec(it, target, ...args);
 		//console.timeEnd( cmd.name );
 
 	}

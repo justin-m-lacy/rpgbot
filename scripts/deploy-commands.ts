@@ -1,16 +1,15 @@
-import { IsCommandModule } from '@/bot/command';
+import { IsCommand, IsCommandModule } from '@/bot/command';
 import { REST, Routes, type RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import * as fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 import { appId, token } from '../auth.json';
-
 const ValidExtensions = ['', '.js', '.ts'];
 
 (async function () {
 
 	const cmds = await findCommands();
-	await sendCommands(cmds);
+	//await sendCommands(cmds);
 
 })();
 
@@ -18,9 +17,13 @@ async function findCommands() {
 
 	const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
+	console.log(`dir: ${__dirname}`);
+
 	// get all command files from the commands directory
-	const commandsDir = path.join(__dirname, 'commands');
-	const fileList = fs.readdirSync(commandsDir, { withFileTypes: true });
+	const commandsDir = path.resolve(`${__dirname}/..`, 'commands');
+	console.log(`dir: ${commandsDir}`);
+
+	const fileList = fs.readdirSync(commandsDir, { withFileTypes: true, recursive: true });
 
 	for (const file of fileList) {
 
@@ -28,17 +31,22 @@ async function findCommands() {
 		const ext = path.extname(file.name).toLowerCase();
 		if (!ValidExtensions.includes(ext)) continue;
 
-		const fileImport = await import(
+		const fileImport = (await import(
 			pathToFileURL(
 				path.resolve(file.parentPath, file.name)
 			).href
-		);
+		));
 
 		if (IsCommandModule(fileImport)) {
 
 			const newCommands = fileImport.GetCommands().map(cmd => cmd.data.toJSON());
-			commands.push(...newCommands);
+			newCommands.forEach(cmd => console.log(`cmd found: ${cmd.name}`));
 
+		} else if (IsCommand(fileImport.default)) {
+			commands.push(fileImport.default.data.toJSON());
+		} else {
+			console.log(`unknown file type: ${file.name}`);
+			return false;
 		}
 
 	}

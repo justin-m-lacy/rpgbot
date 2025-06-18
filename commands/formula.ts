@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
 import { Formula } from "formulic";
 import { Rpg } from "rpg/rpg";
 
@@ -20,4 +20,4 @@ export default {
 		return m.reply('result: ' + res);
 
 	}
-} as CommandData<Rpg>
+} as Command<Rpg>

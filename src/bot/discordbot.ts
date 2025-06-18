@@ -5,7 +5,7 @@ import { Display } from '../utils/display';
 import { Auth } from './auth';
 import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './botcontext';
 import fsys from './botfs';
-import { type ChatAction, type CommandData } from './command';
+import { type ChatAction, type Command } from './command';
 import { CommandMap } from './command-map';
 
 export type TBotConfig = {
@@ -113,7 +113,7 @@ export class DiscordBot {
 
 	}
 
-	initBotEvents() {
+	private initBotEvents() {
 
 		process.on('exit', () => this.onShutdown());
 		process.on('SIGINT', () => this.onShutdown());
@@ -230,7 +230,7 @@ export class DiscordBot {
 	 * @param  func
 	 * @param
 	 */
-	public addCommand(cmd: CommandData) {
+	public addCommand(cmd: Command) {
 		this.commands.set(cmd.data.name, cmd);
 	}
 
@@ -301,7 +301,7 @@ export class DiscordBot {
 	 * @param m
 	 * @returns return true to block guild/channel message.
 	 */
-	spamblock(m: ChatAction) {
+	private spamblock(m: ChatAction) {
 
 		if (!m.guild) return false;
 		const block = this._spamblock[m.guild.id];
@@ -393,7 +393,7 @@ export class DiscordBot {
 
 	}
 
-	async getCmdContext(it: Interaction) {
+	private async getCmdContext(it: Interaction) {
 
 		const type = it.channel?.type;
 		let idobj;

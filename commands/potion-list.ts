@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
 import { PotsList } from "rpg/builders/itemgen";
 import { Rpg } from "rpg/rpg";
 
@@ -16,4 +16,4 @@ export default {
 
 
 	}
-} as CommandData<Rpg>
+} as Command<Rpg>

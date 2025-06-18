@@ -1,4 +1,4 @@
-import { NewCommand, StrOpt, type ChatAction, type CommandData } from "@/bot/command";
+import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -23,4 +23,4 @@ export default {
 		await SendBlock(m, char.getTalents());
 
 	}
-} as CommandData<Rpg>
+} as Command<Rpg>
