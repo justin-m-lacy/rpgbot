@@ -4,7 +4,7 @@ import { Rpg } from "rpg/rpg";
 
 export default {
 	cls: Rpg,
-	data: NewCommand('leaveguild', 'Leave current guild.'),
+	data: NewCommand('guildleave', 'Leave current guild.'),
 	async exec(m: ChatAction, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);

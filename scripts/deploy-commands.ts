@@ -9,7 +9,7 @@ const ValidExtensions = ['', '.js', '.ts'];
 (async function () {
 
 	const cmds = await findCommands();
-	//await sendCommands(cmds);
+	await sendCommands(cmds);
 
 })();
 
@@ -17,11 +17,8 @@ async function findCommands() {
 
 	const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
-	console.log(`dir: ${__dirname}`);
-
 	// get all command files from the commands directory
 	const commandsDir = path.resolve(`${__dirname}/..`, 'commands');
-	console.log(`dir: ${commandsDir}`);
 
 	const fileList = fs.readdirSync(commandsDir, { withFileTypes: true, recursive: true });
 
@@ -40,13 +37,12 @@ async function findCommands() {
 		if (IsCommandModule(fileImport)) {
 
 			const newCommands = fileImport.GetCommands().map(cmd => cmd.data.toJSON());
-			newCommands.forEach(cmd => console.log(`cmd found: ${cmd.name}`));
+			//newCommands.forEach(cmd => console.log(`cmd found: ${cmd.name}`));
 
 		} else if (IsCommand(fileImport.default)) {
 			commands.push(fileImport.default.data.toJSON());
 		} else {
 			console.log(`unknown file type: ${file.name}`);
-			return false;
 		}
 
 	}

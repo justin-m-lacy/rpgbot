@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node .",
-    "dev": "cross-env NODE_ENV=production ts-node index.ts",
-    "devtx": "cross-env NODE_ENV=production tsx index.ts",
+    "dev": "cross-env NODE_ENV=production tsx index.ts",
+    "devnode": "cross-env NODE_ENV=production ts-node index.ts",
     "deploy-commands": "tsx scripts/deploy-commands.ts",
     "serve": "cross-env NODE_ENV=production ts-node index.ts ----transpile-only",
     "build": "rimraf dist && tsc && tsc-alias && pnpm run minify && pnpm run copydata && pnpm run copypackage",

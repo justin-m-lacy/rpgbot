@@ -7,7 +7,7 @@ import { parseRoll } from '../../rpg/values/dice';
 export function GetCommands(): Command[] {
 
     return [
-        CmdBackup, CmdLeaveGuild, CmdProxy, CmdShutdown, CmdRoll, CmdSay
+        CmdBackup, CmdShutdown, CmdLeaveGuild, CmdProxy, CmdRoll, CmdSay
     ]
 
 }

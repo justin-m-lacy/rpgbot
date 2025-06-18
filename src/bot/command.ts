@@ -4,7 +4,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOpt
 
 type BaseCommandFunc = (it: ChatAction, bot: DiscordBot) => Promise<any> | void | undefined;
 
-export type CommandFunc<T extends object> = (it: ChatAction, cls: T) => Promise<any> | void | undefined;
+export type CommandFunc<T extends object> = (it: ChatAction, cls: T, ...rest: any[]) => Promise<any> | void | undefined;
 
 export type ChatAction = ChatInputCommandInteraction;
 
@@ -12,8 +12,12 @@ export type CommandModule = {
 	GetCommands(): Command[]
 }
 
-type CommandClass<T extends object> = {
-	new(context: BotContext<ContextSource>): T
+/**
+ * Class with a constructor that takes a BotContext and returns
+ * data instance to be provided to exec() command function.
+ */
+type CommandClass<T extends object, S extends ContextSource = ContextSource> = {
+	new(context: BotContext<S>): T
 	load?(): Promise<void>;
 }
 
@@ -21,13 +25,29 @@ type BaseCommand = {
 	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
 	hidden?: boolean
 }
+/**
+ * Command not relying on stored instance data or BotContext.
+ */
 type UntypedCommand = BaseCommand & {
-	exec: BaseCommandFunc,
+	exec: BaseCommandFunc;
 }
 
-type TypedCommand<T extends object> = BaseCommand & {
-	exec: CommandFunc<T>,
-	cls: T extends object ? CommandClass<T> : never;
+/**
+ * Command with a shared class instantiated for every context the command is run in.
+ * e.g. A separate Rpg instance is created for every Discord Guild that runs Rpg commands.
+ * This stored Rpg instance is provided to the exec() function whenever an Rpg command is
+ * run from that guild.
+ */
+type TypedCommand<T extends object, S extends ContextSource = ContextSource> = BaseCommand & {
+
+	/**
+	 * Class to instantiate for each unique context command is run on.
+	 */
+	cls: T extends object ? CommandClass<T, S> : never;
+	/**
+	 * Command to execute for command, along with instantiated data class.
+	 */
+	exec: CommandFunc<T>;
 }
 
 export type Command<T extends object | undefined = undefined> = T extends Object ? TypedCommand<T> : UntypedCommand;

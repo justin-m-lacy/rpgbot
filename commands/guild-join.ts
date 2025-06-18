@@ -4,7 +4,7 @@ import { Rpg } from "rpg/rpg";
 
 export default {
 	cls: Rpg,
-	data: NewCommand('joinguild', 'Join guild')
+	data: NewCommand('guildjoin', 'Join guild')
 		.addStringOption(StrOpt('guild', 'Name of guild to join').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
