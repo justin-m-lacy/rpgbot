@@ -1,3 +1,4 @@
+import type { ChatAction } from '@/bot/command';
 import { EmbedBuilder, Message } from 'discord.js';
 
 
@@ -24,11 +25,12 @@ export const makeImageEmbed = (imageUrl: string) => {
     return new EmbedBuilder({ image: { url: imageUrl, proxy_url: imageUrl } });
 }
 
-export const replyEmbedUrl = (m: Message, embedUrl: string, text?: string | null,) => {
+export const ReplyEmbed = (m: Message | ChatAction, embedUrl: string, text?: string | null,) => {
     return m.reply(
         {
 
-            content: (text && text.length > 0) ? text : ' ', embeds: [
+            content: (text && text.length > 0) ? text : ' ',
+            embeds: [
                 makeImageEmbed(embedUrl)
             ]
         }

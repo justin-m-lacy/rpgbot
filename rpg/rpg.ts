@@ -39,6 +39,8 @@ export class Rpg {
 
 	}
 
+	getLastChar(owner: string) { return this.lastChars[owner] }
+
 	async load() {
 		await this.loadLastChars();
 	}

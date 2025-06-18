@@ -1,14 +1,18 @@
-import { EmbedBuilder, Message, type SendableChannels } from "discord.js";
+import type { ChatAction } from "@/bot/command";
+import { EmbedBuilder, Message } from "discord.js";
 import { getNextExp } from "rpg/char/level";
 import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
 import { Char } from '../char/char';
 
 export const BlockText = (s: string) => '```' + s + '```';
 
-export const SendEmbed = async (m: Message, s: string, e: string) => m.reply({
-	content: '```' + s + '```',
-	embeds: [new EmbedBuilder({ image: { url: e } })]
-});
+export const SendEmbed = async (m: Message | ChatAction, s: string, e: string) => m.reply(
+	{
+		content: '```' + s + '```',
+		embeds: [
+			new EmbedBuilder({ image: { url: e } })
+		]
+	});
 
 export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) => m.reply('```' + s + '```');
 
@@ -22,10 +26,10 @@ export const IsVowel = (c: string) => {
 	return c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u';
 }
 
-export const EchoChar = async function (chan: SendableChannels | null, char: Char, prefix: string = '') {
+export const EchoChar = async function (chan: Message | ChatAction, char: Char, prefix: string = '') {
 
 	const desc = CharLongDesc(char);
-	return chan?.send(
+	return chan.reply(
 		prefix + '```' + `${char.name} is a` +
 		(IsVowel(desc.charAt(0)) ? 'n ' : ' ') +
 		desc + '```'
@@ -33,7 +37,7 @@ export const EchoChar = async function (chan: SendableChannels | null, char: Cha
 
 }
 
-export const CharLongDesc = (char: Char) => {
+export const CharLongDesc = (char: Char): string => {
 
 	let desc = `level ${char.level} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
 	desc += `\nage: ${char.age} sex: ${char.sex} gold: ${char.gold} exp: ${char.exp}/ ${getNextExp(char)}`;
