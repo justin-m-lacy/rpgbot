@@ -41,7 +41,7 @@ export const rollWeap = (char: Char) => {
 
 }
 
-export const rollArmor = (char: Char, slot?: string) => {
+export const rollArmor = (char: Char, slot?: string | null) => {
 
 	let level = char.level.valueOf();
 	const cost = rollCost(level);
@@ -81,7 +81,7 @@ export const sellRange = (src: Char, start: ItemIndex, end: ItemIndex) => {
 
 }
 
-export const sell = (src: Char, wot: ItemPicker, end?: ItemIndex) => {
+export const sell = (src: Char, wot: ItemPicker, end?: ItemIndex | null) => {
 
 	if (end != null) {
 		if (typeof wot === 'object') return 'Invalid item range.';

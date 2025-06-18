@@ -345,7 +345,7 @@ export class Game {
 
 	}
 
-	destroy(char: Char, first: string | number, end?: string | number) {
+	destroy(char: Char, first: string | number, end?: string | number | null) {
 
 		if (this.tick(char, 'destroy') === false) return char.output();
 
@@ -369,7 +369,7 @@ export class Game {
 
 	}
 
-	sell(char: Char, first: string | number, end?: string | number) {
+	sell(char: Char, first: string | number, end?: string | number | null) {
 
 		if (this.tick(char, 'sell') === false) return char.output();
 
@@ -576,7 +576,7 @@ export class Game {
 
 	}
 
-	async steal(src: Char, dest: Char, wot?: ItemPicker) {
+	async steal(src: Char, dest: Char, wot?: ItemPicker | null) {
 
 		if (this.tick(src, 'steal') === false) return src.output();
 

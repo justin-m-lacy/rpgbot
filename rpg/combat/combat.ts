@@ -227,7 +227,7 @@ export class Combat {
 	 *
 	 * @param {Item|number|string} wot - optional item to try to take.
 	 */
-	async steal(wot?: ItemPicker) {
+	async steal(wot?: ItemPicker | null) {
 
 		const attacker = this.attacker as Actor | Monster;
 
@@ -285,7 +285,7 @@ export class Combat {
 
 	}
 
-	take(src: Actor | Monster, targ: Char | Monster, wot?: ItemPicker, stealRoll: number = 0) {
+	take(src: Actor | Monster, targ: Char | Monster, wot?: ItemPicker | null, stealRoll: number = 0) {
 
 		let it: Item | null | undefined;
 		if (wot) {
