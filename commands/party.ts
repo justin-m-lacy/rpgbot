@@ -5,7 +5,7 @@ import { Rpg } from "rpg/rpg";
 
 export default {
 	data: NewCommand('party', 'join party, invite to party, or show party status.')
-		.addStringOption(StrOpt('who', 'player to invite or join to party.')),
+		.addStringOption(StrOpt('who', 'player to invite to party or player\'s party to join')),
 	async exec(m: ChatAction, rpg: Rpg) {
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
