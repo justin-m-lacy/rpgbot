@@ -171,7 +171,7 @@ export class World {
 
 	}
 
-	async view(char: Char, what?: string | number) {
+	async view(char: Char, what?: string | number | null) {
 
 		const loc = await this.getOrGen(char.loc);
 		if (what) {

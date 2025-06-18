@@ -8,11 +8,12 @@ import { Race } from './char/race';
 import { Game } from './game';
 import { World } from './world/world';
 
-const RPG_DIR = 'rpg';
 export const LAST_CHARS = '`lastchars`';
 
 // created for each bot context.
 export class Rpg {
+
+	static readonly RpgDir = 'rpg';
 
 	readonly cache: Cache;
 	readonly charCache: Cache;

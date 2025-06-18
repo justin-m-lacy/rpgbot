@@ -144,7 +144,7 @@ export class DiscordBot {
 		this.addCmd('backup', 'backup', (m: ChatAction) => this.cmdBackup(m),
 			{ access: PermissionFlagsBits.Administrator, immutable: true, module: 'default' });
 
-		this.addCmd('archleave', 'archleave', (m: ChatAction) => this.cmdLeaveGuild(m), {
+		this.addCmd('botleave', 'botleave', (m: ChatAction) => this.cmdLeaveGuild(m), {
 			access: PermissionFlagsBits.Administrator
 		});
 
@@ -174,7 +174,7 @@ export class DiscordBot {
 	/**
 	 * Add class that will be instantiated on every running
 	 * context.
-	 * @param {class} cls
+	 * @param cls
 	 */
 	addContextClass(cls: ContextClass<ContextSource>) {
 
@@ -315,8 +315,8 @@ export class DiscordBot {
 	 * Test if current user has permission To use a command.
 	 * @param m
 	 * @param cmd
-	 * @param {*} context
-	 * @returns {boolean}
+	 * @param context
+	 * @returns
 	 */
 	private canUseCmd(m: Message, cmd: Command, context: BotContext<ContextSource>) {
 
@@ -366,8 +366,8 @@ export class DiscordBot {
 	/**
 	 * Close the running Archbot program. Owner only.
 	 * @async
-	 * @param {Message} m
-	 * @returns {Promise}
+	 * @param m
+	 * @returns
 	 */
 	private async cmdBotQuit(m: Message) {
 
@@ -499,8 +499,8 @@ export class DiscordBot {
 
 	/**
 	 * Proxy a Context to a user's PM.
-	 * @param {User} user
-	 * @param {BotContext} context
+	 * @param user
+	 * @param context
 	 */
 	private setProxy(user: User, context: BotContext<Guild | Channel>) {
 
@@ -513,7 +513,7 @@ export class DiscordBot {
 	/**
 	 * Save information about proxied contexts.
 	 * @async
-	 * @returns {Promise<*>}
+	 * @returns
 	 */
 	private async saveProxies() {
 		return this.storeData('proxies', this._proxies);
@@ -522,7 +522,7 @@ export class DiscordBot {
 	/**
 	 * Restore proxies defined in proxies file.
 	 * @async
-	 * @returns {Promise}
+	 * @returns
 	 */
 	private async restoreProxies() {
 
@@ -568,8 +568,8 @@ export class DiscordBot {
 	/**
 	 * Return a unique Context associated with a message channel.
 	 * @async
-	 * @param {Discord.Message} m
-	 * @returns {Promise<BotContext>}
+	 * @param m
+	 * @returns
 	 */
 	async getMsgContext(m: Message) {
 
@@ -596,7 +596,7 @@ export class DiscordBot {
 
 	/**
 	 * Get or create BotContext associated with a Discord object.
-	 * @returns {Promise<BotContext>}
+	 * @returns
 	 */
 	async getContext(idobj: ContextSource, type?: ChannelType) {
 
@@ -613,7 +613,7 @@ export class DiscordBot {
 	 * e.g. a Guild's BotContext being proxied to a user's DM.
 	 * @param proxy - object acting as the actual proxied object.
 	 * This will typically be a User's DM channel.
-	 * @returns {Promise<BotContext>}
+	 * @returns
 	 */
 	private async getProxiedCtx(proxy: ContextSource) {
 
@@ -673,8 +673,8 @@ export class DiscordBot {
 
 	/**
 	 * Gets a displayName for a discord user.
-	 * @param {GuildMember|User} uObject
-	 * @returns {string}
+	 * @param uObject
+	 * @returns
 	 */
 	displayName(uObject: GuildMember | User) {
 		if (uObject instanceof GuildMember) {
@@ -686,8 +686,8 @@ export class DiscordBot {
 
 	/**
 	 * Get the sender of a Message.
-	 * @param {Message} msg
-	 * @returns {GuildMember|User}
+	 * @param msg
+	 * @returns
 	 */
 	getSender(msg: Message) {
 		return msg.member || msg.author;
@@ -696,8 +696,8 @@ export class DiscordBot {
 	/**
 	 * fetch data for arbitrary key.
 	 * @async
-	 * @param {string} key
-	 * @returns {Promise<*>}
+	 * @param key
+	 * @returns
 	 */
 	async fetchData(key: string) {
 		return this.cache.fetch(key);
@@ -706,9 +706,9 @@ export class DiscordBot {
 	/**
 	 * Store data for key.
 	 * @async
-	 * @param {string} key
-	 * @param {*} data
-	 * @returns {Promise}
+	 * @param key
+	 * @param data
+	 * @returns
 	 */
 	async storeData(key: string, data: any) {
 		return this.cache.store(key, data);
@@ -716,9 +716,9 @@ export class DiscordBot {
 
 	/**
 	 * Create a key to associate with a chain of Discord objects.
-	 * @param {*} baseObj
-	 * @param  {...any} subs
-	 * @returns {string}
+	 * @param baseObj
+	 * @param subs
+	 * @returns
 	 */
 	getDataKey(baseObj: Channel | GuildMember | Guild, ...subs: any[]) {
 
@@ -732,8 +732,8 @@ export class DiscordBot {
 
 	/**
 	 *
-	 * @param {string} key
-	 * @param {*} data
+	 * @param key
+	 * @param data
 	 */
 	cacheData(key: string, data: any) {
 		this.cache.cache(key, data);
@@ -741,8 +741,8 @@ export class DiscordBot {
 
 	/**
 	 * @async
-	 * @param {GuildMember|User} uObject
-	 * @returns {Promise<*>}
+	 * @param uObject
+	 * @returns
 	 */
 	private async fetchUserData(uObject: GuildMember | User) {
 
@@ -755,8 +755,8 @@ export class DiscordBot {
 
 	/**
 	 *
-	 * @param {Discord.User|Discord.GuildMember} uObject
-	 * @param {*} data - user data to store.
+	 * @param uObject
+	 * @param data - user data to store.
 	 */
 	private storeUserData(uObject: User | GuildMember, data: any) {
 
@@ -791,9 +791,9 @@ export class DiscordBot {
 
 	/**
 	 * Find a GuildMember or User object in channel.
-	 * @param {Discord.Channel} channel
-	 * @param {string} name - name or nickname of user to find.
-	 * @returns {(GuildMember|User|null)}
+	 * @param channel
+	 * @param name - name or nickname of user to find.
+	 * @returns
 	 */
 	findUser(channel: SendableChannels, name: string) {
 
@@ -848,8 +848,8 @@ export class DiscordBot {
 
 	/**
 	 * @async
-	 * @param {Channel} chan
-	 * @returns {Promise}
+	 * @param chan
+	 * @returns
 	 */
 	async printCommands(chan: SendableChannels, page: number = 0) {
 
@@ -874,15 +874,6 @@ export class DiscordBot {
 		}
 
 
-	}
-
-	/**
-	 * Lists the commands associated with a given plugin or module.
-	 * @async
-	 * @param {string} module
-	 * @returns {Promise}
-	 */
-	private async moduleCommands(module: string) {
 	}
 
 } // class

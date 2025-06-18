@@ -4,6 +4,12 @@ export type CommandFunc<T extends any> = (it: ChatAction, cls: T) => Promise<any
 
 export type ChatAction = ChatInputCommandInteraction;
 
+export type CommandModule<T extends any> = {
+
+	data: SlashCommandBuilder,
+	exec: CommandFunc<T>
+}
+
 export type CommandInfo = {
 	name: string,
 	data: SlashCommandBuilder,
@@ -36,7 +42,7 @@ export function CreateCommand<T extends any>(name: string, desc: string, handler
 
 }
 
-export type CommandModule = {
+export type ModuleCommands = {
 	GetCommands(): CommandInfo[]
 }
 
@@ -44,7 +50,7 @@ export type CommandModule = {
  * Check if loaded js module has command creation function.
  * @param module 
  */
-export const HasCommands = (module?: any): module is CommandModule => {
+export const HasCommands = (module?: any): module is ModuleCommands => {
 	return module && typeof module === 'object' && typeof module.GetCommands === 'function';
 }
 

@@ -1,5 +1,6 @@
 import { NewCommand, StrChoices, StrOpt, type ChatAction } from "@/bot/command";
 import { GenChar } from "rpg/builders/chargen";
+import { EchoChar } from "rpg/display/display";
 import { RandClass, RandRace } from "rpg/parsers/classes";
 import type { Rpg } from "rpg/rpg";
 
@@ -34,7 +35,7 @@ export default {
 			const char = GenChar(m.user.id, race, charCls, charname);
 
 			await rpg.setUserChar(m.user, char);
-			Display.EchoChar(m.channel, char);
+			EchoChar(m, char);
 			await rpg.saveChar(char, true);
 
 		} catch (e) { console.log(e); }
