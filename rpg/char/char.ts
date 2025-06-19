@@ -147,6 +147,9 @@ export class Char extends Actor {
 
 	}
 
+	/**
+	 * Runs every time char is loaded from storage.
+	 */
 	public init() {
 		this.race?.onInitChar(this);
 		this.cls?.onInitChar(this);

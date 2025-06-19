@@ -112,7 +112,6 @@ const boundStats = (char: Char, gens: StatGen[]) => {
 		const info = gens[i];
 		if ('pick' in info) continue;
 
-
 		if (info.min == null && info.max == null) continue;
 
 		const stat = info.stat;

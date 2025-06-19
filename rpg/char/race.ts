@@ -41,6 +41,10 @@ export class Race {
 		char.applyMods(this.mods);
 	}
 
+	/**
+	 * Runs on new char creation.
+	 * @param char 
+	 */
 	onNewChar(char: Char) {
 
 		const cur = char.hp.max.base;

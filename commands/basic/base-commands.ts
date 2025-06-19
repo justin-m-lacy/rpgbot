@@ -1,7 +1,7 @@
 import { DiscordBot } from '../../src/bot/discordbot';
 
 import { NewCommand, NumOpt, StrOpt, type ChatAction, type Command } from '@/bot/command';
-import { MessageFlags } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { parseRoll } from '../../rpg/values/dice';
 
 export function GetCommands(): Command[] {
@@ -16,7 +16,8 @@ export function GetCommands(): Command[] {
 * Backup unsaved cache items.
 */
 const CmdBackup = {
-    data: NewCommand('backup', 'Force backup bot data'),
+    data: NewCommand('backup', 'Force backup bot data')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (await bot.backup(m.user)) {
@@ -32,7 +33,8 @@ const CmdBackup = {
  * Shutdown the bot program. Owner only.
  */
 const CmdShutdown = {
-    data: NewCommand('shutdown', 'Shutdown bot'),
+    data: NewCommand('shutdown', 'Shutdown bot')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
         await bot.shutdown(m.user);
     }
@@ -45,7 +47,8 @@ const CmdShutdown = {
  * @returns
  */
 const CmdLeaveGuild = {
-    data: NewCommand('botleave', 'Remove bot from guild'),
+    data: NewCommand('botleave', 'Remove bot from guild')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (m.guild && await bot.leaveGuild(m)) {
@@ -173,7 +176,7 @@ const CmdSay = {
             StrOpt('what', 'What bot will say', true),
 
         ]
-    ),
+    ).setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: (msg: ChatAction,) => {
 
         const what = msg.options.getString('what', true);
