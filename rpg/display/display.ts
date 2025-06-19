@@ -39,9 +39,9 @@ export const EchoChar = async function (chan: Message | ChatAction, char: Char, 
 
 export const CharLongDesc = (char: Char): string => {
 
-	let desc = `level ${char.level} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
-	desc += `\nage: ${char.age} sex: ${char.sex} gold: ${char.gold} exp: ${char.exp}/ ${getNextExp(char)}`;
-	desc += `\nhp: ${char.hp}/${char.hp.max} armor: ${char.armor}\n`;
+	let desc = `level ${char.level.valueOf()} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
+	desc += `\nage: ${char.age.valueOf()} sex: ${char.sex} gold: ${char.gold} exp: ${char.exp}/ ${getNextExp(char)}`;
+	desc += `\nhp: ${char.hp.valueOf()}/${char.hp.max.valueOf()} armor: ${char.armor.valueOf()}\n`;
 	desc += statString(char);
 
 	if (char.spentPoints < char.statPoints) desc += '\n' + (char.statPoints - char.spentPoints) + ' stat points available.';

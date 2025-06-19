@@ -81,9 +81,6 @@ export class StatBlock {
 	// damage reduction.
 	readonly dr: Simple = new Simple('dr');
 
-	height?: number;
-	weight?: number;
-
 	readonly age: Simple = new Simple('age');
 	gold: number = 0;
 

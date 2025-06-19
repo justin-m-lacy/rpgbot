@@ -19,7 +19,7 @@ export class Race {
 	private _mods: Record<string, IMod> = {};
 	private hitDie: number = 0;
 	private _expMod: number = 1;
-	talents: string[] = [];
+	readonly talents: string[] = [];
 
 	constructor(id: string, hitDie: number = 1) {
 
@@ -51,7 +51,7 @@ export class Race {
 	}
 
 	hasTalent(t: string) {
-		return this.talents && this.talents.includes(t);
+		return this.talents.includes(t);
 	}
 
 	get HD() { return this.hitDie; }

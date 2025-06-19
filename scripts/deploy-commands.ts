@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 import { appId, token } from '../auth.json';
+
 const ValidExtensions = ['', '.js', '.ts'];
 
 (async function () {
@@ -37,7 +38,7 @@ async function findCommands() {
 		if (IsCommandModule(fileImport)) {
 
 			const newCommands = fileImport.GetCommands().map(cmd => cmd.data.toJSON());
-			//newCommands.forEach(cmd => console.log(`cmd found: ${cmd.name}`));
+			commands.push(...newCommands);
 
 		} else if (IsCommand(fileImport.default)) {
 			commands.push(fileImport.default.data.toJSON());

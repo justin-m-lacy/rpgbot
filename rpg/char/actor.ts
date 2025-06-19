@@ -1,6 +1,7 @@
 import type { SexType } from 'rpg/social/gender';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
-import type { Numeric } from 'rpg/values/types';
+import { Simple } from 'rpg/values/simple';
+import { IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { Effect, ProtoEffect } from '../magic/effects';
@@ -95,6 +96,9 @@ export class Actor {
 
 	readonly resists: Record<string, Numeric> = {};
 
+	height?: number;
+	weight?: number;
+
 	sex: SexType = 'm';
 
 	guild?: string;
@@ -116,6 +120,21 @@ export class Actor {
 		this._loc = new Coord(0, 0);
 
 		this._state = 'alive';
+
+	}
+
+	public setBaseStats(stats: Record<keyof Extract<StatBlock, TValue>, Numeric>) {
+
+		let k: keyof Extract<StatBlock, TValue>;
+		for (k in stats) {
+			if (!(k in this)) continue;
+			const targ = this[k as keyof this];
+			if (targ instanceof Simple) {
+				targ.setTo(stats[k].valueOf());
+			} else if (IsValue(targ)) {
+				targ.value = stats[k].valueOf();
+			}
+		}
 
 	}
 

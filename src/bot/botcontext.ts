@@ -386,9 +386,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param args
 	 * @returns
 	 */
-	async routeCommand(it: ChatAction, cmd: Command<object>, args: any[]) {
-
-		//console.time( cmd.name );
+	async routeCommand(it: ChatAction, cmd: Command<object>, ...args: any[]) {
 
 		let target = this.instances.get(cmd.cls.name);
 		if (!target) {
@@ -400,7 +398,6 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 		}
 
 		return cmd.exec(it, target, ...args);
-		//console.timeEnd( cmd.name );
 
 	}
 
@@ -413,29 +410,17 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Returns the key which should be used to refer to a data path in the cache.
-	 * @param {*[]} objs - objs are idables or cache path strings.
-	 * @returns {string}
+	 * @param objs - objs are idables or cache path strings.
+	 * @returns
 	 */
-	getDataKey(...objs: any[]) {
-
-		const len = objs.length;
-		const keys = [];
-		for (let i = 0; i < len; i++) {
-
-			const pt = objs[i];
-			if (typeof pt === 'string') keys.push(pt);
-			else keys.push(pt.id);
-
-		}
-		// todo: maybe use path.resolve instead?
-		return keys.join('/');
-
+	getDataKey(...objs: Array<string | { id: string }>) {
+		return objs.map(v => typeof v == 'string' ? v : v.id).join('/');
 	}
 
 	/**
 	 * @async
-	 * @param {string} key
-	 * @returns {Promise}
+	 * @param key
+	 * @returns
 	 */
 	async deleteData(key: string) {
 		return this.cache.delete(key);

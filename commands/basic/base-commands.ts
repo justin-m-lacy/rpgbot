@@ -20,7 +20,10 @@ const CmdBackup = {
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (await bot.backup(m.user)) {
-            return m.reply('backup complete.');
+            return m.reply({
+                content: 'backup complete.',
+                flags: MessageFlags.Ephemeral
+            });
         }
     }
 }
@@ -140,7 +143,6 @@ const CmdRoll = {
     ),
     exec: async (msg: ChatAction) => {
 
-
         try {
 
             const dice = msg.options.getString('dice', true);
@@ -150,9 +152,14 @@ const CmdRoll = {
         } catch (err) {
 
             if (err instanceof RangeError) {
-                return msg.reply("Number values are too large.");
+                return msg.reply({
+                    content: "Number values are too large.", flags: MessageFlags.Ephemeral
+                });
             }
-            return msg.reply('Dice format must be: xdy+z');
+            return msg.reply({
+                content: 'Dice format must be: xdy+z',
+                flags: MessageFlags.Ephemeral
+            });
 
         }
 
@@ -170,7 +177,7 @@ const CmdSay = {
     exec: (msg: ChatAction,) => {
 
         const what = msg.options.getString('what', true);
-        return msg.reply(`[ ${what} ]`);
+        return msg.reply(what);
 
     }
 }

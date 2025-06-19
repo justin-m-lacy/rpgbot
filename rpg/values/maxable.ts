@@ -21,6 +21,7 @@ export class Maxable implements ISimple {
 	}
 
 	get base() { return this._value; }
+	set base(v) { this._value = v; }
 
 	readonly max: Simple;
 

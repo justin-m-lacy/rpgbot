@@ -136,11 +136,6 @@ export class DiscordBot {
 
 		this.initClient();
 
-		/*this.addCommand('access', 'access cmd [permissions|roles]',
-			(m: Message, cmd: string, perm: PermissionResolvable) => this.cmdAccess(m, cmd, perm),
-			{ minArgs: 1, access: PermissionFlagsBits.Administrator, immutable: true }
-		);*/
-
 	}
 
 	/**
@@ -192,9 +187,10 @@ export class DiscordBot {
 			const cmd = this.commands.get(it.commandName);
 			if (!cmd) return;
 
-			const ctx = await this.getCmdContext(it);
-
 			if ('cls' in cmd) {
+
+				const ctx = await this.getCmdContext(it);
+				ctx?.routeCommand(it, cmd);
 
 			} else {
 				await cmd.exec(it, this);
@@ -225,13 +221,15 @@ export class DiscordBot {
 
 	/**
 	 * Add a command to the bot.
-	 * @param  name
-	 * @param desc
-	 * @param  func
-	 * @param
 	 */
 	public addCommand(cmd: Command) {
 		this.commands.set(cmd.data.name, cmd);
+	}
+
+	public addCommands(cmds: Command[]) {
+		for (let i = cmds.length - 1; i >= 0; i--) {
+			this.commands.set(cmds[i].data.name, cmds[i]);
+		}
 	}
 
 	/**

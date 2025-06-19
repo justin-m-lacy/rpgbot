@@ -17,8 +17,6 @@ package-lock.json
 #
 client_link.txt
 
-!node_modules/archdice
-
 #VSCode
 
 *.code-workspace
