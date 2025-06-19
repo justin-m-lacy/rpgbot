@@ -214,10 +214,10 @@ export class Char extends Actor {
 		let resp = cook.response[Math.floor(cook.response.length * Math.random())];
 
 		const amt = this.heal(
-			Math.floor(5 * Math.random()) + this.level.value);
+			Math.floor(5 * Math.random()) + this.level.valueOf());
 
 		resp = `You eat the ${item.name}. ${resp}.`;
-		if (amt > 0) resp += ` ${amt} hp healed. ${this.hp}/${this.hp.max} total.`;
+		if (amt > 0) resp += ` ${amt} hp healed. ${this.hp.valueOf()}/${this.hp.max.valueOf()} total.`;
 
 		return resp;
 	}

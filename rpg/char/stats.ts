@@ -36,8 +36,6 @@ export const PointStats = ['str', 'con', 'dex', 'int', 'wis', 'char', 'armor'];
 
 export type StatName = 'evil' | 'str' | 'con' | 'dex' | 'int' | 'wis' | 'cha' | 'armor' | 'level' | 'dr' | 'age';
 
-export type StatKey = keyof IStatValues;
-
 export type StatMod = Partial<{
 	[K in keyof IStatValues]: IMod
 }>
@@ -62,6 +60,8 @@ export interface IStatValues {
 	cha: Numeric;
 
 }
+
+export type StatKey = keyof IStatValues;
 
 export class StatBlock {
 

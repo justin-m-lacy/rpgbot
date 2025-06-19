@@ -38,21 +38,25 @@ export class Actor {
 
 	// convenience for shorter formulas.
 	get hp() { return this.stats.hp; }
+	set hp(v) { this.stats.hp.value = v.valueOf(); }
 
 	get dr() { return this.stats.dr; }
+	set dr(v: Numeric) { this.stats.dr.value = v.valueOf() }
 
 	get resist() { return this.resists }
 
 	// convenience for shorter formulas.
 	get mp() { return this.stats.mp; }
+	set mp(v) { this.stats.mp.value = v.valueOf() }
 
 	get level() { return this.stats.level; }
+	set level(v) { this.stats.level.value = v.valueOf() }
 
 	get gold() { return this.stats.gold; }
 	set gold(g) { this.stats.gold = g < 0 ? 0 : g; }
 
 	get age() { return this.stats.age; }
-	set age(s: Numeric) { this.stats.age.setTo(s); }
+	set age(s) { this.stats.age.setTo(s); }
 
 	get armor() { return this.stats.armor; }
 	set armor(v: Numeric) { this.stats.armor.setTo(v) }
@@ -283,13 +287,13 @@ export class Actor {
 		const amt = Math.max(1, Math.ceil(
 			this.getModifier('con') +
 			this.getModifier('wis') +
-			this.level.value) / 2)
+			this.level.valueOf()) / 2)
 		return this.heal(amt);
 	}
 
 	rest() {
 		const amt = Math.max(1,
-			this.getModifier('con') + this.getModifier('wis') + this.level.value);
+			this.getModifier('con') + this.getModifier('wis') + this.level.valueOf());
 		return this.heal(amt);
 	}
 

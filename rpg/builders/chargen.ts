@@ -1,15 +1,19 @@
 import { randElm } from '@/utils/jsutils';
-import { AddValues } from 'rpg/values/apply';
+import type { StatKey } from 'rpg/char/stats';
+import { Simple } from 'rpg/values/simple';
 import { Char } from '../char/char';
 import { Race, type GClass } from '../char/race';
 import * as Dice from '../values/dice';
 import * as ItemGen from './itemgen';
 
-type ValueRoller = { rolls: number, die: number, mod: number, minVal?: number, maxVal?: number };
-type PickValues = { pick: string[] }
 type StatList = { stat: string | string[] };
 
-type StatGen = (StatList & PickValues) | (StatList & ValueRoller);
+type ValueRoller = StatList & { rolls: number, die: number, mod: number, min?: number, max?: number };
+type PickValues = StatList & { pick: string[] }
+
+
+type StatGen = PickValues | ValueRoller;
+
 
 // Defines rolling information for stats.
 const statRolls = [
@@ -26,12 +30,13 @@ export const GenChar = (owner: string, race: Race, charClass: GClass, name: stri
 
 	const statVals = rollStats(statRolls);
 
-	AddValues(char, statVals);
+	char.setBaseStats(statVals);
 
 	race.onNewChar(char);
 	charClass.onNewChar(char);
 
-	boundStats(char);
+	boundStats(char, statRolls);
+
 	char.init();
 
 	initItems(char);
@@ -66,15 +71,18 @@ function rollStats(statRolls: StatGen[], dest: Record<string, number> = {}) {
 
 }
 
-function boundStat(dest: any, stat: string, info: { min?: number, max?: number }) {
+function boundStat(dest: Char, stat: StatKey, info: { min?: number, max?: number }) {
 
-	const cur = dest[stat];
-	if (cur == null) return;
+	const cur = dest[stat as keyof Char];
 
-	if (info.min != null && cur < info.min) {
-		dest[stat] = info.min;
-	} else if (info.max != null && cur > info.max) {
-		dest[stat] = info.max;
+	if (info.min != null && cur.valueOf() < info.min) {
+		if (cur instanceof Simple) {
+			cur.setTo(info.min);
+		}
+	} else if (info.max != null && cur.valueOf() > info.max) {
+		if (cur instanceof Simple) {
+			cur.setTo(info.max);
+		}
 	}
 
 }
@@ -97,12 +105,14 @@ const rollStat = (destObj: Record<string, number>, stat: string,
  * Bound stats by stat definitions min/max.
  * @param char
  */
-const boundStats = (char: Char) => {
+const boundStats = (char: Char, gens: StatGen[]) => {
 
-	const stats = statRolls;
-	for (let i = stats.length - 1; i >= 0; i--) {
+	for (let i = gens.length - 1; i >= 0; i--) {
 
-		const info = stats[i];
+		const info = gens[i];
+		if ('pick' in info) continue;
+
+
 		if (info.min == null && info.max == null) continue;
 
 		const stat = info.stat;
@@ -110,12 +120,12 @@ const boundStats = (char: Char) => {
 		if (Array.isArray(stat)) {
 
 			for (let j = stat.length - 1; j >= 0; j--) {
-				boundStat(char, stat[j], info);
+				boundStat(char, stat[j] as StatKey, info);
 			}
 
 		} else {
 
-			boundStat(char, stat, info)
+			boundStat(char, stat as StatKey, info)
 
 		}
 
