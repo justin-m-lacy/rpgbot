@@ -1,7 +1,6 @@
 import type { SexType } from 'rpg/social/gender';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
-import { Simple } from 'rpg/values/simple';
-import { IsValue, type Numeric, type TValue } from 'rpg/values/types';
+import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { Effect, ProtoEffect } from '../magic/effects';
@@ -131,12 +130,21 @@ export class Actor {
 
 		let k: keyof Extract<StatBlock, TValue>;
 		for (k in stats) {
-			if (!(k in this)) continue;
+
+			if (!(k in this)) {
+				console.warn(`unknown stat: ${k}`)
+				continue;
+			};
+
 			const targ = this[k as keyof this];
-			if (targ instanceof Simple) {
+			if (IsSimple(targ)) {
 				targ.setTo(stats[k].valueOf());
+				console.log(`set: ${k}: ${stats[k].valueOf()}`);
+
 			} else if (IsValue(targ)) {
 				targ.value = stats[k].valueOf();
+				console.log(`set VAL: ${k}: ${stats[k].valueOf()}`);
+
 			}
 		}
 

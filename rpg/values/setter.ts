@@ -15,7 +15,7 @@ export class Setter implements ISimple {
 
 	get base() {
 		return IsSimple(this._value) ?
-			this._value.base : +this._value;
+			this._value.base : this._value.valueOf();
 	}
 
 	private _value: Numeric;
@@ -27,6 +27,15 @@ export class Setter implements ISimple {
 		this.id = id;
 		this._value = v;
 
+	}
+	setTo(v: Numeric): void {
+		if (IsSimple(this._value)) {
+			this._value.setTo(v)
+		} else if (typeof this._value === 'number') {
+			this._value = v.valueOf();
+		} else {
+			this._value.value = v.valueOf();
+		}
 	}
 
 	add(amt: number): void {

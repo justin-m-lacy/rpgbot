@@ -33,8 +33,8 @@ export class Maxable implements ISimple {
 		this.max.setTo(base);
 	}
 	setTo(v: Numeric) {
-		this.max.value = +v;
-		this.value = +v;
+		this.max.value = v.valueOf();
+		this.value = v.valueOf();
 	}
 
 	constructor(id: string) {

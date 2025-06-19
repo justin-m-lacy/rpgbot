@@ -28,4 +28,5 @@ export interface ISimple {
 	base: number;
 	value: number;
 	add(amt: number): void;
+	setTo(v: number): void;
 }

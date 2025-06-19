@@ -1,11 +1,13 @@
 import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { PermissionFlagsBits } from "discord.js";
 import { Formula } from "formulic";
 import { Rpg } from "rpg/rpg";
 
 export default {
 	cls: Rpg,
 	data: NewCommand('formula', 'Test formula')
-		.addStringOption(StrOpt('formula', 'Formula to compute').setRequired(true)),
+		.addStringOption(StrOpt('formula', 'Formula to compute').setRequired(true))
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async exec(m: ChatAction, rpg: Rpg) {
 
 		if (!rpg.context.isOwner(m.user)) return m.reply('You do not have permission to do that.');

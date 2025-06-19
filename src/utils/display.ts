@@ -24,6 +24,10 @@ const SendNoPerm = (m: ChatAction, cmd?: string) => {
 
 }
 
+export const SendPrivate = (m: ChatAction, text: string) => {
+	return m.reply({ content: text, flags: MessageFlags.Ephemeral });
+}
+
 const ContentMax = 1600;
 
 /**

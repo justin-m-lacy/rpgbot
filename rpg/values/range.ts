@@ -102,6 +102,14 @@ export class Range implements IModdable, ISimple {
 
 	}
 
+	setTo(v: number): void {
+		if (typeof this.min === 'number') {
+			this.min = v;
+		} else {
+			this.min.value = v;
+		}
+	}
+
 
 	/// test if number is within range, endpoint inclusive.
 	contains(v: number) {

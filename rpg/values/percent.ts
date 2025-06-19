@@ -35,7 +35,7 @@ export class Percent implements ISimple {
 	}
 
 	/**
-	 * @property {number} pct - decimal percent.
+	 * @property pct - decimal percent.
 	 */
 	private pct: number;
 
@@ -45,7 +45,7 @@ export class Percent implements ISimple {
 
 
 	/**
-	 * @property {number} value - 1 if a random roll
+	 * @property value - 1 if a random roll
 	 * is below the percentile.
 	 */
 	get value() { return (Math.random() < this.pct) ? 1 : 0; }
@@ -55,8 +55,8 @@ export class Percent implements ISimple {
 
 	/**
 	 * Perform a percent roll with a percent modifier.
-	 * @param {number} [mod=0] - 100-based percent.
-	 * @returns {boolean} true if 100-based roll is under the percent.
+	 * @param [mod=0] - 100-based percent.
+	 * @returns true if 100-based roll is under the percent.
 	 */
 	roll(mod = 0) { return 100 * Math.random() < this.pct * (100 + mod); }
 
@@ -74,6 +74,10 @@ export class Percent implements ISimple {
 		this.id = id;
 		this.pct = (val ?? 0) / 100;
 
+	}
+
+	setTo(v: number) {
+		this.pct = v;
 	}
 
 	add(amt: number): void {
