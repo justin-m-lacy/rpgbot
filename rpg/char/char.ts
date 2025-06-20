@@ -4,8 +4,6 @@ import { Log } from '../display/log';
 import { Inventory, ItemPicker } from '../inventory';
 import { Item, ItemType } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
-import { Effect } from '../magic/effects';
-import { GetClass, GetRace } from '../parsers/classes';
 import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
 import { Actor } from './actor';
@@ -66,54 +64,6 @@ export class Char extends Actor {
 		json.cls = this.cls?.name;
 
 		return json;
-	}
-
-	static Revive(json: any) {
-
-		if (!json) return null;
-
-		const char = new Char(
-			json.name,
-			GetRace(json.race)!,
-			GetClass(json.cls)!,
-			json.owner);
-
-		char.exp = Math.floor(json.exp) || 0;
-		char.evil = json.evil || 0;
-
-		char.guild = json.guild;
-
-		if (json.talents) char.talents = json.talents;
-		if (json.history) Object.assign(char.history, json.history);
-		if (json.home) char._home = new Coord(json.home.x, json.home.y);
-
-		if (json.stats) Object.assign(char.stats, json.stats);
-		if (json.loc) Object.assign(char.loc, json.loc);
-
-		if (json.state) char.state = json.state;
-
-		char.statPoints = json.statPoints || char.stats.level;
-		char.spentPoints = json.spentPoints || 0;
-
-		if (json.inv) Inventory.Revive(json.inv, Item.Revive, char.inv);
-
-		// SET AFTER BASE STATS.
-		if (json.effects) {
-			let a = json.effects;
-			for (let i = a.length - 1; i >= 0; i--) {
-
-				let effect = Effect.Revive(a[i]);
-				if (effect) {
-					char.addEffect(effect);
-				}
-
-			}
-		}
-
-		if (json.equip) char.setEquip(Equip.Revive(json.equip));
-
-		return char;
-
 	}
 
 	private readonly _log: Log = new Log();

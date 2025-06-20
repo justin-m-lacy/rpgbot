@@ -1,10 +1,10 @@
-import { NewCommand, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('scout', 'Scout location'),
+	data: CommandData('scout', 'Scout location'),
 	async exec(m: ChatAction, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
@@ -13,4 +13,4 @@ export default {
 		await SendBlock(m, rpg.game.scout(char));
 
 	}
-} as Command<Rpg>
+})

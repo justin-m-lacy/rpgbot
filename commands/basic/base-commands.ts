@@ -1,6 +1,6 @@
 import { DiscordBot } from '../../src/bot/discordbot';
 
-import { NewCommand, NumOpt, StrOpt, type ChatAction, type Command } from '@/bot/command';
+import { CommandData, NumOpt, StrOpt, type ChatAction, type Command } from '@/bot/command';
 import { MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { parseRoll } from '../../rpg/values/dice';
 
@@ -16,7 +16,7 @@ export function GetCommands(): Command[] {
 * Backup unsaved cache items.
 */
 const CmdBackup = {
-    data: NewCommand('backup', 'Force backup bot data')
+    data: CommandData('backup', 'Force backup bot data')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
@@ -33,7 +33,7 @@ const CmdBackup = {
  * Shutdown the bot program. Owner only.
  */
 const CmdShutdown = {
-    data: NewCommand('shutdown', 'Shutdown bot')
+    data: CommandData('shutdown', 'Shutdown bot')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
         await bot.shutdown(m.user);
@@ -47,7 +47,7 @@ const CmdShutdown = {
  * @returns
  */
 const CmdLeaveGuild = {
-    data: NewCommand('botleave', 'Remove bot from guild')
+    data: CommandData('botleave', 'Remove bot from guild')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
@@ -72,7 +72,7 @@ const CmdLeaveGuild = {
  */
 const CmdProxy = {
 
-    data: NewCommand('proxy', 'Proxy this room to your private chat'),
+    data: CommandData('proxy', 'Proxy this room to your private chat'),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (await bot.makeProxy(m)) {
@@ -90,7 +90,7 @@ const CmdProxy = {
  * Reset command's permissions to default.
  */
 const CmdResetAccess = {
-    data: NewCommand('cmdreset', 'Reset command permissions', [
+    data: CommandData('cmdreset', 'Reset command permissions', [
         StrOpt('cmd', 'Command name', true)
     ]),
     exec: async (it: ChatAction, bot: DiscordBot) => {
@@ -111,7 +111,7 @@ const CmdResetAccess = {
 
 const CmdHelp: Command = {
 
-    data: NewCommand('help', 'Get command help',
+    data: CommandData('help', 'Get command help',
         [
             StrOpt('cmd', 'Command name'),
             NumOpt('page', 'Help page number')
@@ -138,7 +138,7 @@ const CmdHelp: Command = {
 
 const CmdRoll = {
 
-    data: NewCommand('roll', 'Simulate dice roll',
+    data: CommandData('roll', 'Simulate dice roll',
         [
             StrOpt('dice', 'Dice to roll ( xdy+z: ex. 1d6, 2d5, 4d3+4)', true),
 
@@ -171,7 +171,7 @@ const CmdRoll = {
 }
 
 const CmdSay = {
-    data: NewCommand('say', 'Admin public message',
+    data: CommandData('say', 'Admin public message',
         [
             StrOpt('what', 'What bot will say', true),
 

@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { ReplyEmbed } from "@/embeds";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('viewitem', 'View item in inventory')
+	data: CommandData('viewitem', 'View item in inventory')
 		.addStringOption(StrOpt('what', 'Item to view').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -27,4 +27,4 @@ export default {
 
 
 	}
-} as Command<Rpg>
+})

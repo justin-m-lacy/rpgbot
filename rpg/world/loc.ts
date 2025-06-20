@@ -387,10 +387,9 @@ export class Loc {
 	getNpc(wot: string | number) {
 
 		if (typeof wot === 'string') {
-			let ind = Number.parseInt(wot);
+			const ind = Number.parseInt(wot);
 			if (Number.isNaN(ind)) {
 				return this.npcs.find((m) => m.name === wot);
-
 			} else {
 				wot = ind;
 			}

@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('unequip', 'Unequip wearable slot', [
+	data: CommandData('unequip', 'Unequip wearable slot', [
 		StrOpt('slot', 'Slot to unequip').setRequired(true)
 	]),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -16,4 +16,4 @@ export default {
 		return m.reply(rpg.game.unequip(char, slot));
 
 	}
-} as Command<Rpg>
+})

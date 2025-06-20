@@ -10,7 +10,7 @@ export type CommandOpts = Partial<Command>;
  */
 //const SplitRE = /"([^"]*)"|“([^”]*)”|\s*\b([^"]+)\b/g;
 
-export default class CmdDispatch {
+export default class Dispatch {
 
 	get prefix() { return this.cmdLine.prefix; }
 

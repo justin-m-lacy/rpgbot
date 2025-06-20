@@ -1,9 +1,9 @@
-import { NewCommand, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('sethome', 'Set current location as home'),
+	data: CommandData('sethome', 'Set current location as home'),
 	async exec(m: ChatAction, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
@@ -13,4 +13,4 @@ export default {
 
 
 	}
-} as Command<Rpg>
+})

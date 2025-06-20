@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('sell', 'Sell items from inventory')
+	data: CommandData('sell', 'Sell items from inventory')
 		.addStringOption(StrOpt('start', 'Starting item to sell').setRequired(true))
 		.addStringOption(StrOpt('end', 'End item to sell')),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -18,4 +18,4 @@ export default {
 		return SendBlock(m, rpg.game.sell(src, start, end));
 
 	}
-} as Command<Rpg>
+})

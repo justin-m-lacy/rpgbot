@@ -1,12 +1,11 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { GetLore } from "rpg/game";
-import { Rpg } from "rpg/rpg";
 
-export default {
-	data: NewCommand('lore', 'Get information on creature, class, race, or item')
+export default NewCommand({
+	data: CommandData('lore', 'Get information on creature, class, race, or item')
 		.addStringOption(StrOpt('what', 'Name of lore entry').setRequired(true)),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatAction) {
 
 		const what = m.options.getString('what', true);
 		if (!what) return m.reply('What do you want to know about?');
@@ -14,4 +13,4 @@ export default {
 		return SendBlock(m, GetLore(what));
 
 	}
-} as Command<Rpg>
+})

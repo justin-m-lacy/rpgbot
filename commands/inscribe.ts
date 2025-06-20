@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('inscribe', 'Inscribe inventory item with a message')
+	data: CommandData('inscribe', 'Inscribe inventory item with a message')
 		.addStringOption(StrOpt('what', 'Item to inscribe').setRequired(true))
 		.addStringOption(StrOpt('text', 'Text to inscribe')),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -20,4 +20,4 @@ export default {
 
 
 	}
-} as Command<Rpg>
+})

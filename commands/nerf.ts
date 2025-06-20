@@ -1,11 +1,11 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { PermissionFlagsBits } from "discord.js";
 import { Rpg } from "rpg/rpg";
 import { nerfItems } from "rpg/trade";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('nerf', 'Nerf character.')
+	data: CommandData('nerf', 'Nerf character.')
 		.addStringOption(StrOpt('who', 'Character to make leader.').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -20,4 +20,4 @@ export default {
 		return m.reply(nerfItems(char));
 
 	}
-} as Command<Rpg>
+})

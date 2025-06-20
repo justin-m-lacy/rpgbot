@@ -67,17 +67,22 @@ export class DiscordBot {
 	private readonly owner: string;
 	private readonly admins?: string[];
 
-	private readonly _spamblock: Record<string, Record<string, boolean>>;
+	private readonly spamblock: Record<string, Record<string, boolean>>;
 
 	private readonly commands: ReturnType<typeof CommandMap> = CommandMap();
+
+	/**
+	 * bots user id.
+	 */
+	private readonly botId: string;
 
 	/**
 	 *
 	 * @param client
 	 * @param auth - authentication information object.
 	 * @param auth.owner - owner of bot.
-	 * @param  auth.admins - accounts with authority to control bot.
-	 * @param  mainDir - main directory of the bot program.
+	 * @param auth.admins - accounts with authority to control bot.
+	 * @param mainDir - main directory of the bot program.
 	 * 	Defaults to the directory of the main script
 	 */
 	constructor(client: Client, auth: Auth, config: Partial<TBotConfig>, mainDir?: string) {
@@ -89,12 +94,14 @@ export class DiscordBot {
 
 		this.client = client;
 
-		this._spamblock = config.spamblock ?? {};
+		this.spamblock = config.spamblock ?? {};
 		this.cmdPrefix = config.cmdprefix ?? '!';
 
 		this.saveDir = path.join(this.baseDir, config.savedir || '/savedata/');
 
 		fsys.setBaseDir(this.saveDir);
+
+		this.botId = client.user!.id;
 
 		this.cache = new Cache({
 			cacheKey: '',
@@ -199,6 +206,18 @@ export class DiscordBot {
 
 		});
 
+		this.client.on(Events.MessageCreate, async (m) => {
+
+			if (m.author.id === this.botId) return;
+			if (this.isSpam(m)) return;
+
+			const ctx = await this.getCmdContext(m);
+			if (ctx) {
+				/// test access.
+			}
+
+		})
+
 	}
 
 	private initContexts() {
@@ -246,19 +265,14 @@ export class DiscordBot {
 	 * Backup unsaved cache items.
 	 * @async
 	 * @param m
-	 * @returns
 	 */
 	public async backup(u: User) {
 
 		if (this.isOwner(u)) {
 			await this.cache.backup(0);
 			return true;
-		} else {
-			/// per-context backup?
-			//let context = this.getMsgContext(m);
-			//if (context) await context.doBackup();
-		}
-		return false;
+		} else /// per-context backup?
+			return false;
 
 	}
 
@@ -295,15 +309,36 @@ export class DiscordBot {
 	}
 
 	/**
-	 *
-	 * @param m
-	 * @returns return true to block guild/channel message.
+	 * @returns return true to block bot by guild/channel message.
 	 */
-	private spamblock(m: ChatAction) {
+	private isSpam(m: Message) {
 
 		if (!m.guild) return false;
-		const block = this._spamblock[m.guild.id];
+		const block = this.spamblock[m.guild.id];
 		return (block && m.channel && !block[m.channel.id]);
+
+	}
+
+	/**
+	 * Test if user can access command.
+	 * @param m
+	 * @param cmd
+	 * @param context
+	 */
+	private hasAccess(m: Message, cmd: Command, context: BotContext<ContextSource>) {
+
+		if (m.member) {
+
+			const allowed = context.canAccess(cmd.id, m.member);
+			if (allowed === undefined) {
+
+				// check default access.
+				if (!cmd.access) return true;
+				return m.member.permissions.has(cmd.access);
+
+			}
+			return allowed;
+		}
 
 	}
 
@@ -391,54 +426,24 @@ export class DiscordBot {
 
 	}
 
-	private async getCmdContext(it: Interaction) {
+	private async getCmdContext(it: Interaction | Message) {
 
-		const type = it.channel?.type;
-		let idobj;
+		let idObj: Guild | User | null;
 
-		if (type === ChannelType.GuildText) {
-			idobj = it.guild;
+		if (it.inGuild()) {
+			idObj = it.guild;
 		} else {
 
-			idobj = it.user;
+			idObj = (it as Message).author || (it as Interaction).user;
 			//check proxy
-			if (this._proxies.has(idobj.id)) {
-				return this.getProxiedCtx(idobj);
+			if (this._proxies.has(idObj.id)) {
+				return this.getProxiedCtx(idObj);
 			}
 
 		}
 
-		if (idobj != null) {
-			return this.contexts.get(idobj.id) ?? this.makeContext(idobj);
-		}
-
-	}
-
-	/**
-	 * Return a unique Context associated with a message channel.
-	 * @async
-	 * @param m
-	 * @returns
-	 */
-	async getMsgContext(m: Message) {
-
-		const type = m.channel.type;
-		let idobj;
-
-		if (type === ChannelType.GuildText) {
-			idobj = m.guild;
-		} else {
-
-			idobj = m.author;
-			//check proxy
-			if (this._proxies.has(idobj.id)) {
-				return this.getProxiedCtx(idobj);
-			}
-
-		}
-
-		if (idobj != null) {
-			return this.contexts.get(idobj.id) ?? this.makeContext(idobj);
+		if (idObj != null) {
+			return this.contexts.get(idObj.id) ?? this.makeContext(idObj);
 		}
 
 	}

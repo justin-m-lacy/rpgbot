@@ -13,16 +13,6 @@ export type LifeState = 'alive' | 'dead';
 
 export class Actor {
 
-	static Revive(json: any, act: Actor) {
-
-		if (json.statMods) {
-			// apply last.
-			let mods = json.statMods;
-			act.setMods(mods);
-		}
-
-	}
-
 	// used to abstract await state in combat.
 	getState() { return this._state; }
 
@@ -81,7 +71,10 @@ export class Actor {
 	get cha() { return this.stats.cha; }
 	set cha(v: Numeric) { this.stats.cha.value = v.valueOf() }
 
-	get HD() { return this._myClass ? Math.floor((this._myClass.HD + this.race.HD) / 2) : this.race.HD; }
+	get HD() {
+		return this._myClass ?
+			Math.floor((this._myClass.HD + this.race.HD) / 2) : this.race.HD;
+	}
 
 	get cls() { return this._myClass }
 
@@ -139,12 +132,9 @@ export class Actor {
 			const targ = this[k as keyof this];
 			if (IsSimple(targ)) {
 				targ.setTo(stats[k].valueOf());
-				console.log(`set: ${k}: ${stats[k].valueOf()}`);
 
 			} else if (IsValue(targ)) {
 				targ.value = stats[k].valueOf();
-				console.log(`set VAL: ${k}: ${stats[k].valueOf()}`);
-
 			}
 		}
 

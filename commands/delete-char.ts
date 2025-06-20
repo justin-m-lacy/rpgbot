@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('deletechar', 'Delete one of your characters')
+	data: CommandData('deletechar', 'Delete one of your characters')
 		.addStringOption(StrOpt('name', 'Name of character to delete').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -27,4 +27,4 @@ export default {
 
 
 	}
-} as Command<Rpg>
+})

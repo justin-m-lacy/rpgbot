@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('give', 'Give item to another character')
+	data: CommandData('give', 'Give item to another character')
 		.addStringOption(StrOpt('who', 'Character to give item to').setRequired(true))
 		.addStringOption(StrOpt('what', 'Which item to give')),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -20,4 +20,4 @@ export default {
 		return m.reply(rpg.game.give(src, dest, what));
 
 	}
-} as Command<Rpg>
+})

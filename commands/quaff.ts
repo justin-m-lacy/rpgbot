@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('quaff', 'Quaff potion or drink from inventory')
+	data: CommandData('quaff', 'Quaff potion or drink from inventory')
 		.addStringOption(StrOpt('what', 'Potion to quaff')),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -14,4 +14,4 @@ export default {
 		}
 
 	}
-} as Command<Rpg>
+})

@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('mkguild', 'Create new guild')
+	data: CommandData('mkguild', 'Create new guild')
 		.addStringOption(StrOpt('guild', 'New guild name').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -16,4 +16,4 @@ export default {
 		await SendBlock(m, await rpg.game.mkGuild(char, gname));
 
 	}
-} as Command<Rpg>
+})

@@ -1,6 +1,7 @@
 import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
 import type { ItemIndex } from 'rpg/items/container';
+import { ReviveChar } from 'rpg/parsers/char';
 import { GetClass, GetRace } from 'rpg/parsers/classes';
 import type Block from 'rpg/world/block';
 import * as ItemGen from './builders/itemgen';
@@ -68,7 +69,7 @@ export class Game {
 
 		this.world = new World(cache.subcache<Block>('world'));
 
-		this.charCache = cache.subcache<Char>('chars', Char.Revive as any);;
+		this.charCache = cache.subcache<Char>('chars', ReviveChar);
 
 		this.guilds = new GuildManager(cache.subcache('guilds'));
 
@@ -587,15 +588,15 @@ export class Game {
 
 	}
 
-	async attack(src: Char, dest: Char) {
+	async attack(src: Char, targ: Char) {
 
 		if (this.tick(src, 'attack') === false) return src.output();
 
 		const p1 = this.getParty(src) || src;
-		let p2: Char | Party = this.getParty(dest);
+		let p2: Char | Party = this.getParty(targ);
 
-		if (!p2 || (!p2.isLeader(dest) && !p2.loc.equals(dest.loc))) {
-			p2 = dest;
+		if (!p2 || (!p2.isLeader(targ) && !p2.loc.equals(targ.loc))) {
+			p2 = targ;
 		}
 
 		const com = new Combat(p1, p2, this.world);

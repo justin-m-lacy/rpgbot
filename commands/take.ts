@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('take', 'Take single item or range of items from ground.')
+	data: CommandData('take', 'Take single item or range of items from ground.')
 		.addStringOption(StrOpt('start', 'Starting item to take').setRequired(true))
 		.addStringOption(StrOpt('end', 'End item to take')),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -18,4 +18,4 @@ export default {
 
 
 	}
-} as Command<Rpg>
+})

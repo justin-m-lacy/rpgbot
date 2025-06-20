@@ -1,8 +1,8 @@
-import { NewCommand, StrChoices, type ChatAction } from '@/bot/command';
+import { CommandData, StrChoices, type ChatAction } from '@/bot/command';
 
 export default {
 
-	data: NewCommand('rollname', 'Get a random name',
+	data: CommandData('rollname', 'Get a random name',
 		[
 			StrChoices('sex', 'Sex of character', [
 				{ name: 'Male', value: 'm' }, { name: 'Female', value: 'f' }

@@ -1,4 +1,3 @@
-import * as ItemGen from '../builders/itemgen';
 import { Item, ItemType } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { HumanSlot, toSlot, Wearable } from "../items/wearable";
@@ -13,30 +12,6 @@ export type HumanSlots = {
 }
 
 export class Equip {
-
-	static Revive(json: { slots?: Partial<HumanSlots> }) {
-
-		const e = new Equip();
-		const src = json.slots;
-		const dest = e.slots;
-		if (src == null) return e;
-
-		let k: HumanSlot;
-		for (k in src) {
-
-			const wot = src[k];
-			if (!wot) continue;
-			else if (Array.isArray(wot)) {
-
-				dest[k] = wot.map(v => ItemGen.Revive(v) as Wearable);
-
-			} else dest[k] = ItemGen.Revive(wot) as Wearable;
-
-		}
-
-		return e;
-
-	}
 
 	readonly slots: HumanSlots = {
 		head: null,

@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('listchars', 'list all characters')
+	data: CommandData('listchars', 'list all characters')
 		.addStringOption(StrOpt('user', 'user name to list characters for')),
 	async exec(m: ChatAction, rpg: Rpg) {
 		try {
@@ -15,4 +15,4 @@ export default {
 		} catch (e) { console.log(e); }
 
 	}
-} as Command<Rpg>
+})

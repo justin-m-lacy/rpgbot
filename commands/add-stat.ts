@@ -1,21 +1,22 @@
-import { NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
-	cls: Rpg,
-	data: NewCommand('addstat', 'Assign stat point', [
-		StrOpt('stat', 'Stat to increase').setRequired(true)
-	]),
-	async exec(m: ChatAction, rpg: Rpg) {
+export default NewCommand<Rpg>(
+	{
+		data: CommandData('addstat', 'Assign stat point', [
+			StrOpt('stat', 'Stat to increase').setRequired(true)
+		]),
+		cls: Rpg,
+		async exec(m: ChatAction, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
-		if (!char) return;
+			const char = await rpg.userCharOrErr(m, m.user);
+			if (!char) return;
 
-		const stat = m.options.getString('stat', true);
-		const res = char.addStat(stat);
+			const stat = m.options.getString('stat', true);
+			const res = char.addStat(stat);
 
-		if (typeof (res) === 'string') return m.reply(res);
+			if (typeof (res) === 'string') return m.reply(res);
 
 
-	}
-};
+		}
+	});

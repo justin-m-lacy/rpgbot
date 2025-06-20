@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('where', 'Locate character.')
+	data: CommandData('where', 'Locate character.')
 		.addStringOption(StrOpt('who', 'Character to track.').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -18,4 +18,4 @@ export default {
 
 
 	}
-} as Command<Rpg>
+})

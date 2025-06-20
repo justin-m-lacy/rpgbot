@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('move', 'Move in given direction')
+	data: CommandData('move', 'Move in given direction')
 		.addStringOption(StrOpt('dir', 'Direction to move').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -17,4 +17,4 @@ export default {
 		rpg.checkLevel(m, char);
 
 	}
-} as Command<Rpg>
+})

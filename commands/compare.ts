@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('compare', 'Compare item in inventory to current worn item')
+	data: CommandData('compare', 'Compare item in inventory to current worn item')
 		.addStringOption(StrOpt('what', 'Item to equip').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -18,4 +18,4 @@ export default {
 		}
 
 	}
-} as Command<Rpg>
+})

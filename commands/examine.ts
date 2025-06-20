@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('ex', 'Examine character or monster.')
+	data: CommandData('ex', 'Examine character or monster.')
 		.addStringOption(StrOpt('what', 'Character or monster to examine.').setRequired(true)),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -14,4 +14,4 @@ export default {
 		await SendBlock(m, await rpg.world.examine(char, what));
 
 	}
-} as Command<Rpg>
+})

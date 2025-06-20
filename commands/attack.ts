@@ -1,11 +1,12 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { Monster } from "rpg/monster/monster";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('attack', 'Attack character or monster')
+	data: CommandData('attack', 'Attack character or monster')
 		.addStringOption(StrOpt('who', 'Who or what to attack')),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -25,14 +26,14 @@ export default {
 		} else if (typeof who === 'string') {
 
 			targ = await rpg.loadChar(who);
-			if (!targ) return m.reply(`'${who}' not found.`);
+			if (!targ) return SendPrivate(m, `'${who}' not found.`);
 
 			res = await rpg.game.attack(src, targ);
 
 		} else {
-			return m.reply(`'${who}' not found.`);
+			return SendPrivate(m, `'${who}' not found.`);
 		}
 
 		await SendBlock(m, res);
 	}
-} as Command<Rpg>
+});

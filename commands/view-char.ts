@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('viewchar', 'View character or self')
+	data: CommandData('viewchar', 'View character or self')
 		.addStringOption(StrOpt('who', 'Character to view')),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -22,4 +22,4 @@ export default {
 		return EchoChar(m, char);
 
 	}
-} as Command<Rpg>
+})

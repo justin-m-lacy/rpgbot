@@ -1,11 +1,11 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import type { Char } from "rpg/char/char";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('party', 'join party, invite to party, or show party status.')
+	data: CommandData('party', 'join party, invite to party, or show party status.')
 		.addStringOption(StrOpt('who', 'player to invite to party or player\'s party to join')),
 	async exec(m: ChatAction, rpg: Rpg) {
 		const char = await rpg.userCharOrErr(m, m.user);
@@ -22,4 +22,4 @@ export default {
 		return SendBlock(m, await rpg.game.party(char, t));
 
 	}
-} as Command<Rpg>
+})

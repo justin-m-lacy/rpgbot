@@ -1,9 +1,9 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('destroy', 'Destroy item or range of items from inventory.')
+	data: CommandData('destroy', 'Destroy item or range of items from inventory.')
 		.addStringOption(StrOpt('start', 'Starting item to destroy').setRequired(true))
 		.addStringOption(StrOpt('end', 'End item to destroy')),
 	async exec(m: ChatAction, rpg: Rpg) {
@@ -19,4 +19,4 @@ export default {
 		return m.reply(rpg.game.destroy(char, start, end));
 
 	}
-} as Command<Rpg>
+})

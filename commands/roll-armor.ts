@@ -1,11 +1,11 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { rollArmor } from "rpg/trade";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('rollarmor', 'Roll for new armor')
+	data: CommandData('rollarmor', 'Roll for new armor')
 		.addStringOption(StrOpt('slot', 'Slot to roll new armor for')),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -16,4 +16,4 @@ export default {
 		}
 
 	}
-} as Command<Rpg>
+})

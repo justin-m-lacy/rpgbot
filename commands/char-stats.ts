@@ -1,11 +1,11 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { getHistory } from "rpg/events";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('charstats', 'View a character\'s stats')
+	data: CommandData('charstats', 'View a character\'s stats')
 		.addStringOption(StrOpt('who', 'Character whose stats to view')),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -24,4 +24,4 @@ export default {
 		await SendBlock(m, getHistory(char));
 
 	}
-} as Command<Rpg>
+})

@@ -1,13 +1,13 @@
-import { NewCommand, StrChoices, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrChoices, StrOpt, type ChatAction } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { GenChar } from "rpg/builders/chargen";
 import { EchoChar } from "rpg/display/display";
 import { GetClass, GetRace, RandClass, RandRace } from "rpg/parsers/classes";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('rollchar', 'roll new character')
+	data: CommandData('rollchar', 'roll new character')
 		.addStringOption(StrOpt('name', 'character name'))
 		.addStringOption(StrOpt('race', 'character race'))
 		.addStringOption(StrOpt('class', 'character class'))
@@ -41,4 +41,4 @@ export default {
 
 		} catch (e) { console.log(e); }
 	}
-} as Command<Rpg>
+})

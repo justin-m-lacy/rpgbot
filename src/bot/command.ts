@@ -1,6 +1,6 @@
 import type { BotContext, ContextSource } from "@/bot/botcontext";
 import type { DiscordBot } from "@/bot/discordbot";
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type SlashCommandOptionsOnlyBuilder } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type SharedSlashCommand } from "discord.js";
 
 type BaseCommandFunc = (it: ChatAction, bot: DiscordBot) => Promise<any> | void | undefined;
 
@@ -22,7 +22,8 @@ type CommandClass<T extends object, S extends ContextSource = ContextSource> = {
 }
 
 type BaseCommand = {
-	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+	id: string,
+	data: SlashCommandBuilder | SharedSlashCommand;
 	hidden?: boolean
 }
 /**
@@ -60,7 +61,22 @@ export const StrChoices = (name: string, desc: string, choices: Array<{ name: st
 
 export const NumOpt = (name: string, desc: string, min: number = 0) => new SlashCommandNumberOption().setName(name).setDescription(desc).setMinValue(min);
 
-export const NewCommand = (name: string, desc: string, opts?: ApplicationCommandOptionBase[]
+/**
+ * Allows automate add 'id' and other useful command funcs.
+ * @param cmd 
+ * @returns 
+ */
+export const NewCommand = <T extends object | undefined>(
+	cmd: Omit<Command<T>, | 'id'>): Command<T> => {
+
+	return {
+		id: cmd.data.name,
+		...cmd
+	} as Command<T>;
+
+}
+
+export const CommandData = (name: string, desc: string, opts?: ApplicationCommandOptionBase[]
 ) => {
 
 	const cmd = new SlashCommandBuilder().setName(name).setDescription(desc);
@@ -79,6 +95,7 @@ export function CreateCommand(
 	const b = new SlashCommandBuilder().setName(name).setDescription(desc);
 
 	const cmd = {
+		id: name,
 		data: b,
 		exec: handler
 	}

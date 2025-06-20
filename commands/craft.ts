@@ -1,10 +1,10 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('craft', 'Attempt to craft object', [
+	data: CommandData('craft', 'Attempt to craft object', [
 		StrOpt('what', 'What to craft').setRequired(true),
 		StrOpt('desc', 'Description of item')
 	]),
@@ -26,4 +26,4 @@ export default {
 
 
 	}
-} as Command<Rpg>
+})

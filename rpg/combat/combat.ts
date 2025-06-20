@@ -37,10 +37,10 @@ export class Combat {
 
 	readonly attacks: any[] = [];
 
-	constructor(c1: Char | Monster | Party, c2: Char | Monster | Party, world: World) {
+	constructor(char1: Char | Monster | Party, char2: Char | Monster | Party, world: World) {
 
-		this.attacker = c1;
-		this.defender = c2;
+		this.attacker = char1;
+		this.defender = char2;
 
 		this.world = world;
 
@@ -408,7 +408,7 @@ class AttackInfo {
 		this._dmg = dmg;
 
 		this.defender.hp.add(-dmg);
-		if (+this.defender.hp <= 0) this._killed = true;
+		if (this.defender.hp.valueOf() <= 0) this._killed = true;
 	}
 
 	getWeapon(char: Actor | Monster) {

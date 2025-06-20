@@ -1,11 +1,11 @@
-import { NewCommand, StrOpt, type ChatAction, type Command } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
 import type { Char } from "rpg/char/char";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
-export default {
+export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: NewCommand('leader', 'Set party leader or get name of current leader.')
+	data: CommandData('leader', 'Set party leader or get name of current leader.')
 		.addStringOption(StrOpt('who', 'Character to make leader.')),
 	async exec(m: ChatAction, rpg: Rpg) {
 
@@ -23,4 +23,4 @@ export default {
 		return SendBlock(m, rpg.game.setLeader(char, t));
 
 	}
-} as Command<Rpg>
+})
