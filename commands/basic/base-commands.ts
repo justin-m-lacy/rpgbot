@@ -1,7 +1,8 @@
 import { DiscordBot } from '../../src/bot/discordbot';
 
-import { CommandData, NumOpt, StrOpt, type ChatAction, type Command } from '@/bot/command';
-import { MessageFlags, PermissionFlagsBits } from 'discord.js';
+import { CommandData, NewCommand, NumOpt, StrOpt, type ChatAction, type Command } from '@/bot/command';
+import { SendPrivate } from '@/utils/display';
+import { PermissionFlagsBits } from 'discord.js';
 import { parseRoll } from '../../rpg/values/dice';
 
 export function GetCommands(): Command[] {
@@ -15,30 +16,27 @@ export function GetCommands(): Command[] {
 /**
 * Backup unsaved cache items.
 */
-const CmdBackup = {
+const CmdBackup = NewCommand({
     data: CommandData('backup', 'Force backup bot data')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (await bot.backup(m.user)) {
-            return m.reply({
-                content: 'backup complete.',
-                flags: MessageFlags.Ephemeral
-            });
+            return SendPrivate(m, 'backup complete.');
         }
     }
-}
+})
 
 /**
  * Shutdown the bot program. Owner only.
  */
-const CmdShutdown = {
+const CmdShutdown = NewCommand({
     data: CommandData('shutdown', 'Shutdown bot')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
         await bot.shutdown(m.user);
     }
-}
+})
 
 /**
  * Make Bot leave guild.
@@ -46,31 +44,25 @@ const CmdShutdown = {
  * @param m
  * @returns
  */
-const CmdLeaveGuild = {
+const CmdLeaveGuild = NewCommand({
     data: CommandData('botleave', 'Remove bot from guild')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     exec: async (m: ChatAction, bot: DiscordBot) => {
 
         if (m.guild && await bot.leaveGuild(m)) {
-            m.reply({
-                content: 'Left guild ' + m.guild.name,
-                flags: MessageFlags.Ephemeral
-            });
+            SendPrivate(m, 'Left guild ' + m.guild.name);
         } else {
-            m.reply({
-                content: 'Leave guild failed',
-                flags: MessageFlags.Ephemeral
-            });
+            SendPrivate(m, 'Leave guild failed');
         }
 
     }
-}
+})
 
 
 /**
  * Proxy the current context to the user's DM.
  */
-const CmdProxy = {
+const CmdProxy = NewCommand({
 
     data: CommandData('proxy', 'Proxy this room to your private chat'),
     exec: async (m: ChatAction, bot: DiscordBot) => {
@@ -78,38 +70,32 @@ const CmdProxy = {
         if (await bot.makeProxy(m)) {
             return m.user.send('Proxy created.');
         } else {
-            m.reply({
-                content: 'Create proxy failed',
-                flags: MessageFlags.Ephemeral
-            })
+            SendPrivate(m, 'Create proxy failed')
         }
     }
-}
+})
 
 /**
  * Reset command's permissions to default.
  */
-const CmdResetAccess = {
+const CmdResetAccess = NewCommand({
     data: CommandData('cmdreset', 'Reset command permissions', [
         StrOpt('cmd', 'Command name', true)
     ]),
-    exec: async (it: ChatAction, bot: DiscordBot) => {
+    exec: async (m: ChatAction, bot: DiscordBot) => {
 
-        const cmd = it.options.getString('cmd', true);
-        if (await bot.resetCommandAccess(it, cmd)) {
-            return it.reply({
-                content: 'Access reset.',
-                flags: MessageFlags.Ephemeral
-            });
+        const cmd = m.options.getString('cmd', true);
+        if (await bot.resetCommandAccess(m, cmd)) {
+            return SendPrivate(m, 'Access reset.');
         } else {
 
         }
 
     }
-}
+})
 
 
-const CmdHelp: Command = {
+const CmdHelp: Command = NewCommand({
 
     data: CommandData('help', 'Get command help',
         [
@@ -134,9 +120,9 @@ const CmdHelp: Command = {
         }
 
     }
-}
+})
 
-const CmdRoll = {
+const CmdRoll = NewCommand({
 
     data: CommandData('roll', 'Simulate dice roll',
         [
@@ -144,33 +130,28 @@ const CmdRoll = {
 
         ]
     ),
-    exec: async (msg: ChatAction) => {
+    exec: async (m: ChatAction) => {
 
         try {
 
-            const dice = msg.options.getString('dice', true);
+            const dice = m.options.getString('dice', true);
             const total = parseRoll(dice);
-            return msg.reply(msg.user.displayName + ' rolled ' + total);
+            return m.reply(m.user.displayName + ' rolled ' + total);
 
         } catch (err) {
 
             if (err instanceof RangeError) {
-                return msg.reply({
-                    content: "Number values are too large.", flags: MessageFlags.Ephemeral
-                });
+                return SendPrivate(m, "Number values are too large.");
             }
-            return msg.reply({
-                content: 'Dice format must be: xdy+z',
-                flags: MessageFlags.Ephemeral
-            });
+            return SendPrivate(m, 'Dice format must be: xdy+z');
 
         }
 
 
     }
-}
+})
 
-const CmdSay = {
+const CmdSay = NewCommand({
     data: CommandData('say', 'Admin public message',
         [
             StrOpt('what', 'What bot will say', true),
@@ -183,4 +164,4 @@ const CmdSay = {
         return msg.reply(what);
 
     }
-}
+})
