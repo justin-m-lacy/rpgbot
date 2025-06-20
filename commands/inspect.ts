@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -11,12 +12,12 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const what = m.options.getString('what');
-		if (!what) return m.reply('Inspect which inventory item?');
+		if (!what) return SendPrivate(m, 'Inspect which inventory item?');
 
 		let item = char.getItem(what);
 		if (Array.isArray(item)) item = item[0];
-		if (!item) return m.reply('Item not found.');
-		return m.reply(item.getDetails());
+		if (!item) return SendPrivate(m, 'Item not found.');
+		return SendPrivate(m, item.getDetails());
 
 	}
 })

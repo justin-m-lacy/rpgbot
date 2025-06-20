@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>(
@@ -15,7 +16,7 @@ export default NewCommand<Rpg>(
 			const stat = m.options.getString('stat', true);
 			const res = char.addStat(stat);
 
-			if (typeof (res) === 'string') return m.reply(res);
+			if (typeof (res) === 'string') return SendPrivate(m, res);
 
 
 		}

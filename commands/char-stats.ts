@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { getHistory } from "rpg/events";
 import { Rpg } from "rpg/rpg";
@@ -18,7 +19,7 @@ export default NewCommand<Rpg>({
 			if (!char) return;
 		} else {
 			char = await rpg.loadChar(who);
-			if (!char) return m.reply(who + ' not found on server. :O');
+			if (!char) return SendPrivate(m, who + ' not found on server. :O');
 		}
 
 		await SendBlock(m, getHistory(char));

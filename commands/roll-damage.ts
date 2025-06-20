@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -8,7 +9,7 @@ export default NewCommand<Rpg>({
 
 		const char = await rpg.userCharOrErr(m, m.user)
 		if (char) {
-			return m.reply('Weapon roll for ' + char.name + ': ' + char.testDmg());
+			return SendPrivate(m, 'Weapon roll for ' + char.name + ': ' + char.testDmg());
 		}
 
 	}

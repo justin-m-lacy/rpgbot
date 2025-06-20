@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import type { HumanSlot } from "rpg/items/wearable";
 import { Rpg } from "rpg/rpg";
@@ -17,7 +18,7 @@ export default NewCommand<Rpg>({
 		else {
 
 			const item = char.getEquip(slot);
-			if (!item) return m.reply('Nothing equipped in ' + slot + ' slot.');
+			if (!item) return SendPrivate(m, 'Nothing equipped in ' + slot + ' slot.');
 			if (typeof (item) === 'string') return m.reply(item);
 			else if (Array.isArray(item)) {
 
@@ -25,9 +26,9 @@ export default NewCommand<Rpg>({
 				for (let i = item.length - 1; i >= 0; i--) {
 					r += item[i].getDetails() + '\n';
 				}
-				return m.reply(r);
+				return SendPrivate(m, r);
 
-			} else return m.reply(item.getDetails());
+			} else return SendPrivate(m, item.getDetails());
 
 		} //
 

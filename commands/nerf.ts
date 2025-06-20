@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { PermissionFlagsBits } from "discord.js";
 import { Rpg } from "rpg/rpg";
 import { nerfItems } from "rpg/trade";
@@ -15,9 +16,9 @@ export default NewCommand<Rpg>({
 		const char = await rpg.loadChar(who);
 		if (!char) return;
 
-		if (!rpg.context.isOwner(m.user)) return m.reply('You do not have permission to do that.');
+		if (!rpg.context.isOwner(m.user)) return SendPrivate(m, 'You do not have permission to do that.');
 
-		return m.reply(nerfItems(char));
+		return SendPrivate(m, nerfItems(char));
 
 	}
 })

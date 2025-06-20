@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { PermissionFlagsBits } from "discord.js";
 import { Formula } from "formulic";
 import { Rpg } from "rpg/rpg";
@@ -10,16 +11,16 @@ export default NewCommand<Rpg>({
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async exec(m: ChatAction, rpg: Rpg) {
 
-		if (!rpg.context.isOwner(m.user)) return m.reply('You do not have permission to do that.');
+		if (!rpg.context.isOwner(m.user)) return SendPrivate(m, 'You do not have permission to do that.');
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const str = m.options.getString('formula', true);
 		const f = Formula.TryParse(str);
-		if (!f) return m.reply('Incantation malformed.');
+		if (!f) return SendPrivate(m, 'Incantation malformed.');
 
 		const res = f.eval(char);
-		return m.reply('result: ' + res);
+		return SendPrivate(m, 'result: ' + res);
 
 	}
 })

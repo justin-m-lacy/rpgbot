@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -13,7 +14,7 @@ export default NewCommand<Rpg>({
 		if (char) {
 			const what = m.options.getString('what', true);
 
-			if (!what) return m.reply('Compare what item?');
+			if (!what) return SendPrivate(m, 'Compare what item?');
 			return SendBlock(m, rpg.game.compare(char, what));
 		}
 

@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -14,7 +15,7 @@ export default NewCommand<Rpg>({
 
 		const t = await rpg.loadChar(who);
 		if (!t) return;
-		return m.reply(t.name + ' is at ' + t.loc.toString());
+		return SendPrivate(m, t.name + ' is at ' + t.loc.toString());
 
 
 	}

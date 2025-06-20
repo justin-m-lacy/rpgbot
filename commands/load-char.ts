@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -11,7 +12,7 @@ export default NewCommand<Rpg>({
 		const charname = m.options.getString('name') ?? m.user.username;
 
 		const char = await rpg.loadChar(charname);
-		if (!char) return m.reply(charname + ' not found on server. D:');
+		if (!char) return SendPrivate(m, charname + ' not found on server. D:');
 
 		let prefix;
 

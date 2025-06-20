@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -13,7 +14,7 @@ export default NewCommand<Rpg>({
 
 		const slot = m.options.getString('slot', true);
 
-		return m.reply(rpg.game.unequip(char, slot));
+		return SendPrivate(m, rpg.game.unequip(char, slot));
 
 	}
 })

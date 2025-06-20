@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -13,7 +14,7 @@ export default NewCommand<Rpg>({
 		const desc = m.options.getString('desc', true);
 
 		const resp = await rpg.world.setDesc(char, desc);// m.attachments?.first()?.proxyURL);
-		if (resp) return m.reply(resp);
+		if (resp) return SendPrivate(m, resp);
 
 
 	}

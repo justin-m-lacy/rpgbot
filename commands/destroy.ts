@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -14,9 +15,9 @@ export default NewCommand<Rpg>({
 		const start = m.options.getString('start');
 		const end = m.options.getString('end');
 
-		if (!start) return m.reply('Destroy which inventory item?');
+		if (!start) return SendPrivate(m, 'Destroy which inventory item?');
 
-		return m.reply(rpg.game.destroy(char, start, end));
+		return SendPrivate(m, rpg.game.destroy(char, start, end));
 
 	}
 })

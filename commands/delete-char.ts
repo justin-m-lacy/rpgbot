@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -9,10 +10,10 @@ export default NewCommand<Rpg>({
 
 		const charname = m.options.getString('name', true);
 
-		if (!charname) return m.reply('Must specify character to delete.');
+		if (!charname) return SendPrivate(m, 'Must specify character to delete.');
 
 		const char = await rpg.loadChar(charname);
-		if (!char) return m.reply(`'${charname}' not found on server.`);
+		if (!char) return SendPrivate(m, `'${charname}' not found on server.`);
 
 		if (!char.owner || char.owner === m.user.id) {
 
@@ -21,9 +22,9 @@ export default NewCommand<Rpg>({
 			// TODO: REMOVE LAST LOADED NAME. etc.
 			if (rpg.getLastChar(char.owner) === charname) rpg.clearUserChar(char.owner);
 
-			return m.reply(charname + ' deleted.');
+			return SendPrivate(m, charname + ' deleted.');
 
-		} else return m.reply('You do not have permission to delete ' + charname);
+		} else return SendPrivate(m, 'You do not have permission to delete ' + charname);
 
 
 	}

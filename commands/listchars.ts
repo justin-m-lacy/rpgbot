@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -8,9 +9,9 @@ export default NewCommand<Rpg>({
 	async exec(m: ChatAction, rpg: Rpg) {
 		try {
 			const list = await rpg.context.getDataList(Rpg.RpgDir + '/chars');
-			if (!list) return m.reply('Could not get char list.');
+			if (!list) return SendPrivate(m, 'Could not get char list.');
 
-			return m.reply(list.join(', '));
+			return SendPrivate(m, list.join(', '));
 
 		} catch (e) { console.log(e); }
 

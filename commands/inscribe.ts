@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -14,9 +15,9 @@ export default NewCommand<Rpg>({
 		const what = m.options.getString('what', true);
 		const script = m.options.getString('text') ?? '';
 
-		if (!what) return m.reply('Inscribe which inventory item?');
+		if (!what) return SendPrivate(m, 'Inscribe which inventory item?');
 
-		return m.reply(rpg.game.inscribe(char, what, script));
+		return SendPrivate(m, rpg.game.inscribe(char, what, script));
 
 
 	}

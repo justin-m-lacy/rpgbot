@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -14,7 +15,7 @@ export default NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user)
 		if (!char) return;
 
-		await m.reply(await rpg.game.take(char, start, end));
+		await SendPrivate(m, await rpg.game.take(char, start, end));
 
 
 	}

@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -15,7 +16,7 @@ export default NewCommand<Rpg>({
 		if (who) {
 
 			char = await rpg.loadChar(who);
-			if (!char) return m.reply(`'${who}' not found.`);
+			if (!char) return SendPrivate(m, `'${who}' not found.`);
 
 
 		} else {

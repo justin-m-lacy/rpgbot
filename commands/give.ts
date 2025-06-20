@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -15,7 +16,7 @@ export default NewCommand<Rpg>({
 		const what = m.options.getString('what', true);
 
 		const dest = await rpg.loadChar(who);
-		if (!dest) return m.reply(`'${who}' does not exist.`);
+		if (!dest) return SendPrivate(m, `'${who}' does not exist.`);
 
 		return m.reply(rpg.game.give(src, dest, what));
 

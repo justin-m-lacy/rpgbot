@@ -1,4 +1,5 @@
 import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -10,7 +11,7 @@ export default NewCommand<Rpg>({
 
 		const potion = m.options.getString('potion', true);
 
-		if (!potion) return m.reply('Brew what potion?');
+		if (!potion) return SendPrivate(m, 'Brew what potion?');
 
 		const char = await rpg.userCharOrErr(m, m.user)
 		if (!char) return;
