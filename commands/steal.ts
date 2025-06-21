@@ -22,6 +22,5 @@ export default NewCommand<Rpg>({
 		const result = await rpg.game.steal(src, dest, what);
 		await SendBlock(m, result);
 
-
 	}
 })

@@ -13,3 +13,16 @@ export class NullDataError extends Error {
 		super('Data null or undefined');
 	}
 }
+
+export class InvalidParam extends Error {
+	constructor(got?: any) {
+		super(`Invalid parameter. Got: ${got}`);
+	}
+
+}
+
+export class NotEnoughArgs extends Error {
+	constructor(cmd: string, got: number, expected: number) {
+		super(`${cmd}: Too few args: Expected: ${expected}, got ${got}`);
+	}
+}

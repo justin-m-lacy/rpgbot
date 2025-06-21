@@ -1,3 +1,4 @@
+import { CmdParser } from '@/bot/cmd-parser';
 import Cache from 'archcache';
 import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
@@ -71,10 +72,11 @@ export class DiscordBot {
 
 	private readonly commands: ReturnType<typeof CommandMap> = CommandMap();
 
-	/**
-	 * bots user id.
-	 */
-	private readonly botId: string;
+	// bot user id.
+	private botId: string | null = null;
+
+	/// parser for raw-message commands.
+	private readonly parser: CmdParser = new CmdParser();
 
 	/**
 	 *
@@ -100,8 +102,6 @@ export class DiscordBot {
 		this.saveDir = path.join(this.baseDir, config.savedir || '/savedata/');
 
 		fsys.setBaseDir(this.saveDir);
-
-		this.botId = client.user!.id;
 
 		this.cache = new Cache({
 			cacheKey: '',
@@ -206,17 +206,36 @@ export class DiscordBot {
 
 		});
 
-		this.client.on(Events.MessageCreate, async (m) => {
+		this.client.on(Events.MessageCreate, (m) => {
 
 			if (m.author.id === this.botId) return;
+			if (!m.content.startsWith(this.cmdPrefix)) return;
+
 			if (this.isSpam(m)) return;
+
+			const ind = m.content.indexOf(' ');
+			const cmdStr = m.content.slice(1, ind);
+			const cmd = this.commands.get(cmdStr);
+			if (cmd) this.onMessage(m, cmd, ind > 0 ? m.content.slice(ind + 1) : '');
+
+		})
+
+	}
+
+	private async onMessage(m: Message, cmd: Command, argLine: string) {
+
+		try {
 
 			const ctx = await this.getCmdContext(m);
 			if (ctx) {
 				/// test access.
+			} else {
+
 			}
 
-		})
+		} catch (err) {
+			console.warn(err);
+		}
 
 	}
 
@@ -230,6 +249,8 @@ export class DiscordBot {
 			if (classes.length === 0) {
 				return;
 			}
+
+			this.botId = this.client.user!.id;
 
 			this.client.guilds.cache.forEach((g, id) => {
 				this.getContext(g);
@@ -333,8 +354,8 @@ export class DiscordBot {
 			if (allowed === undefined) {
 
 				// check default access.
-				if (!cmd.access) return true;
-				return m.member.permissions.has(cmd.access);
+				//if (!cmd.access) return true;
+				//return m.member.permissions.has(cmd.access);
 
 			}
 			return allowed;

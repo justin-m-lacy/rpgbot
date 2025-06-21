@@ -8,10 +8,7 @@ export default NewCommand<Rpg>({
 	async exec(m: ChatAction, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
-		if (!char) return;
-
-		return SendPrivate(m, rpg.world.setHome(char));
-
+		if (char) return SendPrivate(m, rpg.world.setHome(char));
 
 	}
 })

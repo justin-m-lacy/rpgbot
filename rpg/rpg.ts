@@ -1,5 +1,6 @@
 import { BotContext, type ContextSource } from '@/bot/botcontext';
 import type { ChatAction } from '@/bot/command';
+import type { ChatCommand } from '@/bot/wrap-message';
 import Cache from 'archcache';
 import { User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
@@ -52,7 +53,7 @@ export class Rpg {
 
 	async charExists(charname: string) { return this.charCache.exists(this.getCharKey(charname)); }
 
-	async userCharOrErr(m: ChatAction, user: User) {
+	async userCharOrErr(m: ChatCommand, user: User) {
 
 		const charname = this.lastChars[user.id];
 		if (!charname) {

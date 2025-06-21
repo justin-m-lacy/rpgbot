@@ -22,9 +22,22 @@ type CommandClass<T extends object, S extends ContextSource = ContextSource> = {
 }
 
 type BaseCommand = {
+
 	id: string,
+
 	data: SlashCommandBuilder | SharedSlashCommand;
-	hidden?: boolean
+
+	hidden?: boolean,
+
+	/**
+	 * greedy-group text params on right or left.
+	 */
+	merge?: 'start' | 'end',
+
+	minArgs: number,
+
+	maxArgs: number
+
 }
 /**
  * Command not relying on stored instance data or BotContext.
@@ -67,10 +80,14 @@ export const NumOpt = (name: string, desc: string, min: number = 0) => new Slash
  * @returns 
  */
 export const NewCommand = <T extends object | undefined>(
-	cmd: Omit<Command<T>, | 'id'>): Command<T> => {
+	cmd: Omit<Command<T>, | 'id' | 'maxArgs' | 'minArgs'>): Command<T> => {
 
 	return {
 		id: cmd.data.name,
+		minArgs: cmd.data.options.filter(
+			v => !(v as any).required
+		).length,
+		maxArgs: cmd.data.options.length,
 		...cmd
 	} as Command<T>;
 
@@ -83,26 +100,6 @@ export const CommandData = (name: string, desc: string, opts?: ApplicationComman
 	if (opts) {
 		cmd.options.push(...opts)
 	}
-	return cmd;
-
-}
-
-export function CreateCommand(
-	name: string, desc: string,
-	handler: BaseCommandFunc,
-	into?: Command[], ...rest: any) {
-
-	const b = new SlashCommandBuilder().setName(name).setDescription(desc);
-
-	const cmd = {
-		id: name,
-		data: b,
-		exec: handler
-	}
-
-	into?.push(cmd);
-
-
 	return cmd;
 
 }
