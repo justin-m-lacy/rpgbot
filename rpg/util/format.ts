@@ -12,7 +12,7 @@ export const romanlow = (n: number) => {
 
 /**
  * Returns abbreviation of item based on first letters.
- * @param {*} it
+ * @param it
  */
 export const abbr = (it?: { name?: string }) => {
 

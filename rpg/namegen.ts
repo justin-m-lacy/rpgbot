@@ -177,7 +177,7 @@ nameParts['hobbit'] = nameParts['halfling'];
 
 /**
  * @exported
- * @param {string} race
+ * @param race
  */
 export const GenName = (race: string = "human", sex?: string): string => {
 

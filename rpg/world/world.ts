@@ -220,7 +220,7 @@ export class World {
 	/**
 	 *
 	 * @param char
-	 * @param {Item} what
+	 * @param what
 	 */
 	async put(char: Char, what: Item) {
 

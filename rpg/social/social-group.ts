@@ -41,7 +41,7 @@ export class SocialGroup {
 
 	/**
 	 * Invite character to group.
-	 * @param {Char} char
+	 * @param char
 	 */
 	invite(char: Char | string) {
 
@@ -54,7 +54,7 @@ export class SocialGroup {
 
 	/**
 	 * Accept character in group. Character was confirmed.
-	 * @param {*} char
+	 * @param char
 	 * @returns {boolean}
 	 */
 	acceptInvite(char: Char) {
@@ -85,7 +85,7 @@ export class SocialGroup {
 
 	/**
 	 *
-	 * @param {string} name
+	 * @param name
 	 * @returns true if the party should be removed. false otherwise.
 	 */
 	leave(char: Char) {
@@ -106,7 +106,7 @@ export class SocialGroup {
 
 	/**
 	 *
-	 * @param {string|Char} char
+	 * @param char
 	 */
 	includes(char: Char | string) {
 		return this._roster.includes(typeof char === 'string' ? char : char.name);

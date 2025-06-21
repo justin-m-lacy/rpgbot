@@ -49,8 +49,8 @@ export class Item {
 	/**
 	 * Since Item is subclassed, the sub item created
 	 * is passed as a param.
-	 * @param {Object} json
-	 * @param {Item} it
+	 * @param json
+	 * @param it
 	 */
 	static Revive(json: ItemData, it?: Item) {
 
@@ -153,7 +153,7 @@ export class Item {
 
 	/**
 	 *
-	 * @param {Item[]} a
+	 * @param a
 	 */
 	static DetailsList(a: Item[]) {
 
@@ -164,7 +164,7 @@ export class Item {
 
 	/**
 	 *
-	 * @param {Item[]} a
+	 * @param a
 	 */
 	static ItemList(a: Item[]) {
 

@@ -42,8 +42,8 @@ export class Weapon extends Wearable {
 
 	/**
 	 * Create a new weapon from a base weapon object.
-	 * @param {Object} tmp 
-	 * @param {Material} mat 
+	 * @param tmp 
+	 * @param mat 
 	 */
 	static FromData(tmp: any, mat?: Material) {
 

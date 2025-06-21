@@ -1,7 +1,7 @@
 
 /**
  * Determines if array contains any of the given params.
- * @param {Array} arr - array to test for inclusions.
+ * @param arr - array to test for inclusions.
  * @param  {...any} params - arguments to test for inclusion in array.
  * @returns {boolean} - true if at least one param is found in the array.
  */
@@ -46,7 +46,7 @@ export const mergeInto = <T>(a: T[] | null | undefined, b: T[] | null | undefine
 /**
  * Merges items from b into array a for all items in b
  * passing predicate p.
- * @param {T=>boolean} p - merge test.
+ * @param p - merge test.
  * @returns {array} returns a
  */
 export const mergeIf = <T>(a: T[] | null | undefined, b: T[] | null | undefined, p: (it: T) => boolean) => {
@@ -63,7 +63,7 @@ export const mergeIf = <T>(a: T[] | null | undefined, b: T[] | null | undefined,
 
 /**
  * Return a random element from any of a number of arrays.
- * @param {Array[]} arrs - array of arrays.
+ * @param arrs - array of arrays.
  */
 export const randFrom = <T>(arrs: Array<T[]>) => {
 
@@ -85,9 +85,9 @@ export const randFrom = <T>(arrs: Array<T[]>) => {
 
 /**
  * Return random array element between two indices.
- * @param {array} a
- * @param {number} i - lower inclusive limit of random.
- * @param {number} j - upper exclusive limit of random.
+ * @param a
+ * @param i - lower inclusive limit of random.
+ * @param j - upper exclusive limit of random.
  * @returns {*}
  */
 export const randBetween = <T>(a: T[], i: number, j: number) => {
@@ -98,8 +98,8 @@ export const randBetween = <T>(a: T[], i: number, j: number) => {
 
 /**
  * Map Array into non-null elements of a predicate.
- * @param {Arrray} a
- * @param {function} p
+ * @param a
+ * @param p
  */
 export const mapNonNull = <T>(a: T[], p: (it: T) => boolean) => {
 
@@ -148,9 +148,9 @@ export const first = <T>(a: T[]) => {
  * Find the first instance of an element within an array and move it by a
  * specific number of elements.
  * If the amount to be moved would go over array bounds, goes up to the bounds. Does nothing if element isn't found. Non-mutating
- * @param {T[]} arr Array to move elements in
- * @param {T} elm The target element to move
- * @param {number} count Amount of elements to move the target
+ * @param arr Array to move elements in
+ * @param elm The target element to move
+ * @param count Amount of elements to move the target
  * @returns {T[]} The array with the element moved
  */
 export const moveElm = <T>(arr: T[], elm: T, count: number) => {
@@ -167,8 +167,8 @@ export const moveElm = <T>(arr: T[], elm: T, count: number) => {
 
 /**
  * Find an item in an array matching predicate, remove and return it.
- * @param {Array} a
- * @param {*} pred
+ * @param a
+ * @param pred
  */
 export const findRemove = <T>(a: T[], pred: (it: T) => boolean) => {
 
@@ -268,8 +268,8 @@ const propSort = <T extends object>(
 
 /**
  * Binary search array when values at prop are numeric.
- * @param {object[]} arr
- * @param {string} prop
+ * @param arr
+ * @param prop
  */
 export const binarySearch = <S extends string, T extends { [key in S]: number }>(arr: T[], prop: S, v: number) => {
 

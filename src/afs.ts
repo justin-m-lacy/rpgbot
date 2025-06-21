@@ -2,7 +2,7 @@ import fs from 'fs';
 
 /**
  * Attempts to delete a file, with error catching.
- * @param {string} path - file location.
+ * @param path - file location.
  * @returns {Promise<boolean,NodeJS.ErrnoException>}
  * @
  */
@@ -30,8 +30,8 @@ export const exists = (path: string): Promise<boolean> => new Promise((res) => {
 
 /**
  * @function
- * @param {string} path
- * @param {?Object|string} [options=null] Encoding used as the encoding of the result. If not provided, `'utf8'` is used.
+ * @param path
+ * @param [options=null] Encoding used as the encoding of the result. If not provided, `'utf8'` is used.
  * @returns {Promise<string[],NodeJS.ErrnoException>}
  */
 const readdir = fs.promises.readdir;
@@ -39,7 +39,7 @@ const readdir = fs.promises.readdir;
 /**
  * @function
  * Read a list of names of all files at the given path, excluding directories.
- * @param {string} path
+ * @param path
  * @returns {Promise<string[], NodeJS.ErrnoException>}
  */
 export const readFiles = (path: string) => new Promise<string[]>((res, rej) => {
@@ -68,7 +68,7 @@ export const readFiles = (path: string) => new Promise<string[]>((res, rej) => {
  * @function
  * Attempt to create a directory.
  * Directory already existing is not considered an error.
- * @param {string} path
+ * @param path
  * @returns {Promise}
  */
 export const mkdir = (path: string) => {
@@ -91,13 +91,13 @@ export const mkdir = (path: string) => {
 };
 
 /**
- * @param {string} path
+ * @param path
  * @returns {Promise<*,NodeJS.ErrnoException>}
  */
 export const readFile = fs.promises.readFile;
 
 /**
- * @param {string} path
+ * @param path
  * @returns {Promise<Object,Error>}
  */
 export const readJSON = (path: string) => new Promise((res, rej) => {
@@ -124,8 +124,8 @@ export const readJSON = (path: string) => new Promise((res, rej) => {
 
 /**
  * @function
- * @param {string} path
- * @param {*} data
+ * @param path
+ * @param data
  * @returns {Promise}
  */
 export const writeJSON = (path: string, data: any) => new Promise<void>((res, rej) => {

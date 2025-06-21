@@ -1,3 +1,4 @@
+import type { MsgWrap } from '@/bot/wrap-message';
 import ArchCache from 'archcache';
 import { Channel, Guild, GuildMember, Message, PermissionResolvable, User, type SendableChannels } from 'discord.js';
 import * as afs from '../afs';
@@ -138,7 +139,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 *
-	 * @param {string} cmd
+	 * @param cmd
 	 */
 	getAccess(cmd: string) {
 		return this.access?.getAccess(cmd);
@@ -172,8 +173,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * @async
-	 * @param {string} key
-	 * @param {*} value
+	 * @param key
+	 * @param value
 	 * @returns {Promise<*>}
 	 */
 	async setSetting(key: string, value?: any) {
@@ -217,7 +218,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Check if Discord User is the bot owner.
-	 * @param {Discord.User|string} u
+	 * @param u
 	 * @returns {boolean}
 	*/
 	isOwner(u: User | string) { return this.bot.isOwner(u); }
@@ -277,8 +278,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * @async
-	 * @param {string} id - discord user id.
-	 * @return {Promise<string>}
+	 * @param id - discord user id.
+	 * @return
 	 */
 	async displayName(id?: string) {
 
@@ -294,8 +295,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Get a display name for user.
-	 * @param {(string|Discord.User|Discord.GuildMember)} o
-	 * @returns {string}
+	 * @param o
+	 * @returns
 	 */
 	userString(o: string | User | GuildMember) {
 
@@ -325,8 +326,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Override in botcontext subclasses to find named user within context.
-	 * @param {string} name
-	 * @returns {null} overridden in subclasses.
+	 * @param name
+	 * @returns overridden in subclasses.
 	 */
 	findUser(name: string): User | GuildMember | null {
 
@@ -339,7 +340,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Find channel by name. (Not channel Id.)
-	 * @param {string} name
+	 * @param name
 	 */
 	findChannel(name: string): Channel | null {
 		return null;
@@ -349,8 +350,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * Adds a class to be instantiated for the given context,
 	 * if an instance does not already exists.
 	 * @async
-	 * @param {class} cls
-	 * @returns {Promise<Object>}
+	 * @param cls
+	 * @returns
 	 */
 	async addClass(cls: ContextClass<T>): Promise<InstanceType<ContextClass<T>>> {
 
@@ -374,7 +375,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Add a context instance.
-	 * @param {Object} inst - plugin instance for this context.
+	 * @param inst - plugin instance for this context.
 	 */
 	addInstance(inst: ContextClass<T>) {
 		this.instances.set(inst.constructor.name, inst);
@@ -386,7 +387,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param args
 	 * @returns
 	 */
-	async routeCommand(it: ChatAction, cmd: Command<object>, ...args: any[]) {
+	async routeCommand(it: ChatAction | MsgWrap, cmd: Command<object>, ...args: any[]) {
 
 		let target = this.instances.get(cmd.cls.name);
 		if (!target) {
@@ -403,8 +404,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Create a context subcache mapped by key.
-	 * @param {string} key
-	 * @returns {Cache} - The Cache object.
+	 * @param key
+	 * @returns The Cache object.
 	 */
 	subcache(key: string) { return this.cache.subcache(key); }
 
@@ -428,8 +429,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Caches data without writing to disk.
-	 * @param {string} key
-	 * @param {*} data
+	 * @param key
+	 * @param data
 	 */
 	cacheData(key: string, data: any) {
 		this.cache.cache(key, data);
@@ -438,26 +439,26 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	/**
 	 * Attempts to retrieve data from cache without
 	 * checking backing store.
-	 * @param {string} key
-	 * @returns {*}
+	 * @param key
+	 * @returns
 	 */
 	getData(key: string) { return this.cache.get(key); }
 
 	/**
 	 * Fetch keyed data.
 	 * @async
-	 * @param {string} key
-	 * @returns {Promise<*>}
+	 * @param key
+	 * @returns
 	 */
 	async fetchData(key: string) { return this.cache.fetch(key); }
 
 	/**
 	 * Set keyed data.
 	 * @async
-	 * @param {string} key
-	 * @param {*} data
-	 * @param {boolean} [forceSave=false] Whether to force a save to the underlying data store.
-	 * @returns {Promise}
+	 * @param key
+	 * @param data
+	 * @param [forceSave=false] Whether to force a save to the underlying data store.
+	 * @returns
 	 */
 	async storeData(key: string, data: any, forceSave: boolean = false) {
 
@@ -482,7 +483,7 @@ export class UserContext extends BotContext<User> {
 
 	/**
 	 *
-	 * @param {string} name
+	 * @param name
 	 */
 	findUser(name: string) {
 
@@ -507,7 +508,7 @@ export class GuildContext extends BotContext<Guild> {
 
 	/**
 	 *
-	 * @param {string} id
+	 * @param id
 	 */
 	async displayName(id: string) {
 
@@ -558,7 +559,7 @@ export class GuildContext extends BotContext<Guild> {
 
 	/**
 	 *
-	 * @param {string} name - GuildMember display name of user to find.
+	 * @param name - GuildMember display name of user to find.
 	 */
 	findUser(name: string) {
 

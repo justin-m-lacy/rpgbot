@@ -80,8 +80,8 @@ export class Game {
 	/**
 	 * Determines whether a character can perform a given action
 	 * in their current state.
-	 * @param {Character} char
-	 * @param {string} act - action to attempt to perform.
+	 * @param char
+	 * @param act - action to attempt to perform.
 	 */
 	canAct(char: Char, act: string) {
 		const illegal = BlockedActs[char.state];

@@ -20,7 +20,7 @@ export class GuildManager {
 
 	/**
 	 *
-	 * @param {string} name
+	 * @param name
 	 * @returns {Promise<Guild>}
 	 */
 	async GetGuild(name: string) {

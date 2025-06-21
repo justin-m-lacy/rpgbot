@@ -9,8 +9,8 @@ class Scheduler {
 
 	/**
 	 * Schedule at a fixed time from now.
-	 * @param {number} time 
-	 * @param {function} cb 
+	 * @param time 
+	 * @param cb 
 	 */
 	schedIn(time, cb) {
 

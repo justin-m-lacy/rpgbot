@@ -56,8 +56,8 @@ export class Wearable extends Item {
 
 	/**
 	 * From template data.
-	 * @param {*} base
-	 * @param {*} material
+	 * @param base
+	 * @param material
 	 */
 	static FromData(base: any, material: Material) {
 

@@ -1,10 +1,11 @@
 import type { BotContext, ContextSource } from "@/bot/botcontext";
 import type { DiscordBot } from "@/bot/discordbot";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type SharedSlashCommand } from "discord.js";
 
-type BaseCommandFunc = (it: ChatAction, bot: DiscordBot) => Promise<any> | void | undefined;
+type BaseCommandFunc = (it: ChatCommand, bot: DiscordBot) => Promise<any> | void | undefined;
 
-export type CommandFunc<T extends object> = (it: ChatAction, cls: T, ...rest: any[]) => Promise<any> | void | undefined;
+export type CommandFunc<T extends object> = (it: ChatCommand, cls: T, ...rest: any[]) => Promise<any> | void | undefined;
 
 export type ChatAction = ChatInputCommandInteraction;
 
@@ -36,7 +37,7 @@ type BaseCommand = {
 
 	minArgs: number,
 
-	maxArgs: number
+	maxArgs: number,
 
 }
 /**
@@ -64,7 +65,7 @@ type TypedCommand<T extends object, S extends ContextSource = ContextSource> = B
 	exec: CommandFunc<T>;
 }
 
-export type Command<T extends object | undefined = undefined> = T extends Object ? TypedCommand<T> : UntypedCommand;
+export type Command<T extends object | undefined = any> = T extends Object ? TypedCommand<T> : UntypedCommand;
 
 export const StrOpt = (name: string, desc: string, required: boolean = false) => new SlashCommandStringOption().setName(name).setDescription(desc).setRequired(required);
 

@@ -107,7 +107,7 @@ export class Char extends Actor {
 
 	/**
 	 * Add a single point to the given stat.
-	 * @param {string} stat
+	 * @param stat
 	 * @returns {string|bool} error message, or true.
 	 */
 	addStat(stat: string) {
@@ -177,7 +177,7 @@ export class Char extends Actor {
 
 	/**
 	 *
-	 * @param {Item|number|string} what - what to cook.
+	 * @param what - what to cook.
 	 */
 	cook(what: ItemPicker) {
 
@@ -194,7 +194,7 @@ export class Char extends Actor {
 
 	/**
 	 *
-	 * @param {number|string|Item} what
+	 * @param what
 	 * @returns {bool|string} Error message or true.
 	 */
 	equip(what: ItemIndex) {
@@ -227,7 +227,7 @@ export class Char extends Actor {
 	/**
 	 * Removes any items matching the predicate and returns them.
 	 * Removed items are not added to inventory.
-	 * @param {function} p
+	 * @param p
 	 */
 	removeWhere(p: (w: Item) => boolean) {
 
@@ -275,7 +275,7 @@ export class Char extends Actor {
 
 	/**
 	 *
-	 * @param {Item|Item[]} wot
+	 * @param wot
 	 */
 	removeEquip(wot: Item | Item[]) {
 
@@ -297,7 +297,7 @@ export class Char extends Actor {
 
 	/**
 	 * Returns the item in the given equipment slot.
-	 * @param {Item} slot
+	 * @param slot
 	 */
 	getEquip(slot: HumanSlot) { return this._equip.get(slot); }
 
@@ -310,7 +310,7 @@ export class Char extends Actor {
 
 	/**
 	 * Get an item from inventory without removing it.
-	 * @param {number|string|Item} which
+	 * @param which
 	 */
 	getItem(which: number | string, sub?: number | string) {
 		return this.inv.getSub(which, sub);
@@ -318,7 +318,7 @@ export class Char extends Actor {
 
 	/**
 	 * Add an item to inventory.
-	 * @param {Item|Item[]} it
+	 * @param it
 	 */
 	addItem(it?: Item | (Item | null | undefined)[] | null) {
 		return this.inv.add(it);
@@ -327,7 +327,7 @@ export class Char extends Actor {
 
 	/**
 	 * Remove an item from inventory and return it.
-	 * @param {number|string|Item} which
+	 * @param which
 	 * @returns {Item} Item removed or null.
 	 */
 	takeItem(which: number | string | Item, sub?: number | string) {

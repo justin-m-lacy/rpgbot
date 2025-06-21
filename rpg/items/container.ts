@@ -93,7 +93,7 @@ export class Container<T extends SimpleItem = Item> {
 
     /**
      *
-     * @param {number} start - start number of items to take.
+     * @param start - start number of items to take.
      * @param end number of items to take.
      * @returns {T[]|null} - Range of items found.
      */
@@ -116,7 +116,7 @@ export class Container<T extends SimpleItem = Item> {
 
     /**
      * Attempts to remove an item by name or index.
-     * @param {number|string|Item} which
+     * @param which
      * @returns {T|null} item removed, or null if none found.
      */
     take(which?: number | string | T): T | T[] | null {
@@ -158,7 +158,7 @@ export class Container<T extends SimpleItem = Item> {
 
     /**
      *
-     * @param {string} name
+     * @param name
      */
     findItem(name: string) {
 
@@ -198,7 +198,7 @@ export class Container<T extends SimpleItem = Item> {
 
     /**
      * Remove all items matching predicate; returns the list of items removed.
-     * @param {*} p
+     * @param p
      */
     removeWhere(p: (it: T) => boolean) {
 
@@ -214,7 +214,7 @@ export class Container<T extends SimpleItem = Item> {
 
     /**
      * Apply function to each item in inventory.
-     * @param {function} f
+     * @param f
      */
     forEach(f: (it: T) => void) {
         return this.items.forEach(f);

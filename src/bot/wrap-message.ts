@@ -1,4 +1,4 @@
-import { type ChatInputCommandInteraction, type Message } from "discord.js";
+import { type BaseMessageOptions, type ChatInputCommandInteraction, type Message, type MessagePayload } from "discord.js";
 
 export type ChatCommand = ChatInputCommandInteraction | MsgWrap;
 
@@ -10,7 +10,7 @@ export type MessageOpt<T> = {
 
 }
 
-type OptChoice<T extends string | number> = {
+type CmdArg<T extends string | number> = {
 	name: string,
 	value: T
 }
@@ -69,7 +69,7 @@ export class NumberOpt extends CommandOpt<'number'> {
 
 export class ChoicesArg<T extends string | number> extends CommandOpt<'integer'> {
 
-	readonly values: OptChoice<T>[];
+	readonly values: CmdArg<T>[];
 
 	constructor(name: string) {
 
@@ -124,7 +124,7 @@ export class MsgOptions {
 
 	}
 
-	constructor(opts?: OptChoice<any>[]) {
+	constructor(opts?: CmdArg<any>[]) {
 
 		if (opts) {
 			for (let i = 0; i < opts.length; i++) {
@@ -143,20 +143,24 @@ export class MsgWrap {
 
 	get user() { return this.m.author; }
 
-	constructor(m: Message, opts: OptChoice<any>[]) {
+	constructor(m: Message, opts: CmdArg<any>[]) {
 
 		this.m = m;
+
+		console.log(`args count: ${opts.length}`);
 
 		this.options = new MsgOptions(opts);
 
 	}
-	reply(...params: Parameters<typeof this.m.reply>) { return this.m.reply(...params) }
+	reply(opts: string | MessagePayload | BaseMessageOptions) {
 
-}
+		if (typeof opts === 'string') {
+			return this.m.reply(opts);
+		} else {
 
-export const WrapMsg = (m: Message) => {
+			return this.m.reply(opts);
+		}
 
-
-
+	}
 
 }

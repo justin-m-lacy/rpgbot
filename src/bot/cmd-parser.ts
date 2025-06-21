@@ -28,7 +28,7 @@ export class CmdParser {
 	 * @param text 
 	 * @param cmd 
 	 */
-	parse(text: string, cmd: Command): MessageOpt<any>[] {
+	parse(text: string, cmd: Command<any>): MessageOpt<any>[] {
 
 		if (cmd.maxArgs === 0) return [];
 
@@ -38,7 +38,7 @@ export class CmdParser {
 		}
 
 		/**
-		 * TODO: problems if nonrequired options are in middle
+		 * TODO: problems if non-required options are in middle
 		 * of the parse line.
 		 * Ambiguous parsing.
 		 */
@@ -119,7 +119,7 @@ export class CmdParser {
 			if (excess > 0 && op.type === ApplicationCommandOptionType.String) {
 				raw = parts.slice(partInd - excess, partInd + 1).join(' ');
 				/// ind: +1 below, + excess parts
-				partInd += excess;
+				partInd -= excess;
 			} else {
 				raw = parts[partInd];
 			}

@@ -205,8 +205,8 @@ export class Equip {
 
 	/**
 	 *
-	 * @param {string} slot
-	 * @param {Armor|Weapon} it
+	 * @param slot
+	 * @param it
 	 * @returns error string if slot does not exist, null if equip
 	 * successful, old item if item replaces previous.
 	 */
@@ -247,7 +247,7 @@ export class Equip {
 
 	/**
 	 * Remove all items matching predicate, and returns them.
-	 * @param {*} p - predicate
+	 * @param p - predicate
 	 * @returns {Item[]}
 	 */
 	removeWhere(p: (v: Item) => boolean) {

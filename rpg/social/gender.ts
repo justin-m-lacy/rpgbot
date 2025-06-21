@@ -70,8 +70,8 @@ let genReg = /%sub|%ob|%adj|%pos|%ref|%is/g
 
 /**
  * Re-sexes a string with grammatical gender markers: e.g. %sub (subjective)
- * @param {string} sex
- * @param {string} str - string to genderfy
+ * @param sex
+ * @param str - string to genderfy
  * @returns {string}
  */
 export const genderfy = (sex: string, str: string) => {
@@ -105,8 +105,8 @@ export const genderfy = (sex: string, str: string) => {
 
 /**
  * TODO:match word case.
- * @param {string} gender
- * @param {*} word
+ * @param gender
+ * @param word
  */
 /*exports.toGender = function( gender, word ){
 

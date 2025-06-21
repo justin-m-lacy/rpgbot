@@ -129,7 +129,7 @@ export class Effect {
 
 	/**
 	 * 
-	 * @param {Actor} char
+	 * @param char
 	 * @returns {bool} true if effect complete. 
 	 */
 	tick(char: Char) {

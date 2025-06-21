@@ -1,5 +1,4 @@
-import { PermissionsBitField } from 'discord.js';
-import { GuildMember, PermissionResolvable } from 'discord.js';
+import { GuildMember, PermissionResolvable, PermissionsBitField } from 'discord.js';
 const Discord = require('discord.js');
 
 /**
@@ -22,7 +21,7 @@ export default class Access {
 
 	/**
 	 *
-	 * @param {Object} [vars=null]
+	 * @param [vars=null]
 	 */
 	constructor(vars?: { perms?: { [key: string]: any } }) {
 
@@ -34,7 +33,7 @@ export default class Access {
 	 * Remove all permission settings on a command, resetting command access to its default value.
 	 * After access is unset, most commands
 	 * will be available to all users. The exceptions tend to be special admin commands.
-	 * @param {string} cmd
+	 * @param cmd
 	 */
 	unsetAccess(cmd: string) {
 		delete this._perms[cmd];
@@ -42,8 +41,8 @@ export default class Access {
 
 	/**
 	 *
-	 * @param {string} cmd
-	 * @param {number|string} perm
+	 * @param cmd
+	 * @param perm
 	 */
 	setAccess(cmd: string, perm: PermissionResolvable | 'all' | 'public' | 'true') {
 
@@ -78,7 +77,7 @@ export default class Access {
 	}
 
 	/**
-	 * @param {string} cmd - command to get access string for.
+	 * @param cmd - command to get access string for.
 	 * @returns {string|null}
 	 */
 	accessInfo(cmd: string) {
@@ -97,7 +96,7 @@ export default class Access {
 
 	/**
 	 *
-	 * @param {string} cmd
+	 * @param cmd
 	 * @returns {number|string|Array} access flags, or roles, or an array of any combination of them.
 	 */
 	getAccess(cmd: string) {
@@ -109,8 +108,8 @@ export default class Access {
 	}
 
 	/**
-	 * @param {string} cmd - Command being called or setting being used.
-	 * @param {GuildMember} gm
+	 * @param cmd - Command being called or setting being used.
+	 * @param gm
 	 * @returns {boolean|undefined} Returned undefined if no permission is set for the command.
 	 * Returns true if the command or setting can be used by the given member, false otherwise.
 	 */
@@ -128,8 +127,8 @@ export default class Access {
 
 	/**
 	 *
-	 * @param {GuildMember} gm
-	 * @param {number|string} perm
+	 * @param gm
+	 * @param perm
 	 */
 	checkPerms(gm: GuildMember, perm: PermissionResolvable) {
 

@@ -18,7 +18,7 @@ const fist = new Weapon('fists',
 
 /**
  * Exp for killing target.
- * @param {number} lvl
+ * @param lvl
  */
 const NpcExp = (lvl: number) => Math.floor(10 * Math.pow(1.3, lvl));
 const PvpExp = (lvl: number) => Math.floor(10 * Math.pow(1.2, lvl / 2));
@@ -80,8 +80,8 @@ export class Combat {
 
 	/**
 	 * @async
-	 * @param {Party} p
-	 * @param {*} targ
+	 * @param p
+	 * @param targ
 	 * @returns {Promise}
 	 */
 	async partyAttack(p: Party, targ: Char | Party | Monster) {
@@ -225,7 +225,7 @@ export class Combat {
 
 	/**
 	 *
-	 * @param {Item|number|string} wot - optional item to try to take.
+	 * @param wot - optional item to try to take.
 	 */
 	async steal(wot?: ItemPicker | null) {
 
@@ -270,8 +270,8 @@ export class Combat {
 
 	/**
 	 * single Char attack. no reprisal.
-	 * @param {Char} src
-	 * @param {Char} dest
+	 * @param src
+	 * @param dest
 	 */
 	attack(src: Actor | Monster, dest: Actor | Monster) {
 

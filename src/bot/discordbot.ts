@@ -1,4 +1,5 @@
 import { CmdParser } from '@/bot/cmd-parser';
+import { MsgWrap } from '@/bot/wrap-message';
 import Cache from 'archcache';
 import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
@@ -226,11 +227,19 @@ export class DiscordBot {
 
 		try {
 
+			const args = this.parser.parse(argLine, cmd);
+			const wrap = new MsgWrap(m, args);
+
 			const ctx = await this.getCmdContext(m);
 			if (ctx) {
-				/// test access.
-			} else {
 
+
+				if ('cls' in cmd) {
+					await ctx.routeCommand(wrap, cmd);
+				}
+
+			} else {
+				await cmd.exec(wrap, this);
 			}
 
 		} catch (err) {

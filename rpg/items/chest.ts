@@ -64,19 +64,19 @@ export class Chest extends Item implements IInventory {
 
 	/**
 	 * 
-	 * @param {string|number} wot 
+	 * @param wot 
 	 */
 	get(wot: ItemIndex) { return this._inv.get(wot); }
 
 	/**
 	 * 
-	 * @param {number|string|Item} wot 
+	 * @param wot 
 	 */
 	take(wot: ItemIndex) { return this._inv.take(wot); }
 
 	/**
 	 * 
-	 * @param {Item} it 
+	 * @param it 
 	 */
 	add(it: Item) {
 

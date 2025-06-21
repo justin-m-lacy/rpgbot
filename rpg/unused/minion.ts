@@ -4,7 +4,7 @@ export class Minion {
 
 	/**
 	 * Retrieves a minion template by name.
-	 * @param {string} s 
+	 * @param s 
 	 */
 	static GetTemplate(s: keyof typeof templates) { return templates[s]; }
 

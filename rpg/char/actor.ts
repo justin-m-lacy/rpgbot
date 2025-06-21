@@ -166,7 +166,7 @@ export class Actor {
 
 	/**
 	 * Removes a gold amount or returns false.
-	 * @param {number} amt
+	 * @param amt
 	 */
 	payOrFail(amt: number) {
 

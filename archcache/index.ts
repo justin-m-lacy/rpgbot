@@ -243,7 +243,7 @@ export default class Cache<T = any> extends Emitter {
 
 	/**
 	 * Attempts to retrieve a value from the cache without checking the backing store.
-	 * @param {string} key
+	 * @param key
 	 * @returns {*} - Undefined if key invalid.
 	 */
 	get<D = T>(key: string): D | undefined {
@@ -260,8 +260,8 @@ export default class Cache<T = any> extends Emitter {
 	/**
 	 * Cache a value without saving to backing store.
 	 * Useful when doing interval backups.
-	 * @param {string} key
-	 * @param {*} value - value to cache.
+	 * @param key
+	 * @param value - value to cache.
 	 */
 	cache(key: string, value: any) {
 
@@ -274,7 +274,7 @@ export default class Cache<T = any> extends Emitter {
 	/**
 	 * Deletes object from local cache and from the backing store.
 	 * @async
-	 * @param {string} key
+	 * @param key
 	 * @returns {Promise}
 	 */
 	async delete(key: string) {
@@ -295,7 +295,7 @@ export default class Cache<T = any> extends Emitter {
 	 * Backup any items that have not been saved within the given timespan.
 	 * @async
 	 * @emits 'backup'
-	 * @param {number} [time=120000] - Time in ms since last save.
+	 * @param [time=120000] - Time in ms since last save.
 	 * @returns {Promise}
 	 */
 	async backup(time: number = 1000 * 60 * 2): Promise<any[] | undefined> {
@@ -338,7 +338,7 @@ export default class Cache<T = any> extends Emitter {
 	 * Clear items from cache that have not been accessed recently.
 	 * Dirty entries are first saved to file.
 	 * @async
-	 * @param {number} [time=300000] - Time in ms since last access.
+	 * @param [time=300000] - Time in ms since last access.
 	 * Items not accessed in this time are purged.
 	 */
 	async cleanup(time: number = 1000 * 60 * 5): Promise<any[] | void> {
@@ -383,7 +383,7 @@ export default class Cache<T = any> extends Emitter {
 
 	/**
 	 * Clean old items from cache without storing to backing store.
-	 * @param {number} time - Minimum time in ms since last access.
+	 * @param time - Minimum time in ms since last access.
 	 */
 	_cleanNoSave(time: number) {
 
@@ -407,7 +407,7 @@ export default class Cache<T = any> extends Emitter {
 
 	/**
 	 * Remove an item from cache, without deleting it from the data store.
-	 * @param {string} key
+	 * @param key
 	 */
 	free(key: string) { this._dict.delete(key); }
 
@@ -415,7 +415,7 @@ export default class Cache<T = any> extends Emitter {
 	/**
 	 * Checks if the keyed data exists in cache or data store.
 	 * @async
-	 * @param {string} key
+	 * @param key
 	 * @returns {Promise<boolean>}
 	 */
 	async exists(key: string) {
@@ -431,7 +431,7 @@ export default class Cache<T = any> extends Emitter {
 	/**
 	 * Checks if a data item is locally cached
 	 * for the key. Does not check backing store.
-	 * @param {string} key
+	 * @param key
 	 * @returns {boolean}
 	 */
 	has(key: string) {
@@ -440,7 +440,7 @@ export default class Cache<T = any> extends Emitter {
 
 	/**
 	 * Convert a cache key into valid cacheKey format.
-	 * @param {string} key
+	 * @param key
 	 * @returns {string}
 	 */
 	_fixKey(key: string) {
@@ -451,8 +451,8 @@ export default class Cache<T = any> extends Emitter {
 
 	/**
 	 * Create a key for a subcache.
-	 * @param {string} parentKey
-	 * @param {string} key
+	 * @param parentKey
+	 * @param key
 	 * @returns {string} key created.
 	 */
 	_subkey(parentKey: string = this._separator, key: string = '') {

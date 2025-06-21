@@ -1,6 +1,7 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
+import { ChatCommand } from '../src/bot/wrap-message';
 
 export default NewCommand<Rpg>(
 	{
@@ -8,7 +9,7 @@ export default NewCommand<Rpg>(
 			StrOpt('stat', 'Stat to increase').setRequired(true)
 		]),
 		cls: Rpg,
-		async exec(m: ChatAction, rpg: Rpg) {
+		async exec(m: ChatCommand, rpg: Rpg) {
 
 			const char = await rpg.userCharOrErr(m, m.user);
 			if (!char) return;

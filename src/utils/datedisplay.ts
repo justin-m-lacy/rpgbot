@@ -60,8 +60,8 @@ export default {
 	/**
 	 * Parse a time string into its hours/minutes components and set
 	 * the given date's time to the result.
-	 * @param {Date} date
-	 * @param {string} str
+	 * @param date
+	 * @param str
 	 */
 	setTime(date: Date, str: string) {
 
@@ -77,7 +77,7 @@ export default {
 
 	/**
 	 * Attempts to get a day of the week.
-	 * @param {string} str
+	 * @param str
 	 * @returns zero-indexed day of week, or -1 on failure.
 	 */
 	tryGetDay(str: string) {
@@ -91,7 +91,7 @@ export default {
 
 	/**
 	 * Get a numeric month of the year based on a month string.
-	 * @param {string} str
+	 * @param str
 	 * @returns  zero-indexed month of the year, or -1 on failure.
 	 */
 	tryGetMonth(str: string) {
@@ -105,7 +105,7 @@ export default {
 
 	/**
 	 *
-	 * @param {number} since - timestamp of the starting Date.
+	 * @param since - timestamp of the starting Date.
 	 * @returns {string} Description of time elapsed.
 	 */
 	elapsed(since: number) {
@@ -116,7 +116,7 @@ export default {
 
 	/**
 	 * Gets a string describing a span of time.
-	 * @param {number} dt - span of time in milliseconds.
+	 * @param dt - span of time in milliseconds.
 	 * @returns {string} - description of the time span.
 	 */
 	timespan(dt: number) {
@@ -187,7 +187,7 @@ export default {
 
 	/**
 	 * Determines if the elapsed milliseconds is under a day.
-	 * @param {number} dt - elapsed period if time in milliseconds.
+	 * @param dt - elapsed period if time in milliseconds.
 	 * @returns {boolean} - true if the elapsed time is less than a day.
 	 */
 	inDay(dt: number) {
@@ -196,7 +196,7 @@ export default {
 
 	/**
 	 * Determines if the elapsed milliseconds is under a week.
-	 * @param {number} dt - elapsed period if time in milliseconds.
+	 * @param dt - elapsed period if time in milliseconds.
 	 * @returns {boolean} - true if the elapsed time is less than a week.
 	 */
 	inWeek(dt: number) {
@@ -205,7 +205,7 @@ export default {
 
 	/**
 	 * Determines if the elapsed milliseconds is under a month.
-	 * @param {number} dt - elapsed period if time in milliseconds.
+	 * @param dt - elapsed period if time in milliseconds.
 	 * @returns {boolean} - true if the elapsed time is less than a month.
 	 */
 	inMonth(dt: number) {
@@ -214,7 +214,7 @@ export default {
 
 	/**
 	 * Determines if the elapsed milliseconds is under a year.
-	 * @param {number} dt - elapsed period if time in milliseconds.
+	 * @param dt - elapsed period if time in milliseconds.
 	 * @returns {boolean} - true if the elapsed time is less than a year.
 	 */
 	inYear(dt: number) {

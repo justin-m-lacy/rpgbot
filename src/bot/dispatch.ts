@@ -18,7 +18,7 @@ export default class Dispatch {
 
 	/**
 	 *
-	 * @param {string} cmdPrefix
+	 * @param cmdPrefix
 	 */
 	constructor(cmdPrefix: string = '!') {
 		this.cmdLine = new CmdLine(cmdPrefix);
@@ -26,14 +26,14 @@ export default class Dispatch {
 
 	/**
 	 *
-	 * @param {string} name
+	 * @param name
 	 * @returns {(Command|null)}
 	 */
 	getCommand(name: string) { return this.cmdLine.getCommand(name); }
 
 	/**
 	 * Parse a line of input.
-	 * @param {string} input - text input.
+	 * @param input - text input.
 	 * @returns - command found on input, or null.
 	 */
 	parseLine(input: string) {
@@ -42,8 +42,8 @@ export default class Dispatch {
 
 	/**
 	 *
-	 * @param {Command} cmd
-	 * @param {Array} leadArgs
+	 * @param cmd
+	 * @param leadArgs
 	 */
 	dispatch(cmd: Command, leadArgs: any[]) {
 
@@ -57,9 +57,9 @@ export default class Dispatch {
 
 	/**
 	 *
-	 * @param {BotContext} context
-	 * @param {Command} cmd
-	 * @param {Array} leadArgs
+	 * @param context
+	 * @param cmd
+	 * @param leadArgs
 	 * @returns {Promise}
 	 */
 	routeCmd<T extends ContextSource>(context: BotContext<T>, cmd: Command, leadArgs: any[]) {
@@ -79,10 +79,10 @@ export default class Dispatch {
 	 * @param cmdClass - Class which owns the function.
 	 * @param  opts - Command options.
 	 * @param opts.minArgs
-	 * @param {number} [opts.maxArgs]
-	 * @param {bool}[opts.hidden]
-	 * @param {string}[opts.group]
-	 * @param {*[]} [opts.args] - Arguments to pass after all other arguments to command.
+	 * @param [opts.maxArgs]
+	 * @param[opts.hidden]
+	 * @param[opts.group]
+	 * @param [opts.args] - Arguments to pass after all other arguments to command.
 	 */
 	addContextCmd(name: string, desc: string, func: Function, cmdClass: any, opts?: CommandOpts) {
 
@@ -105,7 +105,7 @@ export default class Dispatch {
 	 * @param name
 	 * @param desc
 	 * @param func
-	 * @param {Object} [opts=null]
+	 * @param [opts=null]
 	 */
 	add(name: string, desc: string | null | undefined, func: Function, opts?: CommandOpts) {
 
@@ -144,7 +144,7 @@ export default class Dispatch {
 
 	/**
 	 *
-	 * @param {string} name
+	 * @param name
 	 */
 	clearCmd(name: string) { return delete this.commands[name]; }
 
@@ -180,7 +180,7 @@ class CmdLine {
 
 	/**
 	 *
-	 * @param {string} name
+	 * @param name
 	 */
 	getCommand(name: string) {
 		return this.commands[name.toLowerCase()];
@@ -189,7 +189,7 @@ class CmdLine {
 
 	/**
 	 *
-	 * @param {string} str
+	 * @param str
 	 * @returns {Command|null} The command found on the input line.
 	 */
 	setInput(str: string) {

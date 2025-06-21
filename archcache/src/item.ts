@@ -20,9 +20,9 @@ export default class Item<T> {
 
 	/**
 	 * @constructor
-	 * @param {string} key 
+	 * @param key 
 	 * @param  data 
-	 * @param {boolean} [dirty=true] 
+	 * @param [dirty=true] 
 	 */
 	constructor(key: string, data: T, dirty: boolean = true) {
 
@@ -41,7 +41,7 @@ export default class Item<T> {
 	/**
 	 * Updates the data stored and sets the last access time
 	 * to the current time.
-	 * @param {*} data - data stored.
+	 * @param data - data stored.
 	 */
 	update(data: T) {
 
@@ -53,7 +53,7 @@ export default class Item<T> {
 
 	/**
 	 * Mark the data as having been saved at the given time.
-	 * @param {number} [time=0] unix timestamp of save time.
+	 * @param [time=0] unix timestamp of save time.
 	 */
 	markSaved(time: number = 0) {
 		this.lastSave = time || Date.now();

@@ -1,4 +1,5 @@
 import type { ChatAction } from '@/bot/command';
+import type { ChatCommand } from '@/bot/wrap-message';
 import { EmbedBuilder, Message, MessageFlags, type SendableChannels } from 'discord.js';
 
 
@@ -24,7 +25,7 @@ const SendNoPerm = (m: ChatAction, cmd?: string) => {
 
 }
 
-export const SendPrivate = (m: ChatAction, text: string) => {
+export const SendPrivate = (m: ChatCommand, text: string) => {
 	return m.reply({ content: text, flags: MessageFlags.Ephemeral });
 }
 

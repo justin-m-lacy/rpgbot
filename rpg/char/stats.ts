@@ -131,7 +131,7 @@ export class StatBlock {
 
 	/**
 	 * Gets a modifier for a base stat.
-	 * @param {*} stat 
+	 * @param stat 
 	 */
 	getModifier(stat: string) {
 		const val = stat in this ? +this[stat as StatKey] : 0;

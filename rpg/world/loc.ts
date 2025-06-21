@@ -93,7 +93,7 @@ export class Coord {
 
 	/**
 	 * Get distance to another coordinate.
-	 * @param {Coord} c - second coordinate
+	 * @param c - second coordinate
 	 * @returns
 	 */
 	dist(c: Coord) { return Math.abs(c.x - this.x) + Math.abs(c.y - this.y); }
@@ -353,13 +353,13 @@ export class Loc {
 
 	/**
 	 *
-	 * @param {Feature} f
+	 * @param f
 	 */
 	addFeature(f: Feature | null) { if (f) this._features.add(f); }
 
 	/**
 	 *
-	 * @param {string|number} wot
+	 * @param wot
 	 */
 	getFeature(wot: string | number) { return this._features.get(wot) as Feature; }
 
@@ -370,7 +370,7 @@ export class Loc {
 
 	/**
 	 *
-	 * @param {Item|Item[]} item
+	 * @param item
 	 */
 	drop(item: Item | Item[]) { return this.inv.add(item); }
 
