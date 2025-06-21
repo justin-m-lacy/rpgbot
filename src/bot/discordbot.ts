@@ -100,6 +100,8 @@ export class DiscordBot {
 		this.spamblock = config.spamblock ?? {};
 		this.cmdPrefix = config.cmdprefix ?? '!';
 
+		console.log(`pref: ${this.cmdPrefix}`);
+
 		this.saveDir = path.join(this.baseDir, config.savedir || '/savedata/');
 
 		fsys.setBaseDir(this.saveDir);
@@ -215,7 +217,8 @@ export class DiscordBot {
 			if (this.isSpam(m)) return;
 
 			const ind = m.content.indexOf(' ');
-			const cmdStr = m.content.slice(1, ind);
+			const cmdStr = ind < 0 ? m.content.slice(1) : m.content.slice(1, ind);
+
 			const cmd = this.commands.get(cmdStr);
 			if (cmd) this.onMessage(m, cmd, ind > 0 ? m.content.slice(ind + 1) : '');
 
@@ -230,6 +233,7 @@ export class DiscordBot {
 			const args = this.parser.parse(argLine, cmd);
 			const wrap = new MsgWrap(m, args);
 
+			console.log(`args len: ${args.length}`);
 			const ctx = await this.getCmdContext(m);
 			if (ctx) {
 
@@ -346,7 +350,7 @@ export class DiscordBot {
 
 		if (!m.guild) return false;
 		const block = this.spamblock[m.guild.id];
-		return (block && m.channel && !block[m.channel.id]);
+		return (m.channel && block?.[m.channel.id]);
 
 	}
 
