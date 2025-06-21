@@ -1,6 +1,7 @@
 import { DiscordBot } from '../../src/bot/discordbot';
 
-import { CommandData, NewCommand, NumOpt, StrOpt, type ChatAction, type Command } from '@/bot/command';
+import { CommandData, NewCommand, NumOpt, StrOpt, type Command } from '@/bot/command';
+import { ChatCommand } from '@/bot/wrap-message';
 import { SendPrivate } from '@/utils/display';
 import { PermissionFlagsBits } from 'discord.js';
 import { parseRoll } from '../../rpg/values/dice';
@@ -19,7 +20,7 @@ export function GetCommands(): Command[] {
 const CmdBackup = NewCommand({
     data: CommandData('backup', 'Force backup bot data')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-    exec: async (m: ChatAction, bot: DiscordBot) => {
+    exec: async (m: ChatCommand, bot: DiscordBot) => {
 
         if (await bot.backup(m.user)) {
             return SendPrivate(m, 'backup complete.');
@@ -33,7 +34,7 @@ const CmdBackup = NewCommand({
 const CmdShutdown = NewCommand({
     data: CommandData('shutdown', 'Shutdown bot')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-    exec: async (m: ChatAction, bot: DiscordBot) => {
+    exec: async (m: ChatCommand, bot: DiscordBot) => {
         await bot.shutdown(m.user);
     }
 })
@@ -47,7 +48,7 @@ const CmdShutdown = NewCommand({
 const CmdLeaveGuild = NewCommand({
     data: CommandData('botleave', 'Remove bot from guild')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-    exec: async (m: ChatAction, bot: DiscordBot) => {
+    exec: async (m: ChatCommand, bot: DiscordBot) => {
 
         if (m.guild && await bot.leaveGuild(m)) {
             SendPrivate(m, 'Left guild ' + m.guild.name);
@@ -65,7 +66,7 @@ const CmdLeaveGuild = NewCommand({
 const CmdProxy = NewCommand({
 
     data: CommandData('proxy', 'Proxy this room to your private chat'),
-    exec: async (m: ChatAction, bot: DiscordBot) => {
+    exec: async (m: ChatCommand, bot: DiscordBot) => {
 
         if (await bot.makeProxy(m)) {
             return m.user.send('Proxy created.');
@@ -82,7 +83,7 @@ const CmdResetAccess = NewCommand({
     data: CommandData('cmdreset', 'Reset command permissions', [
         StrOpt('cmd', 'Command name', true)
     ]),
-    exec: async (m: ChatAction, bot: DiscordBot) => {
+    exec: async (m: ChatCommand, bot: DiscordBot) => {
 
         const cmd = m.options.getString('cmd', true);
         if (await bot.resetCommandAccess(m, cmd)) {
@@ -104,7 +105,7 @@ const CmdHelp: Command = NewCommand({
 
         ]
     ),
-    exec: (msg: ChatAction, bot: DiscordBot) => {
+    exec: (msg: ChatCommand, bot: DiscordBot) => {
 
         const cmd = msg.options.getString('cmd');
         const page = msg.options.getNumber('page') ?? undefined;
@@ -130,7 +131,7 @@ const CmdRoll = NewCommand({
 
         ]
     ),
-    exec: async (m: ChatAction) => {
+    exec: async (m: ChatCommand) => {
 
         try {
 
@@ -158,7 +159,7 @@ const CmdSay = NewCommand({
 
         ]
     ).setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-    exec: (msg: ChatAction,) => {
+    exec: (msg: ChatCommand,) => {
 
         const what = msg.options.getString('what', true);
         return msg.reply(what);

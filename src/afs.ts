@@ -3,7 +3,7 @@ import fs from 'fs';
 /**
  * Attempts to delete a file, with error catching.
  * @param path - file location.
- * @returns {Promise<boolean,NodeJS.ErrnoException>}
+ * @returns
  * @
  */
 export const deleteFile = (path: string) => new Promise((res, rej) => {
@@ -17,7 +17,7 @@ export const deleteFile = (path: string) => new Promise((res, rej) => {
 /**
  * Determines if file exists at path, without throwing exceptions.
  * @param path
- * @returns {Promise<boolean>}
+ * @returns
  */
 export const exists = (path: string): Promise<boolean> => new Promise((res) => {
 
@@ -32,7 +32,7 @@ export const exists = (path: string): Promise<boolean> => new Promise((res) => {
  * @function
  * @param path
  * @param [options=null] Encoding used as the encoding of the result. If not provided, `'utf8'` is used.
- * @returns {Promise<string[],NodeJS.ErrnoException>}
+ * @returns
  */
 const readdir = fs.promises.readdir;
 
@@ -40,7 +40,7 @@ const readdir = fs.promises.readdir;
  * @function
  * Read a list of names of all files at the given path, excluding directories.
  * @param path
- * @returns {Promise<string[], NodeJS.ErrnoException>}
+ * @returns
  */
 export const readFiles = (path: string) => new Promise<string[]>((res, rej) => {
 
@@ -69,7 +69,7 @@ export const readFiles = (path: string) => new Promise<string[]>((res, rej) => {
  * Attempt to create a directory.
  * Directory already existing is not considered an error.
  * @param path
- * @returns {Promise}
+ * @returns
  */
 export const mkdir = (path: string) => {
 
@@ -92,13 +92,13 @@ export const mkdir = (path: string) => {
 
 /**
  * @param path
- * @returns {Promise<*,NodeJS.ErrnoException>}
+ * @returns
  */
 export const readFile = fs.promises.readFile;
 
 /**
  * @param path
- * @returns {Promise<Object,Error>}
+ * @returns
  */
 export const readJSON = (path: string) => new Promise((res, rej) => {
 
@@ -126,7 +126,7 @@ export const readJSON = (path: string) => new Promise((res, rej) => {
  * @function
  * @param path
  * @param data
- * @returns {Promise}
+ * @returns
  */
 export const writeJSON = (path: string, data: any) => new Promise<void>((res, rej) => {
 

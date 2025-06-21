@@ -9,7 +9,7 @@ export class Log {
 
 	/**
 	 * Gets and clears the current log text.
-	 * @returns {string} The current log text.
+	 * @returns The current log text.
 	 */
 	getAndClear() {
 		const t = this._text;

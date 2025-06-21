@@ -106,7 +106,7 @@ export default {
 	/**
 	 *
 	 * @param since - timestamp of the starting Date.
-	 * @returns {string} Description of time elapsed.
+	 * @returns Description of time elapsed.
 	 */
 	elapsed(since: number) {
 
@@ -117,7 +117,7 @@ export default {
 	/**
 	 * Gets a string describing a span of time.
 	 * @param dt - span of time in milliseconds.
-	 * @returns {string} - description of the time span.
+	 * @returns - description of the time span.
 	 */
 	timespan(dt: number) {
 		if (dt < ms_per_hr) return ((dt / ms_per_min).toFixed(2) + ' minutes');
@@ -188,7 +188,7 @@ export default {
 	/**
 	 * Determines if the elapsed milliseconds is under a day.
 	 * @param dt - elapsed period if time in milliseconds.
-	 * @returns {boolean} - true if the elapsed time is less than a day.
+	 * @returns - true if the elapsed time is less than a day.
 	 */
 	inDay(dt: number) {
 		return Math.abs(dt) < ms_per_day;
@@ -197,7 +197,7 @@ export default {
 	/**
 	 * Determines if the elapsed milliseconds is under a week.
 	 * @param dt - elapsed period if time in milliseconds.
-	 * @returns {boolean} - true if the elapsed time is less than a week.
+	 * @returns - true if the elapsed time is less than a week.
 	 */
 	inWeek(dt: number) {
 		return Math.abs(dt) < 7 * ms_per_day;
@@ -206,7 +206,7 @@ export default {
 	/**
 	 * Determines if the elapsed milliseconds is under a month.
 	 * @param dt - elapsed period if time in milliseconds.
-	 * @returns {boolean} - true if the elapsed time is less than a month.
+	 * @returns - true if the elapsed time is less than a month.
 	 */
 	inMonth(dt: number) {
 		return Math.abs(dt) < 31 * ms_per_day;
@@ -215,7 +215,7 @@ export default {
 	/**
 	 * Determines if the elapsed milliseconds is under a year.
 	 * @param dt - elapsed period if time in milliseconds.
-	 * @returns {boolean} - true if the elapsed time is less than a year.
+	 * @returns - true if the elapsed time is less than a year.
 	 */
 	inYear(dt: number) {
 		return Math.abs(dt) < ms_per_year;

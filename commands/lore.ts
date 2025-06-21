@@ -1,11 +1,12 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendBlock } from "rpg/display/display";
 import { GetLore } from "rpg/game";
 
 export default NewCommand({
 	data: CommandData('lore', 'Get information on creature, class, race, or item')
 		.addStringOption(StrOpt('what', 'Name of lore entry').setRequired(true)),
-	async exec(m: ChatAction) {
+	async exec(m: ChatCommand) {
 
 		const what = m.options.getString('what', true);
 		if (!what) return m.reply('What do you want to know about?');

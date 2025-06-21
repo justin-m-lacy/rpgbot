@@ -1,13 +1,14 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
+import { ChatCommand } from '../src/bot/wrap-message';
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('viewchar', 'View character or self')
 		.addStringOption(StrOpt('who', 'Character to view')),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		let char;
 

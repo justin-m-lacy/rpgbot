@@ -11,7 +11,7 @@ export default {
 	/**
 	 * Parse a string to get a number of game turns.
 	 * @param str - time string.
-	 * @returns {number} duration in number of turns.
+	 * @returns duration in number of turns.
 	 */
 	getTurns(str: string) {
 
@@ -42,7 +42,7 @@ export default {
 	/**
 	 * Converts a number of turns into a string duration.
 	 * @param turns - number of turns.
-	 * @returns {string} - human readable duration.
+	 * @returns - human readable duration.
 	 */
 	getDuration(turns: number) {
 

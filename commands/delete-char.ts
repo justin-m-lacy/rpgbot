@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
@@ -6,7 +7,7 @@ export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('deletechar', 'Delete one of your characters')
 		.addStringOption(StrOpt('name', 'Name of character to delete').setRequired(true)),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const charname = m.options.getString('name', true);
 

@@ -55,7 +55,7 @@ export const ParseAlter = (id: string, mod: string | number | boolean, src: Nume
  * @param modStr - mod str.
  * @param id - mod id.
  * @param src - mod source.
- * @returns {Mod|string}
+ * @returns
  */
 export const StrMod = (id: string, modStr: string, src: Numeric): IMod | undefined => {
 

@@ -87,7 +87,6 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	/**
 	 * Load Context preferences, init Context classes required
 	 * by plugins.
-	 * @async
 	 * @param classes
 	 * @returns
 	 */
@@ -172,10 +171,9 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	}
 
 	/**
-	 * @async
 	 * @param key
 	 * @param value
-	 * @returns {Promise<*>}
+	 * @returns
 	 */
 	async setSetting(key: string, value?: any) {
 
@@ -187,7 +185,6 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	}
 
 	/**
-	 * @async
 	 * @param key
 	 * @param defaultset - value to return if setting not found.
 	 * @returns
@@ -219,7 +216,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	/**
 	 * Check if Discord User is the bot owner.
 	 * @param u
-	 * @returns {boolean}
+	 * @returns
 	*/
 	isOwner(u: User | string) { return this.bot.isOwner(u); }
 
@@ -446,7 +443,6 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Fetch keyed data.
-	 * @async
 	 * @param key
 	 * @returns
 	 */
@@ -454,7 +450,6 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Set keyed data.
-	 * @async
 	 * @param key
 	 * @param data
 	 * @param [forceSave=false] Whether to force a save to the underlying data store.
@@ -471,14 +466,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 export class UserContext extends BotContext<User> {
 
-	/**
-	 * {string}
-	 */
 	get type() { return 'user'; }
 
-	/**
-	 * {string}
-	 */
 	get name() { return this.idObject.username; }
 
 	/**
@@ -497,17 +486,12 @@ export class UserContext extends BotContext<User> {
 }
 
 export class GuildContext extends BotContext<Guild> {
-	/**
-	 * {string}
-	 */
+
 	get type() { return 'guild'; }
-	/**
-	 * {string}
-	 */
+
 	get name() { return this.idObject.name; }
 
 	/**
-	 *
 	 * @param id
 	 */
 	async displayName(id: string) {

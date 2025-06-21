@@ -1,6 +1,6 @@
 /**
  * @param pred - predicate random element must satisfy.
- * @returns {*} - Random element satisfying predicate,
+ * @returns - Random element satisfying predicate,
  * or null.
  */
 export const randWhere = <T>(arr: T[], pred: (elm: T) => boolean) => {

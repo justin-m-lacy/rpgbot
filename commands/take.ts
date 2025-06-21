@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
@@ -7,7 +8,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('take', 'Take single item or range of items from ground.')
 		.addStringOption(StrOpt('start', 'Starting item to take').setRequired(true))
 		.addStringOption(StrOpt('end', 'End item to take')),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const start = m.options.getString('start', true);
 		const end = m.options.getString('end');

@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { Monster } from "rpg/monster/monster";
@@ -8,7 +9,7 @@ export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('attack', 'Attack character or monster')
 		.addStringOption(StrOpt('who', 'Who or what to attack')),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const who = m.options.getString('who');
 

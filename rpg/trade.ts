@@ -15,7 +15,7 @@ const goldAmt = /^(\d+)\s*g(?:old)?$/i;
 /**
  *
  * @param lvl
- * @returns {number} item cost per level.
+ * @returns item cost per level.
  */
 const rollCost = (lvl: number) => {
 	return 40 * lvl * (Math.floor(Math.pow(1.5, Math.floor(lvl / 2))));

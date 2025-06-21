@@ -82,7 +82,7 @@ export class Combat {
 	 * @async
 	 * @param p
 	 * @param targ
-	 * @returns {Promise}
+	 * @returns
 	 */
 	async partyAttack(p: Party, targ: Char | Party | Monster) {
 
@@ -116,7 +116,7 @@ export class Combat {
 
 	/**
 	 * @async
-	 * @returns {Promise}
+	 * @returns
 	 */
 	async fight() {
 
@@ -144,7 +144,7 @@ export class Combat {
 
 	/**
 	 * @async
-	 * @returns {Promise}
+	 * @returns
 	 */
 	async resolve() {
 

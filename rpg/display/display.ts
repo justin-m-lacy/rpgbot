@@ -1,4 +1,5 @@
 import type { ChatAction } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { EmbedBuilder, Message } from "discord.js";
 import { getNextExp } from "rpg/char/level";
 import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
@@ -26,7 +27,7 @@ export const IsVowel = (c: string) => {
 	return c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u';
 }
 
-export const EchoChar = async function (chan: Message | ChatAction, char: Char, prefix: string = '') {
+export const EchoChar = async function (chan: Message | ChatCommand, char: Char, prefix: string = '') {
 
 	const desc = CharLongDesc(char);
 	return chan.reply(

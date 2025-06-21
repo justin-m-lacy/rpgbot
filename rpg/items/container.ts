@@ -38,7 +38,7 @@ export class Container<T extends SimpleItem = Item> {
     }
 
     /**
-     * @returns {string} list of all items in inventory.
+     * @returns list of all items in inventory.
     */
     getMenu() {
 
@@ -95,7 +95,7 @@ export class Container<T extends SimpleItem = Item> {
      *
      * @param start - start number of items to take.
      * @param end number of items to take.
-     * @returns {T[]|null} - Range of items found.
+     * @returns - Range of items found.
      */
     takeRange(start: ItemIndex, end: ItemIndex): T[] | null {
 
@@ -117,7 +117,7 @@ export class Container<T extends SimpleItem = Item> {
     /**
      * Attempts to remove an item by name or index.
      * @param which
-     * @returns {T|null} item removed, or null if none found.
+     * @returns item removed, or null if none found.
      */
     take(which?: number | string | T): T | T[] | null {
 

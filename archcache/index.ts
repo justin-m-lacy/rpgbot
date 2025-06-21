@@ -218,7 +218,7 @@ export default class Cache<T = any> extends Emitter {
 	 * @async
 	 * @param key
 	 * @param value - value to store.
-	 * @returns {Promise}
+	 * @returns
 	 */
 	async store(key: string, value: T) {
 
@@ -244,7 +244,7 @@ export default class Cache<T = any> extends Emitter {
 	/**
 	 * Attempts to retrieve a value from the cache without checking the backing store.
 	 * @param key
-	 * @returns {*} - Undefined if key invalid.
+	 * @returns - Undefined if key invalid.
 	 */
 	get<D = T>(key: string): D | undefined {
 
@@ -275,7 +275,7 @@ export default class Cache<T = any> extends Emitter {
 	 * Deletes object from local cache and from the backing store.
 	 * @async
 	 * @param key
-	 * @returns {Promise}
+	 * @returns
 	 */
 	async delete(key: string) {
 
@@ -296,7 +296,7 @@ export default class Cache<T = any> extends Emitter {
 	 * @async
 	 * @emits 'backup'
 	 * @param [time=120000] - Time in ms since last save.
-	 * @returns {Promise}
+	 * @returns
 	 */
 	async backup(time: number = 1000 * 60 * 2): Promise<any[] | undefined> {
 
@@ -416,7 +416,7 @@ export default class Cache<T = any> extends Emitter {
 	 * Checks if the keyed data exists in cache or data store.
 	 * @async
 	 * @param key
-	 * @returns {Promise<boolean>}
+	 * @returns
 	 */
 	async exists(key: string) {
 
@@ -432,7 +432,7 @@ export default class Cache<T = any> extends Emitter {
 	 * Checks if a data item is locally cached
 	 * for the key. Does not check backing store.
 	 * @param key
-	 * @returns {boolean}
+	 * @returns
 	 */
 	has(key: string) {
 		return this._dict.has(key);
@@ -441,7 +441,7 @@ export default class Cache<T = any> extends Emitter {
 	/**
 	 * Convert a cache key into valid cacheKey format.
 	 * @param key
-	 * @returns {string}
+	 * @returns
 	 */
 	_fixKey(key: string) {
 		if (typeof key !== 'string') return this._separator;
@@ -453,7 +453,7 @@ export default class Cache<T = any> extends Emitter {
 	 * Create a key for a subcache.
 	 * @param parentKey
 	 * @param key
-	 * @returns {string} key created.
+	 * @returns key created.
 	 */
 	_subkey(parentKey: string = this._separator, key: string = '') {
 		return parentKey + this._fixKey(key);

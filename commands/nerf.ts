@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { PermissionFlagsBits } from "discord.js";
 import { Rpg } from "rpg/rpg";
@@ -9,7 +10,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('nerf', 'Nerf character.')
 		.addStringOption(StrOpt('who', 'Character to make leader.').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const who = m.options.getString('who', true);
 

@@ -72,7 +72,7 @@ let genReg = /%sub|%ob|%adj|%pos|%ref|%is/g
  * Re-sexes a string with grammatical gender markers: e.g. %sub (subjective)
  * @param sex
  * @param str - string to genderfy
- * @returns {string}
+ * @returns
  */
 export const genderfy = (sex: string, str: string) => {
 

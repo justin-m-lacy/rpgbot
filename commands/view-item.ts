@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { ReplyEmbed } from "@/embeds";
 import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
@@ -7,7 +8,7 @@ export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('viewitem', 'View item in inventory')
 		.addStringOption(StrOpt('what', 'Item to view').setRequired(true)),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user)
 		if (!char) return;

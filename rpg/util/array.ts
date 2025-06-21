@@ -3,7 +3,7 @@
  * Determines if array contains any of the given params.
  * @param arr - array to test for inclusions.
  * @param  {...any} params - arguments to test for inclusion in array.
- * @returns {boolean} - true if at least one param is found in the array.
+ * @returns - true if at least one param is found in the array.
  */
 export const includesAny = <T>(arr: T[], ...params: T[]) => {
 
@@ -47,7 +47,7 @@ export const mergeInto = <T>(a: T[] | null | undefined, b: T[] | null | undefine
  * Merges items from b into array a for all items in b
  * passing predicate p.
  * @param p - merge test.
- * @returns {array} returns a
+ * @returns returns a
  */
 export const mergeIf = <T>(a: T[] | null | undefined, b: T[] | null | undefined, p: (it: T) => boolean) => {
 
@@ -88,7 +88,7 @@ export const randFrom = <T>(arrs: Array<T[]>) => {
  * @param a
  * @param i - lower inclusive limit of random.
  * @param j - upper exclusive limit of random.
- * @returns {*}
+ * @returns
  */
 export const randBetween = <T>(a: T[], i: number, j: number) => {
 
@@ -151,7 +151,7 @@ export const first = <T>(a: T[]) => {
  * @param arr Array to move elements in
  * @param elm The target element to move
  * @param count Amount of elements to move the target
- * @returns {T[]} The array with the element moved
+ * @returns The array with the element moved
  */
 export const moveElm = <T>(arr: T[], elm: T, count: number) => {
 

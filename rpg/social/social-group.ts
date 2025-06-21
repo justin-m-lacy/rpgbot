@@ -55,7 +55,7 @@ export class SocialGroup {
 	/**
 	 * Accept character in group. Character was confirmed.
 	 * @param char
-	 * @returns {boolean}
+	 * @returns
 	 */
 	acceptInvite(char: Char) {
 

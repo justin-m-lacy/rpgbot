@@ -1,11 +1,12 @@
-import { CommandData, NewCommand, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('savechar', 'Force save current character'),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;

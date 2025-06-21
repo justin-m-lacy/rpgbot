@@ -78,7 +78,7 @@ export default class Access {
 
 	/**
 	 * @param cmd - command to get access string for.
-	 * @returns {string|null}
+	 * @returns
 	 */
 	accessInfo(cmd: string) {
 
@@ -97,7 +97,7 @@ export default class Access {
 	/**
 	 *
 	 * @param cmd
-	 * @returns {number|string|Array} access flags, or roles, or an array of any combination of them.
+	 * @returns access flags, or roles, or an array of any combination of them.
 	 */
 	getAccess(cmd: string) {
 
@@ -110,7 +110,7 @@ export default class Access {
 	/**
 	 * @param cmd - Command being called or setting being used.
 	 * @param gm
-	 * @returns {boolean|undefined} Returned undefined if no permission is set for the command.
+	 * @returns Returned undefined if no permission is set for the command.
 	 * Returns true if the command or setting can be used by the given member, false otherwise.
 	 */
 	canAccess(cmd: string, gm: GuildMember) {

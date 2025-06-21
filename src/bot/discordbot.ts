@@ -1,5 +1,5 @@
 import { CmdParser } from '@/bot/cmd-parser';
-import { MsgWrap } from '@/bot/wrap-message';
+import { MsgWrap, type ChatCommand } from '@/bot/wrap-message';
 import Cache from 'archcache';
 import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
@@ -7,7 +7,7 @@ import { Display } from '../utils/display';
 import { Auth } from './auth';
 import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './botcontext';
 import fsys from './botfs';
-import { type ChatAction, type Command } from './command';
+import { type Command } from './command';
 import { CommandMap } from './command-map';
 
 export type TBotConfig = {
@@ -269,7 +269,8 @@ export class DiscordBot {
 	}
 
 	/**
-	 * Add a command to the bot.
+	 * add command to bot.
+	 * @param cmd 
 	 */
 	public addCommand(cmd: Command) {
 		this.commands.set(cmd.data.name, cmd);
@@ -328,7 +329,7 @@ export class DiscordBot {
 	 * @param m
 	 * @returns
 	 */
-	public async leaveGuild(m: ChatAction) {
+	public async leaveGuild(m: ChatCommand) {
 
 		if (this.isOwner(m.user.id) && m.guild) {
 			await m.guild.leave();
@@ -378,7 +379,7 @@ export class DiscordBot {
 	 * @param m
 	 * @returns
 	 */
-	public async makeProxy(m: ChatAction) {
+	public async makeProxy(m: ChatCommand) {
 
 		// get context of the guild/channel to be proxied to user.
 		const context = await this.getCmdContext(m);
@@ -398,7 +399,7 @@ export class DiscordBot {
 	 * @param cmd - name of command.
 	 * @returns
 	 */
-	async resetCommandAccess(it: ChatAction, cmd: string) {
+	async resetCommandAccess(it: ChatCommand, cmd: string) {
 
 		const context = await this.getCmdContext(it);
 
@@ -456,7 +457,7 @@ export class DiscordBot {
 
 	}
 
-	private async getCmdContext(it: Interaction | Message) {
+	private async getCmdContext(it: Interaction | Message | ChatCommand) {
 
 		let idObj: Guild | User | null;
 
@@ -715,7 +716,7 @@ export class DiscordBot {
 	 * @param cmdname
 	 * @returns
 	 */
-	async printCommand(chan: ChatAction, cmdname: string, page: number = 0) {
+	async printCommand(chan: ChatCommand, cmdname: string, page: number = 0) {
 
 		const cmdInfo = this.commands.get(cmdname);
 		if (cmdInfo) {
@@ -744,7 +745,7 @@ export class DiscordBot {
 	 * @param chan
 	 * @returns
 	 */
-	async printCommands(chan: ChatAction, page: number = 0) {
+	async printCommands(chan: ChatCommand, page: number = 0) {
 
 		const parts: string[] = [
 			`Use ${this.cmdPrefix}help [command] for more information.\nAvailable commands:\n`

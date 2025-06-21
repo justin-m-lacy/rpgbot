@@ -15,81 +15,12 @@ type CmdArg<T extends string | number> = {
 	value: T
 }
 
-export class CommandOpt<T extends 'integer' | 'number' | 'string'> {
-
-	type: 'integer' | 'number' | 'string' = 'string';
-	greedy: boolean = false;
-
-	required: boolean;
-	readonly name: string;
-
-
-	constructor(name: string, required: boolean = false) {
-
-		this.name = name;
-		this.required = required;
-
-	}
-
-	/**
-	 * Parse text option into command arg.
-	 * @param text 
-	 * @returns 
-	 */
-	parse(text: string): any {
-		return text;
-	}
-
-	setRequired(required: boolean) {
-		this.required = required;
-	}
-
-}
-
-export class StringOpt extends CommandOpt<'string'> {
-
-	parse(text: string) {
-		return text;
-	}
-}
-
-export class IntegerOpt extends CommandOpt<'number'> {
-
-	parse(text: string) {
-		return Number.parseInt(text);
-	}
-}
-
-export class NumberOpt extends CommandOpt<'number'> {
-
-	parse(text: string) {
-		return Number.parseFloat(text);
-	}
-}
-
-export class ChoicesArg<T extends string | number> extends CommandOpt<'integer'> {
-
-	readonly values: CmdArg<T>[];
-
-	constructor(name: string) {
-
-		super(name);
-
-		this.values = [];
-	}
-
-	add(name: string, value: T) {
-		this.values.push({ name, value });
-	}
-
-}
-
 export class MsgOptions {
 
 	readonly opts: Record<string, string | undefined> = {};
 
 	getString(key: string, required: boolean): string;
-	getString(key: string, required: false): string | null;
+	getString(key: string, required?: false): string | null;
 	getString(key: string, required?: boolean): string | null {
 
 		if (required) {
@@ -101,7 +32,7 @@ export class MsgOptions {
 	}
 
 	getInteger(key: string, required: boolean): number;
-	getInteger(key: string, required: false): number | null;
+	getInteger(key: string, required?: false): number | null;
 	getInteger(key: string, required?: boolean) {
 		if (required) {
 			return Number.parseInt(this.opts[key]!);
@@ -113,7 +44,7 @@ export class MsgOptions {
 	}
 
 	getNumber(key: string, required: boolean): number;
-	getNumber(key: string, required: false): number | null;
+	getNumber(key: string, required?: false): number | null;
 	getNumber(key: string, required?: boolean) {
 		if (required) {
 			return Number.parseFloat(this.opts[key]!);
@@ -143,6 +74,10 @@ export class MsgWrap {
 
 	get user() { return this.m.author; }
 
+	get guild() { return this.m.guild }
+
+	inGuild() { return this.m.inGuild() }
+
 	constructor(m: Message, opts: CmdArg<any>[]) {
 
 		this.m = m;
@@ -164,3 +99,69 @@ export class MsgWrap {
 	}
 
 }
+
+/*
+export class CommandOpt<T extends 'integer' | 'number' | 'string'> {
+
+	type: 'integer' | 'number' | 'string' = 'string';
+	greedy: boolean = false;
+
+	required: boolean;
+	readonly name: string;
+
+
+	constructor(name: string, required: boolean = false) {
+
+		this.name = name;
+		this.required = required;
+
+	}
+
+	parse(text: string): any {
+		return text;
+	}
+
+	setRequired(required: boolean) {
+		this.required = required;
+	}
+
+}
+
+export class StringOpt extends CommandOpt<'string'> {
+
+	parse(text: string) {
+		return text;
+	}
+}
+
+export class IntegerOpt extends CommandOpt<'number'> {
+
+	parse(text: string) {
+		return Number.parseInt(text);
+	}
+}
+
+export class NumberOpt extends CommandOpt<'number'> {
+
+	parse(text: string) {
+		return Number.parseFloat(text);
+	}
+}*/
+
+/*
+export class ChoicesArg<T extends string | number> extends CommandOpt<'integer'> {
+
+	readonly values: CmdArg<T>[];
+
+	constructor(name: string) {
+
+		super(name);
+
+		this.values = [];
+	}
+
+	add(name: string, value: T) {
+		this.values.push({ name, value });
+	}
+
+}*/

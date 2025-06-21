@@ -274,7 +274,7 @@ export class Loc {
 	 * Returns the exit that leads back from the given direction.
 	 * e.g. fromDir == 'west' returns the 'east' exit, if it exists.
 	 * @param fromDir - direction arriving from.
-	 * @returns {Exit|null}
+	 * @returns
 	 */
 	reverseExit(fromDir: DirVal) {
 		const reverse = reverses[fromDir];

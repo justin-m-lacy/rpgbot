@@ -34,7 +34,7 @@ let BaseDir = './savedata';
 /**
  *
  * @param relPath
- * @returns {Promise<*>}
+ * @returns
  */
 async function readData(relPath: string): Promise<any> {
 	return afs.readJSON(path.join(BaseDir, relPath + '.json'));
@@ -44,7 +44,7 @@ async function readData(relPath: string): Promise<any> {
  *
  * @param relPath
  * @param data - data to be JSON-encoded.
- * @returns {Promise<*>}
+ * @returns
  */
 async function writeData(relPath: string, data: any) {
 
@@ -64,7 +64,7 @@ async function writeData(relPath: string, data: any) {
 /**
  * Gets path to guild storage.
  * @param guild
- * @returns {string}
+ * @returns
  */
 function getGuildDir(guild?: Guild) {
 	return guild ? GUILDS_DIR + guild.id + '/' : GUILDS_DIR;
@@ -73,7 +73,7 @@ function getGuildDir(guild?: Guild) {
 /**
  *
  * @param user
- * @returns {string} User storage directory.
+ * @returns User storage directory.
  */
 function getUserDir(user?: User) {
 	return user ? USERS_DIR + user.id + '/' : USERS_DIR;
@@ -82,7 +82,7 @@ function getUserDir(user?: User) {
 /**
  * path to member's base guild file.
  * @param member
- * @returns {string}
+ * @returns
  */
 const memberPath = (member?: GuildMember) => {
 

@@ -108,7 +108,7 @@ export const Display = {
 	 * @param text - text to paginate and send.
 	 * @param page - zero-based page of text to be sent.
 	 */
-	async sendPage(chan: ChatAction, text: string, page: number = 0) {
+	async sendPage(chan: ChatCommand, text: string, page: number = 0) {
 		return chan.reply(
 			{
 				content: GetPageText(text, page) + '\n\n' + PageFooter(text),

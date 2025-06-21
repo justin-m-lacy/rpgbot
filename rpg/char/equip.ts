@@ -248,7 +248,7 @@ export class Equip {
 	/**
 	 * Remove all items matching predicate, and returns them.
 	 * @param p - predicate
-	 * @returns {Item[]}
+	 * @returns
 	 */
 	removeWhere(p: (v: Item) => boolean) {
 

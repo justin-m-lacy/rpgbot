@@ -108,7 +108,7 @@ export class Char extends Actor {
 	/**
 	 * Add a single point to the given stat.
 	 * @param stat
-	 * @returns {string|bool} error message, or true.
+	 * @returns error message, or true.
 	 */
 	addStat(stat: string) {
 
@@ -150,7 +150,7 @@ export class Char extends Actor {
 	/**
 	 * Eat an item from inventory.
 	 * @param what
-	 * @returns {string} result message.
+	 * @returns result message.
 	 */
 	eat(what: ItemIndex) {
 
@@ -195,7 +195,7 @@ export class Char extends Actor {
 	/**
 	 *
 	 * @param what
-	 * @returns {bool|string} Error message or true.
+	 * @returns Error message or true.
 	 */
 	equip(what: ItemIndex) {
 
@@ -328,7 +328,7 @@ export class Char extends Actor {
 	/**
 	 * Remove an item from inventory and return it.
 	 * @param which
-	 * @returns {Item} Item removed or null.
+	 * @returns Item removed or null.
 	 */
 	takeItem(which: number | string | Item, sub?: number | string) {
 		return this.inv.take(which, sub);

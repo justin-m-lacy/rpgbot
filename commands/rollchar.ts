@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrChoices, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrChoices, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { GenChar } from "rpg/builders/chargen";
 import { EchoChar } from "rpg/display/display";
@@ -12,13 +13,13 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('race', 'character race'))
 		.addStringOption(StrOpt('class', 'character class'))
 		.addStringOption(StrChoices('sex', 'character sex', [{ name: 'male', value: 'm' }, { name: 'female', value: 'f' }])),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 		try {
 
 			const racename = m.options.getString('race');
 			const classname = m.options.getString('class');
 			let charname = m.options.getString('name');
-			const sex = m.options.get('sex') ?? Math.random() < 0.5 ? 'm' : 'f';
+			const sex = m.options.getString('sex') ?? Math.random() < 0.5 ? 'm' : 'f';
 
 			const race = racename ? GetRace(racename) : RandRace(racename);
 			if (!race) return SendPrivate(m, 'Race ' + racename + ' not found.');

@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -6,7 +7,7 @@ export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('track', 'Track another character')
 		.addStringOption(StrOpt('who', 'Character to track').setRequired(true)),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const src = await rpg.userCharOrErr(m, m.user);
 		if (!src) return;

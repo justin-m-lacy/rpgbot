@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { PermissionFlagsBits } from "discord.js";
 import { Formula } from "formulic";
@@ -9,7 +10,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('formula', 'Test formula')
 		.addStringOption(StrOpt('formula', 'Formula to compute').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		if (!rpg.context.isOwner(m.user)) return SendPrivate(m, 'You do not have permission to do that.');
 		const char = await rpg.userCharOrErr(m, m.user);

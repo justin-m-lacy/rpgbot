@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
@@ -8,7 +9,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('steal', 'Attempt to steal from character')
 		.addStringOption(StrOpt('who', 'Character to steal from').setRequired(true))
 		.addStringOption(StrOpt('what', 'What to steal')),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const src = await rpg.userCharOrErr(m, m.user);
 		if (!src) return;

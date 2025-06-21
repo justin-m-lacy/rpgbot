@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import type { HumanSlot } from "rpg/items/wearable";
@@ -8,7 +9,7 @@ export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('worn', 'Get list of worn items or view equipped item')
 		.addStringOption(StrOpt('slot', 'equipment slot to view')),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user)
 		if (!char) return;

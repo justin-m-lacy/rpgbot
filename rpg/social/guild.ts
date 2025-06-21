@@ -21,7 +21,7 @@ export class GuildManager {
 	/**
 	 *
 	 * @param name
-	 * @returns {Promise<Guild>}
+	 * @returns
 	 */
 	async GetGuild(name: string) {
 
@@ -40,7 +40,7 @@ export class GuildManager {
 
 	/**
 	 *
-	 * @returns {Promise<Guild>}
+	 * @returns
 	 */
 	async MakeGuild(name: string, leader: Char) {
 

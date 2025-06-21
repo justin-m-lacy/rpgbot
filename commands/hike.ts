@@ -1,4 +1,5 @@
-import { CommandData, NewCommand, StrOpt, type ChatAction } from "@/bot/command";
+import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import type { ChatCommand } from "@/bot/wrap-message";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { toDirection } from "rpg/world/loc";
@@ -7,7 +8,7 @@ export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('hike', 'Attempt to hike in a given direction')
 		.addStringOption(StrOpt('dir', 'Direction to hike').setRequired(true)),
-	async exec(m: ChatAction, rpg: Rpg) {
+	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;

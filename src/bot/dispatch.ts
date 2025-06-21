@@ -27,7 +27,7 @@ export default class Dispatch {
 	/**
 	 *
 	 * @param name
-	 * @returns {(Command|null)}
+	 * @returns
 	 */
 	getCommand(name: string) { return this.cmdLine.getCommand(name); }
 
@@ -60,7 +60,7 @@ export default class Dispatch {
 	 * @param context
 	 * @param cmd
 	 * @param leadArgs
-	 * @returns {Promise}
+	 * @returns
 	 */
 	routeCmd<T extends ContextSource>(context: BotContext<T>, cmd: Command, leadArgs: any[]) {
 
@@ -190,7 +190,7 @@ class CmdLine {
 	/**
 	 *
 	 * @param str
-	 * @returns {Command|null} The command found on the input line.
+	 * @returns The command found on the input line.
 	 */
 	setInput(str: string) {
 

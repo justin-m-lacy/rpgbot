@@ -115,7 +115,7 @@ export class Item {
 	}
 
 	/**
-	 * @returns {string} detailed string description of item.
+	 * @returns detailed string description of item.
 	*/
 	getDetails(imgTag = true) {
 
