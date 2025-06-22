@@ -2,7 +2,7 @@ import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
 import type { ItemIndex } from 'rpg/items/container';
 import { ReviveChar } from 'rpg/parsers/char';
-import { GetClass, GetRace } from 'rpg/parsers/classes';
+import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import type Block from 'rpg/world/block';
 import * as ItemGen from './builders/itemgen';
 import { Actor, LifeState } from './char/actor';

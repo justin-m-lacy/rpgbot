@@ -11,7 +11,10 @@ export const CommandMap = () => {
 		entries() { return commands.entries() },
 		values() { return commands.values() },
 		get(k: string) { return commands.get(k) },
-		set(k: string, cmd: Command) { commands.set(k, cmd) }
+		set(k: string, cmd: Command) {
+			commands.set(k, cmd);
+			if (cmd.alias) commands.set(cmd.alias, cmd);
+		}
 	}
 
 

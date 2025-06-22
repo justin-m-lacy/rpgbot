@@ -1,13 +1,13 @@
 import { Char } from 'rpg/char/char';
 import { Equip, type HumanSlots } from 'rpg/char/equip';
-import { BadDataError, NullDataError } from 'rpg/errors/parsing';
+import { BadTypeError, NullDataError } from 'rpg/errors/parsing';
 import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { Effect } from 'rpg/magic/effects';
 import { Coord } from 'rpg/world/loc';
 import * as ItemGen from '../builders/itemgen';
-import { GetClass, GetRace } from './classes';
+import { GetClass, GetRace } from './parse-class';
 
 
 export const ReviveChar = (json: any) => {
@@ -31,7 +31,7 @@ export const ReviveChar = (json: any) => {
 
 	if (!json.stats) throw new NullDataError();
 
-	if (typeof json.stats !== 'object') throw new BadDataError(json.stats, 'object');
+	if (typeof json.stats !== 'object') throw new BadTypeError(json.stats, 'object');
 	char.setBaseStats(json.stats);
 
 	if (json.loc) Object.assign(char.loc, json.loc);
@@ -48,7 +48,7 @@ export const ReviveChar = (json: any) => {
 		let a = json.effects;
 		for (let i = a.length - 1; i >= 0; i--) {
 
-			let effect = Effect.Revive(a[i]);
+			const effect = Effect.Revive(a[i]);
 			if (effect) {
 				char.addEffect(effect);
 			}
@@ -58,10 +58,10 @@ export const ReviveChar = (json: any) => {
 
 	if (json.equip) char.setEquip(ReviveEquip(json.equip));
 
-	if (json.statMods) {
+	/*if (json.statMods) {
 		let mods = json.statMods;
 		char.setMods(mods);
-	}
+	}*/
 
 	char.init();
 
@@ -74,7 +74,7 @@ export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
 
 	const e = new Equip();
 
-	if (typeof json !== 'object') throw new BadDataError(json, 'object');
+	if (typeof json !== 'object') throw new BadTypeError(json, 'object');
 	const src = json.slots;
 
 	const dest = e.slots;

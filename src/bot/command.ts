@@ -24,7 +24,10 @@ type CommandClass<T extends object, S extends ContextSource = ContextSource> = {
 
 type BaseCommand = {
 
-	id: string,
+	id: string;
+
+	/// alias for command.
+	alias?: string;
 
 	data: SlashCommandBuilder | SharedSlashCommand;
 
@@ -86,7 +89,7 @@ export const NewCommand = <T extends object | undefined>(
 	return {
 		id: cmd.data.name,
 		minArgs: cmd.data.options.filter(
-			v => !(v as any).required
+			v => (v as any).required
 		).length,
 		maxArgs: cmd.data.options.length,
 		...cmd

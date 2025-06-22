@@ -17,7 +17,7 @@ type RawEffect = {
 	typeof import('../data/magic/effects.json', { assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
-const effects: { [name: string]: ProtoEffect } = {};
+const Effects: { [name: string]: ProtoEffect } = {};
 
 /**
  * Effect info only. Effect is effect in progress.
@@ -64,35 +64,46 @@ export class ProtoEffect {
 
 export class Effect {
 
-	get name() { return this._effect.name; }
+	get name() { return this.efx.name; }
 
-	get effect() { return this._effect; }
-	get dot() { return this._effect.dot; }
+	get effect() { return this.efx; }
+	get dot() { return this.efx.dot; }
 
-	get mods() { return this._effect.mods }
+	get mod() { return this.efx.mods }
 
 	get time() { return this._time; }
 
-	private _effect: ProtoEffect;
+	// source effect.
+	private readonly efx: ProtoEffect;
+
 	private _time: number;
-	// source that created the effect.
+
+	// spell, npc, or action that created the effect.
 	private readonly source?: string;
 
 	static Revive(json: any) {
 
-		let e = json.effect;
-		if (typeof (e) === 'string') e = effects[e];
-		else e = new ProtoEffect(e);
+		if (json == null || typeof json !== 'object') {
+			// don't throw just for a missing effect.
+			console.warn(`missing effect data: ${json}`);
+			return null;
+			//throw new BadTypeError(json, 'object');
+		}
+
+		let e = json.efx;
+		if (typeof (e) === 'string') e = Effects[e];
+		else if (e && typeof e === 'object') e = new ProtoEffect(e);
 		if (!e) return null;
 
 		return new Effect(e, json.src, json.time);
+
 	}
 
 	toJSON() {
 
 		return {
 			src: this.source,
-			effect: this._effect.name,
+			efx: this.efx.id,
 			time: this._time
 		};
 
@@ -100,9 +111,9 @@ export class Effect {
 
 	constructor(effect: ProtoEffect, time?: number, src?: any) {
 
-		this._effect = effect;
+		this.efx = effect;
 		this.source = src;
-		this._time = time || this._effect.time;
+		this._time = time || this.efx.time;
 
 	}
 
@@ -112,8 +123,8 @@ export class Effect {
 			char.log(`${char.name} is affected by ${this.name}.`);
 		}
 
-		if (this.mods) {
-			ApplyMods(char, this.mods);
+		if (this.mod) {
+			ApplyMods(char, this.mod);
 		};
 
 	}
@@ -121,8 +132,8 @@ export class Effect {
 	end(char: Char) {
 
 		char.log(`${char.name}: ${this.name} has worn off.`);
-		if (this.mods) {
-			RemoveMods(char, this.mods);
+		if (this.mod) {
+			RemoveMods(char, this.mod);
 		};
 
 	}
@@ -169,7 +180,7 @@ export class Effect {
 
 }
 
-const parseEffect = (raw: RawEffect) => {
+const parseEffectType = (raw: RawEffect) => {
 
 	return new ProtoEffect({
 		id: raw.id,
@@ -182,14 +193,14 @@ const parseEffect = (raw: RawEffect) => {
 
 }
 
-export const LoadEffects = async () => {
+export const LoadEffectTypes = async () => {
 
 	const efx = (await import('../data/magic/effects.json', { assert: { type: 'json' } })).default;
 	for (let i = efx.length - 1; i >= 0; i--) {
-		effects[efx[i].id] = parseEffect(efx[i] as any);
+		Effects[efx[i].id] = parseEffectType(efx[i] as any);
 	}
 
 }
 
 
-export const GetEffect = (s: string) => effects[s];
+export const GetEffect = (s: string) => Effects[s];

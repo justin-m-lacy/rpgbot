@@ -16,6 +16,17 @@ const SaveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
 	'loc', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
 
 
+enum CharEventFlags {
+
+	None = 0,
+	/// char died.
+	Died = 1,
+	/// char leveled up.
+	Level = 2
+}
+
+
+
 export class Char extends Actor {
 
 	get exp() { return this._exp; }
@@ -42,12 +53,21 @@ export class Char extends Actor {
 	get talents() { return this._talents; }
 	set talents(v) { this._talents = v; }
 
+	/// Char leveled up this turn.
+	get levelFlag() { return (this.events & CharEventFlags.Level) > 0 }
+	set levelFlag(v) {
+		if (v) {
+			this.events |= CharEventFlags.Level;
+		} else {
+			this.events &= ~CharEventFlags.Level;
+		}
+	}
+
 	/**
 	 * Notification for level up.
 	 * TODO: replace with event system.
 	 */
-	get levelFlag() { return this._levelUp; }
-	set levelFlag(b) { this._levelUp = b; }
+	events: CharEventFlags = 0;
 
 	toJSON() {
 
@@ -106,7 +126,7 @@ export class Char extends Actor {
 	}
 
 	/**
-	 * Add a single point to the given stat.
+	 * Add single point to the given stat.
 	 * @param stat
 	 * @returns error message, or true.
 	 */

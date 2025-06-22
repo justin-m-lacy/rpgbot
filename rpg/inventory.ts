@@ -33,7 +33,7 @@ export class Inventory extends Container<Item> {
 
 			const it = reviver(arr[i]);
 			if (it) items.push(it);
-			else console.log('Inventory: ERR PARSING: ' + arr[i]);
+			else console.warn('Inventory: ERR PARSING: ' + arr[i]);
 
 		}
 

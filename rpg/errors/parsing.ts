@@ -1,4 +1,4 @@
-export class BadDataError extends Error {
+export class BadTypeError extends Error {
 
 	constructor(got?: any, expectType?: string) {
 

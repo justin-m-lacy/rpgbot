@@ -218,9 +218,8 @@ export default class Cache<T = any> extends Emitter {
 	 * @async
 	 * @param key
 	 * @param value - value to store.
-	 * @returns
 	 */
-	async store(key: string, value: T) {
+	async store(key: string, value: T): Promise<T> {
 
 		const item = new Item(key, value);
 		this._dict.set(key, item);
@@ -228,16 +227,9 @@ export default class Cache<T = any> extends Emitter {
 		item.markSaved();
 
 		if (this.saver) {
-
-			return this.saver(this._cacheKey + key, value).then(
-
-				// returns null on success and an error on reject.
-				null, err => {
-					return err;
-				}
-			);
-
+			await this.saver(this._cacheKey + key, value);
 		}
+		return value;
 
 	}
 

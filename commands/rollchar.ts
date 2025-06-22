@@ -3,7 +3,7 @@ import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { GenChar } from "rpg/builders/chargen";
 import { EchoChar } from "rpg/display/display";
-import { GetClass, GetRace, RandClass, RandRace } from "rpg/parsers/classes";
+import { GetClass, GetRace, RandClass, RandRace } from "rpg/parsers/parse-class";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({

@@ -1,19 +1,34 @@
 import { BotContext, type ContextSource } from '@/bot/botcontext';
-import type { ChatAction } from '@/bot/command';
 import type { ChatCommand } from '@/bot/wrap-message';
 import Cache from 'archcache';
 import { User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
 import { LoadActions } from 'rpg/magic/action';
-import { LoadEffects } from 'rpg/magic/effects';
+import { LoadEffectTypes } from 'rpg/magic/effects';
 import { GenName } from 'rpg/namegen';
-import { InitClasses, InitRaces } from 'rpg/parsers/classes';
+import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
 import { Char } from './char/char';
 import { Race } from './char/race';
 import { Game } from './game';
 import { World } from './world/world';
 
 export const LAST_CHARS = '`lastchars`';
+
+type UserData = {
+
+	// user id.
+	id: string;
+
+	// chars on server.
+	chars: Array<{ name: string }>;
+
+	// total levels of all chars.
+	levels: number;
+
+	// name of last loaded char.
+	curChar: string | null;
+
+}
 
 // created for each bot context.
 export class Rpg {
@@ -22,6 +37,12 @@ export class Rpg {
 
 	readonly cache: Cache;
 	readonly charCache: Cache;
+
+	/**
+	 * Store meta information about users.
+	 */
+	readonly userCache: Cache<UserData>;
+
 	readonly context: BotContext<any>;
 
 	readonly world: World;
@@ -37,6 +58,7 @@ export class Rpg {
 		this.context = context;
 
 		this.cache = this.context.subcache(Rpg.RpgDir);
+		this.userCache = this.cache.subcache('users');
 
 		this.game = new Game(this.cache);
 
@@ -74,6 +96,25 @@ export class Rpg {
 
 	}
 
+	/**
+	 * Get per-user level data.
+	 * @param user
+	 * @returns 
+	 */
+	async getUserData(user: User): Promise<UserData> {
+
+		const data = await this.userCache.fetch(user.id);
+		if (data) return data;
+
+		return await this.userCache.store(user.id, {
+			id: user.id,
+			chars: [],
+			levels: 0,
+			curChar: null
+		});
+
+	}
+
 	async loadChar(charname: string) {
 
 		const key = this.getCharKey(charname);
@@ -104,7 +145,7 @@ export class Rpg {
 
 	}
 
-	checkLevel(m: ChatAction, char: Char) {
+	checkLevel(m: ChatCommand, char: Char) {
 		if (char.levelFlag) {
 			m.reply(char.name + ' has leveled up.');
 			char.levelFlag = false;
@@ -139,6 +180,6 @@ export class Rpg {
  */
 export const InitGame = async () => {
 
-	await Promise.all([InitRaces(), InitClasses(), InitItems(), LoadEffects(), LoadActions()]);
+	await Promise.all([InitRaces(), InitClasses(), InitItems(), LoadEffectTypes(), LoadActions()]);
 
 }
