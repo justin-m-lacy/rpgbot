@@ -17,32 +17,36 @@ export const GetRace = (racename?: string) => {
 	return racename ? raceByName[racename.toLowerCase()] : undefined;
 }
 
-export const RandRace = (racename?: string | null) => {
+export const GetClass = (id?: string) => {
+	return id ? classByName[id.toLowerCase()] : undefined;
+}
+
+export const RandRace = (racename?: string | null, userLevels: number = 0) => {
+
+	const filtered = userLevels > 0 ? races.filter(v => v.minLevels <= userLevels) : races;
 
 	if (racename) {
 		racename = racename.toLowerCase();
 		if (raceByName[racename] != null) return raceByName[racename];
 	}
-	return races[Math.floor(races.length * Math.random())];
+	return filtered[Math.floor(filtered.length * Math.random())];
 }
 
-export const GetClass = (id?: string) => {
-	return id ? classByName[id.toLowerCase()] : undefined;
-}
+export const RandClass = (id?: string | null, userLevels: number = 0) => {
 
-export const RandClass = (id?: string | null) => {
+	const filtered = userLevels > 0 ? classes.filter(v => v.minLevels <= userLevels) : classes;
 
 	if (id) {
 		id = id.toLowerCase();
 		if (classByName.hasOwnProperty(id)) return classByName[id];
 	}
-	return classes[Math.floor(classes.length * Math.random())];
+	return filtered[Math.floor(filtered.length * Math.random())];
 
 }
 
 const ParseRace = (raw: RawRaceData) => {
 
-	const race = new Race(raw.id, raw.hitdie);
+	const race = new Race(raw.id, raw.hitdie, (raw as any).minLevels);
 
 	race.desc = raw.desc;
 

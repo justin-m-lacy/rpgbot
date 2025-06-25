@@ -21,9 +21,14 @@ export class Race {
 	private _expMod: number = 1;
 	readonly talents: string[] = [];
 
-	constructor(id: string, hitDie: number = 1) {
+	// minimum levels required to select this race/class.
+	readonly minLevels: number;
+
+	constructor(id: string, hitDie: number = 1, minLevels: number = 0) {
 
 		this.id = this.name = id;
+		this.minLevels = minLevels;
+
 		this.hitDie = hitDie;
 
 	}

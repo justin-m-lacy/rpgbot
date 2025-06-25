@@ -7,25 +7,13 @@ import { LoadActions } from 'rpg/magic/action';
 import { LoadEffectTypes } from 'rpg/magic/effects';
 import { GenName } from 'rpg/namegen';
 import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
+import { NewUserData, type UserData } from 'rpg/users/users';
 import { Char } from './char/char';
 import { Race } from './char/race';
 import { Game } from './game';
 import { World } from './world/world';
 
 export const LAST_CHARS = '`lastchars`';
-
-type UserData = {
-
-	// user id.
-	id: string;
-
-	// chars on server.
-	chars: Record<string, { name: string, level: number }>;
-
-	// name of last loaded char.
-	curChar: string | null;
-
-}
 
 // created for each bot context.
 export class Rpg {
@@ -111,11 +99,7 @@ export class Rpg {
 		const data = await this.userCache.fetch(userId);
 		if (data) return data;
 
-		return await this.userCache.store(userId, {
-			id: userId,
-			chars: {},
-			curChar: null
-		});
+		return await this.userCache.store(userId, NewUserData(userId));
 
 	}
 

@@ -6,12 +6,22 @@ import type { GClass, Race } from "rpg/char/race";
 import { EchoChar } from "rpg/display/display";
 import { GetClass, GetClasses, GetRace, GetRaces, RandClass, RandRace } from "rpg/parsers/parse-class";
 import { Rpg } from "rpg/rpg";
+import { GetUserLevels } from "rpg/users/users";
 
 const RaceChoices = (arr: Array<Race | GClass>) => {
 	return arr.map((v) => {
 		return { name: v.name, value: v.name }
 	});
 }
+
+const LevelCheck = (m: ChatCommand, race: Race | GClass, userLevels: number) => {
+	if (userLevels < race.minLevels) {
+		SendPrivate(m, `Too few Character levels for ${race.name}. ${userLevels}/${race.minLevels} required`);
+		return false;
+	}
+	return true;
+}
+
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('rollchar', 'roll new character')
@@ -27,11 +37,17 @@ export default NewCommand<Rpg>({
 			let charname = m.options.getString('name');
 			const sex = m.options.getString('sex') ?? Math.random() < 0.5 ? 'm' : 'f';
 
-			const race = racename ? GetRace(racename) : RandRace(racename);
+			const userData = await rpg.getUserData(m.user.id);
+			const userLevels = GetUserLevels(userData);
+
+			const race = racename ? GetRace(racename) : RandRace(racename, userLevels);
 			if (!race) return SendPrivate(m, 'Race ' + racename + ' not found.');
 
-			const charCls = classname ? GetClass(classname) : RandClass(classname);
+			const charCls = classname ? GetClass(classname) : RandClass(classname, userLevels);
 			if (!charCls) return SendPrivate(m, 'Class ' + classname + ' not found.');
+
+			if (!LevelCheck(m, race, userLevels)) return;
+			if (!LevelCheck(m, charCls, userLevels)) return;
 
 			if (charname) {
 
