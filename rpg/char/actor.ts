@@ -1,3 +1,5 @@
+import EventEmitter from 'eventemitter3';
+import type { CharEvents } from 'rpg/char/events';
 import type { SexType } from 'rpg/social/gender';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
@@ -88,7 +90,7 @@ export class Actor {
 	readonly stats: StatBlock = new StatBlock();
 	readonly effects: Effect[] = [];
 	private _myClass?: GClass;
-	protected _talents?: string[];
+	readonly talents: string[] = [];
 
 	readonly resists: Record<string, Numeric> = {};
 
@@ -104,6 +106,8 @@ export class Actor {
 	 */
 	readonly mods: ModBlock<typeof this>[] = [];
 	private _state: LifeState;
+
+	readonly events: EventEmitter<CharEvents> = new EventEmitter();
 
 	constructor(name: string, race: Race, rpgClass?: GClass) {
 
@@ -203,6 +207,7 @@ export class Actor {
 		}
 		this.effects.push(e);
 		e.start(this);
+		this.events.emit('effectStart', this, e);
 
 	}
 
@@ -242,7 +247,7 @@ export class Actor {
 	}
 
 	hasTalent(s: string) {
-		return this._talents?.includes(s);
+		return this.talents?.includes(s);
 	}
 
 	/// TODO

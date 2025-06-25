@@ -1,5 +1,5 @@
+import { TryEat } from 'rpg/char/cooking';
 import type { ItemIndex } from 'rpg/items/container';
-import { History } from '../display/history';
 import { Log } from '../display/log';
 import { Inventory, ItemPicker } from '../inventory';
 import { Item, ItemType } from '../items/item';
@@ -8,6 +8,7 @@ import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
 import { Actor } from './actor';
 import { Equip } from './equip';
+import { History } from './events';
 import { tryLevel } from './level';
 import { Race, type GClass } from './race';
 import { StatKey } from './stats';
@@ -22,7 +23,7 @@ enum CharEventFlags {
 	/// char died.
 	Died = 1,
 	/// char leveled up.
-	Level = 2
+	LevelUp = 2
 }
 
 
@@ -50,16 +51,13 @@ export class Char extends Actor {
 	get evil() { return +this.stats.evil.value; }
 	set evil(v) { this.stats.evil.setTo(v); }
 
-	get talents() { return this._talents; }
-	set talents(v) { this._talents = v; }
-
 	/// Char leveled up this turn.
-	get levelFlag() { return (this.events & CharEventFlags.Level) > 0 }
+	get levelFlag() { return (this.eventFlags & CharEventFlags.LevelUp) > 0 }
 	set levelFlag(v) {
 		if (v) {
-			this.events |= CharEventFlags.Level;
+			this.eventFlags |= CharEventFlags.LevelUp;
 		} else {
-			this.events &= ~CharEventFlags.Level;
+			this.eventFlags &= ~CharEventFlags.LevelUp;
 		}
 	}
 
@@ -67,7 +65,7 @@ export class Char extends Actor {
 	 * Notification for level up.
 	 * TODO: replace with event system.
 	 */
-	events: CharEventFlags = 0;
+	eventFlags: CharEventFlags = 0;
 
 	toJSON() {
 
@@ -97,8 +95,6 @@ export class Char extends Actor {
 
 	private _home?: Coord;
 	private _skills: any;
-	// TODO: replace with events.
-	private _levelUp: boolean = false;
 	readonly history: History;
 
 	constructor(name: string, race: Race, cls: GClass, owner: string) {
@@ -111,7 +107,7 @@ export class Char extends Actor {
 		this.inv = new Inventory();
 		this._equip = new Equip();
 
-		this.history = { explored: 0, crafted: 0 };
+		this.history = { explore: 0, crafts: 0 };
 
 		this.owner = owner;
 
@@ -128,13 +124,18 @@ export class Char extends Actor {
 	/**
 	 * Add single point to the given stat.
 	 * @param stat
-	 * @returns error message, or true.
 	 */
 	addStat(stat: string) {
 
 		stat = stat.toLowerCase();
-		if (!(stat in this.stats)) return 'Stat not found.';
-		if (this._spentPoints >= this._statPoints) return 'No stat points available.';
+		if (!(stat in this.stats)) {
+			this.log('Stat not found');
+			return false;
+		}
+		if (this._spentPoints >= this._statPoints) {
+			this.log('No stat points available.');
+			return false;
+		}
 
 		if (stat in this.stats) {
 			this.stats[stat as StatKey].add(1);
@@ -147,18 +148,21 @@ export class Char extends Actor {
 	}
 
 	hasTalent(t: string) {
-		return (this._talents?.includes(t)) || this.cls!.hasTalent(t) || this.race.hasTalent(t);
+		return (this.talents?.includes(t)) || this.cls!.hasTalent(t) || this.race.hasTalent(t);
 	}
 
-	addHistory(evt: string) {
-		this.history[evt] = (this.history[evt] || 0) + 1;
+	addHistory(evt: keyof History) {
+		this.history[evt] = (this.history[evt] ?? 0) + 1;
 	}
 
 	levelUp() {
 
 		super.levelUp();
-		this._levelUp = true;
+		this.eventFlags |= CharEventFlags.LevelUp;
+
+		this.log(this.name + ' has leveled up.');
 		this._statPoints++;
+		this.events.emit('levelUp', this);
 
 	}
 
@@ -175,24 +179,13 @@ export class Char extends Actor {
 	eat(what: ItemIndex) {
 
 		const item = this.inv.get(what);
-		if (!item) return 'Item not found.';
+		if (!item) {
+			this.log('Item not found.');
+		} else if (!TryEat(this, item)) {
+			// return to inventory.
+			this.inv.take(item);
+		}
 
-		if (item.type !== ItemType.Food) return item.name + ' isn\'t food!';
-
-		this.inv.take(item);
-
-		const cook = require('../data/cooking.json');
-		this.addHistory('eat');
-
-		let resp = cook.response[Math.floor(cook.response.length * Math.random())];
-
-		const amt = this.heal(
-			Math.floor(5 * Math.random()) + this.level.valueOf());
-
-		resp = `You eat the ${item.name}. ${resp}.`;
-		if (amt > 0) resp += ` ${amt} hp healed. ${this.hp.valueOf()}/${this.hp.max.valueOf()} total.`;
-
-		return resp;
 	}
 
 	/**
@@ -370,8 +363,8 @@ export class Char extends Actor {
 
 	getTalents() {
 
-		if (!this._talents || this._talents.length == 0) return `${this.name} has no talents.`;
-		return this.name + "'s Talents:" + this._talents.join('\n');
+		if (!this.talents || this.talents.length == 0) return `${this.name} has no talents.`;
+		return this.name + "'s Talents:" + this.talents.join('\n');
 
 	}
 
@@ -406,8 +399,10 @@ export class Char extends Actor {
 	log(str: string) {
 		this._log.log(str.replace('%c', this.name));
 	}
-	getLog() { return this._log.text; }
-	output(str = '') { return this._log.output(str); }
+	getLog(clear: boolean = true) {
+		return this._log.getLog(clear);
+	}
+	output(str?: string) { return this._log.output(str); }
 
 	clearLog() { this._log.clear(); }
 

@@ -2,16 +2,22 @@ import { CommandData, NewCommand, StrChoices, StrOpt } from "@/bot/command";
 import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { GenChar } from "rpg/builders/chargen";
+import type { GClass, Race } from "rpg/char/race";
 import { EchoChar } from "rpg/display/display";
-import { GetClass, GetRace, RandClass, RandRace } from "rpg/parsers/parse-class";
+import { GetClass, GetClasses, GetRace, GetRaces, RandClass, RandRace } from "rpg/parsers/parse-class";
 import { Rpg } from "rpg/rpg";
 
+const RaceChoices = (arr: Array<Race | GClass>) => {
+	return arr.map((v) => {
+		return { name: v.name, value: v.name }
+	});
+}
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('rollchar', 'roll new character')
 		.addStringOption(StrOpt('name', 'character name'))
-		.addStringOption(StrOpt('race', 'character race'))
-		.addStringOption(StrOpt('class', 'character class'))
+		.addStringOption(StrChoices('race', 'character race', RaceChoices(GetRaces())))
+		.addStringOption(StrChoices('class', 'character class', RaceChoices(GetClasses())))
 		.addStringOption(StrChoices('sex', 'character sex', [{ name: 'male', value: 'm' }, { name: 'female', value: 'f' }])),
 	async exec(m: ChatCommand, rpg: Rpg) {
 		try {

@@ -25,6 +25,6 @@ function InitFeatures() {
 
 }
 
-export const randFeature = () => {
+export const RandFeature = () => {
 	return Feature.Revive(randElm(FeatureData));
 }

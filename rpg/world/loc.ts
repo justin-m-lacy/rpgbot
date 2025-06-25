@@ -69,6 +69,9 @@ const reverses: Partial<Record<DirString, DirVal>> = {
 	exit: DirMap.enter,
 };
 
+export const IsCoord = (obj: any): obj is { x: number, y: number } => {
+	return obj && typeof obj === 'object' && typeof obj.x === 'number' && typeof obj.y === 'number';
+}
 
 
 export class Coord {

@@ -16,7 +16,6 @@ export default NewCommand<Rpg>({
 		const dir = m.options.getString('dir', true);
 
 		await SendBlock(m, await rpg.game.hike(char, toDirection(dir)));
-		rpg.checkLevel(m, char);
 
 	}
 })

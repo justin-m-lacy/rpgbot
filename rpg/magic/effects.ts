@@ -20,18 +20,15 @@ type RawEffect = {
 const Effects: { [name: string]: ProtoEffect } = {};
 
 /**
- * Effect info only. Effect is effect in progress.
+ * Effect prototype. class Effect is effect in progress.
  */
 export class ProtoEffect {
-
-	get time() { return this._time; }
-	set time(v) { this._time = v; }
 
 	readonly id: string;
 	readonly name: string;
 	readonly mods: Path<IMod> | null;
 	readonly dot: Path<TValue> | null;
-	private _time: any;
+	readonly time: number;
 
 	constructor(data: {
 		id: string,
@@ -46,7 +43,7 @@ export class ProtoEffect {
 		this.dot = data.dot ?? null;
 		this.mods = data.mods ?? null;
 
-		this._time = data.time ?? 0;
+		this.time = data.time ?? 0;
 
 	}
 
@@ -55,7 +52,7 @@ export class ProtoEffect {
 		return {
 			mods: this.mods,
 			dot: this.dot,			// formulas have toJSON()?
-			time: this._time
+			time: this.time
 		};
 
 	}
@@ -84,10 +81,9 @@ export class Effect {
 	static Revive(json: any) {
 
 		if (json == null || typeof json !== 'object') {
-			// don't throw just for a missing effect.
+			// don't throw for just a missing effect.
 			console.warn(`missing effect data: ${json}`);
 			return null;
-			//throw new BadTypeError(json, 'object');
 		}
 
 		let e = json.efx;

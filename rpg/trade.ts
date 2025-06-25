@@ -113,7 +113,7 @@ export const transfer = (src: Char, dest: Char, what: string) => {
 
 			const ind = dest.addItem(it);
 			src.addHistory('gave');
-			dest.addHistory('recieved');
+			dest.addHistory('given');
 
 			return (it.name) ? `Gave ${dest.name} ${it.name}. (${ind})` : `Gave ${dest.name} the item.`;
 

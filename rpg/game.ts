@@ -630,7 +630,8 @@ export class Game {
 	eat(char: Char, wot: ItemIndex) {
 
 		if (this.tick(char, 'eat') === false) return char.output();
-		return char.output(char.eat(wot));
+		char.eat(wot);
+		return char.output();
 
 	}
 

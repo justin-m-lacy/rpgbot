@@ -1,4 +1,4 @@
-import { randFeature } from 'rpg/builders/features';
+import { RandFeature } from 'rpg/builders/features';
 import Biomes from '../data/world/biomes.json';
 import { Biome, Coord, Exit, Loc } from './loc';
 
@@ -7,7 +7,7 @@ type BiomeName = keyof typeof Biomes;
 /**
  * Generate a new location without any starting information.
 */
-export const genNew = (coord: Coord) => {
+export const GenNewLoc = (coord: Coord) => {
 
 	// note that a new coord must be used to avoid references.
 	const loc = makeBiomeLoc(new Coord(coord.x, coord.y), Biome.TOWN);
@@ -28,7 +28,7 @@ export const genNew = (coord: Coord) => {
  * @param  from - location arriving from.
  * @param  adj - all allowed exits.
  */
-export const genLoc = (coord: Coord, from: Loc, exits: Exit[]): Loc => {
+export const GenLoc = (coord: Coord, from: Loc, exits: Exit[]): Loc => {
 
 	const biomeName = from ? randBiome(from.biome as BiomeName) : Biome.TOWN;
 	const loc = makeBiomeLoc(coord, biomeName as BiomeName);
@@ -38,7 +38,7 @@ export const genLoc = (coord: Coord, from: Loc, exits: Exit[]): Loc => {
 	}
 
 	while (Math.random() < 0.1) {
-		loc.addFeature(randFeature());
+		loc.addFeature(RandFeature());
 	}
 
 	return loc;

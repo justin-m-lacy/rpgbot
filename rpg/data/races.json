@@ -1,6 +1,6 @@
 [
     {
-        "name": "elf",
+        "id": "elf",
         "hitdie": 7,
         "desc": "Elves are limber and flexy, have pointy ears, and tend to live in the woods. Their long lives incline them to laziness, and they seldom undertake adventures. Elves posses some intrinsic magic power, but few develop the talent.",
         "create": {
@@ -17,7 +17,7 @@
         }
     },
     {
-        "name": "half-elf",
+        "id": "half-elf",
         "hitdie": 8,
         "desc": "Half-elves are the result of dalliances between humans and elves. Their physiques and abilities lie somewhere between the two races.",
         "create": {
@@ -31,7 +31,7 @@
         }
     },
     {
-        "name": "dwarf",
+        "id": "dwarf",
         "hitdie": 10,
         "desc": "Mountain dwarves have stumpy bodies with brawny chests and arms, while the smaller hill dwarves are closer to gnomes in appearance. Mining jewels and precious metals, working at the smith, and brewing ales are the chief occupations of most dwarves, for which purposes they are rarely called to leave their delven abodes. A dwarf on the road was likely forced from his home by a greedy dragon, an army of goblins, or a terror from the mountain deeps.",
         "talents": [
@@ -48,7 +48,7 @@
         }
     },
     {
-        "name": "human",
+        "id": "human",
         "hitdie": 8,
         "desc": "Humans are short-lived, boring, creatures with little magic of their own. They spend most of their days farming, marking territories, fighting over boundaries, or in lascivious pursuits. The elf wit Vellaya once described them as 'Goblins with law degrees.' Qualities such as these have made humans the most successful and widespread of all the races, even if the others don't quite see the point of it all. Their active nature makes humans excellent wizards, though it does take a mortal a few hundred years just to master the basics.",
         "create": {
@@ -59,7 +59,7 @@
         }
     },
     {
-        "name": "gnome",
+        "id": "gnome",
         "hitdie": 7,
         "desc": "A gnome is to magic and tinkering as a dwarf is to mining and smithwork.",
         "create": {
@@ -76,7 +76,7 @@
         }
     },
     {
-        "name": "halfling",
+        "id": "halfling",
         "hitdie": 6,
         "desc": "Although often mistaken for Hobbits, the difference is legally miles away. Still, if you wanted to learn something about halflings, you could do a lot worse than picking up a copy of The Hobbit, and making some educated guesses.",
         "create": {
@@ -95,7 +95,7 @@
         }
     },
     {
-        "name": "half-orc",
+        "id": "half-orc",
         "hitdie": 10,
         "desc": "",
         "create": {
@@ -109,12 +109,13 @@
         }
     },
     {
-        "name": "orc",
-        "hitdie": 14,
+        "id": "orc",
+        "hitdie": 10,
         "desc": "",
         "create": {
             "age": "8d5+7"
         },
+        "minLevels": 15,
         "mod": {
             "str": 3,
             "int": -3,
@@ -123,9 +124,10 @@
         }
     },
     {
-        "name": "troll",
+        "id": "troll",
         "hitdie": 20,
         "desc": "",
+        "minLevels": 30,
         "talents": [
             "hike"
         ],
@@ -141,9 +143,10 @@
         }
     },
     {
-        "name": "half-troll",
+        "id": "half-troll",
         "hitdie": 18,
         "desc": "",
+        "minLevels": 20,
         "create": {
             "age": "3d10+12"
         },
@@ -156,9 +159,10 @@
         }
     },
     {
-        "name": "ogre",
+        "id": "ogre",
         "hitdie": 16,
         "desc": "",
+        "minLevels": 20,
         "create": {
             "age": "2d10+10"
         },
@@ -173,9 +177,10 @@
         }
     },
     {
-        "name": "fairy",
+        "id": "fairy",
         "hitdie": 4,
         "desc": "",
+        "minLevels": 15,
         "create": {
             "age": "10d75+100"
         },
@@ -188,7 +193,8 @@
         }
     },
     {
-        "name": "pixie",
+        "id": "pixie",
+        "minLevels": 13,
         "hitdie": 2,
         "desc": "",
         "create": {
@@ -203,8 +209,9 @@
         }
     },
     {
-        "name": "minotaur",
+        "id": "minotaur",
         "hitdie": 14,
+        "minLevels": 17,
         "desc": "",
         "create": {
             "age": "10d20+30"
@@ -220,12 +227,13 @@
         }
     },
     {
-        "name": "centaur",
+        "id": "centaur",
         "hitdie": 2,
         "desc": "Centaurs have four legs like a horse, and human heads and torsos, for which fact they are made the butt of endless jokes; though logically it's the humans and horses we should be raising eyebrows at. Centaurs have a tendency towards the mystic, and many are able to read the stars like a book, albeit a dense and ponderous one.",
         "create": {
             "age": "7d7+10"
         },
+        "minLevels": 13,
         "talents": [
             "track"
         ],
@@ -236,7 +244,7 @@
         }
     },
     {
-        "name": "goblin",
+        "id": "goblin",
         "hitdie": 6,
         "desc": "",
         "talents": [
@@ -255,7 +263,7 @@
         }
     },
     {
-        "name": "kobold",
+        "id": "kobold",
         "hitdie": 6,
         "desc": "Goblins live in caves because they hate light, like to hide, and aren't much good at construction. Kobolds live in caves because all things considered, that's the only place they'd want to live; though some will settle for a swamp in a pinch.",
         "create": {
@@ -269,9 +277,10 @@
         }
     },
     {
-        "name": "demigod",
+        "id": "demigod",
         "hitdie": 14,
         "desc": "",
+        "minLevels": 100,
         "talents": [
             "revive"
         ],

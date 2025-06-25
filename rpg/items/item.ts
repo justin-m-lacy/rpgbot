@@ -210,7 +210,7 @@ export const Craft = (char: Char, name: string, desc?: string, attach?: string) 
 	const maxBonus = Math.max(char.level.value + char.getModifier('int') + 1, 2);
 	item.cost = Math.floor(maxBonus * Math.random());
 
-	char.addHistory('crafted');
+	char.addHistory('crafts');
 	char.addExp(2);
 	return char.addItem(item);
 

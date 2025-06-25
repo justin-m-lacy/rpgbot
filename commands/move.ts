@@ -20,7 +20,6 @@ const CmdMove = NewCommand<Rpg>({
 		const dir = m.options.getString('dir', true);
 
 		await SendBlock(m, await rpg.game.move(char, dir));
-		rpg.checkLevel(m, char);
 
 	}
 });
@@ -35,7 +34,6 @@ const CmdNorth = NewCommand<Rpg>({
 		if (!char) return;
 
 		await SendBlock(m, await rpg.game.move(char, 'n'));
-		rpg.checkLevel(m, char);
 
 	}
 });
@@ -50,7 +48,6 @@ const CmdSouth = NewCommand<Rpg>({
 		if (!char) return;
 
 		await SendBlock(m, await rpg.game.move(char, 's'));
-		rpg.checkLevel(m, char);
 
 	}
 });
@@ -65,7 +62,6 @@ const CmdEast = NewCommand<Rpg>({
 		if (!char) return;
 
 		await SendBlock(m, await rpg.game.move(char, 'e'));
-		rpg.checkLevel(m, char);
 
 	}
 })
@@ -81,7 +77,6 @@ const CmdWest = NewCommand<Rpg>({
 		if (!char) return;
 
 		await SendBlock(m, await rpg.game.move(char, 'w'));
-		rpg.checkLevel(m, char);
 
 	}
 });

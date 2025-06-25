@@ -1,8 +1,8 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
+import { getHistory } from "rpg/char/events";
 import { SendBlock } from "rpg/display/display";
-import { getHistory } from "rpg/events";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({

@@ -20,10 +20,7 @@ type UserData = {
 	id: string;
 
 	// chars on server.
-	chars: Array<{ name: string }>;
-
-	// total levels of all chars.
-	levels: number;
+	chars: Record<string, { name: string, level: number }>;
 
 	// name of last loaded char.
 	curChar: string | null;
@@ -36,7 +33,7 @@ export class Rpg {
 	static readonly RpgDir = 'rpg';
 
 	readonly cache: Cache;
-	readonly charCache: Cache;
+	readonly charCache: Cache<Char>;
 
 	/**
 	 * Store meta information about users.
@@ -92,7 +89,15 @@ export class Rpg {
 			m.reply(`You do not control '${charname}'`);
 			return null;
 		}
+
 		return char;
+
+	}
+
+	async updateCharInfo(char: Char) {
+
+		const userData = await this.getUserData(char.owner);
+		userData.chars[char.name].level = char.level.valueOf();
 
 	}
 
@@ -101,15 +106,14 @@ export class Rpg {
 	 * @param user
 	 * @returns 
 	 */
-	async getUserData(user: User): Promise<UserData> {
+	async getUserData(userId: string): Promise<UserData> {
 
-		const data = await this.userCache.fetch(user.id);
+		const data = await this.userCache.fetch(userId);
 		if (data) return data;
 
-		return await this.userCache.store(user.id, {
-			id: user.id,
-			chars: [],
-			levels: 0,
+		return await this.userCache.store(userId, {
+			id: userId,
+			chars: {},
 			curChar: null
 		});
 
@@ -119,9 +123,15 @@ export class Rpg {
 
 		const key = this.getCharKey(charname);
 
-		const data = (this.charCache.get(key) ?? await this.charCache.fetch(key)) as Char | undefined;
-		data?.init();
-		return data;
+		let char = this.charCache.get(key);
+		if (char) return char;
+
+		char = await this.charCache.fetch(key);
+		if (char) {
+			char.events.addListener('levelUp', this.updateCharInfo, this);
+		}
+
+		return char;
 	}
 
 	clearUserChar(uid: string) { delete this.lastChars[uid]; }
@@ -130,6 +140,7 @@ export class Rpg {
 
 		this.lastChars[user.id] = char.name;
 		this.cache.cache(LAST_CHARS, this.lastChars);
+		char.events.addListener("levelUp", this.updateCharInfo, this);
 
 	}
 
@@ -143,13 +154,6 @@ export class Rpg {
 		this.lastChars = {};	// uid->char name
 		this.cache.cache(LAST_CHARS, this.lastChars);
 
-	}
-
-	checkLevel(m: ChatCommand, char: Char) {
-		if (char.levelFlag) {
-			m.reply(char.name + ' has leveled up.');
-			char.levelFlag = false;
-		}
 	}
 
 	getCharKey(charname: string) { return charname; }

@@ -5,7 +5,7 @@ import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { Effect } from 'rpg/magic/effects';
-import { Coord } from 'rpg/world/loc';
+import { Coord, IsCoord } from 'rpg/world/loc';
 import * as ItemGen from '../builders/itemgen';
 import { GetClass, GetRace } from './parse-class';
 
@@ -25,16 +25,24 @@ export const ReviveChar = (json: any) => {
 
 	char.guild = json.guild;
 
-	if (json.talents) char.talents = json.talents;
+	if (json.talents && Array.isArray(json.talents)) {
+		for (let i = 0; i < json.talents.length; i++) {
+			if (typeof json.talents[i] === 'string') {
+				char.talents.push(json.talents[i]);
+			}
+		}
+	}
+
 	if (json.history) Object.assign(char.history, json.history);
-	if (json.home) char.home = new Coord(json.home.x, json.home.y);
+	if (IsCoord(json.home)) char.home = new Coord(json.home.x, json.home.y);
 
 	if (!json.stats) throw new NullDataError();
-
 	if (typeof json.stats !== 'object') throw new BadTypeError(json.stats, 'object');
 	char.setBaseStats(json.stats);
 
-	if (json.loc) Object.assign(char.loc, json.loc);
+	if (IsCoord(json.loc)) {
+		char.loc.setTo(json.loc)
+	}
 
 	if (json.state) char.state = json.state;
 
@@ -57,11 +65,6 @@ export const ReviveChar = (json: any) => {
 	}
 
 	if (json.equip) char.setEquip(ReviveEquip(json.equip));
-
-	/*if (json.statMods) {
-		let mods = json.statMods;
-		char.setMods(mods);
-	}*/
 
 	char.init();
 

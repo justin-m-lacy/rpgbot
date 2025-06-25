@@ -17,8 +17,11 @@ export default NewCommand<Rpg>(
 			const stat = m.options.getString('stat', true);
 			const res = char.addStat(stat);
 
-			if (typeof (res) === 'string') return SendPrivate(m, res);
-
+			if (res) {
+				SendPrivate(m, `${stat} increased.`);
+			} else {
+				SendPrivate(m, char.getLog());
+			}
 
 		}
 	});

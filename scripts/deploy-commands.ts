@@ -2,12 +2,17 @@ import { IsCommand, IsCommandModule } from '@/bot/command';
 import { REST, Routes, type RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import * as fs from 'fs';
 import path from 'path';
+import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
 import { pathToFileURL } from 'url';
 import { appId, token } from '../auth.json';
 
 const ValidExtensions = ['', '.js', '.ts'];
 
 (async function () {
+
+	// races and classes need to be loaded to give commands correct class/race options.
+	await InitClasses();
+	await InitRaces();
 
 	const cmds = await findCommands();
 	await sendCommands(cmds);

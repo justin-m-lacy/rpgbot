@@ -1,4 +1,5 @@
 import Cache from 'archcache';
+import { GenLoc, GenNewLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
 import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
@@ -6,7 +7,6 @@ import { Monster } from '../monster/monster';
 import Block from './block';
 import { Feature } from './feature';
 import { Coord, DirString, DirVal, Exit, Loc } from './loc';
-import * as Gen from './worldgen';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching of existing world data.
@@ -302,10 +302,10 @@ export class World {
 
 			const exits = await this.getRandExits(destX, destY);
 			// must use NEW coord so avoid references.
-			dest = Gen.genLoc(new Coord(destX, destY), from, exits);
+			dest = GenLoc(new Coord(destX, destY), from, exits);
 			dest.setMaker(char.name);
 
-			char.addHistory('explored');
+			char.addHistory('explore');
 			char.addExp(2);
 
 			this.quickSave(dest);
@@ -345,7 +345,7 @@ export class World {
 		if (loc == null) {
 
 			console.log(coord + ' NOT FOUND. GENERATING NEW');
-			loc = Gen.genNew(coord);
+			loc = GenNewLoc(coord);
 
 			if (char) loc.setMaker(char.name);
 

@@ -10,6 +10,9 @@ const raceByName: Record<string, Race> = {};
 const classes: GClass[] = [];
 const classByName: Record<string, GClass> = {};
 
+export const GetClasses = () => classes;
+export const GetRaces = () => races;
+
 export const GetRace = (racename?: string) => {
 	return racename ? raceByName[racename.toLowerCase()] : undefined;
 }
@@ -39,7 +42,7 @@ export const RandClass = (id?: string | null) => {
 
 const ParseRace = (raw: RawRaceData) => {
 
-	const race = new Race(raw.name, raw.hitdie);
+	const race = new Race(raw.id, raw.hitdie);
 
 	race.desc = raw.desc;
 

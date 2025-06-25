@@ -11,9 +11,9 @@ export class Log {
 	 * Gets and clears the current log text.
 	 * @returns The current log text.
 	 */
-	getAndClear() {
+	getLog(clear: boolean = true) {
 		const t = this._text;
-		this._text = '';
+		if (clear) this._text = '';
 		return t;
 	}
 
