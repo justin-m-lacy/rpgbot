@@ -1,6 +1,6 @@
-import { type BaseMessageOptions, type ChatInputCommandInteraction, type Message, type MessagePayload } from "discord.js";
+import { type BaseMessageOptions, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type MessagePayload, type User } from "discord.js";
 
-export type ChatCommand = ChatInputCommandInteraction | MsgWrap;
+export type ChatCommand = ChatInputCommandInteraction | ICmdWrap;
 
 export type MessageOpt<T> = {
 
@@ -66,7 +66,62 @@ export class MsgOptions {
 	}
 
 }
-export class MsgWrap {
+
+const SymWrap = Symbol('MsgWrap');
+export const IsWrappedCmd = (m: any): m is ICmdWrap => {
+	return m && typeof m === 'object' && m.symbol == SymWrap;
+}
+
+
+export interface ICmdWrap {
+
+	get symbol(): Symbol;
+
+	get user(): User;
+
+	get guild(): Guild | null;
+
+	inGuild(): boolean;
+
+	reply(opts: string | MessagePayload | BaseMessageOptions): Promise<any>;
+
+	readonly options: MsgOptions;
+
+
+}
+export class ButtonCommand implements ICmdWrap {
+
+	options: MsgOptions = new MsgOptions();
+
+	get symbol() { return SymWrap; }
+	readonly m: ButtonInteraction;
+
+	constructor(act: ButtonInteraction) {
+
+		this.m = act;
+
+	}
+
+	reply(opts: string | MessagePayload | BaseMessageOptions) {
+		return this.m.reply(opts);
+	}
+
+	get user(): User {
+		return this.m.user;
+	}
+	get guild(): Guild | null {
+		return this.m.guild;
+	}
+	inGuild(): boolean {
+		return this.m.inGuild();
+	}
+
+
+}
+
+export class MsgWrap implements ICmdWrap {
+
+	get symbol() { return SymWrap };
 
 	readonly m: Message;
 

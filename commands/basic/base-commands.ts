@@ -1,7 +1,7 @@
 import { DiscordBot } from '../../src/bot/discordbot';
 
+import { ChatCommand } from '@/bot/cmd-wrapper';
 import { CommandData, NewCommand, NumOpt, StrOpt, type Command } from '@/bot/command';
-import { ChatCommand } from '@/bot/wrap-message';
 import { SendPrivate } from '@/utils/display';
 import { PermissionFlagsBits } from 'discord.js';
 import { parseRoll } from '../../rpg/values/dice';

@@ -2,7 +2,7 @@ import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
-import { ChatCommand } from '../src/bot/wrap-message';
+import { ChatCommand } from '../src/bot/cmd-wrapper';
 
 export default NewCommand<Rpg>({
 	cls: Rpg,

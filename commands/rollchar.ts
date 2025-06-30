@@ -1,5 +1,5 @@
+import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrChoices, StrOpt } from "@/bot/command";
-import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { GenChar } from "rpg/builders/chargen";
 import type { GClass, Race } from "rpg/char/race";
@@ -40,6 +40,7 @@ export default NewCommand<Rpg>({
 			const userData = await rpg.getUserData(m.user.id);
 			const userLevels = GetUserLevels(userData);
 
+			console.log(`newchar: ${charname} race: ${racename} cls: ${classname}`);
 			const race = racename ? GetRace(racename) : RandRace(racename, userLevels);
 			if (!race) return SendPrivate(m, 'Race ' + racename + ' not found.');
 

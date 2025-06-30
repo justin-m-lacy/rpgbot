@@ -1,5 +1,5 @@
+import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import type { ChatCommand } from "@/bot/wrap-message";
 import { SendPrivate } from "@/utils/display";
 import { PermissionFlagsBits } from "discord.js";
 import { Formula } from "formulic";

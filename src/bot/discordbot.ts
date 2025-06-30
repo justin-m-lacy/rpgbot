@@ -1,5 +1,5 @@
 import { CmdParser } from '@/bot/cmd-parser';
-import { MsgWrap, type ChatCommand } from '@/bot/wrap-message';
+import { type ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
@@ -193,17 +193,32 @@ export class DiscordBot {
 
 		this.client.on(Events.InteractionCreate, async (it) => {
 
-			if (!it.isChatInputCommand()) return;
-			const cmd = this.commands.get(it.commandName);
-			if (!cmd) return;
+			if (it.isChatInputCommand()) {
+				const cmd = this.commands.get(it.commandName);
+				if (!cmd) return;
 
-			if ('cls' in cmd) {
+				if ('cls' in cmd) {
 
-				const ctx = await this.getCmdContext(it);
-				ctx?.routeCommand(it, cmd);
+					const ctx = await this.getCmdContext(it);
+					ctx?.routeCommand(it, cmd);
 
-			} else {
-				await cmd.exec(it, this);
+				} else {
+					await cmd.exec(it, this);
+				}
+			} else if (it.isButton()) {
+
+				const cmd = this.commands.get(it.customId);
+				if (!cmd) return;
+
+				if ('cls' in cmd) {
+
+					const ctx = await this.getCmdContext(it);
+					ctx?.routeCommand(it, cmd);
+
+				} else {
+					await cmd.exec(it, this);
+				}
+
 			}
 
 
@@ -231,9 +246,9 @@ export class DiscordBot {
 		try {
 
 			const args = this.parser.parse(argLine, cmd);
+			console.log(`args len: ${args.length}`);
 			const wrap = new MsgWrap(m, args);
 
-			console.log(`args len: ${args.length}`);
 			const ctx = await this.getCmdContext(m);
 			if (ctx) {
 

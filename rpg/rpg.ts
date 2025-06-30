@@ -1,5 +1,5 @@
 import { BotContext, type ContextSource } from '@/bot/botcontext';
-import type { ChatCommand } from '@/bot/wrap-message';
+import type { ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';

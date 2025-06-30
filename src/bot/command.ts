@@ -1,13 +1,13 @@
 import type { BotContext, ContextSource } from "@/bot/botcontext";
+import type { ChatCommand } from "@/bot/cmd-wrapper";
 import type { DiscordBot } from "@/bot/discordbot";
-import type { ChatCommand } from "@/bot/wrap-message";
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type SharedSlashCommand } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type ButtonInteraction, type SharedSlashCommand } from "discord.js";
 
 type BaseCommandFunc = (it: ChatCommand, bot: DiscordBot) => Promise<any> | void | undefined;
 
 export type CommandFunc<T extends object> = (it: ChatCommand, cls: T, ...rest: any[]) => Promise<any> | void | undefined;
 
-export type ChatAction = ChatInputCommandInteraction;
+export type ChatAction = ChatInputCommandInteraction | ButtonInteraction;
 
 export type CommandModule = {
 	GetCommands(): Command[]

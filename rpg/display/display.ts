@@ -1,6 +1,6 @@
+import { type ChatCommand } from "@/bot/cmd-wrapper";
 import type { ChatAction } from "@/bot/command";
-import type { ChatCommand } from "@/bot/wrap-message";
-import { EmbedBuilder, Message } from "discord.js";
+import { EmbedBuilder, Message, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
 import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
 import { Char } from '../char/char';
@@ -15,7 +15,19 @@ export const SendEmbed = async (m: Message | ChatAction, s: string, e: string) =
 		]
 	});
 
-export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) => m.reply('```' + s + '```');
+export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) =>
+	m.reply('```' + s + '```');
+
+export const ReplyBlock = async (m: ChatCommand,
+	str: string,
+	opts?: InteractionReplyOptions): Promise<any> => {
+
+	return m.reply({
+		content: '```' + str + '````',
+		...opts
+	});
+
+}
 
 /**
  * Checks if character is a vowel.

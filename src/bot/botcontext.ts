@@ -1,10 +1,10 @@
-import type { MsgWrap } from '@/bot/wrap-message';
+import type { ChatCommand } from '@/bot/cmd-wrapper';
 import ArchCache from 'archcache';
 import { Channel, Guild, GuildMember, Message, PermissionResolvable, User, type SendableChannels } from 'discord.js';
 import * as afs from '../afs';
 import Access from './access';
 import BotFs from './botfs';
-import { type ChatAction, type Command } from './command';
+import { type Command } from './command';
 import { DiscordBot } from './discordbot';
 
 /**
@@ -384,7 +384,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param args
 	 * @returns
 	 */
-	async routeCommand(it: ChatAction | MsgWrap, cmd: Command<object>, ...args: any[]) {
+	async routeCommand(it: ChatCommand, cmd: Command<object>, ...args: any[]) {
 
 		let target = this.instances.get(cmd.cls.name);
 		if (!target) {

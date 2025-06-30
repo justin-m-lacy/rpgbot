@@ -1,5 +1,5 @@
+import type { MessageOpt } from "@/bot/cmd-wrapper";
 import type { Command } from "@/bot/command";
-import type { MessageOpt } from "@/bot/wrap-message";
 import { ApplicationCommandOptionBase, ApplicationCommandOptionType } from "discord.js";
 import { NotEnoughArgs } from "rpg/errors/parsing";
 
@@ -44,7 +44,7 @@ export class CmdParser {
 		 */
 
 		const excess = parts.length - cmd.maxArgs;
-		if (cmd.merge === 'start') {
+		if (cmd.merge !== 'end') {
 			return this.groupArgsLeft(
 				parts,
 				cmd.data.options as ApplicationCommandOptionBase[],
@@ -73,10 +73,6 @@ export class CmdParser {
 		for (let argInd = 0; argInd < ops.length; argInd++) {
 
 			const op = ops[argInd];
-			if (!(op instanceof ApplicationCommandOptionBase)) {
-				continue;
-			}
-
 			let raw: string;
 
 			if (excess > 0 && op.type === ApplicationCommandOptionType.String) {
@@ -110,9 +106,6 @@ export class CmdParser {
 		for (let argInd = ops.length - 1; argInd >= 0; argInd--) {
 
 			const op = ops[argInd];
-			if (!(op instanceof ApplicationCommandOptionBase)) {
-				continue;
-			}
 
 			let raw: string;
 

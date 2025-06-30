@@ -1,5 +1,5 @@
+import type { ChatCommand } from '@/bot/cmd-wrapper';
 import type { ChatAction } from '@/bot/command';
-import type { ChatCommand } from '@/bot/wrap-message';
 import { EmbedBuilder, Message, MessageFlags, type SendableChannels } from 'discord.js';
 
 

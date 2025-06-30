@@ -1,5 +1,5 @@
+import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand } from "@/bot/command";
-import type { ChatCommand } from "@/bot/wrap-message";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
