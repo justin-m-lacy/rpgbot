@@ -141,21 +141,6 @@ export class World {
 
 	}
 
-	async move(char: Char, dir: DirVal) {
-
-		if (!dir) return 'Must specify movement direction.';
-
-		const loc = await this.tryMove(char.loc ?? new Coord(0, 0), dir, char);
-		if (typeof loc === 'string') {
-			return loc;
-		} else {
-
-			char.loc = loc.coord;
-			return char.name + ' is' + loc.look()
-		}
-
-	}
-
 	/**
 	 *
 	 * @param char
@@ -277,21 +262,18 @@ export class World {
 
 	/**
 	 * Return the new location after moving from the given coordinate.
-	 * @param coord - current coordinate.
 	 * @param dir - move direction.
 	 * @returns new Loc or error string.
 	 */
-	async tryMove(coord: Coord, dir: DirVal, char: Char): Promise<Loc | string> {
+	async tryMove(char: Char, dir: DirVal): Promise<Loc | null> {
 
-		const from = await this.getLoc(coord.x, coord.y);
-		if (!from) {
-			console.warn('error: starting loc null.');
-			return 'Error: Not in a starting location.'
-		}
-
+		const from = await this.getOrGen(char.loc, char);
 		const exit = from.getExit(dir);
 
-		if (!exit) return 'You cannot move in that direction.';
+		if (!exit) {
+			char.log('You cannot move in that direction.');
+			return null;
+		}
 
 		const destX = exit.to.x;
 		const destY = exit.to.y;
@@ -307,6 +289,8 @@ export class World {
 
 			char.addHistory('explore');
 			char.addExp(2);
+
+			char.loc.setTo(dest.coord);
 
 			this.quickSave(dest);
 

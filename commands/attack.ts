@@ -8,6 +8,7 @@ import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
+	alias: 'a',
 	data: CommandData('attack', 'Attack character or monster')
 		.addStringOption(StrOpt('who', 'Who or what to attack')),
 	async exec(m: ChatCommand, rpg: Rpg) {

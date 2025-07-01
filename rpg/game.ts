@@ -105,19 +105,20 @@ export class Game {
 
 	async move(char: Char, dir: string) {
 
-		if (this.tick(char, 'move') === false) return char.getLog();
+		if (this.tick(char, 'move') === false) return;
 
-		const res = await this.world.move(char, toDirection(dir));
+		const loc = await this.world.tryMove(char, toDirection(dir));
+		if (!loc) return;
+
+		char.log(char.name + ' is' + loc.look());
 
 		const p = this.getParty(char);
 		if (p && p.leader === char.name) {
 
-			//console.log('Moving party to: ' + char.loc.toString() );
 			await p.move(char.loc);
 
 		} else char.recover();
 
-		return char.output(res);
 	}
 
 	async hike(char: Char, dir: DirVal) {

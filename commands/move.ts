@@ -53,7 +53,8 @@ const CmdMove = NewCommand<Rpg>({
 
 		}
 
-		await ReplyBlock(m, await rpg.game.move(char, dir));
+		await rpg.game.move(char, dir);
+		return ReplyBlock(m, char.getLog());
 
 	}
 });
@@ -67,7 +68,8 @@ const CmdNorth = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await ReplyBlock(m, await rpg.game.move(char, 'n'));
+		await rpg.game.move(char, 'n');
+		return ReplyBlock(m, char.getLog());
 
 	}
 });
@@ -81,7 +83,8 @@ const CmdSouth = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await ReplyBlock(m, await rpg.game.move(char, 's'));
+		await rpg.game.move(char, 's');
+		return ReplyBlock(m, char.getLog());
 
 	}
 });
@@ -95,7 +98,8 @@ const CmdEast = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await ReplyBlock(m, await rpg.game.move(char, 'e'));
+		await rpg.game.move(char, 'e');
+		return ReplyBlock(m, char.getLog());
 
 	}
 })
@@ -110,7 +114,8 @@ const CmdWest = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await ReplyBlock(m, await rpg.game.move(char, 'w'));
+		await rpg.game.move(char, 'w');
+		return ReplyBlock(m, char.getLog());
 
 	}
 });

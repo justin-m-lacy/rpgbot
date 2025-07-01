@@ -237,11 +237,15 @@ export class DiscordBot {
 
 			if (this.isSpam(m)) return;
 
-			const ind = m.content.indexOf(' ');
-			const cmdStr = ind < 0 ? m.content.slice(1) : m.content.slice(1, ind);
+			try {
+				const ind = m.content.indexOf(' ');
+				const cmdStr = ind < 0 ? m.content.slice(1) : m.content.slice(1, ind);
 
-			const cmd = this.commands.get(cmdStr);
-			if (cmd) this.onMessage(m, cmd, ind > 0 ? m.content.slice(ind + 1) : '');
+				const cmd = this.commands.get(cmdStr);
+				if (cmd) this.onMessage(m, cmd, ind > 0 ? m.content.slice(ind + 1) : '');
+			} catch (e) {
+				console.error(e);
+			}
 
 		})
 

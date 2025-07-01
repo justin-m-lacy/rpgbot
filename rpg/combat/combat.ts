@@ -12,7 +12,7 @@ import { Dice, roll } from '../values/dice';
 import { World } from '../world/world';
 import { Loot } from './loot';
 
-const fist = new Weapon('fists',
+const fist = new Weapon('fists', 'fists',
 	new forms.DamageSrc(new Dice(1, 2, 0), 'blunt'),
 	'Just plain fists.');
 
