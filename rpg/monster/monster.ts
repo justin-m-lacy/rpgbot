@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
 import { Maxable } from 'rpg/values/maxable';
 import { LifeState } from '../char/actor';
@@ -141,7 +142,7 @@ export class Monster {
 
 	static Revive(json: any) {
 
-		let m = new Monster();
+		let m = new Monster(json.id);
 		Object.assign(m, json);
 
 		if (m.weap) m.weap = Weapon.Revive(m.weap);
@@ -152,7 +153,8 @@ export class Monster {
 
 	toJSON() {
 
-		let json = {
+		return {
+			id: this.id,
 			name: this.name,
 			desc: this.desc,
 			level: this._level,
@@ -168,7 +170,6 @@ export class Monster {
 			weap: this._weap ?? undefined
 
 		};
-		return json;
 
 	}
 
@@ -223,6 +224,8 @@ export class Monster {
 
 	private readonly _hp: Maxable = new Maxable('hp');
 
+	readonly id: string;
+
 	private _level: number = 0;
 	private _armor: number = 0;
 	private _evil: number = 0;
@@ -236,7 +239,8 @@ export class Monster {
 
 	private _held?: Item[];
 
-	constructor() {
+	constructor(id?: string) {
+		this.id = id ?? randomUUID();
 		this._toHit = 0;
 		this._state = 'alive';
 	}

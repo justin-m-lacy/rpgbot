@@ -5,6 +5,7 @@ import type { Game } from "rpg/game";
 import type { Inventory } from "rpg/inventory";
 import type { Item } from "rpg/items/item";
 import { Wearable } from "rpg/items/wearable";
+import type { Monster } from "rpg/monster/monster";
 
 export const IllegalIdChars = ['/', '\\', ':', '*', '?', '"', '|', '<', '>', '#', '='];
 
@@ -202,6 +203,30 @@ export const WorldItemActions = (item: Item) => {
 
 	return acts;
 
+}
+
+export const PickCharButtons = (cmd: string, chars: Char[], param: string = 'who') => {
+	return ToActionRows(
+
+		chars.map(c => CustomButton({
+			customId: cmd,
+			label: c.name
+		}, {
+			[param]: c.name
+		}))
+	);
+}
+
+export const PickNpcButtons = (cmd: string, chars: Array<Char | Monster>, param: string = 'who') => {
+	return ToActionRows(
+
+		chars.map(c => CustomButton({
+			customId: cmd,
+			label: c.name
+		}, {
+			[param]: 'id' in c ? c.id : c.name
+		}))
+	);
 }
 
 /**

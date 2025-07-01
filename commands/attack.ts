@@ -1,6 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
+import { PickNpcButtons } from "rpg/actions";
 import { SendBlock } from "rpg/display/display";
 import { Monster } from "rpg/monster/monster";
 import { Rpg } from "rpg/rpg";
@@ -11,12 +12,20 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('who', 'Who or what to attack')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const who = m.options.getString('who');
-
 		const src = await rpg.userCharOrErr(m, m.user);
 		if (!src) return;
 
-		let targ = await rpg.world.getNpc(src, who ?? 1);
+		const who = m.options.getString('who');
+		if (!who) {
+
+			const loc = await rpg.world.getOrGen(src.loc);
+			return SendPrivate(m, 'Attack who?', {
+				components: PickNpcButtons('attack', loc.npcs)
+			});
+
+		}
+
+		let targ = await rpg.world.getNpc(src, who);
 		let res;
 
 		if (targ) {

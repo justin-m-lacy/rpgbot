@@ -1,6 +1,6 @@
 import { ButtonAction } from "@/bot/cmd-wrapper";
 import type { Command } from "@/bot/command";
-import { ButtonBuilder, type ButtonComponentData, type ButtonInteraction } from "discord.js";
+import { ButtonBuilder, ButtonStyle, type ButtonComponentData, type ButtonInteraction } from "discord.js";
 
 
 /**
@@ -19,6 +19,8 @@ const CmdSplitChar = '/';
 export const CustomButton = (
 	opts: Partial<ButtonComponentData> & { customId: string, label: string },
 	props: Record<string, any>) => {
+
+	opts.style ??= ButtonStyle.Secondary;
 
 	if (props) {
 		for (const k in props) {
