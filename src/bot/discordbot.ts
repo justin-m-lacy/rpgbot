@@ -1,5 +1,5 @@
 import { CmdParser } from '@/bot/cmd-parser';
-import { ButtonCommand, MsgWrap, type ChatCommand } from '@/bot/cmd-wrapper';
+import { MsgWrap, type ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
@@ -7,7 +7,7 @@ import { Display } from '../utils/display';
 import { Auth } from './auth';
 import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './botcontext';
 import fsys from './botfs';
-import { type Command } from './command';
+import { IsTypedCmd, type Command } from './command';
 import { CommandMap } from './command-map';
 
 export type TBotConfig = {
@@ -197,7 +197,7 @@ export class DiscordBot {
 				const cmd = this.commands.get(it.commandName);
 				if (!cmd) return;
 
-				if ('cls' in cmd) {
+				if (IsTypedCmd(cmd)) {
 
 					const ctx = await this.getCmdContext(it);
 					ctx?.routeCommand(it, cmd);
@@ -207,18 +207,16 @@ export class DiscordBot {
 				}
 			} else if (it.isButton()) {
 
-				const cmd = this.commands.get(it.customId);
-				if (!cmd) return;
+				const wrap = this.commands.parseButton(it);
+				if (!wrap) return;
 
-				const wrap = new ButtonCommand(it);
-
-				if ('cls' in cmd) {
+				if (IsTypedCmd(wrap.cmd)) {
 
 					const ctx = await this.getCmdContext(it);
-					ctx?.routeCommand(wrap, cmd);
+					ctx?.routeCommand(wrap, wrap.cmd);
 
 				} else {
-					await cmd.exec(wrap, this);
+					await wrap.cmd.exec(wrap, this);
 				}
 
 			}

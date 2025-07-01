@@ -1,6 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrChoices, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
+import { IsLegalName } from "rpg/actions";
 import { GenChar } from "rpg/builders/chargen";
 import type { GClass, Race } from "rpg/char/race";
 import { EchoChar } from "rpg/display/display";
@@ -40,7 +41,6 @@ export default NewCommand<Rpg>({
 			const userData = await rpg.getUserData(m.user.id);
 			const userLevels = GetUserLevels(userData);
 
-			console.log(`newchar: ${charname} race: ${racename} cls: ${classname}`);
 			const race = racename ? GetRace(racename) : RandRace(racename, userLevels);
 			if (!race) return SendPrivate(m, 'Race ' + racename + ' not found.');
 
@@ -52,7 +52,7 @@ export default NewCommand<Rpg>({
 
 			if (charname) {
 
-				if (!rpg.context.isValidKey(charname)) return SendPrivate(m, `'${charname}' contains illegal letters.`);
+				if (!IsLegalName(charname)) return SendPrivate(m, `'${charname}' contains illegal letters.`);
 				if (await rpg.charExists(charname)) return SendPrivate(m, `Character '${charname}' already exists.`);
 
 			} else charname = await rpg.uniqueName(race, sex);

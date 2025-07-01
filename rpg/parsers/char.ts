@@ -1,10 +1,10 @@
 import { Char } from 'rpg/char/char';
 import { Equip, type HumanSlots } from 'rpg/char/equip';
-import { BadTypeError, NullDataError } from 'rpg/errors/parsing';
 import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { Effect } from 'rpg/magic/effects';
+import { BadTypeError, NullDataError } from 'rpg/util/errors';
 import { Coord, IsCoord } from 'rpg/world/loc';
 import * as ItemGen from '../builders/itemgen';
 import { GetClass, GetRace } from './parse-class';

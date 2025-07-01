@@ -1,5 +1,5 @@
 import { type ChatCommand } from "@/bot/cmd-wrapper";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type InteractionReplyOptions } from "discord.js";
+import { EmbedBuilder, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
 import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
 import { Char } from '../char/char';
@@ -36,20 +36,6 @@ export const IsVowel = (c: string) => {
 
 	c = c.toLowerCase();
 	return c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u';
-}
-
-/**
- * Get actions usable by own char.
- * @returns 
- */
-export const GetOwnCharActions = () => {
-
-	return new ActionRowBuilder<ButtonBuilder>().addComponents(
-
-		new ButtonBuilder().setCustomId('inv').setLabel('Inventory').setStyle(ButtonStyle.Secondary),
-		new ButtonBuilder().setCustomId('equip').setLabel('Equipped').setStyle(ButtonStyle.Secondary)
-
-	);
 }
 
 /**

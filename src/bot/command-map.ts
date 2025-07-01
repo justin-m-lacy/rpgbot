@@ -1,21 +1,62 @@
+import { ButtonAction } from "@/bot/cmd-wrapper";
 import type { Command } from "@/bot/command";
+import type { ButtonInteraction } from "discord.js";
 
 
+/**
+ * Character for splitting customId (button) commands.
+ */
+export const CmdSplitChar = '/';
 
-export const CommandMap = () => {
+export class Commands {
 
-	const commands = new Map<string, Command<any>>();
+	readonly commands = new Map<string, Command<any>>();
 
+	constructor() {
 
-	return {
-		entries() { return commands.entries() },
-		values() { return commands.values() },
-		get(k: string) { return commands.get(k) },
-		set(k: string, cmd: Command) {
-			commands.set(k, cmd);
-			if (cmd.alias) commands.set(cmd.alias, cmd);
-		}
 	}
 
+	/**
+	 * Parse button interaction into Button command data.
+	 * @param it 
+	 * @returns 
+	 */
+	parseButton(it: ButtonInteraction) {
 
+		const parts = it.customId.split(CmdSplitChar);
+		const cmd = this.commands.get(parts[0]);
+		if (!cmd) return null;
+
+		const act = new ButtonAction(cmd, it);
+
+		for (let i = 1; i < parts.length; i++) {
+
+			const kvp = parts[i];
+			const ind = kvp.indexOf('=')
+			if (ind > 0) {
+				act.addOption(kvp.slice(0, ind), kvp.slice(ind + 1));
+			}
+
+		}
+
+
+		return act;
+
+	}
+
+	entries() { return this.commands.entries() }
+
+	values() { return this.commands.values() }
+
+	get(k: string) { return this.commands.get(k) }
+
+	set(k: string, cmd: Command) {
+		this.commands.set(k, cmd);
+		if (cmd.alias) this.commands.set(cmd.alias, cmd);
+	}
+
+}
+
+export const CommandMap = () => {
+	return new Commands();
 }

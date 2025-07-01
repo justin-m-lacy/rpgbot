@@ -1,9 +1,9 @@
 import type { MessageOpt } from "@/bot/cmd-wrapper";
 import type { Command } from "@/bot/command";
 import { ApplicationCommandOptionBase, ApplicationCommandOptionType } from "discord.js";
-import { NotEnoughArgs } from "rpg/errors/parsing";
+import { NotEnoughArgs } from "rpg/util/errors";
 
-const splitter = /\s+/gi;
+//const splitter = /\s+/gi;
 
 const ParseOpType = (text: string, type: ApplicationCommandOptionType) => {
 	if (type === ApplicationCommandOptionType.String) {

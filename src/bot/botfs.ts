@@ -114,9 +114,6 @@ export default {
 
 	},
 
-	/**
-	 * @property {string[]} illegalChars
-	 */
 	illegalChars: ['/', '\\', ':', '*', '?', '"', '|', '<', '>'],
 
 	get BaseDir() { return BaseDir; },

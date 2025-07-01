@@ -1,3 +1,4 @@
+import type { Command } from "@/bot/command";
 import { type BaseMessageOptions, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type MessagePayload, type User } from "discord.js";
 
 export type ChatCommand = ChatInputCommandInteraction | ICmdWrap;
@@ -55,6 +56,10 @@ export class MsgOptions {
 
 	}
 
+	addOption(key: string, value: string) {
+		this.opts[key] = value;
+	}
+
 	constructor(opts?: CmdArg<any>[]) {
 
 		if (opts) {
@@ -89,17 +94,33 @@ export interface ICmdWrap {
 
 
 }
-export class ButtonCommand implements ICmdWrap {
+export class ButtonAction implements ICmdWrap {
 
 	options: MsgOptions = new MsgOptions();
 
 	get symbol() { return SymWrap; }
 	readonly m: ButtonInteraction;
 
-	constructor(act: ButtonInteraction) {
+	/**
+	 * Underlying command the button action represents.
+	 */
+	readonly cmd: Command;
+
+	constructor(cmd: Command, act: ButtonInteraction, opts?: Record<string, string>) {
 
 		this.m = act;
+		this.cmd = cmd;
 
+		if (opts) {
+			for (const k in opts) {
+				this.addOption(k, opts[k])
+			}
+		}
+
+	}
+
+	addOption(k: string, val: string) {
+		this.options.addOption(k, val);
 	}
 
 	reply(opts: string | MessagePayload | BaseMessageOptions) {

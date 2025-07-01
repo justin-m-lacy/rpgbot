@@ -2,8 +2,9 @@ import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { type InteractionReplyOptions } from "discord.js";
+import { GetOtherCharActions, GetOwnCharActions } from "rpg/actions";
 import { getHistory } from "rpg/char/events";
-import { GetOwnCharActions, ReplyBlock } from "rpg/display/display";
+import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -24,13 +25,14 @@ export default NewCommand<Rpg>({
 			char = await rpg.userCharOrErr(m, m.user);
 			if (!char) return;
 
-			const actions = GetOwnCharActions();
-			opts.components = [actions];
+			opts.components = [GetOwnCharActions()];
 
 		} else {
 
 			char = await rpg.loadChar(who);
 			if (!char) return SendPrivate(m, who + ' not found on server. :O');
+
+			opts.components = [GetOtherCharActions(who)];
 
 		}
 

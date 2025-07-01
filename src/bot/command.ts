@@ -42,6 +42,8 @@ type BaseCommand = {
 
 	maxArgs: number,
 
+	//isContext: boolean
+
 }
 /**
  * Command not relying on stored instance data or BotContext.
@@ -78,6 +80,7 @@ export const StrChoices = (name: string, desc: string, choices: Array<{ name: st
 
 export const NumOpt = (name: string, desc: string, min: number = 0) => new SlashCommandNumberOption().setName(name).setDescription(desc).setMinValue(min);
 
+export const IsTypedCmd = (cmd: Command): cmd is TypedCommand<any> => 'cls' in cmd;
 /**
  * Allows automate add 'id' and other useful command funcs.
  * @param cmd 
