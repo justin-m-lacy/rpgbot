@@ -11,7 +11,7 @@ import { Equip } from './equip';
 import { History } from './events';
 import { tryLevel } from './level';
 import { Race, type GClass } from './race';
-import { StatKey } from './stats';
+import { StatIds, StatKey } from './stats';
 
 const SaveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
 	'loc', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
@@ -128,7 +128,7 @@ export class Char extends Actor {
 	addStat(stat: string) {
 
 		stat = stat.toLowerCase();
-		if (!(stat in this.stats)) {
+		if (!StatIds.includes(stat)) {
 			this.log('Stat not found');
 			return false;
 		}

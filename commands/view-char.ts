@@ -26,7 +26,7 @@ export default NewCommand<Rpg>({
 		} else {
 			char = await rpg.loadChar(charname);
 			if (!char) return SendPrivate(m, charname + ' not found on server.');
-			opts.components = [GetOtherCharActions(charname)];
+			opts.components = [GetOtherCharActions(rpg.game, char)];
 		}
 		return EchoChar(m, char, opts);
 

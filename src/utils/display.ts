@@ -1,6 +1,6 @@
 import type { ChatCommand } from '@/bot/cmd-wrapper';
 import type { ChatAction } from '@/bot/command';
-import { EmbedBuilder, Message, MessageFlags, type SendableChannels } from 'discord.js';
+import { EmbedBuilder, Message, MessageFlags, type InteractionReplyOptions, type SendableChannels } from 'discord.js';
 
 
 /**
@@ -25,8 +25,11 @@ const SendNoPerm = (m: ChatAction, cmd?: string) => {
 
 }
 
-export const SendPrivate = (m: ChatCommand, text: string) => {
-	return m.reply({ content: text, flags: MessageFlags.Ephemeral });
+export const SendPrivate = (m: ChatCommand, text: string, opts?: InteractionReplyOptions) => {
+	return m.reply({
+		content: text, flags: MessageFlags.Ephemeral,
+		...opts
+	});
 }
 
 const ContentMax = 1600;

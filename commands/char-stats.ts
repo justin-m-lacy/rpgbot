@@ -32,7 +32,7 @@ export default NewCommand<Rpg>({
 			char = await rpg.loadChar(who);
 			if (!char) return SendPrivate(m, who + ' not found on server. :O');
 
-			opts.components = [GetOtherCharActions(who)];
+			opts.components = [GetOtherCharActions(rpg.game, char)];
 
 		}
 

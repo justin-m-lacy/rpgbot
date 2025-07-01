@@ -1,12 +1,16 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import { CmdSplitChar } from "@/bot/command-map";
 import { SendPrivate } from "@/utils/display";
+import { ActionRowBuilder, ButtonStyle } from "discord.js";
+import { ButtonBuilder } from "node_modules/discord.js/typings/index.mjs";
+import { StatIds } from "rpg/char/stats";
 import { Rpg } from "rpg/rpg";
 import { ChatCommand } from '../src/bot/cmd-wrapper';
 
 export default NewCommand<Rpg>(
 	{
 		data: CommandData('addstat', 'Assign stat point', [
-			StrOpt('stat', 'Stat to increase').setRequired(true)
+			StrOpt('stat', 'Stat to increase')
 		]),
 		cls: Rpg,
 		async exec(m: ChatCommand, rpg: Rpg) {
@@ -14,9 +18,32 @@ export default NewCommand<Rpg>(
 			const char = await rpg.userCharOrErr(m, m.user);
 			if (!char) return;
 
-			const stat = m.options.getString('stat', true);
-			const res = char.addStat(stat);
+			const stat = m.options.getString('stat');
 
+			if (!stat) {
+
+				// prompt stat to increase.
+				return SendPrivate(m, 'Increase which stat?', {
+					components: [
+
+						new ActionRowBuilder<ButtonBuilder>().addComponents(
+
+							...StatIds.map(stat => {
+								return new ButtonBuilder({
+									customId: `addstat${CmdSplitChar}stat=${stat}`,
+									label: stat,
+									style: ButtonStyle.Primary
+
+								})
+							})
+
+						)
+					]
+				});
+
+			}
+
+			const res = char.addStat(stat);
 			if (res) {
 				SendPrivate(m, `${stat} increased.`);
 			} else {
