@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
 import { Char } from '../char/char';
 import * as Effects from '../magic/effects';
@@ -7,7 +8,7 @@ export class Potion extends Item {
 
 	static Revive(json: any) {
 
-		let p = new Potion();
+		let p = new Potion(json.id);
 
 		if (json.effect) p.effect = json.effect;
 		if (json.form) p.form = json.form;
@@ -44,8 +45,8 @@ export class Potion extends Item {
 
 	_effect?: any;
 
-	constructor() {
-		super('', '', ItemType.Potion);
+	constructor(id?: string) {
+		super(id ?? randomUUID(), '', '', ItemType.Potion);
 	}
 
 	quaff(char: Char) {

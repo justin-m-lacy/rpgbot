@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { SendBlock } from "rpg/display/display";
+import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -21,7 +21,7 @@ export default NewCommand<Rpg>({
 		if (!dest) return SendPrivate(m, `'${who}' not seen here.`);
 
 		const result = await rpg.game.steal(src, dest, what);
-		await SendBlock(m, result);
+		await ReplyBlock(m, result);
 
 	}
 })

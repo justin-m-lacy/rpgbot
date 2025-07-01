@@ -43,7 +43,7 @@ export const ToActionRows = (buttons: ButtonBuilder[]) => {
 
 }
 
-export const GetOtherCharActions = (game: Game, char: Char, myChar?: Char, nohostile?: boolean) => {
+export const OtherCharActions = (game: Game, char: Char, myChar?: Char, nohostile?: boolean) => {
 
 	const acts = new ActionRowBuilder<ButtonBuilder>();
 
@@ -107,7 +107,7 @@ export const GetOtherCharActions = (game: Game, char: Char, myChar?: Char, nohos
  * Get actions usable by own char.
  * @returns 
  */
-export const GetOwnCharActions = () => {
+export const OwnCharActions = () => {
 
 	return new ActionRowBuilder<ButtonBuilder>().addComponents(
 
@@ -119,4 +119,8 @@ export const GetOwnCharActions = () => {
 		new ButtonBuilder().setCustomId('equip').setLabel('Equipment').setStyle(ButtonStyle.Secondary)
 
 	);
+}
+
+export const GroundItemActions = () => {
+
 }

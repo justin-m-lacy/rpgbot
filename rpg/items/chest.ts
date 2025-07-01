@@ -11,7 +11,7 @@ export class Chest extends Item implements IInventory {
 
 	static Revive(json: any) {
 
-		const p = new Chest(Inventory.Revive(json.inv, Item.Revive));
+		const p = new Chest(json.id, Inventory.Revive(json.inv, Item.Revive));
 		p.size = json.size;
 
 		return super.Revive(json, p);
@@ -44,8 +44,9 @@ export class Chest extends Item implements IInventory {
 
 	private readonly _inv;
 
-	constructor(inv: Inventory) {
-		super('', '', ItemType.Chest);
+	constructor(id: string, inv: Inventory) {
+
+		super(id, '', ItemType.Chest);
 
 		this._inv = inv;
 

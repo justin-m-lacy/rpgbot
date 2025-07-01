@@ -1,6 +1,8 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt, type Command } from "@/bot/command";
-import { SendBlock } from "rpg/display/display";
+import { SendPrivate } from "@/utils/display";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 
@@ -11,15 +13,47 @@ export function GetCommands(): Command[] {
 const CmdMove = NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('move', 'Move in given direction')
-		.addStringOption(StrOpt('dir', 'Direction to move').setRequired(true)),
+		.addStringOption(StrOpt('dir', 'Direction to move')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
 		const dir = m.options.getString('dir', true);
+		if (!dir) {
 
-		await SendBlock(m, await rpg.game.move(char, dir));
+			return SendPrivate(m, 'Move in what direction?', {
+				components: [
+					new ActionRowBuilder<ButtonBuilder>().addComponents(
+
+						new ButtonBuilder({
+							customId: 'north',
+							label: 'North',
+							style: ButtonStyle.Secondary
+						}),
+						new ButtonBuilder({
+							customId: 'south',
+							label: 'South',
+							style: ButtonStyle.Secondary
+						}),
+						new ButtonBuilder({
+							customId: 'east',
+							label: 'East',
+							style: ButtonStyle.Secondary
+						}),
+						new ButtonBuilder({
+							customId: 'west',
+							label: 'West',
+							style: ButtonStyle.Secondary
+						})
+
+					)
+				]
+			})
+
+		}
+
+		await ReplyBlock(m, await rpg.game.move(char, dir));
 
 	}
 });
@@ -33,7 +67,7 @@ const CmdNorth = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await SendBlock(m, await rpg.game.move(char, 'n'));
+		await ReplyBlock(m, await rpg.game.move(char, 'n'));
 
 	}
 });
@@ -47,7 +81,7 @@ const CmdSouth = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await SendBlock(m, await rpg.game.move(char, 's'));
+		await ReplyBlock(m, await rpg.game.move(char, 's'));
 
 	}
 });
@@ -61,7 +95,7 @@ const CmdEast = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await SendBlock(m, await rpg.game.move(char, 'e'));
+		await ReplyBlock(m, await rpg.game.move(char, 'e'));
 
 	}
 })
@@ -76,7 +110,7 @@ const CmdWest = NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await SendBlock(m, await rpg.game.move(char, 'w'));
+		await ReplyBlock(m, await rpg.game.move(char, 'w'));
 
 	}
 });

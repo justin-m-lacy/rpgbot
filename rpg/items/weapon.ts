@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { DamageSrc } from '../formulas';
 import { Item, ItemType } from './item';
 import { Material } from './material';
@@ -19,7 +20,7 @@ export class Weapon extends Wearable {
 
 	static Revive(json: any) {
 
-		const w = new Weapon(json.name, json.desc);
+		const w = new Weapon(json.id, json.name, json.desc);
 
 		if (json.material) w.material = json.material;
 
@@ -49,7 +50,7 @@ export class Weapon extends Wearable {
 
 		const damage = DamageSrc.FromString(tmp.dmg, tmp.type);
 
-		const w = new Weapon(tmp.name, damage);
+		const w = new Weapon(randomUUID(), tmp.name, damage);
 
 		if (tmp.hands) w.hands = tmp.hands;
 		if (tmp.mods) w.mods = Object.assign({}, tmp.mods);
@@ -79,9 +80,9 @@ export class Weapon extends Wearable {
 	hands: number = 1;
 	damage: DamageSrc;
 
-	constructor(name: string, dmg: DamageSrc, desc?: string) {
+	constructor(id: string, name: string, dmg: DamageSrc, desc?: string) {
 
-		super(name, desc);
+		super(id, name, desc);
 		this.damage = dmg;
 
 		this.type = ItemType.Weapon;

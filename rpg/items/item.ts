@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Char } from "../char/char";
 
 export enum ItemType {
@@ -16,6 +17,7 @@ export enum ItemType {
 }
 
 export type ItemData = {
+	id: string,
 	name: string,
 	type?: ItemType,
 	desc?: string,
@@ -54,7 +56,7 @@ export class Item {
 	 */
 	static Revive(json: ItemData, it?: Item) {
 
-		if (!it) it = new Item(json.name, json.desc, json.type);
+		if (!it) it = new Item(json.id, json.name, json.desc, json.type);
 		else {
 			it.name = json.name;
 		}
@@ -75,6 +77,7 @@ export class Item {
 	toJSON() {
 
 		return {
+			id: this.id,
 			name: this.name,
 			desc: this.desc,
 			type: this.type,
@@ -85,6 +88,8 @@ export class Item {
 			inscrip: this.inscrip || undefined
 		}
 	}
+
+	readonly id: string;
 
 	private _level: number = 0;
 
@@ -102,8 +107,9 @@ export class Item {
 	 */
 	created: number = 0;
 
-	constructor(name: string, desc: string = '', type: ItemType = ItemType.Unknown) {
+	constructor(id: string, name: string, desc: string = '', type: ItemType = ItemType.Unknown) {
 
+		this.id = id;
 		this.name = name;
 		this.type = type;
 		this.desc = desc;
@@ -200,7 +206,7 @@ export class Item {
 
 export const Craft = (char: Char, name: string, desc?: string, attach?: string) => {
 
-	const item = new Item(name, desc);
+	const item = new Item(randomUUID({}), name, desc);
 
 	if (attach) item.attach = attach;
 

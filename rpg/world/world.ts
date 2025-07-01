@@ -203,7 +203,7 @@ export class World {
 
 	}
 
-	async look(char: Char, what: string | number) {
+	async look(char: Char, what?: string | number | null) {
 
 		const loc = await this.getOrGen(char.loc);
 

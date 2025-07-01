@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Item, ItemType } from './item';
 import { Material } from './material';
 
@@ -62,7 +63,7 @@ export class Wearable extends Item {
 	static FromData(base: any, material: Material) {
 
 		const name = material.name + ' ' + base.name;
-		const it = new Wearable(name);
+		const it = new Wearable(randomUUID(), name);
 
 		it.material = material.name;
 		it.cost = material.priceMod ? base.cost * material.priceMod : base.cost;
@@ -77,7 +78,7 @@ export class Wearable extends Item {
 
 	static Revive(json: any) {
 
-		const a = new Wearable(json.name, json.desc);
+		const a = new Wearable(json.id, json.name, json.desc);
 		a.material = json.material;
 		a.slot = json.slot;
 		a.armor = json.armor;
@@ -105,9 +106,9 @@ export class Wearable extends Item {
 	private _material: string = '';
 	private _mods: any;
 
-	constructor(name: string, desc?: string) {
+	constructor(id: string, name: string, desc?: string) {
 
-		super(name, desc, ItemType.Armor);
+		super(id, name, desc, ItemType.Armor);
 		this._armor = 0;
 
 	}
