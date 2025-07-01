@@ -170,7 +170,7 @@ export class Loc {
 			features: this._features ?? undefined,
 			attach: this._attach ?? undefined,
 			maker: this._maker ?? undefined,
-			time: this._time ?? undefined,
+			time: this.time ?? undefined,
 			owner: this._owner ?? undefined
 
 		};
@@ -179,9 +179,6 @@ export class Loc {
 
 	get biome() { return this._biome; }
 	set biome(v) { this._biome = v; }
-
-	get time() { return this._time; }
-	set time(v) { this._time = v; }
 
 	get key() { return this._key; }
 
@@ -198,6 +195,8 @@ export class Loc {
 	get owner() { return this._owner; }
 	set owner(v) { this._owner = v; }
 
+	get items() { return this.inv.items }
+
 	name?: string;
 	desc?: string;
 
@@ -205,9 +204,9 @@ export class Loc {
 	private _maker?: string;
 	private _attach: any;
 	private _owner?: string;
-	private _time?: number;
+	time?: number;
 
-	private _features: Inventory;
+	private readonly _features: Inventory;
 
 	private _key!: string;
 	readonly coord: Coord;
@@ -264,7 +263,7 @@ export class Loc {
 
 		if (json.owner) loc._owner = json.owner;
 		if (json.maker) loc._maker = json.maker;
-		if (json.time) loc._time = json.time;
+		if (json.time) loc.time = json.time;
 
 		return loc;
 
@@ -272,11 +271,10 @@ export class Loc {
 
 	static ParseNpcs(a: any[], loc: Loc) {
 
-		let len = a.length;
+		const len = a.length;
 		for (let i = 0; i < len; i++) {
 
-			var m = Monster.Revive(a[i]);
-			console.log('reviving npc: ' + m.name);
+			const m = Monster.Revive(a[i]);
 			if (m) loc.addNpc(m);
 
 		} //for
@@ -285,13 +283,13 @@ export class Loc {
 
 	setMaker(n: string) {
 		this._maker = n;
-		this._time = Date.now();
+		this.time = Date.now();
 	}
 
 	explored() {
 
 		if (!this._maker) return 'Never explored.';
-		if (this._time) return `Explored by ${this._maker} at ${new Date(this._time).toLocaleDateString()}`;
+		if (this.time) return `Explored by ${this._maker} at ${new Date(this.time).toLocaleDateString()}`;
 		return 'First explored by ' + this._maker + '.';
 
 	}

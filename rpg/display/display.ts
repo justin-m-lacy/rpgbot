@@ -1,5 +1,5 @@
 import { type ChatCommand } from "@/bot/cmd-wrapper";
-import { EmbedBuilder, type InteractionReplyOptions } from "discord.js";
+import { EmbedBuilder, MessageFlags, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
 import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
 import { Char } from '../char/char';
@@ -23,6 +23,7 @@ export const ReplyBlock = async (m: ChatCommand,
 
 	return m.reply({
 		content: '```' + str + '```',
+		flags: MessageFlags.Ephemeral,
 		...opts
 	});
 
