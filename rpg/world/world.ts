@@ -287,12 +287,11 @@ export class World {
 			char.addHistory('explore');
 			char.addExp(2);
 
-			char.loc.setTo(dest.coord);
-
 			this.quickSave(dest);
 
 		}
 
+		char.loc.setTo(dest.coord);
 		this.trySpawn(dest);
 
 		return dest;
