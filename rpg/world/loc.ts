@@ -5,13 +5,38 @@ import { Item } from "../items/item";
 import { Monster } from '../monster/monster';
 import { Feature } from './feature';
 
-export type DirVal = 'n' | 's' | 'e' | 'w' | 'u' | 'd' | 'l' | 'r' | 'x' | 'enter' | 'unknown';
+export type DirVal = 'n' | 's' | 'e' | 'w' | 'u' | 'd' | 'l' | 'r' | 'x' | 'enter';
 export type DirString = DirVal | 'north' | 'south' | 'east' | 'west' | 'exit' | 'up' | 'down' | 'left' | 'right';
 
 export const toDirection = (s: string): DirVal => {
 	return DirMap[s.toLowerCase()] ?? 'unknown';
 }
 
+const DirStrings: Record<DirString, string> = {
+	north: 'North',
+	n: 'North',
+	south: 'South',
+	s: 'South',
+	east: 'East',
+	e: 'East',
+	west: 'West',
+	w: 'West',
+	up: 'Up',
+	u: 'Up',
+	down: 'Down',
+	d: 'Down',
+	left: 'Left',
+	l: 'Left',
+	right: 'Right',
+	r: 'Right',
+	exit: 'Exit',
+	x: 'Exit',
+	enter: 'Enter',
+}
+
+export const ToDirStr = (v: DirString) => {
+	return DirStrings[v];
+}
 export enum Biome {
 	FOREST = 'forest',
 	TOWN = 'town',
@@ -55,18 +80,37 @@ const DirMap: { [s: string]: DirVal } = {
 	enter: 'enter',
 }
 
-
-const reverses: Partial<Record<DirString, DirVal>> = {
+/**
+ * Maps direction to its opposite direction.
+ */
+const OppositeDirs: Partial<Record<DirString, DirVal>> = {
 	enter: DirMap.exit,
 	north: DirMap.south,
+	n: DirMap.south,
+
 	south: DirMap.north,
+	s: DirMap.north,
+
 	east: DirMap.west,
+	e: DirMap.west,
+
 	west: DirMap.east,
+	w: DirMap.east,
+
 	left: DirMap.right,
+	l: DirMap.right,
+
 	right: DirMap.left,
+	r: DirMap.left,
+
 	up: DirMap.down,
+	u: DirMap.down,
+
 	down: DirMap.up,
+	d: DirMap.up,
+
 	exit: DirMap.enter,
+	x: DirMap.enter
 };
 
 export const IsCoord = (obj: any): obj is { x: number, y: number } => {
@@ -113,20 +157,38 @@ export class Coord {
 
 export class Loc {
 
+	toJSON() {
+
+		return {
+			coord: this.coord,
+			exits: this.exits,
+			inv: this.inv,
+			desc: this.desc,
+			name: this.name,
+			biome: this._biome,
+			npcs: this.npcs ?? undefined,
+			features: this._features ?? undefined,
+			attach: this._attach ?? undefined,
+			maker: this._maker ?? undefined,
+			time: this._time ?? undefined,
+			owner: this._owner ?? undefined
+
+		};
+
+	}
+
 	get biome() { return this._biome; }
 	set biome(v) { this._biome = v; }
-
-	get coord() { return this._coord; }
 
 	get time() { return this._time; }
 	set time(v) { this._time = v; }
 
 	get key() { return this._key; }
 
-	get x() { return this._coord.x; }
-	get y() { return this._coord.y; }
+	get x() { return this.coord.x; }
+	get y() { return this.coord.y; }
 
-	get norm() { return Math.abs(this._coord.x) + Math.abs(this._coord.y); }
+	get norm() { return Math.abs(this.coord.x) + Math.abs(this.coord.y); }
 
 	get maker() { return this._maker; }
 
@@ -148,14 +210,14 @@ export class Loc {
 	private _features: Inventory;
 
 	private _key!: string;
-	readonly _coord: Coord;
+	readonly coord: Coord;
 	readonly npcs: Array<Char | Monster> = [];
 	readonly exits: Partial<Record<DirVal, Exit>> = {};
 	private readonly inv: Inventory;
 
 	constructor(coord: Coord, biome: string) {
 
-		this._coord = coord;
+		this.coord = coord;
 		this._biome = biome;
 
 		this.npcs = [];
@@ -170,16 +232,18 @@ export class Loc {
 		const loc = new Loc(new Coord(json.coord.x, json.coord.y), json.biome);
 
 		const exits = json.exits;
-		if (exits) {
+		if (exits && typeof exits === 'object') {
 
 			for (const k in exits) {
 				const e = exits[k];
 				loc.addExit(
-					new Exit(e.dir, new Coord(e.to.x, e.to.y))
+					new Exit(k as DirVal, new Coord(e.to.x, e.to.y))
 				);
 
 			}
 
+		} else {
+			console.error(`No exits: ${json}`);
 		}
 
 		if (json.features) {
@@ -216,26 +280,6 @@ export class Loc {
 			if (m) loc.addNpc(m);
 
 		} //for
-
-	}
-
-	toJSON() {
-
-		return {
-			coord: this._coord,
-			exits: this.exits,
-			inv: this.inv,
-			desc: this.desc,
-			name: this.name,
-			biome: this._biome,
-			npcs: this.npcs ?? undefined,
-			features: this._features ?? undefined,
-			attach: this._attach ?? undefined,
-			maker: this._maker ?? undefined,
-			time: this._time ?? undefined,
-			owner: this._owner ?? undefined
-
-		};
 
 	}
 
@@ -280,7 +324,7 @@ export class Loc {
 	 * @returns
 	 */
 	reverseExit(fromDir: DirVal) {
-		const reverse = reverses[fromDir];
+		const reverse = OppositeDirs[fromDir];
 		return reverse ? this.exits[reverse] : undefined;
 	}
 
@@ -323,7 +367,7 @@ export class Loc {
 		}
 
 		r += '\nPaths:'
-		for (let k in this.exits) {
+		for (const k in this.exits) {
 			r += '\t' + k;
 		}
 
@@ -428,7 +472,13 @@ export class Loc {
 export class Exit {
 
 	static Reverse(dir: DirVal) {
-		return reverses[dir];
+		return OppositeDirs[dir];
+	}
+
+	toJSON() {
+		return {
+			to: this.to
+		}
 	}
 
 	dir: DirVal;

@@ -119,6 +119,8 @@ export class Game {
 
 		} else char.recover();
 
+		return loc;
+
 	}
 
 	async hike(char: Char, dir: DirVal) {

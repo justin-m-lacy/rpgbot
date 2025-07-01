@@ -6,7 +6,7 @@ import { Item } from '../items/item';
 import { Monster } from '../monster/monster';
 import Block from './block';
 import { Feature } from './feature';
-import { Coord, DirString, DirVal, Exit, Loc } from './loc';
+import { Coord, DirString, DirVal, Exit, Loc, ToDirStr } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching of existing world data.
@@ -268,23 +268,20 @@ export class World {
 	async tryMove(char: Char, dir: DirVal): Promise<Loc | null> {
 
 		const from = await this.getOrGen(char.loc, char);
-		const exit = from.getExit(dir);
+		const to = from.getExit(dir)?.to;
 
-		if (!exit) {
-			char.log('You cannot move in that direction.');
+		if (!to) {
+			char.log(`There is no path ${ToDirStr(dir)}`);
 			return null;
 		}
 
-		const destX = exit.to.x;
-		const destY = exit.to.y;
-
-		let dest = await this.getLoc(destX, destY);
+		let dest = await this.getLoc(to.x, to.y);
 
 		if (dest == null) {
 
-			const exits = await this.getRandExits(destX, destY);
+			const exits = await this.getRandExits(to);
 			// must use NEW coord so avoid references.
-			dest = GenLoc(new Coord(destX, destY), from, exits);
+			dest = GenLoc(new Coord(to.x, to.y), from, exits);
 			dest.setMaker(char.name);
 
 			char.addHistory('explore');
@@ -328,7 +325,7 @@ export class World {
 
 		if (loc == null) {
 
-			console.log(coord + ' NOT FOUND. GENERATING NEW');
+			console.log(coord + ' NEW LOC');
 			loc = GenNewLoc(coord);
 
 			if (char) loc.setMaker(char.name);
@@ -414,11 +411,12 @@ export class World {
 	 * @param y
 	 * @returns all exits allowed from this location.
 	 */
-	async getRandExits(x: number, y: number) {
-		return Promise.all([this.getExitTo(new Coord(x - 1, y), 'w'),
-		this.getExitTo(new Coord(x + 1, y), 'e'),
-		this.getExitTo(new Coord(x, y - 1), 's'),
-		this.getExitTo(new Coord(x, y + 1), 'n')]).then(v => v.filter(e => e != null) as Exit[]);
+	private async getRandExits({ x, y }: Coord) {
+		return Promise.all([
+			this.getExitTo(new Coord(x - 1, y), 'w'),
+			this.getExitTo(new Coord(x + 1, y), 'e'),
+			this.getExitTo(new Coord(x, y - 1), 's'),
+			this.getExitTo(new Coord(x, y + 1), 'n')]).then(v => v.filter(e => e != null) as Exit[]);
 
 
 	}

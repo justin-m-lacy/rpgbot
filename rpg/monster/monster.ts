@@ -142,8 +142,22 @@ export class Monster {
 
 	static Revive(json: any) {
 
-		let m = new Monster(json.id);
-		Object.assign(m, json);
+		const m = new Monster(json.id);
+
+		if (json.hp) {
+			m.hp.setTo(json.hp);
+		}
+
+		const desc = Object.getOwnPropertyDescriptors(m);
+		for (const k in json) {
+
+			if (!desc[k] || desc[k].writable) {
+				desc[k] = json[k];
+			} else {
+				console.log(`no write: ${k}`);
+			}
+
+		}
 
 		if (m.weap) m.weap = Weapon.Revive(m.weap);
 		if (m.toHit) m.toHit = Number(m.toHit);

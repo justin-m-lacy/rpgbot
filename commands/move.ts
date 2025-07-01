@@ -1,13 +1,34 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt, type Command } from "@/bot/command";
+import { CustomButton } from "@/bot/command-map";
 import { SendPrivate } from "@/utils/display";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ToActionRows } from "rpg/actions";
 import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
+import { ToDirStr, type DirVal, type Loc } from "rpg/world/loc";
 
 
 export function GetCommands(): Command[] {
 	return [CmdMove, CmdNorth, CmdSouth, CmdEast, CmdWest];
+}
+
+export const MoveButtons = (loc: Loc) => {
+
+	const dirs: DirVal[] = [];
+	let k: DirVal;
+	for (k in loc.exits) {
+		dirs.push(k);
+	}
+
+	return ToActionRows(dirs.map(v => CustomButton({
+
+		customId: 'move',
+		label: ToDirStr(v)
+
+	}, {
+		dir: v
+	})));
+
 }
 
 const CmdMove = NewCommand<Rpg>({
@@ -22,39 +43,18 @@ const CmdMove = NewCommand<Rpg>({
 		const dir = m.options.getString('dir', true);
 		if (!dir) {
 
+			const loc = await rpg.world.getOrGen(char.loc);
 			return SendPrivate(m, 'Move in what direction?', {
-				components: [
-					new ActionRowBuilder<ButtonBuilder>().addComponents(
-
-						new ButtonBuilder({
-							customId: 'north',
-							label: 'North',
-							style: ButtonStyle.Secondary
-						}),
-						new ButtonBuilder({
-							customId: 'south',
-							label: 'South',
-							style: ButtonStyle.Secondary
-						}),
-						new ButtonBuilder({
-							customId: 'east',
-							label: 'East',
-							style: ButtonStyle.Secondary
-						}),
-						new ButtonBuilder({
-							customId: 'west',
-							label: 'West',
-							style: ButtonStyle.Secondary
-						})
-
-					)
-				]
+				components: MoveButtons(loc)
 			})
 
 		}
 
 		await rpg.game.move(char, dir);
-		return ReplyBlock(m, char.getLog());
+		const loc = await rpg.world.getOrGen(char.loc);
+		return ReplyBlock(m, char.getLog(), {
+			components: MoveButtons(loc)
+		});
 
 	}
 });
@@ -69,7 +69,10 @@ const CmdNorth = NewCommand<Rpg>({
 		if (!char) return;
 
 		await rpg.game.move(char, 'n');
-		return ReplyBlock(m, char.getLog());
+		const loc = await rpg.world.getOrGen(char.loc);
+		return ReplyBlock(m, char.getLog(), {
+			components: MoveButtons(loc)
+		});
 
 	}
 });
@@ -84,7 +87,10 @@ const CmdSouth = NewCommand<Rpg>({
 		if (!char) return;
 
 		await rpg.game.move(char, 's');
-		return ReplyBlock(m, char.getLog());
+		const loc = await rpg.world.getOrGen(char.loc);
+		return ReplyBlock(m, char.getLog(), {
+			components: MoveButtons(loc)
+		});
 
 	}
 });
@@ -99,7 +105,10 @@ const CmdEast = NewCommand<Rpg>({
 		if (!char) return;
 
 		await rpg.game.move(char, 'e');
-		return ReplyBlock(m, char.getLog());
+		const loc = await rpg.world.getOrGen(char.loc);
+		return ReplyBlock(m, char.getLog(), {
+			components: MoveButtons(loc)
+		});
 
 	}
 })
@@ -115,7 +124,10 @@ const CmdWest = NewCommand<Rpg>({
 		if (!char) return;
 
 		await rpg.game.move(char, 'w');
-		return ReplyBlock(m, char.getLog());
+		const loc = await rpg.world.getOrGen(char.loc);
+		return ReplyBlock(m, char.getLog(), {
+			components: MoveButtons(loc)
+		});
 
 	}
 });

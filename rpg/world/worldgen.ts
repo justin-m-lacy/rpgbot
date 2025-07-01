@@ -64,7 +64,7 @@ export const makeBiomeLoc = (coord: Coord, biomeName: keyof typeof Biomes = Biom
 
 	const tmpl = Biomes[biomeName];
 	if (tmpl == null) {
-		console.warn('MISSING BIOME: ' + biomeName);
+		console.warn('BAD BIOME: ' + biomeName);
 	}
 	const loc = new Loc(coord, biomeName);
 

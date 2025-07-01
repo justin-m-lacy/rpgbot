@@ -32,6 +32,11 @@ export class Maxable implements ISimple {
 	setMax(base: Numeric) {
 		this.max.setTo(base);
 	}
+
+	/**
+	 * Sets both current and max to same value.
+	 * @param v 
+	 */
 	setTo(v: Numeric) {
 		this.max.value = v.valueOf();
 		this.value = v.valueOf();
