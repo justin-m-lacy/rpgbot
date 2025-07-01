@@ -2,6 +2,7 @@ import { CustomButton } from "@/bot/command-map";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import type { Char } from "rpg/char/char";
 import type { Game } from "rpg/game";
+import type { Inventory } from "rpg/inventory";
 import type { Item } from "rpg/items/item";
 import { Wearable } from "rpg/items/wearable";
 
@@ -197,5 +198,24 @@ export const WorldItemActions = (item: Item) => {
 	);
 
 	return acts;
+
+}
+
+/**
+ * Create item buttons for an inventory command.
+ * @param cmd - command to apply to selected item.
+ * @param inv - selectable items. max 25.
+ * @param param - id of param to set to item id.
+ */
+export const PickItemButtons = (cmd: string, inv: Inventory, param: string = 'item') => {
+
+	return ToActionRows(
+
+		inv.items.map(it => CustomButton({
+			customId: cmd
+		}, {
+			[param]: it.id
+		}))
+	);
 
 }
