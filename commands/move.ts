@@ -59,7 +59,7 @@ export const LocButtons = (loc: Loc) => {
 
 	const rows = MoveButtons(loc);
 	rows.push(
-		new ActionRowBuilder<ButtonBuilder>().addComponents(btns)
+		new ActionRowBuilder<ButtonBuilder>().addComponents(...btns)
 	);
 
 	return rows;
