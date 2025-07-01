@@ -1,6 +1,7 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { EchoChar } from "rpg/display/display";
+import type { InteractionReplyOptions } from "discord.js";
+import { EchoChar, GetOwnCharActions } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { ChatCommand } from '../src/bot/cmd-wrapper';
 
@@ -14,14 +15,18 @@ export default NewCommand<Rpg>({
 
 		const charname = m.options.getString('who');
 
+		const opts: InteractionReplyOptions = {};
+
+
 		if (!charname) {
 			char = await rpg.userCharOrErr(m, m.user);
 			if (!char) return;
+			opts.components = [GetOwnCharActions()]
 		} else {
 			char = await rpg.loadChar(charname);
 			if (!char) return SendPrivate(m, charname + ' not found on server.');
 		}
-		return EchoChar(m, char);
+		return EchoChar(m, char, opts);
 
 	}
 })

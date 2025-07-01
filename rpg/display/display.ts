@@ -1,13 +1,12 @@
 import { type ChatCommand } from "@/bot/cmd-wrapper";
-import type { ChatAction } from "@/bot/command";
-import { EmbedBuilder, Message, type InteractionReplyOptions } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
 import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
 import { Char } from '../char/char';
 
 export const BlockText = (s: string) => '```' + s + '```';
 
-export const SendEmbed = async (m: Message | ChatAction, s: string, e: string) => m.reply(
+export const SendEmbed = async (m: ChatCommand, s: string, e: string) => m.reply(
 	{
 		content: '```' + s + '```',
 		embeds: [
@@ -23,7 +22,7 @@ export const ReplyBlock = async (m: ChatCommand,
 	opts?: InteractionReplyOptions): Promise<any> => {
 
 	return m.reply({
-		content: '```' + str + '````',
+		content: '```' + str + '```',
 		...opts
 	});
 
@@ -39,13 +38,40 @@ export const IsVowel = (c: string) => {
 	return c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u';
 }
 
-export const EchoChar = async function (chan: Message | ChatCommand, char: Char, prefix: string = '') {
+/**
+ * Get actions usable by own char.
+ * @returns 
+ */
+export const GetOwnCharActions = () => {
+
+	return new ActionRowBuilder<ButtonBuilder>().addComponents(
+
+		new ButtonBuilder().setCustomId('inv').setLabel('Inventory').setStyle(ButtonStyle.Secondary),
+		new ButtonBuilder().setCustomId('equip').setLabel('Equipped').setStyle(ButtonStyle.Secondary)
+
+	);
+}
+
+/**
+ * 
+ * @param chan 
+ * @param char 
+ * @param opts - reply options.
+ * @param prefix 
+ * @returns 
+ */
+export const EchoChar = async function (chan: ChatCommand, char: Char,
+	opts?: InteractionReplyOptions | null, prefix: string = '') {
 
 	const desc = CharLongDesc(char);
 	return chan.reply(
-		prefix + '```' + `${char.name} is a` +
-		(IsVowel(desc.charAt(0)) ? 'n ' : ' ') +
-		desc + '```'
+		{
+			content: prefix + '```' + `${char.name} is a` +
+				(IsVowel(desc.charAt(0)) ? 'n ' : ' ') +
+				desc + '```',
+			...opts
+		}
+
 	);
 
 }

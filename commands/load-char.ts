@@ -25,7 +25,7 @@ export default NewCommand<Rpg>({
 			prefix = 'Active character set.\n';
 		}
 
-		return EchoChar(m, char, prefix);
+		return EchoChar(m, char, null, prefix);
 
 	}
 })

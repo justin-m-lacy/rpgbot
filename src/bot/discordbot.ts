@@ -1,5 +1,5 @@
 import { CmdParser } from '@/bot/cmd-parser';
-import { type ChatCommand } from '@/bot/cmd-wrapper';
+import { ButtonCommand, MsgWrap, type ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
@@ -210,13 +210,15 @@ export class DiscordBot {
 				const cmd = this.commands.get(it.customId);
 				if (!cmd) return;
 
+				const wrap = new ButtonCommand(it);
+
 				if ('cls' in cmd) {
 
 					const ctx = await this.getCmdContext(it);
-					ctx?.routeCommand(it, cmd);
+					ctx?.routeCommand(wrap, cmd);
 
 				} else {
-					await cmd.exec(it, this);
+					await cmd.exec(wrap, this);
 				}
 
 			}
