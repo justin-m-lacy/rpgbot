@@ -16,6 +16,32 @@ export const IsLegalName = (s: string) => {
 	return true;
 }
 
+/// Max discord button rows/cols
+const MAX_ROWS = 5;
+const MAX_COLS = 5;
+
+export const ToActionRows = (buttons: ButtonBuilder[]) => {
+
+	const actRows: ActionRowBuilder<ButtonBuilder>[] = [];
+
+	let actRow: ActionRowBuilder<ButtonBuilder>;
+
+	for (let i = 0; i < buttons.length; i++) {
+
+		if ((i % MAX_COLS) === 0) {
+
+			if (actRows.length === MAX_ROWS) break;
+
+			actRow = new ActionRowBuilder<ButtonBuilder>();
+			actRows.push(actRow);
+		}
+		actRow!.addComponents(buttons[i]);
+
+	}
+
+	return actRows;
+
+}
 
 export const GetOtherCharActions = (game: Game, char: Char, myChar?: Char, nohostile?: boolean) => {
 

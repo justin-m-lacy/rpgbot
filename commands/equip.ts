@@ -1,6 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendBlock } from "rpg/display/display";
+import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -14,8 +14,8 @@ export default NewCommand<Rpg>({
 
 		const what = m.options.getString('what', true);
 
-		if (!what) return SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
+		if (!what) return ReplyBlock(m, `${char.name} equip:\n${char.listEquip()}`);
 
-		return SendBlock(m, rpg.game.equip(char, what));
+		return ReplyBlock(m, rpg.game.equip(char, what));
 	}
 })

@@ -1,5 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
+import { IsLegalName } from "rpg/actions";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -14,8 +16,11 @@ export default NewCommand<Rpg>({
 		const what = m.options.getString('what', true);
 		const desc = m.options.getString('desc', true);
 
-		if (!what) return m.reply('Crafted item must have a name.');
-		if (!desc) return m.reply('Crafted items require a description.');
+		if (!what) return SendPrivate(m, 'Crafted item must have a name.');
+		if (IsLegalName(what)) {
+			return SendPrivate(m, 'Name uses illegal characters.');
+		}
+		if (!desc) return SendPrivate(m, 'Crafted items require a description.');
 
 		const char = await rpg.userCharOrErr(m, m.user)
 		if (!char) return;

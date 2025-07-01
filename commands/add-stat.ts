@@ -1,8 +1,8 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { CustomButton } from "@/bot/command-map";
 import { SendPrivate } from "@/utils/display";
-import { ActionRowBuilder, ButtonStyle } from "discord.js";
-import { ButtonBuilder } from "node_modules/discord.js/typings/index.mjs";
+import { ButtonStyle } from "discord.js";
+import { ToActionRows } from "rpg/actions";
 import { StatIds } from "rpg/char/stats";
 import { Rpg } from "rpg/rpg";
 import { ChatCommand } from '../src/bot/cmd-wrapper';
@@ -24,11 +24,11 @@ export default NewCommand<Rpg>(
 
 				// prompt stat to increase.
 				return SendPrivate(m, 'Increase which stat?', {
-					components: [
+					components:
 
-						new ActionRowBuilder<ButtonBuilder>().addComponents(
+						ToActionRows(
 
-							...StatIds.map(stat =>
+							StatIds.map(stat =>
 								CustomButton({
 									customId: 'addstat',
 									label: stat,
@@ -40,7 +40,7 @@ export default NewCommand<Rpg>(
 							)
 
 						)
-					]
+
 				});
 
 			}

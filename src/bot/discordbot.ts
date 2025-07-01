@@ -193,35 +193,41 @@ export class DiscordBot {
 
 		this.client.on(Events.InteractionCreate, async (it) => {
 
-			if (it.isChatInputCommand()) {
-				const cmd = this.commands.get(it.commandName);
-				if (!cmd) return;
+			try {
 
-				if (IsTypedCmd(cmd)) {
+				if (it.isChatInputCommand()) {
+					const cmd = this.commands.get(it.commandName);
+					if (!cmd) return;
 
-					const ctx = await this.getCmdContext(it);
-					ctx?.routeCommand(it, cmd);
+					if (IsTypedCmd(cmd)) {
 
-				} else {
-					await cmd.exec(it, this);
+						const ctx = await this.getCmdContext(it);
+						ctx?.routeCommand(it, cmd);
+
+					} else {
+						await cmd.exec(it, this);
+					}
+
+				} else if (it.isButton()) {
+
+					const wrap = this.commands.parseButton(it);
+					if (!wrap) return;
+
+					if (IsTypedCmd(wrap.cmd)) {
+
+						const ctx = await this.getCmdContext(it);
+						ctx?.routeCommand(wrap, wrap.cmd);
+
+					} else {
+						await wrap.cmd.exec(wrap, this);
+					}
+
 				}
-			} else if (it.isButton()) {
 
-				const wrap = this.commands.parseButton(it);
-				if (!wrap) return;
 
-				if (IsTypedCmd(wrap.cmd)) {
-
-					const ctx = await this.getCmdContext(it);
-					ctx?.routeCommand(wrap, wrap.cmd);
-
-				} else {
-					await wrap.cmd.exec(wrap, this);
-				}
-
+			} catch (e) {
+				console.error(e);
 			}
-
-
 		});
 
 		this.client.on(Events.MessageCreate, (m) => {
