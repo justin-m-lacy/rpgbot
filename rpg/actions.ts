@@ -162,6 +162,7 @@ export const CharItemActions = (item: Item) => {
 	acts.addComponents(
 		CustomButton({
 			customId: 'drop',
+			label: 'Drop'
 		}, {
 			start: item.id
 		})
@@ -171,6 +172,7 @@ export const CharItemActions = (item: Item) => {
 		acts.addComponents(
 			CustomButton({
 				customId: 'equip',
+				label: 'Equip'
 			}, {
 				item: item.id
 			})
@@ -192,6 +194,7 @@ export const WorldItemActions = (item: Item) => {
 	acts.addComponents(
 		CustomButton({
 			customId: 'take',
+			label: 'Take'
 		}, {
 			start: item.id
 		})
@@ -212,7 +215,8 @@ export const PickItemButtons = (cmd: string, inv: Inventory, param: string = 'it
 	return ToActionRows(
 
 		inv.items.map(it => CustomButton({
-			customId: cmd
+			customId: cmd,
+			label: it.name
 		}, {
 			[param]: it.id
 		}))

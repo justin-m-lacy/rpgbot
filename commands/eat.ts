@@ -1,6 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
+import { PickItemButtons } from "rpg/actions";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -10,10 +11,16 @@ export default NewCommand<Rpg>({
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user)
-		if (char) {
-			const what = m.options.getString('what', true);
-			return SendPrivate(m, rpg.game.eat(char, what));
+		if (!char) return;
+
+		const what = m.options.getString('what', true);
+		if (!what) {
+			return SendPrivate(m, 'Eat which item?', {
+				components: PickItemButtons('eat', char.inv, 'what')
+			})
 		}
+
+		return SendPrivate(m, rpg.game.eat(char, what));
 
 	}
 

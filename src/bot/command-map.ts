@@ -17,13 +17,12 @@ const CmdSplitChar = '/';
  * @returns 
  */
 export const CustomButton = (
-	opts: Partial<ButtonComponentData> & { customId: string },
+	opts: Partial<ButtonComponentData> & { customId: string, label: string },
 	props: Record<string, any>) => {
 
 	if (props) {
 		for (const k in props) {
-			opts.customId += CmdSplitChar;
-			opts.customId += k + '=' + props[k];
+			opts.customId += CmdSplitChar + k + '=' + props[k];
 		}
 	}
 
