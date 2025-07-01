@@ -1,4 +1,4 @@
-import { CmdSplitChar } from "@/bot/command-map";
+import { CustomButton } from "@/bot/command-map";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import type { Char } from "rpg/char/char";
 import type { Game } from "rpg/game";
@@ -22,38 +22,52 @@ export const GetOtherCharActions = (game: Game, char: Char, myChar?: Char, nohos
 	const acts = new ActionRowBuilder<ButtonBuilder>();
 
 	if (!char.isAlive()) {
-		acts.addComponents(new ButtonBuilder({
-			customId: `revive${CmdSplitChar}who=${char.name}`,
-			label: 'Revive',
-			style: ButtonStyle.Primary
-		}));
+		acts.addComponents(
+
+			CustomButton({
+				customId: 'revive',
+				label: 'Revive',
+				style: ButtonStyle.Primary
+			}, {
+				who: char.name
+			})
+
+		);
 	}
 
 	if (!game.getParty(char)) {
-		acts.addComponents(new ButtonBuilder({
-			customId: `party${CmdSplitChar}who=${char.name}`,
+		acts.addComponents(CustomButton({
+			customId: 'party',
 			label: 'Party',
 			style: ButtonStyle.Secondary
+		}, {
+			who: char.name
 		}));
 	}
 
 	if (!nohostile) {
 		acts.addComponents(
 
-			new ButtonBuilder({
-				customId: `attack${CmdSplitChar}who=${char.name}`,
+			CustomButton({
+				customId: 'attack',
 				label: 'Attack',
 				style: ButtonStyle.Danger
+			}, {
+				who: char.name
 			}),
-			new ButtonBuilder({
-				customId: `steal${CmdSplitChar}who=${char.name}`,
+			CustomButton({
+				customId: 'steal',
 				label: 'Steal',
 				style: ButtonStyle.Danger
+			}, {
+				who: char.name
 			}),
-			new ButtonBuilder({
-				customId: `track${CmdSplitChar}who=${char.name}`,
+			CustomButton({
+				customId: 'track',
 				label: 'Track',
 				style: ButtonStyle.Danger
+			}, {
+				who: char.name
 			}),
 
 		);

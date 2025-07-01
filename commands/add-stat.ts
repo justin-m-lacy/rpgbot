@@ -1,5 +1,5 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { CmdSplitChar } from "@/bot/command-map";
+import { CustomButton } from "@/bot/command-map";
 import { SendPrivate } from "@/utils/display";
 import { ActionRowBuilder, ButtonStyle } from "discord.js";
 import { ButtonBuilder } from "node_modules/discord.js/typings/index.mjs";
@@ -28,14 +28,16 @@ export default NewCommand<Rpg>(
 
 						new ActionRowBuilder<ButtonBuilder>().addComponents(
 
-							...StatIds.map(stat => {
-								return new ButtonBuilder({
-									customId: `addstat${CmdSplitChar}stat=${stat}`,
+							...StatIds.map(stat =>
+								CustomButton({
+									customId: 'addstat',
 									label: stat,
 									style: ButtonStyle.Primary
 
+								}, {
+									stat: stat
 								})
-							})
+							)
 
 						)
 					]

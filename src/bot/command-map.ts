@@ -1,12 +1,36 @@
 import { ButtonAction } from "@/bot/cmd-wrapper";
 import type { Command } from "@/bot/command";
-import type { ButtonInteraction } from "discord.js";
+import { ButtonBuilder, type ButtonComponentData, type ButtonInteraction } from "discord.js";
 
 
 /**
  * Character for splitting customId (button) commands.
  */
-export const CmdSplitChar = '/';
+const CmdSplitChar = '/';
+
+
+/**
+ * Create a new button with command-id and properties
+ * encoded in button customId
+ * @param opts 
+ * @param props 
+ * @returns 
+ */
+export const CustomButton = (
+	opts: Partial<ButtonComponentData> & { customId: string },
+	props: Record<string, any>) => {
+
+	if (props) {
+		for (const k in props) {
+			opts.customId += CmdSplitChar;
+			opts.customId += k + '=' + props[k];
+		}
+	}
+
+	return new ButtonBuilder(opts);
+
+
+}
 
 export class Commands {
 
