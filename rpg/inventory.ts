@@ -77,7 +77,6 @@ export class Inventory extends Container<Item> {
 		start--;
 		if (start >= 0 && start < this.items.length) return this.items[start];
 
-
 		return null;
 
 	}
@@ -147,7 +146,11 @@ export class Inventory extends Container<Item> {
 				which = which.toLowerCase();
 				for (let i = this.items.length - 1; i >= 0; i--) {
 
-					if (this.items[i]?.name.toLowerCase() === which) return this.items.splice(i, 1)[0];
+					if (!this.items[i]) continue;
+					if (this.items[i].id === which ||
+						this.items[i].name.toLowerCase() === which) {
+						return this.items.splice(i, 1)[0];
+					}
 
 				}
 				return null;

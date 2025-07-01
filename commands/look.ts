@@ -1,5 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
+import { GroundItemActions } from "rpg/actions";
 import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -14,7 +16,19 @@ export default NewCommand<Rpg>({
 
 		const what = m.options.getString('what');
 
-		return ReplyBlock(m, await rpg.world.look(char, what));
+		const loc = await rpg.world.getOrGen(char.loc);
+		if (!what) {
+			return SendPrivate(m, char.name + ' is' + loc.look());
+		}
+
+		const item = loc.get(what);
+		if (!item) {
+			return SendPrivate(m, 'Item not found');
+		}
+
+		return ReplyBlock(m, item.getDetails(), {
+			components: [GroundItemActions(item)]
+		});
 
 	}
 })

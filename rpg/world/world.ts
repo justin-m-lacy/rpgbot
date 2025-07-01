@@ -203,17 +203,17 @@ export class World {
 
 	}
 
-	async look(char: Char, what?: string | number | null) {
+	/**
+	 * Get Item on ground at coordinate. Does not remove item.
+	 * @param at 
+	 * @param what 
+	 * @returns 
+	 */
+	async itemAt(at: Coord, what?: ItemIndex | null) {
 
-		const loc = await this.getOrGen(char.loc);
-
-		if (what) {
-
-			const it = loc.get(what);
-			if (!it) return 'Item not found.';
-			return it.getDetails();
-
-		} else return char.name + ' is' + loc.look();
+		if (!what) return null;
+		const loc = await this.getLoc(at.x, at.y);
+		return loc?.get(what);
 
 	}
 
@@ -225,7 +225,7 @@ export class World {
 	async put(char: Char, what: Item) {
 
 		const loc = await this.getOrGen(char.loc, char);
-		const ind = loc.drop(what);
+		const ind = loc.put(what);
 		await this.quickSave(loc);
 
 		return `${char.name} dropped ${what.name}. (${ind})`;
@@ -243,7 +243,7 @@ export class World {
 		if (!it) return 'Invalid item.';
 
 		const loc = await this.getOrGen(char.loc, char);
-		const ind = loc.drop(it);
+		const ind = loc.put(it);
 		await this.quickSave(loc);
 
 		if (Array.isArray(it)) return it.length + ' items dropped.';

@@ -2,6 +2,7 @@ import { CustomButton } from "@/bot/command-map";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import type { Char } from "rpg/char/char";
 import type { Game } from "rpg/game";
+import type { Item } from "rpg/items/item";
 
 export const IllegalIdChars = ['/', '\\', ':', '*', '?', '"', '|', '<', '>', '#', '='];
 
@@ -121,6 +122,17 @@ export const OwnCharActions = () => {
 	);
 }
 
-export const GroundItemActions = () => {
+export const GroundItemActions = (item: Item) => {
+
+	const acts = new ActionRowBuilder<ButtonBuilder>();
+	acts.addComponents(
+		CustomButton({
+			customId: 'take',
+		}, {
+			start: item.id
+		})
+	);
+
+	return acts;
 
 }

@@ -375,7 +375,7 @@ export class Loc {
 	 *
 	 * @param item
 	 */
-	drop(item: Item | Item[]) { return this.inv.add(item); }
+	put(item: Item | Item[]) { return this.inv.add(item); }
 
 	takeRange(start: number, end: number) {
 		return this.inv.takeRange(start, end);

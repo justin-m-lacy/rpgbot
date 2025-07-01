@@ -4,6 +4,7 @@ export type ItemPicker<T = Item> = string | number | T;
 export type ItemIndex = string | number;
 
 type SimpleItem = {
+    id: string,
     name: string,
     type: string,
     attach?: string,
@@ -166,7 +167,9 @@ export class Container<T extends SimpleItem = Item> {
         for (let i = this.items.length - 1; i >= 0; i--) {
 
             const it = this.items[i];
-            if (it && it.name && it.name.toLowerCase() === lower) return this.items[i];
+            if (!it) continue;
+            if (it.id === lower) return this.items[i];
+            else if (it.name && it.name.toLowerCase() === lower) return this.items[i];
 
         }
         return null;
