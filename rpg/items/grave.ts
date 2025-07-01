@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
 import { Item, ItemType, type ItemData } from "./item";
@@ -12,7 +13,7 @@ export class Grave extends Item {
 	 * @param slayer
 	 */
 	static MakeGrave(char: Char, slayer: Char) {
-		return new Grave(char.name, slayer.name, Grave.GetEpitaph(char, slayer));
+		return new Grave(randomUUID(), char.name, slayer.name, Grave.GetEpitaph(char, slayer));
 	}
 
 	static Revive(json: ItemData & { char: string, slayer?: string, epitaph?: string }) {

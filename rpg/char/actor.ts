@@ -11,7 +11,12 @@ import { Coord } from '../world/loc';
 import { Race, type GClass } from './race';
 import { StatBlock, type StatMod } from './stats';
 
+enum CharState {
+	Dead = 'dead',
+	Alive = 'alive'
+}
 export type LifeState = 'alive' | 'dead';
+
 
 export class Actor {
 
@@ -22,7 +27,7 @@ export class Actor {
 
 	get state() { return this._state; }
 	set state(v) { this._state = v; }
-	isAlive() { return this._state !== exports.Dead; }
+	isAlive() { return this._state !== CharState.Dead; }
 
 	get evil() { return this.stats.evil; }
 	set evil(v: Numeric) { this.stats.evil.setTo(+v); }
@@ -105,7 +110,7 @@ export class Actor {
 	 * Current mods applied to char.
 	 */
 	readonly mods: ModBlock<typeof this>[] = [];
-	private _state: LifeState;
+	private _state: CharState;
 
 	readonly events: EventEmitter<CharEvents> = new EventEmitter();
 
@@ -119,7 +124,7 @@ export class Actor {
 
 		this._loc = new Coord(0, 0);
 
-		this._state = 'alive';
+		this._state = CharState.Alive;
 
 	}
 
@@ -223,15 +228,15 @@ export class Actor {
 	revive() {
 
 		if (this.hp.value <= 0) this.hp.value = 1;
-		this.state = exports.Alive;
+		this.state = CharState.Alive;
 
 	}
 
 	getWeapons(): Weapon | Weapon[] | null { return null; }
 
 	updateState() {
-		if (this.hp.value <= 0) this.state = exports.Dead;
-		else this.state = exports.Alive;
+		if (this.hp.value <= 0) this.state = CharState.Dead;
+		else this.state = CharState.Alive;
 		return this.state;
 	}
 
@@ -241,8 +246,7 @@ export class Actor {
 	hit(amt: number) {
 		this.hp.value -= amt;
 		if (this.hp.value <= 0) {
-			this.state = exports.Dead;
-			return exports.Dead;
+			return this.state = CharState.Dead;
 		}
 	}
 
