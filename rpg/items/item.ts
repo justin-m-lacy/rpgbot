@@ -107,9 +107,9 @@ export class Item {
 	 */
 	created: number = 0;
 
-	constructor(id: string, name: string, desc: string = '', type: ItemType = ItemType.Unknown) {
+	constructor(id: string | null | undefined, name: string, desc: string = '', type: ItemType = ItemType.Unknown) {
 
-		this.id = id;
+		this.id = id ?? randomUUID();
 		this.name = name;
 		this.type = type;
 		this.desc = desc;

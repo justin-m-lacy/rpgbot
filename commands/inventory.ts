@@ -7,7 +7,7 @@ import { Rpg } from "rpg/rpg";
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('inv', 'View a character\'s inventory')
-		.addStringOption(StrOpt('who', 'Character inventory to view. Defaults to own inventory').setRequired(true)),
+		.addStringOption(StrOpt('who', 'Character\'s inventory to view. Defaults to own inventory')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		let char;

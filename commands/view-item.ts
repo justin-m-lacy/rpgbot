@@ -24,9 +24,9 @@ export default NewCommand<Rpg>({
 		if (view[1]) {
 
 			return ReplyEmbed(m, view[1], view[0]);
+		} else {
+			return SendPrivate(m, view[0]);
 		}
-		else await SendPrivate(m, view[0]);
-
 
 	}
 })

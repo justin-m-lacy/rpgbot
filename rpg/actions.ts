@@ -3,6 +3,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import type { Char } from "rpg/char/char";
 import type { Game } from "rpg/game";
 import type { Item } from "rpg/items/item";
+import { Wearable } from "rpg/items/wearable";
 
 export const IllegalIdChars = ['/', '\\', ':', '*', '?', '"', '|', '<', '>', '#', '='];
 
@@ -117,12 +118,74 @@ export const OwnCharActions = () => {
 			label: 'Inventory',
 			style: ButtonStyle.Secondary
 		}),
-		new ButtonBuilder().setCustomId('equip').setLabel('Equipment').setStyle(ButtonStyle.Secondary)
+		new ButtonBuilder({
+			customId: 'equip',
+			label: 'Equipment',
+			style: ButtonStyle.Secondary
+		}),
+		new ButtonBuilder({
+			customId: 'rest',
+			label: 'Rest',
+			style: ButtonStyle.Secondary
+		})
 
 	);
 }
 
-export const GroundItemActions = (item: Item) => {
+/**
+ * Actions for equipped item.
+ */
+export const EquipItemActions = (item: Wearable) => {
+
+	const acts = new ActionRowBuilder<ButtonBuilder>();
+	acts.addComponents(
+		CustomButton({
+			customId: 'unequip',
+			label: 'Unequip'
+		}, {
+			slot: item.slot
+		})
+	);
+
+	return acts;
+
+}
+
+
+/**
+ * Action for items in character's inventory.
+ */
+export const CharItemActions = (item: Item) => {
+
+	const acts = new ActionRowBuilder<ButtonBuilder>();
+	acts.addComponents(
+		CustomButton({
+			customId: 'drop',
+		}, {
+			start: item.id
+		})
+	);
+
+	if (item instanceof Wearable) {
+		acts.addComponents(
+			CustomButton({
+				customId: 'equip',
+			}, {
+				item: item.id
+			})
+		);
+	}
+
+	return acts;
+
+}
+
+/**
+ * 
+ * @param item 
+ * @returns 
+ */
+export const WorldItemActions = (item: Item) => {
 
 	const acts = new ActionRowBuilder<ButtonBuilder>();
 	acts.addComponents(

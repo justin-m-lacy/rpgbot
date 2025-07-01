@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { GroundItemActions } from "rpg/actions";
+import { WorldItemActions } from "rpg/actions";
 import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -27,7 +27,7 @@ export default NewCommand<Rpg>({
 		}
 
 		return ReplyBlock(m, item.getDetails(), {
-			components: [GroundItemActions(item)]
+			components: [WorldItemActions(item)]
 		});
 
 	}

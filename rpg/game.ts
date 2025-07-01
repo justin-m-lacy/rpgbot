@@ -431,7 +431,9 @@ export class Game {
 
 		if (this.tick(char, 'unequip') === false) return char.output();
 
-		if (!slot) return char.output('Specify an equip slot to remove.');
+		if (!slot) {
+			return char.output('Specify an equip slot to remove.');
+		}
 
 		if (char.unequip(slot)) return char.output('Removed.');
 		return char.output('Cannot unequip from ' + slot);

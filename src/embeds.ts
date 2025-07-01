@@ -1,5 +1,5 @@
-import type { ChatAction } from '@/bot/command';
-import { EmbedBuilder, Message } from 'discord.js';
+import type { ChatCommand } from '@/bot/cmd-wrapper';
+import { EmbedBuilder, Message, MessageFlags } from 'discord.js';
 
 
 export const getEmbedUrl = (m: Message) => {
@@ -25,14 +25,15 @@ export const makeImageEmbed = (imageUrl: string) => {
     return new EmbedBuilder({ image: { url: imageUrl, proxy_url: imageUrl } });
 }
 
-export const ReplyEmbed = (m: Message | ChatAction, embedUrl: string, text?: string | null,) => {
+export const ReplyEmbed = (m: ChatCommand, embedUrl: string, text?: string | null,) => {
     return m.reply(
         {
 
             content: (text && text.length > 0) ? text : ' ',
             embeds: [
                 makeImageEmbed(embedUrl)
-            ]
+            ],
+            flags: MessageFlags.Ephemeral
         }
     );
 }
