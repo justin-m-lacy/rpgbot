@@ -15,11 +15,11 @@ export const IsLegalName = (s: string) => {
 }
 
 
-export const GetOtherCharActions = (charId: string, hostile?: boolean) => {
+export const GetOtherCharActions = (charId: string, nohostile?: boolean) => {
 
 	const acts = new ActionRowBuilder<ButtonBuilder>();
 
-	if (hostile) {
+	if (!nohostile) {
 		acts.addComponents(
 
 			new ButtonBuilder({

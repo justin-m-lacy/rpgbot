@@ -1,7 +1,7 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import type { InteractionReplyOptions } from "discord.js";
-import { GetOwnCharActions } from "rpg/actions";
+import { GetOtherCharActions, GetOwnCharActions } from "rpg/actions";
 import { EchoChar } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { ChatCommand } from '../src/bot/cmd-wrapper';
@@ -26,6 +26,7 @@ export default NewCommand<Rpg>({
 		} else {
 			char = await rpg.loadChar(charname);
 			if (!char) return SendPrivate(m, charname + ' not found on server.');
+			opts.components = [GetOtherCharActions(charname)];
 		}
 		return EchoChar(m, char, opts);
 

@@ -195,7 +195,7 @@ export class Combat {
 		if (attack.hit) {
 
 			this.resp += `\n${d.name} was hit for ${attack.dmg} ${attack.dmgType} damage.`;
-			this.resp += ` hp: ${d.hp}/${d.hp.max}`;
+			this.resp += ` hp: ${d.hp.valueOf()}/${d.hp.max.valueOf()}`;
 
 		} else this.resp += `\n${src.name} misses!`;
 
