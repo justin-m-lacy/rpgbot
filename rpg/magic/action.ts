@@ -3,21 +3,6 @@ import { ParseResult, type RawResult, type Result } from 'rpg/handlers/results';
 import { Char } from '../char/char';
 
 
-export const ParseTarget = (s: keyof typeof ActTarget) => {
-	return ActTarget[s] ?? ActTarget.none;
-}
-
-export enum ActTarget {
-	none = 0,
-	self = 1,
-	any = 2,
-	allies = 4,
-	enemies = 8,
-	all = ActTarget.allies | ActTarget.enemies
-
-}
-
-
 const actions: Record<string, Action> = {};
 
 class Action {

@@ -1,31 +1,50 @@
 [
     {
-        "phase": {
-            "target": "self",
-            "duration": "instant",
-            "level": 1,
-            "cost": {
-                "mp": 1
-            }
-        },
-        "magic_missile": {
-            "target": "any",
-            "damage": "1d4",
-            "duration": "instant",
-            "level": 1,
-            "cost": {
-                "mp": 2
-            }
-        },
-        "mage_armor": {
-            "name": "Mage Armor",
-            "target": "self",
-            "duration": "1hr",
-            "effect": "",
-            "level": 1,
-            "cost": {
-                "mp": 1
-            }
+        "id": "phase",
+        "target": "self",
+        "level": 1,
+        "cost": {
+            "mp": 1
+        }
+    },
+    {
+        "id": "magic_missile",
+        "target": "any",
+        "damage": "1d4",
+        "level": 1,
+        "cost": {
+            "mp": 1
+        }
+    },
+    {
+        "id": "firebolt_1",
+        "name": "Fire bolt 1",
+        "target": "any",
+        "damage": "1d6",
+        "level": 1,
+        "cost": {
+            "mp": 1
+        }
+    },
+    {
+        "id": "frostbolt 1",
+        "name": "Frost bolt 1",
+        "target": "any",
+        "damage": "1d5",
+        "level": 1,
+        "cost": {
+            "mp": 1
+        }
+    },
+    {
+        "id": "mage armor",
+        "name": "Mage Armor",
+        "target": "self",
+        "duration": "1hr",
+        "effect": "",
+        "level": 1,
+        "cost": {
+            "mp": 4
         }
     }
 ]

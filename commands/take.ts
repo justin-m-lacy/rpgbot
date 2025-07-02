@@ -14,14 +14,19 @@ export default NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		const start = m.options.getString('start');
-
+		let start: string | number | null = m.options.getString('start');
 		if (!start) {
 			const loc = await rpg.world.getOrGen(char.loc);
 
-			return SendPrivate(m, 'Take what item?', {
-				components: PickItemButtons('take', loc.inventory, 'start')
-			});
+			if (loc.items.length === 0) {
+				return SendPrivate(m, 'Nothing here to take.');
+			} else if (loc.items.length === 1) {
+				start = 1;
+			} else {
+				return SendPrivate(m, 'Take what item?', {
+					components: PickItemButtons('take', loc.inventory, 'start')
+				});
+			}
 		}
 
 		const end = m.options.getString('end');

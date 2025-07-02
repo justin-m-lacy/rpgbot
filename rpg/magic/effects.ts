@@ -8,7 +8,7 @@ import { Char } from '../char/char';
 import { ParseMods } from '../parsers/mods';
 import { type TValue } from '../values/types';
 
-type RawEffect = {
+export type RawEffect = {
 	id: string,
 	name?: string,
 	dot?: Record<string, any>,
@@ -17,7 +17,7 @@ type RawEffect = {
 	typeof import('../data/magic/effects.json', { assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
-const Effects: { [name: string]: ProtoEffect } = {};
+export const Effects: { [name: string]: ProtoEffect } = {};
 
 /**
  * Effect prototype. class Effect is effect in progress.

@@ -26,6 +26,7 @@ export interface IMod {
 
 /**
  * Defines Mods for Moddable properties of an object.
+ * @param D - target of mods
  */
 export type ModBlock<D extends object> = {
 	[K in keyof Partial<D>]: D[K] extends IModdable ? IMod : never

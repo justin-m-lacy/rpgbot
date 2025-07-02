@@ -49,6 +49,48 @@ export const AddValues = (dest: Record<string, any>, vals: Record<string, Numeri
 }
 
 /**
+ * Test if object has minimum amount of values.
+ * Usually used to test if a quantity of item can be spent.
+ * @param dest 
+ * @param costs 
+ * @param dt - scale factor of cost values.
+ * @returns 
+ */
+export const HasValues = (dest: Record<string, any>,
+	costs: Path<Numeric | TValue>,
+	dt: number = 1) => {
+
+	for (const key in costs) {
+
+		const amt = costs[key];
+		const targ = costs.getKeyed(dest, key);
+		if (!targ) return false;
+
+		if (IsPath(amt)) {
+
+			if (!HasValues(targ ?? createValue(dest, key, targ), amt, dt)) {
+				return false;
+			}
+
+		} else if (IsValue(amt) || typeof amt === 'number') {
+
+			const tot = dt * Number(amt);
+			if (IsValue(targ)) {
+				if (targ.valueOf() < tot) return false;
+			} else if (typeof targ === 'number') {
+				if (targ < tot) return false;
+			}
+
+		} else if (typeof amt === 'object') {
+
+		}
+
+	}
+	return true;
+
+}
+
+/**
  * For each [path,value] in list, add value amount, multiplied by factor dt
  * @param dest 
  * @param rlist - path of result values to add to dest.

@@ -7,6 +7,7 @@ import { LoadActions } from 'rpg/magic/action';
 import { LoadEffectTypes } from 'rpg/magic/effects';
 import { GenName } from 'rpg/namegen';
 import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
+import { LoadSpells } from 'rpg/parsers/spells';
 import { NewUserData, type UserData } from 'rpg/users/users';
 import { Char } from './char/char';
 import { Race } from './char/race';
@@ -161,13 +162,15 @@ export class Rpg {
 
 	}
 
-} // class
+}
 
 /**
  * Preload Rpg data.
  */
 export const InitGame = async () => {
 
-	await Promise.all([InitRaces(), InitClasses(), InitItems(), LoadEffectTypes(), LoadActions()]);
+	await Promise.all([
+		InitRaces(), InitClasses(), InitItems(), LoadEffectTypes(), LoadActions(), LoadSpells()
+	]);
 
 }
