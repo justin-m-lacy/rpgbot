@@ -20,7 +20,7 @@ export class Item {
 	get attach() { return this._attach; }
 	set attach(v) { this._attach = v; }
 
-	toJSON() {
+	toJSON(): Record<string, any> {
 
 		return {
 			id: this.id,
@@ -41,7 +41,7 @@ export class Item {
 	 * @param json
 	 * @param it
 	 */
-	static InitItem<D extends ItemData = ItemData>(json: D, it?: Item) {
+	static InitData<D extends ItemData = ItemData>(json: D, it?: Item) {
 
 		it ??= new Item(json.id);
 		it.name = json.name;

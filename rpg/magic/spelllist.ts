@@ -10,4 +10,5 @@ export class SpellList extends Inventory<Spell> {
 
 	}
 
+
 }

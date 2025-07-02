@@ -1,3 +1,4 @@
+import { NaNError } from "rpg/util/errors";
 import type { IMod } from "rpg/values/imod";
 import { IsAtMod, parseAtMod } from "rpg/values/mods/atmod";
 import { BaseMod } from "rpg/values/mods/base-mod";
@@ -102,19 +103,6 @@ class InvalidModData extends Error {
 
 		super(`${source?.toString()}: Invalid Mod Str: ${str}`);
 
-	}
-
-}
-
-class NaNError extends Error {
-
-	readonly value: unknown;
-	readonly source?: Id;
-
-	constructor(v: unknown, source?: Id) {
-		super(`${source?.toString()}: Value is NaN: ${v}`);
-		this.value = v;
-		this.source = source;
 	}
 
 }

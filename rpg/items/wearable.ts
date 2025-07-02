@@ -86,7 +86,7 @@ export class Wearable extends Item {
 
 		if (json.mods) a.mods = json.mods;
 
-		return Item.InitItem(json, a);
+		return Item.InitData(json, a);
 	}
 
 	toJSON() {

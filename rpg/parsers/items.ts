@@ -27,6 +27,7 @@ export enum ItemType {
 	Food = 'food',
 	Drink = 'drink',
 	Scroll = 'scroll',
+	Grimoire = 'grimoire',
 	Unique = 'unique',
 	Chest = 'chest',
 	Feature = 'feature',
@@ -58,7 +59,7 @@ export const ReviveItem = (json: any): Item | null | undefined => {
 			return Chest.Revive(json);
 
 		default:
-			return Item.InitItem(json);
+			return Item.InitData(json);
 	}
 
 }

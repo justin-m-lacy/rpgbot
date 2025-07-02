@@ -38,7 +38,7 @@ export class Weapon extends Wearable {
 
 		w.toHit = json.hit || 0;
 
-		return Item.InitItem(json, w);
+		return Item.InitData(json, w);
 
 	}
 

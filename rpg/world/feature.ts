@@ -26,7 +26,7 @@ export class Feature extends Item {
 		}
 		if (json.fb) f.fb = json.fb;
 
-		return Item.InitItem(json, f) as Feature;
+		return Item.InitData(json, f) as Feature;
 
 	}
 

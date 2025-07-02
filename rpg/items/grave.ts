@@ -21,7 +21,7 @@ export class Grave extends Item {
 
 		const p = new Grave(json.id, json.char, json.slayer, json.epitaph);
 
-		Item.InitItem(json, p);
+		Item.InitData(json, p);
 
 		return p;
 

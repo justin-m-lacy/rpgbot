@@ -1,5 +1,6 @@
 import { TryEat } from 'rpg/char/cooking';
 import type { ItemIndex } from 'rpg/items/container';
+import { SpellList } from 'rpg/magic/spelllist';
 import { ItemType } from 'rpg/parsers/items';
 import { Log } from '../display/log';
 import { Inventory, ItemPicker } from '../inventory';
@@ -99,6 +100,8 @@ export class Char extends Actor {
 	private _skills: any;
 	readonly history: History;
 
+	readonly spelllist: SpellList = new SpellList('spells');
+
 	constructor(name: string, race: Race, cls: GClass, owner: string) {
 
 		super(name, race, cls);
@@ -109,7 +112,7 @@ export class Char extends Actor {
 		this.inv = new Inventory();
 		this._equip = new Equip();
 
-		this.history = { explore: 0, crafts: 0 };
+		this.history = { explore: 0 };
 
 		this.owner = owner;
 

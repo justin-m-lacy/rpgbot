@@ -14,7 +14,7 @@ export class Potion extends Item {
 		if (json.effect) p.effect = json.effect;
 		if (json.form) p.form = json.form;
 
-		Item.InitItem(json, p);
+		Item.InitData(json, p);
 
 		return p;
 
