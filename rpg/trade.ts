@@ -21,11 +21,23 @@ const rollCost = (lvl: number) => {
 	return 40 * lvl * (Math.floor(Math.pow(1.5, Math.floor(lvl / 2))));
 }
 
+/**
+ * Removes a gold amount or returns false.
+ * @param amt
+ */
+const payOrFail = (char: Char, gold: number) => {
+
+	if (gold > char.gold) return false;
+	char.gold -= gold;
+	return true;
+
+}
+
 export const rollWeap = (char: Char) => {
 
 	let level = char.level.valueOf();
 	const cost = rollCost(level);
-	if (!char.payOrFail(cost))
+	if (!payOrFail(char, cost))
 		return `${char.name} cannot afford to roll a new weapon. (${cost} gold)`;
 
 	const gen = require('./items/itemgen');
@@ -45,7 +57,7 @@ export const rollArmor = (char: Char, slot?: string | null) => {
 
 	let level = char.level.valueOf();
 	const cost = rollCost(level);
-	if (!char.payOrFail(cost))
+	if (!payOrFail(char, cost))
 		return `${char.name} cannot afford to roll new armor. (${cost} gold)`;
 
 	const mod = Math.max(1 + char.getModifier('cha'), 0);

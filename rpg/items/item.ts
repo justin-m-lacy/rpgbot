@@ -1,34 +1,7 @@
 import { randomUUID } from 'crypto';
+import { ItemType } from 'rpg/parsers/items';
+import { Viewable } from 'rpg/values/types';
 import { Char } from "../char/char";
-
-export enum ItemType {
-
-	Weapon = 'weapon',
-	Armor = 'armor',
-	Potion = 'potion',
-	Food = 'food',
-	Drink = 'drink',
-	Scroll = 'scroll',
-	Unique = 'unique',
-	Chest = 'chest',
-	Feature = 'feature',
-	Grave = 'grave',
-	Unknown = 'unknown'
-}
-
-export type ItemData = {
-	id: string,
-	name: string,
-	type?: ItemType,
-	desc?: string,
-	cost?: number,
-	maker?: string,
-	inscrip?: string,
-	level?: number,
-	created?: number,
-	/// file/image attachment
-	attach?: string
-}
 
 export class Item {
 
@@ -47,32 +20,6 @@ export class Item {
 
 	get attach() { return this._attach; }
 	set attach(v) { this._attach = v; }
-
-	/**
-	 * Since Item is subclassed, the sub item created
-	 * is passed as a param.
-	 * @param json
-	 * @param it
-	 */
-	static Revive(json: ItemData, it?: Item) {
-
-		if (!it) it = new Item(json.id, json.name, json.desc, json.type);
-		else {
-			it.name = json.name;
-		}
-
-		if (json.cost) it._cost = json.cost;
-		if (json.attach) it._attach = json.attach;
-		if (json.maker) it.maker = json.maker;
-		if (json.inscrip) it.inscrip = json.inscrip;
-
-		if (json.level && !Number.isNaN(json.level)) {
-			it._level = json.level;
-		}
-
-		return it;
-
-	}
 
 	toJSON() {
 
@@ -107,12 +54,17 @@ export class Item {
 	 */
 	created: number = 0;
 
-	constructor(id: string | null | undefined, name: string, desc: string = '', type: ItemType = ItemType.Unknown) {
+	constructor(id: string | null | undefined,
+		info?: {
+			type?: ItemType,
+			desc?: string,
+			name: string
+		}) {
 
 		this.id = id ?? randomUUID();
-		this.name = name;
-		this.type = type;
-		this.desc = desc;
+		this.name = info?.name ?? this.id;
+		this.type = info?.type ?? ItemType.Unknown;
+		this.desc = info?.desc ?? '';
 
 	}
 
@@ -172,7 +124,7 @@ export class Item {
 	 *
 	 * @param a
 	 */
-	static ItemList(a: Item[]) {
+	static ItemList(a: Viewable[]) {
 
 		if (a.length === 0) return 'nothing';
 		return a.map(it => it.name + (it.attach ? '\t[img]' : '')).join(',');
@@ -206,7 +158,7 @@ export class Item {
 
 export const Craft = (char: Char, name: string, desc?: string, attach?: string) => {
 
-	const item = new Item(randomUUID({}), name, desc);
+	const item = new Item(randomUUID({}), { name, desc });
 
 	if (attach) item.attach = attach;
 

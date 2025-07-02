@@ -14,7 +14,7 @@ export type RawEffect = {
 	dot?: Record<string, any>,
 	time?: number
 } &
-	typeof import('../data/magic/effects.json', { assert: { type: 'json' } })[number];
+	typeof import('../data/magic/dots.json', { assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
 export const Effects: { [name: string]: ProtoEffect } = {};
@@ -191,7 +191,7 @@ const parseEffectType = (raw: RawEffect) => {
 
 export const LoadEffectTypes = async () => {
 
-	const efx = (await import('../data/magic/effects.json', { assert: { type: 'json' } })).default;
+	const efx = (await import('../data/magic/dots.json', { assert: { type: 'json' } })).default;
 	for (let i = efx.length - 1; i >= 0; i--) {
 		Effects[efx[i].id] = parseEffectType(efx[i] as any);
 	}

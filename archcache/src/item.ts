@@ -1,7 +1,7 @@
 /**
  * Item within the Cache.
  */
-export default class Item<T> {
+export default class CacheItem<T> {
 
 	/**
 	 * Timestamp when item was last accessed.

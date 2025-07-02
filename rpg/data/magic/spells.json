@@ -10,7 +10,7 @@
     {
         "id": "magic_missile",
         "target": "any",
-        "damage": "1d4",
+        "dmg": "1d4",
         "level": 1,
         "cost": {
             "mp": 1
@@ -18,9 +18,9 @@
     },
     {
         "id": "firebolt_1",
-        "name": "Fire bolt 1",
+        "name": "Fire Bolt I",
         "target": "any",
-        "damage": "1d6",
+        "dmg": "1d6",
         "level": 1,
         "cost": {
             "mp": 1
@@ -28,20 +28,94 @@
     },
     {
         "id": "frostbolt 1",
-        "name": "Frost bolt 1",
+        "name": "Frost Bolt I",
         "target": "any",
-        "damage": "1d5",
+        "dmg": "1d5",
         "level": 1,
         "cost": {
             "mp": 1
         }
     },
     {
+        "id": "firebolt_1",
+        "name": "Fire bolt I",
+        "target": "any",
+        "dmg": "1d6",
+        "level": 1,
+        "cost": {
+            "mp": 1
+        }
+    },
+    {
+        "id": "resistfire_1",
+        "name": "Dampen",
+        "target": "any",
+        "desc": "Provides a small resistence to fire.",
+        "dot": {
+            "resist.fire": 5,
+            "duration": 50
+        },
+        "level": 1,
+        "cost": {
+            "mp": 1
+        }
+    },
+    {
+        "id": "resistpoison_1",
+        "name": "Dampen",
+        "target": "any",
+        "desc": "Provides a small resistence to poisons.",
+        "dot": {
+            "mod": {
+                "resist.fire": 5
+            },
+            "duration": 50
+        },
+        "level": 1,
+        "cost": {
+            "mp": 1
+        }
+    },
+    {
+        "id": "antidote_1",
+        "name": "Antidote",
+        "desc": "Cures a subject of minor poisons.",
+        "cure": {
+            "type": "poison",
+            "levels": 5
+        }
+    },
+    {
+        "id": "magebolt_1",
+        "name": "Mage Bolt I",
+        "target": "any",
+        "dmg": "3~8",
+        "level": 2,
+        "cost": {
+            "mp": 3
+        }
+    },
+    {
+        "id": "fireball_1",
+        "name": "Fireball I",
+        "target": "enemies",
+        "desc": "A large ball of fire damages all enemies",
+        "dmg": "2d6",
+        "level": 4,
+        "cost": {
+            "mp": 5
+        }
+    },
+    {
         "id": "mage armor",
         "name": "Mage Armor",
         "target": "self",
-        "duration": "1hr",
-        "effect": "",
+        "dot": {
+            "mod": {
+                "armor": 1
+            },
+            "duration": 50
+        },
         "level": 1,
         "cost": {
             "mp": 4

@@ -1,5 +1,6 @@
 import { IsInt } from 'rpg/util/parse';
-import { Container, type ItemIndex } from './items/container';
+import { Viewable } from 'rpg/values/types';
+import { type ItemIndex } from './items/container';
 import { Item } from './items/item';
 
 export type ItemPicker<T = Item> = ItemIndex | T;
@@ -17,16 +18,23 @@ export const IsInventory = (a: any): a is Inventory => {
 	return a && typeof a === 'object' && SymInventory in a;
 }
 
-export class Inventory extends Container<Item> {
+export class Inventory<T extends Viewable = Item> extends Item {
 
 	readonly [SymInventory] = true;
 
-	static Revive<T extends any = any>(json: any, reviver: (data: T) => Item | null | undefined, inv?: Inventory,) {
+	get count() { return this.items.length; }
+
+	readonly items: T[] = [];
+
+	static Revive<D extends Viewable = Item>(
+		json: any,
+		reviver: (data: any) => D | null | undefined,
+		inv?: Inventory<D>) {
 
 		const arr = json.items;
 		const len = arr.length;
 
-		if (!inv) inv = new Inventory();
+		if (!inv) inv = new Inventory<D>();
 		const items = inv.items;
 		items.length = 0;
 
@@ -42,11 +50,13 @@ export class Inventory extends Container<Item> {
 
 	}
 
-	constructor() {
-		super();
+	constructor(id?: string, info?: { name?: string, desc?: string }) {
+		super(id, info);
 	}
 
-	toJSON() { return { items: this.items }; }
+	toJSON() {
+		return { items: this.items, ...super.toJSON() };
+	}
 
 	getList() {
 		return Item.ItemList(this.items);
@@ -57,7 +67,7 @@ export class Inventory extends Container<Item> {
 	 * @param  start
 	 * @returns  Item found, or null on failure.
 	 */
-	get(start?: ItemIndex): Item | null {
+	get(start?: ItemIndex): T | null {
 
 		/// 0 is also not allowed because indices are 1-based.
 		if (!start) return null;
@@ -91,9 +101,9 @@ export class Inventory extends Container<Item> {
 	 * @param sub
 	 * @returns
 	 */
-	getSub(base: string | number, sub?: string | number): Item | Item[] | null {
+	getSub(base: string | number, sub?: string | number): T | T[] | null {
 
-		const it = this.get(base) as Item;
+		const it = this.get(base) as T;
 		if (!it) return null;
 
 		if (!sub) return it;
@@ -111,9 +121,9 @@ export class Inventory extends Container<Item> {
 	 * @param  sub
 	 * @returns
 	 */
-	takeSub(base: ItemPicker, sub: ItemPicker | ItemIndex): Item | Item[] | null {
+	takeSub(base: ItemPicker<T>, sub: ItemPicker<T> | ItemIndex): T | T[] | null {
 
-		const it = this.take(base) as Inventory | null;
+		const it = this.take(base) as Inventory<T> | null;
 		if (!it) return null;
 
 		/// TODO: this is clearly wrong.
@@ -122,18 +132,32 @@ export class Inventory extends Container<Item> {
 
 	}
 
+	findItem(name: string) {
+
+		const lower = name.toLowerCase();
+		for (let i = this.items.length - 1; i >= 0; i--) {
+
+			const it = this.items[i];
+			if (!it) continue;
+			if (it.id === lower) return this.items[i];
+			else if (it.name && it.name.toLowerCase() === lower) return this.items[i];
+
+		}
+		return null;
+	}
+
 	/**
 	 * Attempts to remove an item by name or index.
 	 * @param which
 	 * @returns item removed, or null if none found.
 	 */
-	take(which?: number | string | Item,
-		sub?: ItemPicker): Item | Item[] | null {
+	take(which?: number | string | T,
+		sub?: ItemPicker<T>): T | T[] | null {
 
 		if (which === null || which === undefined) return null;
 		if (sub) return this.takeSub(which, sub);
 
-		if (which instanceof Item) {
+		if (typeof which === 'object') {
 
 			const ind = this.items.indexOf(which);
 			if (ind >= 0) return this.items.splice(ind, 1)[0];
@@ -169,6 +193,30 @@ export class Inventory extends Container<Item> {
 		return null;
 
 	}
+
+	/**
+	 *
+	 * @param start - start number of items to take.
+	 * @param end number of items to take.
+	 * @returns - Range of items found.
+	 */
+	takeRange(start: ItemIndex, end: ItemIndex): T[] | null {
+
+		if (typeof start === 'string') {
+			start = parseInt(start);
+		}
+		if (typeof end === 'string') {
+			end = parseInt(end);
+		}
+		if (isNaN(start) || isNaN(end)) return null;
+
+		if (--start < 0) start = 0;
+		if (end > this.items.length) { end = this.items.length; }
+
+		return this.items.splice(start, end - start);
+
+	}
+
 
 
 }

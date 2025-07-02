@@ -114,11 +114,11 @@ export class Actor {
 
 	readonly events: EventEmitter<CharEvents> = new EventEmitter();
 
-	constructor(name: string, race: Race, rpgClass?: GClass) {
+	constructor(name: string, race: Race, rpClass?: GClass) {
 
 		this.name = name;
 
-		this._myClass = rpgClass;
+		this._myClass = rpClass;
 
 		this.race = race;
 
@@ -171,18 +171,6 @@ export class Actor {
 
 		}
 		this.mods.push(mods);
-
-	}
-
-	/**
-	 * Removes a gold amount or returns false.
-	 * @param amt
-	 */
-	payOrFail(amt: number) {
-
-		if (amt > this.gold) return false;
-		this.gold -= amt;
-		return true;
 
 	}
 
@@ -262,25 +250,12 @@ export class Actor {
 	/**
 	 * Computes current, as opposed to base hp.
 	*/
-	computeHp() {
+	private computeHp() {
 
 		const hp =
 			Math.max(1,
 				this.stats.hp.max.value + this.stats.level.value * this.getModifier('con'));
 		this.hp.max.value = hp;
-
-	}
-
-	/**
-	 * reroll hp.
-	*/
-	rollBaseHp() {
-
-		const maxHp = this.HD +
-			this.stats.getModifier('con')
-			+ roll(this.stats.level.value - 1, this.HD);
-
-		this.stats.hp.max.value = maxHp;
 
 	}
 

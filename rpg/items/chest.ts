@@ -1,6 +1,7 @@
 import type { ItemIndex } from 'rpg/items/container';
+import { ItemType, ReviveItem } from 'rpg/parsers/items';
 import { Inventory, SymInventory, type IInventory } from '../inventory';
-import { Item, ItemType } from "./item";
+import { Item } from "./item";
 
 /**
  * Chest extends Item not Inventory to avoid multi-inheritance.
@@ -11,10 +12,11 @@ export class Chest extends Item implements IInventory {
 
 	static Revive(json: any) {
 
-		const p = new Chest(json.id, Inventory.Revive(json.inv, Item.Revive));
+		const p = new Chest(
+			json.id, Inventory.Revive<Item>(json.inv, ReviveItem));
 		p.size = json.size;
 
-		return super.Revive(json, p);
+		return ReviveItem(json, p);
 
 	}
 
@@ -44,9 +46,9 @@ export class Chest extends Item implements IInventory {
 
 	private readonly _inv;
 
-	constructor(id: string, inv: Inventory) {
+	constructor(id: string, inv: Inventory<Item>) {
 
-		super(id, '', ItemType.Chest);
+		super(id, { name: 'chest', type: ItemType.Chest });
 
 		this._inv = inv;
 

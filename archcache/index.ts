@@ -1,6 +1,6 @@
 
 import Emitter from 'eventemitter3';
-import Item from './src/item';
+import CacheItem from './src/item';
 
 export type Loader<Data = any> = (key: string) => Promise<Data>;
 export type Saver = (key: string, data: any) => Promise<any>;
@@ -53,7 +53,7 @@ export default class Cache<T = any> extends Emitter {
 		this._cacheKey = this._fixKey(v);
 	}
 
-	private _dict: Map<string, Item<T> | Cache<T>> = new Map();
+	private _dict: Map<string, CacheItem<T> | Cache<T>> = new Map();
 	get data() { return this._dict; }
 
 	lastAccess: number = 0;
@@ -201,7 +201,7 @@ export default class Cache<T = any> extends Emitter {
 			if (data === undefined) return undefined;
 
 			const value = this.reviver ? this.reviver(data) : data;
-			this._dict.set(key, new Item<T>(key, value, false));
+			this._dict.set(key, new CacheItem<T>(key, value, false));
 
 			return value as T;
 
@@ -221,7 +221,7 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	async store(key: string, value: T): Promise<T> {
 
-		const item = new Item(key, value);
+		const item = new CacheItem(key, value);
 		this._dict.set(key, item);
 
 		item.markSaved();
@@ -258,8 +258,8 @@ export default class Cache<T = any> extends Emitter {
 	cache(key: string, value: any) {
 
 		const cur = this._dict.get(key);
-		if (cur instanceof Item) cur.update(value);
-		else this._dict.set(key, new Item(key, value));
+		if (cur instanceof CacheItem) cur.update(value);
+		else this._dict.set(key, new CacheItem(key, value));
 
 	}
 

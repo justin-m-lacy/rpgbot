@@ -273,14 +273,14 @@ export class Loc {
 		}
 
 		if (json.features) {
-			Inventory.Revive(
+			Inventory.Revive<Feature>(
 				json.features, Feature.Revive, loc.features
 			);
 		}
 		if (json.attach) loc._attach = json.attach;
 
 		if (json.inv) {
-			Inventory.Revive(json.inv, Item.Revive, loc.inv);
+			Inventory.Revive<Item>(json.inv, Item.Revive, loc.inv);
 		}
 
 		loc.name = json.name;

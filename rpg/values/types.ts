@@ -4,6 +4,12 @@ export type Idable = {
 	id: string
 }
 
+export type Viewable = {
+	id: string,
+	name: string,
+	attach?: string
+}
+
 export type TValue = {
 	valueOf(): number;
 	value: number;

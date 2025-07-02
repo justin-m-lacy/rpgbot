@@ -43,7 +43,7 @@ export class Feature extends Item {
 	_action?: any;
 
 	constructor(name: string, desc: string) {
-		super(name, desc, ItemType.Feature);
+		super(undefined, { name: name, desc: desc, type: ItemType.Feature });
 	}
 
 	use(char: Char) {
