@@ -17,13 +17,17 @@ export const IsInventory = (a: any): a is Inventory => {
 	return a && typeof a === 'object' && SymInventory in a;
 }
 
-export class Inventory<T extends Item = Item> extends Item {
+export class Inventory<T extends Item = Item> extends Item implements IInventory {
 
 	readonly [SymInventory] = true;
 
 	get count() { return this.items.length; }
 
 	readonly items: T[] = [];
+
+	toJSON() {
+		return { items: this.items, ...super.toJSON() };
+	}
 
 	static Revive<I extends Item = Item>(
 		json: any,
@@ -51,10 +55,6 @@ export class Inventory<T extends Item = Item> extends Item {
 
 	constructor(id?: string, info?: { name?: string, desc?: string }) {
 		super(id, info);
-	}
-
-	toJSON() {
-		return { items: this.items, ...super.toJSON() };
 	}
 
 	/**
@@ -140,7 +140,7 @@ export class Inventory<T extends Item = Item> extends Item {
 	 * @param  sub
 	 * @returns
 	 */
-	takeSub(base: ItemPicker<T>, sub: ItemPicker<T> | ItemIndex): T | T[] | null {
+	private takeSub(base: ItemPicker<T>, sub: ItemPicker<T> | ItemIndex): T | T[] | null {
 
 		const it = this.take(base) as Inventory<T> | null;
 		if (!it) return null;
@@ -151,9 +151,9 @@ export class Inventory<T extends Item = Item> extends Item {
 
 	}
 
-	findItem(name: string) {
+	findItem(id: string) {
 
-		const lower = name.toLowerCase();
+		const lower = id.toLowerCase();
 		for (let i = this.items.length - 1; i >= 0; i--) {
 
 			const it = this.items[i];
@@ -235,5 +235,34 @@ export class Inventory<T extends Item = Item> extends Item {
 		return this.items.splice(start, end - start);
 
 	}
+
+	/**
+	 * Remove all items matching predicate; returns the list of items removed.
+	 * @param p
+	 */
+	removeWhere(p: (it: T) => boolean) {
+
+		const r = [];
+
+		for (let i = this.items.length - 1; i >= 0; i--) {
+			if (p(this.items[i])) r.push(this.items.splice(i, 1)[0]);
+		}
+
+		return r;
+
+	}
+
+	/**
+	 * Removes and returns random item from inventory.
+	 * @returns random item from Inventory, or null.
+	 */
+	randItem() {
+
+		const len = this.items.length;
+		if (len === 0) return null;
+		return this.items.splice(Math.floor(len * Math.random()), 1)[0];
+
+	}
+
 
 }

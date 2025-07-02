@@ -1,9 +1,7 @@
+import { ItemType, ReviveItem } from 'rpg/parsers/items';
 import { Loot } from '../combat/loot';
 import BaseArmors from '../data/items/armors.json';
 import BaseWeapons from '../data/items/weapons.json';
-import { Chest } from '../items/chest';
-import { Grave } from '../items/grave';
-import { Item, ItemType } from '../items/item';
 import { Material } from '../items/material';
 import { Potion } from '../items/potion';
 import { Weapon } from '../items/weapon';
@@ -104,35 +102,6 @@ function initArmors() {
 		const list = armorBySlot[slot] ?? (armorBySlot[slot] = []);
 		list.push(armor);
 
-	}
-
-}
-
-/**
- * revive item from JSON
-*/
-export const Revive = (json: any) => {
-
-	if (!json) return null;
-
-	switch (json.type) {
-		case ItemType.Armor:
-			return Wearable.Revive(json);
-
-		case ItemType.Weapon:
-			return Weapon.Revive(json);
-
-		case ItemType.Potion:
-			return Potion.Revive(json);
-
-		case 'grave':
-			return Grave.Revive(json);
-
-		case 'chest':
-			return Chest.Revive(json);
-
-		default:
-			return Item.Revive(json);
 	}
 
 }
@@ -255,10 +224,7 @@ const getDrops = (mons: Monster) => {
 }
 
 const procItem = (name: string) => {
-
-	const data = allItems[name];
-	return data ? Revive(data) : null;
-
+	return allItems[name] ? ReviveItem(allItems[name]) : null;
 }
 
 /**
@@ -267,7 +233,7 @@ const procItem = (name: string) => {
 export const getMiscItem = () => {
 
 	const it = miscItems[Math.floor(miscItems.length * Math.random())];
-	return Revive(it);
+	return ReviveItem(it);
 
 }
 

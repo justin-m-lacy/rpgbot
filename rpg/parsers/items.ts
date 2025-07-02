@@ -1,4 +1,9 @@
+import { Chest } from "rpg/items/chest";
+import { Grave } from "rpg/items/grave";
 import { Item } from "rpg/items/item";
+import { Potion } from "rpg/items/potion";
+import { Weapon } from "rpg/items/weapon";
+import { Wearable } from "rpg/items/wearable";
 
 export type ItemData = {
 	id: string,
@@ -30,25 +35,30 @@ export enum ItemType {
 }
 
 /**
- * Since Item is subclassed, the sub item created
- * is passed as a param.
- * @param json
- * @param it
- */
-export const ReviveItem
-	= <T extends Item = Item, D extends ItemData = ItemData>(json: D, it: T) => {
+ * revive item from JSON
+*/
+export const ReviveItem = (json: any): Item | null | undefined => {
 
-		it.name = json.name;
+	if (!json) return null;
 
-		if (json.cost) it.cost = json.cost;
-		if (json.attach) it.attach = json.attach;
-		if (json.maker) it.maker = json.maker;
-		if (json.inscrip) it.inscrip = json.inscrip;
+	switch (json.type) {
+		case ItemType.Armor:
+			return Wearable.Revive(json);
 
-		if (json.level && !Number.isNaN(json.level)) {
-			it.level = json.level;
-		}
+		case ItemType.Weapon:
+			return Weapon.Revive(json);
 
-		return it;
+		case ItemType.Potion:
+			return Potion.Revive(json);
 
+		case 'grave':
+			return Grave.Revive(json);
+
+		case 'chest':
+			return Chest.Revive(json);
+
+		default:
+			return Item.Revive(json);
 	}
+
+}

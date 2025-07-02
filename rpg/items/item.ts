@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { ItemType } from 'rpg/parsers/items';
+import { ItemData, ItemType } from 'rpg/parsers/items';
 import { Char } from "../char/char";
 
 export class Item {
@@ -33,6 +33,30 @@ export class Item {
 			maker: this.maker ?? undefined,
 			inscrip: this.inscrip || undefined
 		}
+	}
+
+	/**
+	 * Since Item is subclassed, the sub item created
+	 * is passed as a param.
+	 * @param json
+	 * @param it
+	 */
+	static InitData<D extends ItemData = ItemData>(json: D, it?: Item) {
+
+		it ??= new Item(json.id);
+		it.name = json.name;
+
+		if (json.cost) it.cost = json.cost;
+		if (json.attach) it.attach = json.attach;
+		if (json.maker) it.maker = json.maker;
+		if (json.inscrip) it.inscrip = json.inscrip;
+
+		if (json.level && !Number.isNaN(json.level)) {
+			it.level = json.level;
+		}
+
+		return it;
+
 	}
 
 	readonly id: string;

@@ -1,5 +1,5 @@
 import Cache from 'archcache';
-import { Item } from 'rpg/items/item';
+import { ReviveItem } from 'rpg/parsers/items';
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Coord } from '../world/loc';
@@ -64,7 +64,7 @@ export class Guild extends SocialGroup {
 
 		Object.assign(g, json);
 
-		if (g.inv) g.inv = Inventory.Revive(g.inv, Item.Revive, g.inv);
+		if (g.inv) g.inv = Inventory.Revive(g.inv, ReviveItem, g.inv);
 		else g.inv = new Inventory();
 
 		return g;

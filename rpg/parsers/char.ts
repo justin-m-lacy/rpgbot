@@ -1,12 +1,11 @@
 import { Char } from 'rpg/char/char';
 import { Equip, type HumanSlots } from 'rpg/char/equip';
 import { Inventory } from 'rpg/inventory';
-import { Item } from 'rpg/items/item';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { Effect } from 'rpg/magic/effects';
+import { ReviveItem } from 'rpg/parsers/items';
 import { BadTypeError, NullDataError } from 'rpg/util/errors';
 import { Coord, IsCoord } from 'rpg/world/loc';
-import * as ItemGen from '../builders/itemgen';
 import { GetClass, GetRace } from './parse-class';
 
 
@@ -52,7 +51,7 @@ export const ReviveChar = (json: any) => {
 	char.statPoints = json.statPoints || char.stats.level;
 	char.spentPoints = json.spentPoints || 0;
 
-	if (json.inv) Inventory.Revive(json.inv, Item.Revive, char.inv);
+	if (json.inv) Inventory.Revive(json.inv, ReviveItem, char.inv);
 
 	// SET AFTER BASE STATS.
 	if (json.effects) {
@@ -93,9 +92,9 @@ export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
 		if (!wot) continue;
 		else if (Array.isArray(wot)) {
 
-			dest[k] = wot.map(v => ItemGen.Revive(v) as Wearable);
+			dest[k] = wot.map(v => ReviveItem(v) as Wearable);
 
-		} else dest[k] = ItemGen.Revive(wot) as Wearable;
+		} else dest[k] = ReviveItem(wot) as Wearable;
 
 	}
 

@@ -435,10 +435,6 @@ export class Loc {
 
 	}
 
-	lookFeatures() { return 'Features: ' + this.features.getList(); }
-
-	lookItems() { return 'On ground: ' + this.inv.getList(); }
-
 	/**
 	 *
 	 * @param f

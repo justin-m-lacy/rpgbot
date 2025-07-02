@@ -1,8 +1,9 @@
 import { TryEat } from 'rpg/char/cooking';
 import type { ItemIndex } from 'rpg/items/container';
+import { ItemType } from 'rpg/parsers/items';
 import { Log } from '../display/log';
 import { Inventory, ItemPicker } from '../inventory';
-import { Item, ItemType } from '../items/item';
+import { Item } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
 import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
@@ -236,18 +237,6 @@ export class Char extends Actor {
 			return 'Item cannot be equipped.'
 		}
 
-	}
-
-	/**
-	 * Removes any items matching the predicate and returns them.
-	 * Removed items are not added to inventory.
-	 * @param p
-	 */
-	removeWhere(p: (w: Item) => boolean) {
-
-		const equips = this._equip.removeWhere(p);
-		this.removeEquip(equips);
-		return this.inv.removeWhere(p).concat(equips);
 	}
 
 	unequip(slot?: string) {

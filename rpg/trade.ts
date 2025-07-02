@@ -170,7 +170,7 @@ export const nerfItems = (char: Char) => {
 		return false;
 	};
 
-	const removed = char.removeWhere(test);
+	const removed = char.inv.removeWhere(test);
 	return 'Removed Items: ' + removed.map(it => it.name).join(', ');
 
 }
