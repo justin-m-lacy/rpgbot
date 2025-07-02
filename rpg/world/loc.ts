@@ -1,6 +1,7 @@
 import type { ItemIndex } from "rpg/items/container";
+import { quickSplice } from "rpg/util/array";
 import { IsInt } from "rpg/util/parse";
-import { Char } from "../char/char";
+import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Item } from "../items/item";
 import { Monster } from '../monster/monster';
@@ -165,10 +166,11 @@ export class Loc {
 			exits: this.exits,
 			inv: this.inv,
 			desc: this.desc,
+			chars: this.chars.length > 0 ? this.chars : undefined,
 			name: this.name,
-			biome: this._biome,
-			npcs: this.npcs ?? undefined,
-			features: this._features ?? undefined,
+			biome: this.biome,
+			npcs: this.npcs.length > 0 ? this.npcs : undefined,
+			features: this.features ?? undefined,
 			attach: this._attach ?? undefined,
 			maker: this._maker ?? undefined,
 			time: this.time ?? undefined,
@@ -177,9 +179,6 @@ export class Loc {
 		};
 
 	}
-
-	get biome() { return this._biome; }
-	set biome(v) { this._biome = v; }
 
 	get key() { return this._key; }
 
@@ -196,36 +195,59 @@ export class Loc {
 	get owner() { return this._owner; }
 	set owner(v) { this._owner = v; }
 
-	get inventory() { return this.inv; }
 	get items() { return this.inv.items }
 
 	name?: string;
 	desc?: string;
 
-	private _biome: string;
+	biome: string;
 	private _maker?: string;
 	private _attach: any;
 	private _owner?: string;
 	time?: number;
 
-	private readonly _features: Inventory;
+	readonly features: Inventory;
 
 	private _key!: string;
 	readonly coord: Coord;
-	readonly npcs: Array<Char | Monster> = [];
+
+	/**
+	 * player characters at location.
+	 */
+	readonly chars: string[] = [];
+
+	/**
+	 * npcs at location.
+	 */
+	readonly npcs: Array<Monster> = [];
+
 	readonly exits: Partial<Record<DirVal, Exit>> = {};
-	private readonly inv: Inventory;
+	readonly inv: Inventory;
 
 	constructor(coord: Coord, biome: string) {
 
 		this.coord = coord;
-		this._biome = biome;
+		this.biome = biome;
 
-		this.npcs = [];
-
-		this._features = new Inventory();
+		this.features = new Inventory();
 		this.inv = new Inventory();
 
+	}
+
+	/**
+	 * add character to this location.
+	 * @param char 
+	 */
+	addChar(char: Char) {
+		char.loc.setTo(this.coord);
+		if (!this.chars.includes(char.id)) {
+			this.chars.push(char.id);
+		}
+	}
+
+	rmChar(char: Char) {
+		const ind = this.chars.indexOf(char.id);
+		if (ind >= 0) quickSplice(this.chars, ind);
 	}
 
 	static Revive(json: any) {
@@ -249,7 +271,7 @@ export class Loc {
 
 		if (json.features) {
 			Inventory.Revive(
-				json.features, Feature.Revive, loc._features
+				json.features, Feature.Revive, loc.features
 			);
 		}
 		if (json.attach) loc._attach = json.attach;
@@ -346,29 +368,43 @@ export class Loc {
 
 	}
 
-	view() { return [this.look(true), this._attach]; }
+	view() { return [this.look(undefined, true), this._attach]; }
 
 	/**
-	 * Returns everything seen when 'look'
-	 * is used at this location.
-	*/
-	look(imgTag: boolean = true) {
+	 * Returns text seen by character looking at location.
+	 * @param looker 
+	 * @param imgTag 
+	 * @param showPaths 
+	 * @returns 
+	 */
+	look(looker?: Char, imgTag: boolean = true, showPaths: boolean = false) {
 
-		let r = in_prefix[this._biome as Biome] + this._biome;//+ ' (' + this._coord.toString() + ')';
+		let r = in_prefix[this.biome as Biome] + this.biome;//+ ' (' + this._coord.toString() + ')';
 		if (this._attach && imgTag) r += ' [img]';
 		r += '\n' + this.desc;
 
-		if (this._features.count > 0) r += '\nFeatures: ' + this._features.getList();
+		if (this.features.count > 0) r += '\nFeatures: ' + this.features.getList();
 		r += '\nOn ground: ' + this.inv.getList();
 
-		if (this.npcs.length > 0) {
-			r += '\nCreatures: ';
-			r += this.npcList();
+
+		if (this.chars.length > 0) {
+
+			const text = this.charList(looker?.name);
+			if (text) {
+				r += '\nChars: ' + text;
+			}
+
 		}
 
-		r += '\nPaths:'
-		for (const k in this.exits) {
-			r += '\t' + k;
+		if (this.npcs.length > 0) {
+			r += '\nCreatures: ' + this.npcList();
+		}
+
+		if (showPaths) {
+			r += '\nPaths:'
+			for (const k in this.exits) {
+				r += '\t' + ToDirStr(k as DirVal);
+			}
 		}
 
 		return r;
@@ -384,7 +420,7 @@ export class Loc {
 
 		let f: Feature | null;
 		if (typeof wot !== 'object') {
-			f = this._features.get(wot) as Feature;
+			f = this.features.get(wot) as Feature;
 			if (!f) return false;
 		} else {
 			f = wot;
@@ -394,7 +430,7 @@ export class Loc {
 
 	}
 
-	lookFeatures() { return 'Features: ' + this._features.getList(); }
+	lookFeatures() { return 'Features: ' + this.features.getList(); }
 
 	lookItems() { return 'On ground: ' + this.inv.getList(); }
 
@@ -402,13 +438,13 @@ export class Loc {
 	 *
 	 * @param f
 	 */
-	addFeature(f: Feature | null) { if (f) this._features.add(f); }
+	addFeature(f: Feature | null) { if (f) this.features.add(f); }
 
 	/**
 	 *
 	 * @param wot
 	 */
-	getFeature(wot: string | number) { return this._features.get(wot) as Feature; }
+	getFeature(wot: string | number) { return this.features.get(wot) as Feature; }
 
 	/**
 	 * Get item data without taking it.
@@ -453,6 +489,13 @@ export class Loc {
 		console.log('removing npc at: ' + ind);
 		if (ind >= 0) return this.npcs.splice(ind, 1)[0];
 		return null;
+
+	}
+
+	charList(looker?: string) {
+
+		if (this.chars.length === 1 && this.chars[0] === looker) return undefined;
+		return this.chars.join(', ');
 
 	}
 

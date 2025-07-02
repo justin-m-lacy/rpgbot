@@ -136,7 +136,7 @@ export class World {
 				return;
 		}
 
-		char.loc = loc.coord;
+		char.loc.setTo(loc.coord);
 		return loc;
 
 	}

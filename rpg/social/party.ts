@@ -1,7 +1,8 @@
 import Cache from 'archcache';
+import { World } from 'rpg/world/world';
 import { Actor } from '../char/actor';
 import { Char } from '../char/char';
-import { Coord } from '../world/loc';
+import { Coord, Loc } from '../world/loc';
 import { SocialGroup } from './social-group';
 
 export class Party extends SocialGroup {
@@ -62,13 +63,11 @@ export class Party extends SocialGroup {
 	 */
 	async getChar(name: string) { return this.cache.fetch(name) as Promise<Char | undefined>; }
 
-	/**
-	 *
-	 * @param coord
-	 */
-	async move(coord: Coord) {
+	async move(world: World, to: Loc) {
 
-		this.loc = coord;
+		const prev = await world.getLoc(this.loc.x, this.loc.y);
+
+		this.loc.setTo(to.coord);
 
 		let roster = this.roster;
 
@@ -76,7 +75,8 @@ export class Party extends SocialGroup {
 
 			const char = await this.cache.fetch(roster[i]);
 			if (char) {
-				char.loc = coord;
+				prev?.rmChar(char);
+				to.addChar(char);
 				if (char.isAlive()) char.recover();
 			}
 

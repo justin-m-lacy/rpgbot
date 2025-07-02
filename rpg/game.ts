@@ -110,12 +110,12 @@ export class Game {
 		const loc = await this.world.tryMove(char, toDirection(dir));
 		if (!loc) return;
 
-		char.log(char.name + ' is' + loc.look());
+		char.log(char.name + ' is' + loc.look(char));
 
 		const p = this.getParty(char);
-		if (p && p.leader === char.name) {
+		if (p && p.leader === char.id) {
 
-			await p.move(char.loc);
+			await p.move(this.world, loc);
 
 		} else char.recover();
 
@@ -148,11 +148,11 @@ export class Game {
 		if (p && p.leader === char.name) {
 
 			//console.log('Moving party to: ' + char.loc.toString() );
-			await p.move(char.loc);
+			await p.move(this.world, loc);
 
 		}
 
-		return char.output(`${char.name}: ${loc.look()}`);
+		return char.output(`${char.name}: ${loc.look(char)}`);
 
 	}
 

@@ -24,7 +24,7 @@ export default NewCommand<Rpg>({
 				start = 1;
 			} else {
 				return SendPrivate(m, 'Take what item?', {
-					components: PickItemButtons('take', loc.inventory, 'start')
+					components: PickItemButtons('take', loc.inv, 'start')
 				});
 			}
 		}
