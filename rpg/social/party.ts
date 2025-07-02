@@ -27,10 +27,7 @@ export class Party extends SocialGroup {
 
 	}
 
-	get loc() { return this._loc; }
-	set loc(v) { this._loc.setTo(v); }
-
-	private _loc: Coord;
+	readonly at: Coord;
 
 	constructor(leader: Char, cache: Cache) {
 
@@ -41,7 +38,7 @@ export class Party extends SocialGroup {
 		this.leader = leader.name;
 		this.name = this.leader + "'s Party";
 
-		this._loc = new Coord(leader.loc.x, leader.loc.y);
+		this.at = new Coord(leader.at.x, leader.at.y);
 
 	}
 
@@ -65,9 +62,9 @@ export class Party extends SocialGroup {
 
 	async move(world: World, to: Loc) {
 
-		const prev = await world.getLoc(this.loc.x, this.loc.y);
+		const prev = await world.getLoc(this.at);
 
-		this.loc.setTo(to.coord);
+		this.at.setTo(to.coord);
 
 		let roster = this.roster;
 

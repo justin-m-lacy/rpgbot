@@ -16,7 +16,7 @@ export default NewCommand<Rpg>({
 
 		let start: string | number | null = m.options.getString('start');
 		if (!start) {
-			const loc = await rpg.world.getOrGen(char.loc);
+			const loc = await rpg.world.getOrGen(char.at);
 
 			if (loc.items.length === 0) {
 				return SendPrivate(m, 'Nothing here to take.');

@@ -86,11 +86,11 @@ export class Actor {
 	get cls() { return this._myClass }
 
 	get toHit() { return this.getModifier('dex'); }
-	get loc() { return this._loc; }
-	set loc(v) { this._loc.setTo(v); }
+	get at() { return this._at; }
+	set at(v) { this._at.setTo(v); }
 
 	readonly name: string;
-	private readonly _loc: Coord;
+	private readonly _at: Coord;
 	race: Race;
 	readonly stats: StatBlock = new StatBlock();
 	readonly effects: Effect[] = [];
@@ -122,7 +122,7 @@ export class Actor {
 
 		this.race = race;
 
-		this._loc = new Coord(0, 0);
+		this._at = new Coord(0, 0);
 
 		this._state = CharState.Alive;
 

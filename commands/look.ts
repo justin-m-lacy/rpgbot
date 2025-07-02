@@ -82,7 +82,7 @@ export default NewCommand<Rpg>({
 
 		const what = m.options.getString('what');
 
-		const loc = await rpg.world.getOrGen(char.loc);
+		const loc = await rpg.world.getOrGen(char.at);
 		if (!what) {
 			return SendPrivate(m, char.name + ' is' + loc.look(char), {
 				components: WorldLocActions(loc)

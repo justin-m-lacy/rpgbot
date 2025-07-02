@@ -120,8 +120,8 @@ export class Combat {
 	 */
 	async fight() {
 
-		if ('loc' in this.attacker && 'loc' in this.defender
-			&& !(this.attacker.loc.equals(this.defender.loc))) {
+		if ('at' in this.attacker && 'at' in this.defender
+			&& !(this.attacker.at.equals(this.defender.at))) {
 			this.resp += `${this.attacker.name} does not see ${this.defender.name} at their location.`;
 			return;
 		}
@@ -241,7 +241,7 @@ export class Combat {
 		} else { defender = this.defender }
 
 		/// Monsters always assumed to be at same location.
-		if ('loc' in attacker && 'loc' in defender && !(attacker.loc.equals(defender.loc))) {
+		if ('at' in attacker && 'at' in defender && !(attacker.at.equals(defender.at))) {
 			this.resp += `${attacker.name} does not see ${defender.name} at their location.`;
 			return;
 		}
@@ -275,7 +275,7 @@ export class Combat {
 	 */
 	attack(src: Actor | Monster, dest: Actor | Monster) {
 
-		if ('loc' in src && 'loc' in dest && !(src.loc.equals(dest.loc))) {
+		if ('at' in src && 'at' in dest && !(src.at.equals(dest.at))) {
 			this.resp += `${src.name} does not see ${dest.name} at this location.`;
 			return;
 		}

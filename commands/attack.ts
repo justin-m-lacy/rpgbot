@@ -19,7 +19,7 @@ export default NewCommand<Rpg>({
 		let who: string | number | null = m.options.getString('who');
 		if (!who) {
 
-			const loc = await rpg.world.getOrGen(src.loc);
+			const loc = await rpg.world.getOrGen(src.at);
 
 			if (loc.npcs.length === 0) {
 				return SendPrivate(m, 'Attack who?');

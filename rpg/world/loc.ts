@@ -119,8 +119,11 @@ export const IsCoord = (obj: any): obj is { x: number, y: number } => {
 	return obj && typeof obj === 'object' && typeof obj.x === 'number' && typeof obj.y === 'number';
 }
 
+export type TCoord = {
+	x: number, y: number
+}
 
-export class Coord {
+export class Coord implements TCoord {
 
 	x: number;
 	y: number;
@@ -219,7 +222,7 @@ export class Loc {
 	/**
 	 * npcs at location.
 	 */
-	readonly npcs: Array<Monster> = [];
+	readonly npcs: Array<Monster | Char> = [];
 
 	readonly exits: Partial<Record<DirVal, Exit>> = {};
 	readonly inv: Inventory;
@@ -239,7 +242,7 @@ export class Loc {
 	 * @param char 
 	 */
 	addChar(char: Char) {
-		char.loc.setTo(this.coord);
+		char.at.setTo(this.coord);
 		if (!this.chars.includes(char.id)) {
 			this.chars.push(char.id);
 		}

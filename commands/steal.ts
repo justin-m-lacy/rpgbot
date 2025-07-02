@@ -21,7 +21,7 @@ export default NewCommand<Rpg>({
 
 			return SendPrivate(m, 'Steal from whom?', {
 				components: PickCharButtons('steal',
-					(await rpg.world.getOrGen(src.loc)).npcs.filter((v): v is Char => v instanceof Char)
+					(await rpg.world.getOrGen(src.at)).npcs.filter((v): v is Char => v instanceof Char)
 				)
 			})
 

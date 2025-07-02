@@ -16,7 +16,7 @@ export default NewCommand<Rpg>({
 
 		const t = await rpg.loadChar(who);
 		if (!t) return;
-		return SendPrivate(m, t.name + ' is at ' + t.loc.toString());
+		return SendPrivate(m, t.name + ' is at ' + t.at.toString());
 
 
 	}

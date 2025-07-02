@@ -14,7 +14,7 @@ import { Race, type GClass } from './race';
 import { StatIds, StatKey } from './stats';
 
 const SaveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
-	'loc', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
+	'at', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
 
 
 enum CharEventFlags {

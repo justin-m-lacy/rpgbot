@@ -127,7 +127,7 @@ export class Game {
 
 		if (this.tick(char, 'hike') === false) return char.getLog();
 
-		const d = char.loc.abs();
+		const d = char.at.abs();
 
 		let r = this.skillRoll(char) + char.getModifier('dex') + char.getModifier('wis');
 		const p = this.getParty(char);
@@ -292,11 +292,11 @@ export class Game {
 
 	}
 
-	goHome(char: Char) {
+	async goHome(char: Char) {
 
 		if (this.tick(char, 'home') === false) return char.getLog();
 
-		return char.output(this.world.goHome(char));
+		return char.output(await this.world.goHome(char));
 
 	}
 
@@ -504,8 +504,8 @@ export class Game {
 		if (r < 5) return char.output('You are lost.');
 
 		const err = Math.floor(400 / r);
-		const x = Math.round(char.loc.x + err * (Math.random() - 0.5));
-		const y = Math.round(char.loc.y + err * (Math.random() - 0.5));
+		const x = Math.round(char.at.x + err * (Math.random() - 0.5));
+		const y = Math.round(char.at.y + err * (Math.random() - 0.5));
 
 		return char.output(`You believe you are near (${x},${y}).`);
 
@@ -538,8 +538,8 @@ export class Game {
 		if (char.hasTalent('track')) r *= 2;
 		else r -= 10;
 
-		const src = char.loc;
-		const dest = targ.loc;
+		const src = char.at;
+		const dest = targ.at;
 		const d = src.dist(dest);
 
 		if (d === 0) return char.output(`${targ.name} is here.`);
@@ -600,7 +600,7 @@ export class Game {
 		const p1 = this.getParty(src) || src;
 		let p2: Char | Party = this.getParty(targ);
 
-		if (!p2 || (!p2.isLeader(targ) && !p2.loc.equals(targ.loc))) {
+		if (!p2 || (!p2.isLeader(targ) && !p2.at.equals(targ.at))) {
 			p2 = targ;
 		}
 

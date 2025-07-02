@@ -6,7 +6,7 @@ import { Item } from '../items/item';
 import { Monster } from '../monster/monster';
 import Block from './block';
 import { Feature } from './feature';
-import { Coord, DirString, DirVal, Exit, Loc, ToDirStr } from './loc';
+import { Coord, DirString, DirVal, Exit, Loc, TCoord, ToDirStr } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching of existing world data.
@@ -39,7 +39,7 @@ export class World {
 	 */
 	async setDesc(char: Char, desc?: string, attach?: string) {
 
-		const loc = await this.getOrGen(char.loc, char);
+		const loc = await this.getOrGen(char.at, char);
 		if (attach) loc.attach = attach;
 
 		const owner = loc.owner;
@@ -57,7 +57,7 @@ export class World {
 	 * @param who
 	 */
 	async getNpc(char: Char, who: ItemIndex) {
-		const loc = await this.getOrGen(char.loc, char);
+		const loc = await this.getOrGen(char.at, char);
 		return loc.getNpc(who);
 	}
 
@@ -67,7 +67,7 @@ export class World {
 	 * @param who
 	 */
 	async removeNpc(char: Char, who: Monster) {
-		const loc = await this.getOrGen(char.loc, char);
+		const loc = await this.getOrGen(char.at, char);
 		return loc.removeNpc(who);
 
 	}
@@ -79,7 +79,7 @@ export class World {
 	 */
 	async useLoc(char: Char, wot: string | number | Feature) {
 
-		const loc = await this.getOrGen(char.loc, char);
+		const loc = await this.getOrGen(char.at, char);
 
 		const f = typeof wot !== 'object' ? loc.getFeature(wot) : wot;
 		if (!f) return 'You do not see any such thing here.';
@@ -98,7 +98,7 @@ export class World {
 	 */
 	async take(char: Char, first: string | number, end?: string | number | null) {
 
-		const loc = await this.getOrGen(char.loc, char);
+		const loc = await this.getOrGen(char.at, char);
 
 		const it = (end != null) ? loc.takeRange(first as number, end as number) : loc.take(first);
 		if (!it) return 'Item not found.';
@@ -112,7 +112,7 @@ export class World {
 
 	async hike(char: Char, dir: DirString) {
 
-		const coord = char.loc || new Coord(0, 0);
+		const coord = char.at || new Coord(0, 0);
 		let loc;
 
 		switch (dir) {
@@ -136,7 +136,7 @@ export class World {
 				return;
 		}
 
-		char.loc.setTo(loc.coord);
+		char.at.setTo(loc.coord);
 		return loc;
 
 	}
@@ -148,7 +148,7 @@ export class World {
 	 */
 	async explored(char: Char) {
 
-		const loc = await this.getOrGen(char.loc);
+		const loc = await this.getOrGen(char.at);
 		if (loc.maker) return loc.explored();
 
 		loc.setMaker(char.name);
@@ -158,7 +158,7 @@ export class World {
 
 	async view(char: Char, what?: string | number | null) {
 
-		const loc = await this.getOrGen(char.loc);
+		const loc = await this.getOrGen(char.at);
 		if (what) {
 
 			const it = loc.get(what);
@@ -178,7 +178,7 @@ export class World {
 	 */
 	async examine(char: Char, what: string | number) {
 
-		const loc = await this.getOrGen(char.loc);
+		const loc = await this.getOrGen(char.at);
 
 		if (!what) return 'Examine what?';
 
@@ -197,7 +197,7 @@ export class World {
 	async itemAt(at: Coord, what?: ItemIndex | null) {
 
 		if (!what) return null;
-		const loc = await this.getLoc(at.x, at.y);
+		const loc = await this.getLoc(at);
 		return loc?.get(what);
 
 	}
@@ -209,7 +209,7 @@ export class World {
 	 */
 	async put(char: Char, what: Item) {
 
-		const loc = await this.getOrGen(char.loc, char);
+		const loc = await this.getOrGen(char.at, char);
 		const ind = loc.put(what);
 		await this.quickSave(loc);
 
@@ -227,7 +227,7 @@ export class World {
 		const it = end ? char.takeRange(what as ItemIndex, end) : char.takeItem(what);
 		if (!it) return 'Invalid item.';
 
-		const loc = await this.getOrGen(char.loc, char);
+		const loc = await this.getOrGen(char.at, char);
 		const ind = loc.put(it);
 		await this.quickSave(loc);
 
@@ -243,8 +243,8 @@ export class World {
 	setHome(char: Char) {
 
 		if (char.home) {
-			char.home.setTo(char.loc);
-		} else char.home = new Coord(char.loc.x, char.loc.y);
+			char.home.setTo(char.at);
+		} else char.home = new Coord(char.at.x, char.at.y);
 
 		return `${char.name} Home set.`;
 
@@ -253,9 +253,18 @@ export class World {
 	/**
 	 * @param char
 	 */
-	goHome(char: Char) {
+	async goHome(char: Char) {
 
-		char.loc.setTo(char.home ?? new Coord(0, 0));
+		let cur = await this.getLoc(char.at);
+		cur?.rmChar(char);
+
+		char.at.setTo(char.home ?? new Coord(0, 0));
+		cur = await this.getLoc(char.at);
+		cur?.addChar(char);
+
+		/// todo: move party? unparty.
+
+		/// public vs private log?
 		return char.name + ' has travelled home.';
 
 	}
@@ -267,7 +276,7 @@ export class World {
 	 */
 	async tryMove(char: Char, dir: DirVal): Promise<Loc | null> {
 
-		const from = await this.getOrGen(char.loc, char);
+		const from = await this.getOrGen(char.at, char);
 		const to = from.getExit(dir)?.to;
 
 		if (!to) {
@@ -275,7 +284,7 @@ export class World {
 			return null;
 		}
 
-		let dest = await this.getLoc(to.x, to.y);
+		let dest = await this.getLoc(to);
 
 		if (dest == null) {
 
@@ -291,7 +300,7 @@ export class World {
 
 		}
 
-		char.loc.setTo(dest.coord);
+		char.at.setTo(dest.coord);
 		this.trySpawn(dest);
 
 		return dest;
@@ -320,7 +329,7 @@ export class World {
 
 	async getOrGen(coord: Coord, char?: Char) {
 
-		let loc = await this.getLoc(coord.x, coord.y);
+		let loc = await this.getLoc(coord);
 
 		if (loc == null) {
 
@@ -337,9 +346,9 @@ export class World {
 
 	}
 
-	async getLoc(x: number, y: number) {
+	async getLoc(coord: TCoord) {
 
-		const bkey = this.getBKey(x, y);
+		const bkey = this.getBlockKey(coord);
 		let block = await this.cache.fetch(bkey) as Block;
 
 		if (block) {
@@ -349,14 +358,20 @@ export class World {
 				this.cache.cache(bkey, block);
 			}
 
-			return block.getLoc(this.locKey(x, y));
+			return block.getLoc(this.locKey(coord));
 		}
 
 	}
 
-	async getBlock(x: number, y: number, create: boolean = false) {
+	/**
+	 * Get block containing a coordinate.
+	 * @param loc 
+	 * @param create 
+	 * @returns 
+	 */
+	private async getBlock(loc: TCoord, create: boolean = false) {
 
-		const bkey = this.getBKey(x, y);
+		const bkey = this.getBlockKey(loc);
 		let block = await this.cache.fetch(bkey);
 
 		if (!block) return (create === true) ? new Block({ key: bkey }) : null;
@@ -372,7 +387,7 @@ export class World {
 
 	async quickSave(loc: Loc) {
 
-		const block = await this.getBlock(loc.x, loc.y, true);
+		const block = await this.getBlock(loc, true);
 		block.setLoc(this.coordKey(loc.coord), loc);
 
 		this.cache.cache(block.key, block);
@@ -380,27 +395,27 @@ export class World {
 
 	async forceSave(loc: Loc) {
 
-		const block = await this.getBlock(loc.x, loc.y, true);
+		const block = await this.getBlock(loc, true);
 
 		block.setLoc(this.coordKey(loc.coord), loc);
 		return this.cache.store(block.key, block)
 
 	}
 
-	locKey(x: number, y: number) {
-		return x + ',' + y;
+	private locKey(loc: TCoord) {
+		return loc.x + ',' + loc.y;
 	}
 
 	coordKey(coord: Coord) {
 		return coord.x + ',' + coord.y;
 	}
+
 	/**
-	 *
-	 * @param x
-	 * @param y
 	 */
-	getBKey(x: number, y: number) {
-		return 'rpg/blocks/' + Math.floor(x / BLOCK_SIZE) + ',' + Math.floor(y / BLOCK_SIZE);
+	private getBlockKey(loc: { x: number, y: number }) {
+		return 'rpg/blocks/' +
+			Math.floor(loc.x / BLOCK_SIZE) + ',' +
+			Math.floor(loc.y / BLOCK_SIZE);
 	}
 
 
@@ -428,7 +443,7 @@ export class World {
 	 * @returns
 	 */
 	async getExitTo(dest: Coord, fromDir: DirVal) {
-		const loc = await this.getLoc(dest.x, dest.y);
+		const loc = await this.getLoc(dest);
 		if (loc) {
 			const e = loc.reverseExit(fromDir);
 			if (e) return new Exit(fromDir, dest);
@@ -444,13 +459,13 @@ export class World {
 	* @param x
 	* @param y
 	*/
-	async getNear(x: number, y: number) {
+	/*async getNear(loc: TCoord) {
 
 		return [await this.getLoc(x - 1, y),
 		await this.getLoc(x + 1, y),
 		await this.getLoc(x, y - 1),
 		await this.getLoc(x, y + 1)].filter(v => v != null);
 
-	}
+	}*/
 
 }

@@ -40,8 +40,11 @@ export const ReviveChar = (json: any) => {
 	if (typeof json.stats !== 'object') throw new BadTypeError(json.stats, 'object');
 	char.setBaseStats(json.stats);
 
-	if (IsCoord(json.loc)) {
-		char.loc.setTo(json.loc)
+	if (IsCoord(json.at)) {
+		char.at.setTo(json.at);
+	} else if (IsCoord(json.loc)) {
+		/// @deprecated legacy. remove.
+		char.at.setTo(json.loc)
 	}
 
 	if (json.state) char.state = json.state;
