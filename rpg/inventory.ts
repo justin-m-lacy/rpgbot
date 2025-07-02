@@ -1,4 +1,5 @@
 import { IsInt } from 'rpg/util/parse';
+import { SymEncode } from 'rpg/values/types';
 import { type ItemIndex } from './items/container';
 import { Item } from './items/item';
 
@@ -25,8 +26,19 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	readonly items: T[] = [];
 
-	toJSON() {
-		return { items: this.items, ...super.toJSON() };
+	/**
+	 * 
+	 * @param encoder - data encoder.
+	 */
+	[SymEncode](encoder?: (it: T) => any) {
+
+		const data = super.toJSON();
+		if (this.items.length > 0) {
+			data.items = encoder ? this.items.map(encoder) : this.items;
+		}
+
+		return data;
+
 	}
 
 	static Revive<I extends Item = Item>(
@@ -149,6 +161,23 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		if (IsInventory(it)) return it.take(sub);
 		else return this.takeRange(base as ItemIndex, sub as ItemIndex);
 
+	}
+
+	/**
+	 * Check if inventory has item with id or name.
+	 * @param id 
+	 */
+	has(id: string) {
+		const lower = id.toLowerCase();
+		for (let i = this.items.length - 1; i >= 0; i--) {
+
+			const it = this.items[i];
+			if (!it) continue;
+			if (it.id === lower) return true;
+			else if (it.name && it.name.toLowerCase() === lower) return true;
+
+		}
+		return false;
 	}
 
 	findItem(id: string) {

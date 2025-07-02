@@ -14,7 +14,7 @@ type RawSpell = {
 	typeof import('../data/magic/spells.json', { assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
-export const Spells: { [name: string]: Spell } = {};
+export const Spells: Partial<{ [id: string]: Spell }> = {};
 
 const parseSpell = (raw: RawSpell) => {
 

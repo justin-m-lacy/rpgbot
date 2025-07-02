@@ -1,7 +1,8 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import type { Char } from "rpg/char/char";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
+import { GetSpell } from "rpg/parsers/spells";
 import { Rpg } from "rpg/rpg";
 
 /**
@@ -16,15 +17,24 @@ export default NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		const who = m.options.getString('spell');
-
-		let t: Char | undefined;
-		if (who) {
-			t = await rpg.loadChar(who);
-			if (!t) return;
+		const spellName = m.options.getString('spell');
+		if (!spellName) {
+			return SendPrivate(m, 'Learn what spell?');
 		}
 
-		return SendBlock(m, rpg.game.setLeader(char, t));
+		const spell = GetSpell(spellName);
+		if (!spell) {
+			return SendPrivate(m, `'${spellName}' is not a spell.`);
+		}
+
+		if (char.spelllist.has(spell.id)) {
+			return SendPrivate(m, `You already know spell ${spellName}`);
+		}
+
+		char.spelllist.add(spell);
+		char.spelllist.add();
+
+		return SendBlock(m, '');
 
 	}
 })

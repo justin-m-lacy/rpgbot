@@ -36,3 +36,6 @@ export interface ISimple {
 	add(amt: number): void;
 	setTo(v: number): void;
 }
+
+export const SymEncode = Symbol('Encode');
+export const SymDecode = Symbol('Decode');
