@@ -30,7 +30,7 @@ export class Setter implements ISimple {
 	}
 	setTo(v: Numeric): void {
 		if (IsSimple(this._value)) {
-			this._value.setTo(v)
+			this._value.setTo(v.valueOf())
 		} else if (typeof this._value === 'number') {
 			this._value = v.valueOf();
 		} else {

@@ -1,4 +1,5 @@
-import { CommandData, StrChoices, type ChatAction } from '@/bot/command';
+import { ChatCommand } from '@/bot/cmd-wrapper';
+import { CommandData, StrChoices } from '@/bot/command';
 
 export default {
 
@@ -9,7 +10,7 @@ export default {
 			])
 		]
 	),
-	exec: (m: ChatAction) => {
+	exec: (m: ChatCommand) => {
 		const name = GenName(
 			m.options.getString('race') ?? undefined,
 			toSex(m.options.getString('sex') ?? undefined)

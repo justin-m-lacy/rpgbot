@@ -1,33 +1,36 @@
 [
-
     {
-        "name":"Healing Fount",
-        "desc":"Healing waters of healing power.",
-        "fb":"%c drinks from the shimmering water.",
-        "action":"heal"
+        "id": "healfount",
+        "name": "Healing Fount",
+        "desc": "Healing waters of healing power.",
+        "fb": "%c drinks from the shimmering water.",
+        "action": "heal"
     },
     {
-        "name":"Portal",
-        "fb":"%c steps into the swirling portal.",
-        "desc":"A mysterious portal."
+        "id": "portal",
+        "name": "Portal",
+        "fb": "%c steps into the swirling portal.",
+        "desc": "A mysterious portal."
     },
     {
-        "name":"Gate",
-        "fb":"%c steps through existence.",
-        "desc":"A magical rip in reality. You doubt there's a way back.",
-        "action":"gate"
+        "id": "gate",
+        "name": "Gate",
+        "fb": "%c steps through existence.",
+        "desc": "A magical rip in reality. You doubt there's a way back.",
+        "action": "gate"
     },
     {
-        "name":"Shrine",
-        "desc":"It looks mystical.",
-        "fb":"%c chants to the mystical shrine.",
-        "action":"revive"
+        "id": "shrine",
+        "name": "Shrine",
+        "desc": "It looks mystical.",
+        "fb": "%c chants to the mystical shrine.",
+        "action": "revive"
     },
     {
-        "name":"Evil Shrine",
-        "fb":"%c prays to the wicked altar.",
-        "desc":"It looks evil.",
-        "action":"hurt"
+        "id": "shrineevil",
+        "name": "Evil Shrine",
+        "fb": "%c prays to the wicked altar.",
+        "desc": "It looks evil.",
+        "action": "hurt"
     }
-
 ]

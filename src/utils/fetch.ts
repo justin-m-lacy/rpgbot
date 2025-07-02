@@ -13,8 +13,8 @@ class HttpError extends Error {
 }
 
 export function makeRequest<T extends object>(url: string | URL, method: string, data?: { [key: string]: unknown }, headers?: { [key: string]: string | number }): Promise<T>;
-export function makeRequest<undefined>(url: string | URL, method: string, data?: { [key: string]: unknown }, headers?: { [key: string]: string | number }): Promise<unknown>;
-export function makeRequest<T extends object | undefined>(url: string | URL, method: string, data?: { [key: string]: unknown }, headers?: { [key: string]: string | number }): Promise<T | undefined> {
+export function makeRequest<T extends undefined>(url: string | URL, method: string, data?: { [key: string]: unknown }, headers?: { [key: string]: string | number }): Promise<undefined>;
+export function makeRequest<T extends object | void>(url: string | URL, method: string, data?: { [key: string]: unknown }, headers?: { [key: string]: string | number }): Promise<T | undefined> {
 
     return new Promise<T | undefined>((resolve, reject) => {
 

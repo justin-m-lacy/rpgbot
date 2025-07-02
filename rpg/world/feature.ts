@@ -1,4 +1,4 @@
-import { ItemData, ItemType, ReviveItem } from 'rpg/parsers/items';
+import { ItemData, ItemType } from 'rpg/parsers/items';
 import { Char } from '../char/char';
 import { Item } from '../items/item';
 import * as acts from '../magic/action';
@@ -26,7 +26,7 @@ export class Feature extends Item {
 		}
 		if (json.fb) f.fb = json.fb;
 
-		return ReviveItem(json, f) as Feature;
+		return Item.InitItem(json, f) as Feature;
 
 	}
 
