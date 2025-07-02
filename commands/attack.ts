@@ -16,13 +16,20 @@ export default NewCommand<Rpg>({
 		const src = await rpg.userCharOrErr(m, m.user);
 		if (!src) return;
 
-		const who = m.options.getString('who');
+		let who: string | number | null = m.options.getString('who');
 		if (!who) {
 
 			const loc = await rpg.world.getOrGen(src.loc);
-			return SendPrivate(m, 'Attack who?', {
-				components: PickNpcButtons('attack', loc.npcs)
-			});
+
+			if (loc.npcs.length === 0) {
+				return SendPrivate(m, 'Attack who?');
+			} else if (loc.npcs.length > 1) {
+
+				return SendPrivate(m, 'Attack who?', {
+					components: PickNpcButtons('attack', loc.npcs)
+				});
+			}
+			who = 1;
 
 		}
 

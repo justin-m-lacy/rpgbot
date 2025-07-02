@@ -144,6 +144,8 @@ export class Monster {
 
 		const m = new Monster(json.id);
 
+		if (json.name) m.name = json.name;
+
 		if (json.hp) {
 			m.hp.setTo(json.hp);
 		}
@@ -233,7 +235,7 @@ export class Monster {
 	private _state: LifeState;
 	private _kind?: string;
 
-	name: string = '';
+	name: string = 'unknown';
 	desc?: string;
 
 	private readonly _hp: Maxable = new Maxable('hp');

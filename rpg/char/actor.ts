@@ -36,14 +36,14 @@ export class Actor {
 	get hp() { return this.stats.hp; }
 	set hp(v) { this.stats.hp.value = v.valueOf(); }
 
+	get mp() { return this.stats.mp; }
+	set mp(v) { this.stats.mp.value = v.valueOf() }
+
 	get dr() { return this.stats.dr; }
 	set dr(v: Numeric) { this.stats.dr.value = v.valueOf() }
 
 	get resist() { return this.resists }
 
-	// convenience for shorter formulas.
-	get mp() { return this.stats.mp; }
-	set mp(v) { this.stats.mp.value = v.valueOf() }
 
 	get level() { return this.stats.level; }
 	set level(v) { this.stats.level.value = v.valueOf() }

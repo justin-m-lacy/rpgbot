@@ -18,8 +18,10 @@ const CmdSplitChar = '/';
  */
 export const CustomButton = (
 	opts: Partial<ButtonComponentData> & { customId: string, label: string },
-	props: Record<string, any>) => {
+	props?: Record<string, any>) => {
 
+	if (!opts.label || opts.label.length == 0) console.warn(`no label: ${opts.customId}`);
+	opts.label ??= opts.customId;
 	opts.style ??= ButtonStyle.Secondary;
 
 	if (props) {

@@ -13,6 +13,13 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const who = m.options.getString('who');
+
+		if (!who && char.isAlive()) {
+
+			// get char list at location.
+
+		}
+
 		const t = who ? await rpg.loadChar(who) : char;
 		if (!t) return;
 

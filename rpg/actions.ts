@@ -115,17 +115,17 @@ export const OwnCharActions = () => {
 
 	return new ActionRowBuilder<ButtonBuilder>().addComponents(
 
-		new ButtonBuilder({
+		CustomButton({
 			customId: 'inv',
 			label: 'Inventory',
 			style: ButtonStyle.Secondary
 		}),
-		new ButtonBuilder({
+		CustomButton({
 			customId: 'equip',
 			label: 'Equipment',
 			style: ButtonStyle.Secondary
 		}),
-		new ButtonBuilder({
+		CustomButton({
 			customId: 'rest',
 			label: 'Rest',
 			style: ButtonStyle.Secondary
@@ -206,6 +206,8 @@ export const WorldItemActions = (item: Item) => {
 }
 
 export const PickCharButtons = (cmd: string, chars: Char[], param: string = 'who') => {
+
+	if (chars.length === 0) return [];
 	return ToActionRows(
 
 		chars.map(c => CustomButton({
@@ -218,13 +220,14 @@ export const PickCharButtons = (cmd: string, chars: Char[], param: string = 'who
 }
 
 export const PickNpcButtons = (cmd: string, chars: Array<Char | Monster>, param: string = 'who') => {
+	if (chars.length === 0) return [];
 	return ToActionRows(
 
 		chars.map(c => CustomButton({
 			customId: cmd,
-			label: c.name
+			label: c.name ?? 'unknown'
 		}, {
-			[param]: 'id' in c ? c.id : c.name
+			[param]: c.id
 		}))
 	);
 }
@@ -237,6 +240,7 @@ export const PickNpcButtons = (cmd: string, chars: Array<Char | Monster>, param:
  */
 export const PickItemButtons = (cmd: string, inv: Inventory, param: string = 'item') => {
 
+	if (inv.items.length == 0) return [];
 	return ToActionRows(
 
 		inv.items.map(it => CustomButton({

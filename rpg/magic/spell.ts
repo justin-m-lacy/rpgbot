@@ -1,6 +1,7 @@
 import { Formula } from 'formulic';
-import { ProtoEffect } from '../magic/effects';
-class Spell {
+import { ProtoEffect } from './effects';
+
+export class Spell {
 
 	get duration() { return this._duration; }
 

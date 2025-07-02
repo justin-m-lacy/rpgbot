@@ -157,21 +157,11 @@ export class MsgWrap implements ICmdWrap {
 	constructor(m: Message, opts: CmdArg<any>[]) {
 
 		this.m = m;
-
-		console.log(`args count: ${opts.length}`);
-
 		this.options = new MsgOptions(opts);
 
 	}
 	reply(opts: string | MessagePayload | BaseMessageOptions) {
-
-		if (typeof opts === 'string') {
-			return this.m.reply(opts);
-		} else {
-
-			return this.m.reply(opts);
-		}
-
+		return this.m.reply(opts);
 	}
 
 }

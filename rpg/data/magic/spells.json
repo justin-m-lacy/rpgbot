@@ -1,27 +1,31 @@
 [
-
     {
-        "phase":{
-            "target":"self",
-            "duration":"instant"
-        }
-
-    },
-
-    {
-        "magic_missile":{
-            "target":"single",
-            "damage":"1d4",
-            "duration":"instant"
+        "phase": {
+            "target": "self",
+            "duration": "instant",
+            "level": 1,
+            "cost": {
+                "mp": 1
+            }
         },
-        "mage_armor":{
-            "name":"Mage Armor",
-            "target":"self",
-			"duration":"1hr",
-			"effect":""
+        "magic_missile": {
+            "target": "any",
+            "damage": "1d4",
+            "duration": "instant",
+            "level": 1,
+            "cost": {
+                "mp": 2
+            }
+        },
+        "mage_armor": {
+            "name": "Mage Armor",
+            "target": "self",
+            "duration": "1hr",
+            "effect": "",
+            "level": 1,
+            "cost": {
+                "mp": 1
+            }
         }
-
     }
-
-
 ]

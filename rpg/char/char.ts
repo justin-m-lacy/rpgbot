@@ -61,6 +61,7 @@ export class Char extends Actor {
 		}
 	}
 
+	get id() { return this.name }
 	/**
 	 * Notification for level up.
 	 * TODO: replace with event system.

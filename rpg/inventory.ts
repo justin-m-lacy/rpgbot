@@ -1,3 +1,4 @@
+import { IsInt } from 'rpg/util/parse';
 import { Container, type ItemIndex } from './items/container';
 import { Item } from './items/item';
 
@@ -56,18 +57,19 @@ export class Inventory extends Container<Item> {
 	 * @param  start
 	 * @returns  Item found, or null on failure.
 	 */
-	get(start?: ItemIndex,): Item | null {
+	get(start?: ItemIndex): Item | null {
 
 		/// 0 is also not allowed because indices are 1-based.
 		if (!start) return null;
 
 		if (typeof start === 'string') {
-			const num = parseInt(start);
-			if (Number.isNaN(num)) {
+
+			if (!IsInt(start)) {
 				return this.findItem(start);
 			} else {
-				start = num;
+				start = parseInt(start);
 			}
+
 		} else if (Number.isNaN(start)) {
 			/// initial index passed was NaN.
 			return null;
@@ -141,7 +143,7 @@ export class Inventory extends Container<Item> {
 
 		if (typeof which === 'string') {
 
-			if (Number.isNaN(which)) {
+			if (!IsInt(which)) {
 
 				which = which.toLowerCase();
 				for (let i = this.items.length - 1; i >= 0; i--) {

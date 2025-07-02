@@ -1,5 +1,12 @@
 [
     {
+        "id": "armor_1",
+        "name": "minor armor",
+        "mod": {
+            "armor": 1
+        }
+    },
+    {
         "id": "poison_1",
         "name": "minor poison",
         "dot": {

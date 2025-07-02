@@ -256,7 +256,6 @@ export class DiscordBot {
 		try {
 
 			const args = this.parser.parse(argLine, cmd);
-			console.log(`args len: ${args.length}`);
 			const wrap = new MsgWrap(m, args);
 
 			const ctx = await this.getCmdContext(m);

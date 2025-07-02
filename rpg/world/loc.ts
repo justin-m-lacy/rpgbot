@@ -1,4 +1,5 @@
 import type { ItemIndex } from "rpg/items/container";
+import { IsInt } from "rpg/util/parse";
 import { Char } from "../char/char";
 import { Inventory } from '../inventory';
 import { Item } from "../items/item";
@@ -195,6 +196,7 @@ export class Loc {
 	get owner() { return this._owner; }
 	set owner(v) { this._owner = v; }
 
+	get inventory() { return this.inv; }
 	get items() { return this.inv.items }
 
 	name?: string;
@@ -427,16 +429,17 @@ export class Loc {
 	 *
 	 * @param what
 	 */
-	take(what: string | number) { return this.inv.take(what); }
+	take(what: ItemIndex) { return this.inv.take(what); }
 
-	getNpc(wot: string | number) {
+	getNpc(wot: ItemIndex) {
 
 		if (typeof wot === 'string') {
-			const ind = Number.parseInt(wot);
-			if (Number.isNaN(ind)) {
-				return this.npcs.find((m) => m.name === wot);
+
+			console.log(`${wot} int: ${IsInt(wot)}`)
+			if (!IsInt(wot)) {
+				return this.npcs.find((m) => m.id === wot || m.name === wot);
 			} else {
-				wot = ind;
+				wot = Number.parseInt(wot);
 			}
 		}
 		return this.npcs[wot - 1];
