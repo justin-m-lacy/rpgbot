@@ -1,7 +1,8 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { SendBlock } from "rpg/display/display";
+import { ReplyBlock } from "rpg/display/display";
+import { ItemMenu } from "rpg/display/items";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -27,7 +28,8 @@ export default NewCommand<Rpg>({
 
 		}
 
-		return SendBlock(m, `${char.name} Inventory:\n${char.inv.getMenu()}`);
+		return ReplyBlock(m,
+			char.name + 'Inventory:\n' + ItemMenu(char.inv));
 
 	}
 })

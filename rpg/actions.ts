@@ -238,7 +238,7 @@ export const PickNpcButtons = (cmd: string, chars: Array<Char | Monster>, param:
  * @param inv - selectable items. max 25.
  * @param param - id of param to set to item id.
  */
-export const PickItemButtons = (cmd: string, inv: Inventory, param: string = 'item') => {
+export const PickItemButtons = (cmd: string, inv: Inventory<Item>, param: string = 'item') => {
 
 	if (inv.items.length == 0) return [];
 	return ToActionRows(

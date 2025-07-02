@@ -1,4 +1,6 @@
+import { ItemList } from "rpg/display/items";
 import type { ItemIndex } from "rpg/items/container";
+import { ReviveItem } from "rpg/parsers/items";
 import { quickSplice } from "rpg/util/array";
 import { IsInt } from "rpg/util/parse";
 import { Char } from '../char/char';
@@ -209,7 +211,7 @@ export class Loc {
 	private _owner?: string;
 	time?: number;
 
-	readonly features: Inventory;
+	readonly features: Inventory<Feature>;
 
 	private _key!: string;
 	readonly coord: Coord;
@@ -280,7 +282,7 @@ export class Loc {
 		if (json.attach) loc._attach = json.attach;
 
 		if (json.inv) {
-			Inventory.Revive<Item>(json.inv, Item.Revive, loc.inv);
+			Inventory.Revive<Item>(json.inv, ReviveItem, loc.inv);
 		}
 
 		loc.name = json.name;
@@ -386,8 +388,8 @@ export class Loc {
 		if (this._attach && imgTag) r += ' [img]';
 		r += '\n' + this.desc;
 
-		if (this.features.count > 0) r += '\nFeatures: ' + this.features.getList();
-		r += '\nOn ground: ' + this.inv.getList();
+		if (this.features.count > 0) r += '\nFeatures: ' + ItemList(this.features);
+		r += '\nOn ground: ' + ItemList(this.inv);
 
 
 		if (this.chars.length > 0) {

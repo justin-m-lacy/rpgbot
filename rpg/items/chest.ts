@@ -1,3 +1,4 @@
+import { ItemMenu } from 'rpg/display/items';
 import type { ItemIndex } from 'rpg/items/container';
 import { ItemType, ReviveItem } from 'rpg/parsers/items';
 import { Inventory, SymInventory, type IInventory } from '../inventory';
@@ -58,11 +59,8 @@ export class Chest extends Item implements IInventory {
 		return this._inv.takeRange(start, end);
 	}
 
-	getList() { return this._inv.getList(); }
-	getMenu() { return this._inv.getMenu(); }
-
 	getDetails() {
-		return this._inv.getMenu() + '\n' + super.getDetails();
+		return ItemMenu(this._inv) + '\n' + super.getDetails();
 	}
 
 	/**

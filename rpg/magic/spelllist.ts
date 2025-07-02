@@ -1,11 +1,12 @@
-import { Item } from "rpg/items/item";
+import { Inventory } from "rpg/inventory";
+import { Spell } from "rpg/magic/spell";
 
-export class SpellList extends Item {
+export class SpellList extends Inventory<Spell> {
 
 
 	constructor(id: string) {
 
-		super(id, 'Spells');
+		super(id, { name: 'Spells' });
 
 	}
 

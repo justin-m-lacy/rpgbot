@@ -39,29 +39,6 @@ export class Container<T extends SimpleItem = Item> {
     }
 
     /**
-     * @returns list of all items in inventory.
-    */
-    getMenu() {
-
-        const len = this.items.length;
-        if (len === 0) return '';
-
-        let it = this.items[0];
-        let list = '1) ' + `${it}`;
-        if (it.attach) list += '\t[img]';
-
-        for (let i = 1; i < len; i++) {
-            it = this.items[i];
-            list += '\n' + (i + 1) + ') ' + it.name;
-            if (it.attach) list += '\t[img]';
-
-        }
-
-        return list;
-
-    }
-
-    /**
      * Retrieve item by name or index.
      * @param  start
      * @returns  Item found, or null on failure.

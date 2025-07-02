@@ -36,17 +36,9 @@ export enum ItemType {
  * @param it
  */
 export const ReviveItem
-	= <T extends Item = Item, D extends ItemData = ItemData>(json: D, it?: T) => {
+	= <T extends Item = Item, D extends ItemData = ItemData>(json: D, it: T) => {
 
-		if (!it) {
-			it = new Item(json.id, {
-				name: json.name,
-				desc: json.desc,
-				type: json.type
-			});
-		} else {
-			it.name = json.name;
-		}
+		it.name = json.name;
 
 		if (json.cost) it.cost = json.cost;
 		if (json.attach) it.attach = json.attach;

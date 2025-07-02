@@ -1,6 +1,5 @@
 import { randomUUID } from 'crypto';
 import { ItemType } from 'rpg/parsers/items';
-import { Viewable } from 'rpg/values/types';
 import { Char } from "../char/char";
 
 export class Item {
@@ -58,7 +57,7 @@ export class Item {
 		info?: {
 			type?: ItemType,
 			desc?: string,
-			name: string
+			name?: string
 		}) {
 
 		this.id = id ?? randomUUID();
@@ -117,17 +116,6 @@ export class Item {
 
 		if (a.length === 0) return 'nothing';
 		return a.map(it => it.getDetails()).join(",");
-
-	}
-
-	/**
-	 *
-	 * @param a
-	 */
-	static ItemList(a: Viewable[]) {
-
-		if (a.length === 0) return 'nothing';
-		return a.map(it => it.name + (it.attach ? '\t[img]' : '')).join(',');
 
 	}
 

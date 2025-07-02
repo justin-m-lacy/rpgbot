@@ -1,5 +1,4 @@
 import { IsInt } from 'rpg/util/parse';
-import { Viewable } from 'rpg/values/types';
 import { type ItemIndex } from './items/container';
 import { Item } from './items/item';
 
@@ -18,7 +17,7 @@ export const IsInventory = (a: any): a is Inventory => {
 	return a && typeof a === 'object' && SymInventory in a;
 }
 
-export class Inventory<T extends Viewable = Item> extends Item {
+export class Inventory<T extends Item = Item> extends Item {
 
 	readonly [SymInventory] = true;
 
@@ -26,15 +25,15 @@ export class Inventory<T extends Viewable = Item> extends Item {
 
 	readonly items: T[] = [];
 
-	static Revive<D extends Viewable = Item>(
+	static Revive<I extends Item = Item>(
 		json: any,
-		reviver: (data: any) => D | null | undefined,
-		inv?: Inventory<D>) {
+		reviver: (data: any) => I | null | undefined,
+		inv?: Inventory<I>) {
 
 		const arr = json.items;
 		const len = arr.length;
 
-		if (!inv) inv = new Inventory<D>();
+		if (!inv) inv = new Inventory<I>();
 		const items = inv.items;
 		items.length = 0;
 
@@ -58,8 +57,28 @@ export class Inventory<T extends Viewable = Item> extends Item {
 		return { items: this.items, ...super.toJSON() };
 	}
 
-	getList() {
-		return Item.ItemList(this.items);
+	/**
+	 *
+	 * @param it
+	 * @returns starting 1-index where items were added.
+	 */
+	add(it?: T | T[] | (T | null | undefined)[] | null) {
+
+		if (Array.isArray(it)) {
+			const ind = this.items.length + 1;
+
+			it = it.filter((v): v is T => v != null);
+			this.items.push(...it as T[]);
+
+			return ind;
+		}
+
+		if (it != null) {
+			this.items.push(it);
+			return this.items.length;
+		}
+		return -1;
+
 	}
 
 	/**
@@ -216,7 +235,5 @@ export class Inventory<T extends Viewable = Item> extends Item {
 		return this.items.splice(start, end - start);
 
 	}
-
-
 
 }
