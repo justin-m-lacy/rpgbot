@@ -1,8 +1,9 @@
 import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
+import { ItemType } from 'rpg/parsers/items';
 import { Char } from '../char/char';
 import * as Effects from '../magic/effects';
-import { Item, ItemType } from './item';
+import { Item } from './item';
 
 export class Potion extends Item {
 
@@ -13,7 +14,7 @@ export class Potion extends Item {
 		if (json.effect) p.effect = json.effect;
 		if (json.form) p.form = json.form;
 
-		Item.Revive(json, p);
+		Item.InitItem(json, p);
 
 		return p;
 
@@ -46,7 +47,7 @@ export class Potion extends Item {
 	_effect?: any;
 
 	constructor(id?: string) {
-		super(id ?? randomUUID(), '', '', ItemType.Potion);
+		super(id ?? randomUUID(), { name: '', desc: '', type: ItemType.Potion });
 	}
 
 	quaff(char: Char) {

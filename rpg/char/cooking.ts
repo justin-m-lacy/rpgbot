@@ -1,6 +1,7 @@
 import { randElm } from '@/utils/jsutils';
 import type { Char } from 'rpg/char/char';
-import { ItemType, type Item } from 'rpg/items/item';
+import { type Item } from 'rpg/items/item';
+import { ItemType } from 'rpg/parsers/items';
 import FoodInfo from '../data/cooking.json';
 
 export const GetAdjective = () => {

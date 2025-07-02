@@ -17,7 +17,7 @@ export class Chest extends Item implements IInventory {
 			json.id, Inventory.Revive<Item>(json.inv, ReviveItem));
 		p.size = json.size;
 
-		return Item.InitData(json, p);
+		return Item.InitItem(json, p);
 
 	}
 

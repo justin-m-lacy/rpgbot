@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
+import { ItemType } from 'rpg/parsers/items';
 import { DamageSrc } from '../formulas';
-import { Item, ItemType } from './item';
+import { Item } from './item';
 import { Material } from './material';
 import { Wearable } from './wearable';
 
@@ -37,7 +38,7 @@ export class Weapon extends Wearable {
 
 		w.toHit = json.hit || 0;
 
-		return Item.Revive(json, w);
+		return Item.InitItem(json, w);
 
 	}
 

@@ -58,7 +58,7 @@ export const ReviveItem = (json: any): Item | null | undefined => {
 			return Chest.Revive(json);
 
 		default:
-			return Item.Revive(json);
+			return Item.InitItem(json);
 	}
 
 }

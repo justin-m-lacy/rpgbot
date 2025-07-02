@@ -1,7 +1,8 @@
 import { randomUUID } from 'crypto';
+import { ItemData, ItemType } from 'rpg/parsers/items';
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
-import { Item, ItemType, type ItemData } from "./item";
+import { Item } from "./item";
 
 export class Grave extends Item {
 
@@ -20,7 +21,7 @@ export class Grave extends Item {
 
 		const p = new Grave(json.id, json.char, json.slayer, json.epitaph);
 
-		Item.Revive(json, p);
+		Item.InitItem(json, p);
 
 		return p;
 
@@ -58,7 +59,11 @@ export class Grave extends Item {
 		slayer: Char | string = 'nothing',
 		epitaph?: string) {
 
-		super(id, `${char}'s Gravestone`, `Here lies ${char}, slain by ${slayer}.`, ItemType.Grave);
+		super(id, {
+			name: `${char}'s Gravestone`,
+			desc: `Here lies ${char}, slain by ${slayer}.`,
+			type: ItemType.Grave
+		});
 
 		this.char = typeof char === 'string' ? char : char.name;
 		this.slayer = typeof slayer === 'string' ? slayer : slayer?.name;

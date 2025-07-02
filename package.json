@@ -9,7 +9,7 @@
     "devnode": "cross-env NODE_ENV=production ts-node index.ts",
     "deploy-commands": "tsx scripts/deploy-commands.ts",
     "serve": "cross-env NODE_ENV=production ts-node index.ts ----transpile-only",
-    "build": "rimraf dist && tsc && tsc-alias && pnpm run minify && pnpm run copydata && pnpm run copypackage",
+    "build": "rimraf dist && tsc -b && tsc-alias && pnpm run minify && pnpm run copydata && pnpm run copypackage",
     "copypackage": "ts-node --project tsconfig.node.json strip-package.ts",
     "minify": "node mterser --glob dist/**/*.js --compress --mangle",
     "copydata": "copyfiles plugins/**/*.png dist && copyfiles .env dist && copyfiles -f assets/* dist"
@@ -22,6 +22,7 @@
     "romans": "^3.1.0"
   },
   "devDependencies": {
+    "@types/node": "^24.0.10",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "glob": "^8.0.1",

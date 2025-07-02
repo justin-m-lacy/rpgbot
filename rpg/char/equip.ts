@@ -1,4 +1,6 @@
-import { Item, ItemType } from '../items/item';
+import { ItemList } from 'rpg/display/items';
+import { ItemType } from 'rpg/parsers/items';
+import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { HumanSlot, toSlot, Wearable } from "../items/wearable";
 
@@ -48,7 +50,7 @@ export class Equip {
 				list += 'nothing'
 			} else if (Array.isArray(cur)) {
 
-				list += Item.ItemList(cur);
+				list += ItemList(cur);
 
 			} else {
 				list += cur.name;

@@ -41,7 +41,7 @@ export class Item {
 	 * @param json
 	 * @param it
 	 */
-	static InitData<D extends ItemData = ItemData>(json: D, it?: Item) {
+	static InitItem<D extends ItemData = ItemData>(json: D, it?: Item) {
 
 		it ??= new Item(json.id);
 		it.name = json.name;

@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
-import { Item, ItemType } from './item';
+import { ItemType } from 'rpg/parsers/items';
+import { Item, } from './item';
 import { Material } from './material';
 
 const Slots: { [s: string]: boolean } = {
@@ -85,7 +86,7 @@ export class Wearable extends Item {
 
 		if (json.mods) a.mods = json.mods;
 
-		return Item.Revive(json, a);
+		return Item.InitItem(json, a);
 	}
 
 	toJSON() {
@@ -108,7 +109,7 @@ export class Wearable extends Item {
 
 	constructor(id: string, name: string, desc?: string) {
 
-		super(id, name, desc, ItemType.Armor);
+		super(id, { name, desc, type: ItemType.Armor });
 		this._armor = 0;
 
 	}
