@@ -1,14 +1,14 @@
 import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
+import { Blockers, GameActions } from 'rpg/actions';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
-import { Spell } from 'rpg/magic/spell';
 import { ReviveChar } from 'rpg/parsers/char';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
 import * as ItemGen from './builders/itemgen';
-import { Actor, LifeState } from './char/actor';
+import { Actor } from './char/actor';
 import { Char } from './char/char';
 import { Combat } from "./combat/combat";
 import { ItemPicker } from './inventory';
@@ -32,26 +32,7 @@ export const GetLore = (wot?: string) => {
 
 }
 
-/**
- * actions not allowed for each player state.
-*/
-const BlockedActs: Partial<{ [Property in LifeState]: any }> = {
-	dead: {
-		'brew': 1, 'map': 1, 'hike': 1, 'scout': 1,
-		"take": 1, "attack": 1, 'drop': 1, "equip": 1, "unequip": 1, "steal": 1, "craft": 1, "track": 1, "quaff": 1,
-		'give': 1, 'eat': 1, 'cook': 1, "sell": 1, "destroy": 1, "inscribe": 1, "revive": 1
-	}
-};
 
-// actions that allow some hp recovery.
-const rest_acts = { 'move': 1, 'cook': 1, 'drop': 1 };
-/// actions that apply to entire party.
-const party_acts = ['attack', 'move'];
-
-const eventExp = {
-	explored: 2,
-	crafted: 1
-};
 
 export class Game {
 
@@ -65,31 +46,7 @@ export class Game {
 
 	readonly events: GameEvents = new EventEmitter();
 
-	readonly actions = {
-
-		attack: {
-
-			tick: true,
-			async exec(char: Char, targ: Char | Monster) {
-			}
-
-		},
-		move: {
-
-			tick: true,
-
-		},
-		cast: {
-
-			tick: true,
-			async exec(char: Char, spell: Spell, targ: Char | Monster) {
-			}
-		},
-		drop: {
-
-		},
-
-	}
+	readonly actions = GameActions;
 
 	/**
 	 *
@@ -118,7 +75,7 @@ export class Game {
 	 * @param act - action to attempt to perform.
 	 */
 	canAct(char: Char, act: string) {
-		const illegal = BlockedActs[char.state];
+		const illegal = Blockers[char.state];
 		if (illegal && illegal.hasOwnProperty(act)) {
 			char.log(`Cannot ${act} while ${char.state}.`);
 			return false;
