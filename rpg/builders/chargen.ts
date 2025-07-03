@@ -1,9 +1,10 @@
 import { randElm } from '@/utils/jsutils';
 import type { StatKey } from 'rpg/char/stats';
+import { TCharEvents } from 'rpg/events';
 import type { SexType } from 'rpg/social/gender';
-import { IsSimple, IsValue } from 'rpg/values/types';
+import { IsSimple, IsValue, Numeric } from 'rpg/values/types';
 import { Char } from '../char/char';
-import { Race, type GClass } from '../char/race';
+import { GClass, Race } from '../char/race';
 import * as Dice from '../values/dice';
 import * as ItemGen from './itemgen';
 
@@ -25,16 +26,20 @@ const statRolls = [
 
 ];
 
-export const GenChar = (owner: string, race: Race, charClass: GClass, name: string, sex?: SexType) => {
+export const GenChar = (
+	opts: {
+		events: TCharEvents,
+		owner: string, race: Race, cls: GClass, name: string, sex?: SexType
+	}) => {
 
-	const char = new Char(name, race, charClass, owner);
+	const char = new Char(opts.name, opts);
 
 	const statVals = rollStats(statRolls);
 
 	char.setBaseStats(statVals);
 
-	race.onNewChar(char);
-	charClass.onNewChar(char);
+	opts.race.onNewChar(char);
+	opts.cls.onNewChar(char);
 
 	clampStats(char, statRolls);
 
@@ -74,7 +79,7 @@ function rollStats(statRolls: StatGen[], dest: Record<string, number> = {}) {
 
 function clampStat(dest: Char, stat: StatKey, info: { min?: number, max?: number }) {
 
-	const cur = dest[stat as keyof Char];
+	const cur = dest[stat as keyof Char] as Numeric;
 
 	if (info.min != null && cur.valueOf() < info.min) {
 

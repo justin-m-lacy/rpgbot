@@ -57,7 +57,11 @@ export default NewCommand<Rpg>({
 
 			} else charname = await rpg.uniqueName(race, sex);
 
-			const char = GenChar(m.user.id, race, charCls, charname, sex);
+			const char = GenChar({
+				owner: m.user.id,
+				events: rpg.game.events,
+				race, cls: charCls, name: charname, sex
+			});
 
 			await rpg.setUserChar(m.user, char);
 			EchoChar(m, char);
