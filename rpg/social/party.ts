@@ -73,7 +73,7 @@ export class Party extends SocialGroup {
 			if (char) {
 				prev?.rmChar(char);
 				to.addChar(char);
-				if (char.isAlive()) char.recover();
+				char.recover();
 			}
 
 		} //
@@ -108,7 +108,7 @@ export class Party extends SocialGroup {
 
 			const char = await this.cache.fetch(roster[i]);
 			//console.log( 'moving char: ' + char.name + ' to: ' + coord.toString() );
-			if (char && char.isAlive()) char.recover();
+			char?.recover();
 
 		} //
 

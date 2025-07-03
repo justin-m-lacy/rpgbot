@@ -91,6 +91,9 @@ export class Game {
 		if (this.actions[act].tick) {
 			this.tickDots(char);
 		}
+		if (this.actions[act].rest) {
+			char.recover(this.actions[act].rest);
+		}
 
 		return await (GameActions[act as T].exec as Function).apply(
 			this, [char, ...params]
@@ -126,10 +129,8 @@ export class Game {
 
 		const p = this.getParty(char);
 		if (p && p.leader === char.id) {
-
 			await p.move(this.world, loc);
-
-		} else char.recover();
+		}
 
 		return loc;
 

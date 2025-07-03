@@ -274,12 +274,15 @@ export class Actor {
 	}
 
 	// recover hp without rest.
-	recover() {
+	recover(scale: number = 1) {
+
+		if (!this.isAlive()) return 0;
+
 		const amt = Math.max(1, Math.ceil(
 			this.getModifier('con') +
 			this.getModifier('wis') +
 			this.level.valueOf()) / 2)
-		return this.heal(amt);
+		return this.heal(scale * amt);
 	}
 
 	rest() {

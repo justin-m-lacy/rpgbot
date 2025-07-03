@@ -39,6 +39,7 @@ export const GameActions = {
 
 		tick: true,
 		exec: Game.prototype.attack,
+		rest: 0
 	},
 	cook: {
 		tick: true,
@@ -118,14 +119,17 @@ export const GameActions = {
 	scout: {
 		tick: true,
 		exec: Game.prototype.scout,
+		rest: 0
 	},
 	sell: {
 		tick: true,
 		exec: Game.prototype.sell,
+		rest: 0.9
 	},
 	steal: {
 		tick: true,
 		exec: Game.prototype.steal,
+		rest: 0.2
 	},
 	take: {
 		tick: true,
