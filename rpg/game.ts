@@ -1,6 +1,6 @@
 import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
-import { Blockers, GameActions } from 'rpg/actions';
+import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { ReviveChar } from 'rpg/parsers/char';
@@ -36,7 +36,6 @@ export const GetLore = (wot?: string) => {
 
 export class Game {
 
-	private readonly cache: Cache;
 	readonly charCache: Cache<Char>;
 	readonly world: World
 
@@ -54,8 +53,6 @@ export class Game {
 	 */
 	constructor(cache: Cache<any>) {
 
-		this.cache = cache;
-
 		this.world = new World(cache.subcache<Block>('world'));
 
 		this.charCache = cache.subcache<Char>('chars', (data) => {
@@ -69,14 +66,13 @@ export class Game {
 	skillRoll(act: Actor) { return dice.roll(1, 5 * (+act.level + 4)); }
 
 	/**
-	 * Determines whether a character can perform a given action
+	 * Test if a character can perform an action
 	 * in their current state.
 	 * @param char
 	 * @param act - action to attempt to perform.
 	 */
 	canAct(char: Char, act: string) {
-		const illegal = Blockers[char.state];
-		if (illegal && illegal.hasOwnProperty(act)) {
+		if (Blockers[char.state]?.[act]) {
 			char.log(`Cannot ${act} while ${char.state}.`);
 			return false;
 		}
@@ -84,19 +80,44 @@ export class Game {
 		return true;
 	}
 
-	tick(char: Char, action: string) {
+	async tryAct<T extends keyof TGameActions>(
+		char: Char, act: T,
+		...params: ActParams<T>) {
 
 		char.clearLog();
 
-		if (!this.canAct(char, action)) return false;
+		if (!this.canAct(char, act)) return false;
 
-		this.tickDots(char, action);
+		if (this.actions[act].tick) {
+			this.tickDots(char);
+		}
+
+		await (GameActions[act as T].exec as Function).apply(
+			this, [char, ...params]
+		);
 
 	}
 
-	async move(char: Char, dir: string) {
+	private tickDots(char: Char) {
 
-		if (this.tick(char, 'move') === false) return;
+		const efx = char.effects;
+		if (!efx) return;
+
+		for (let i = efx.length - 1; i >= 0; i--) {
+
+			const e = efx[i];
+			if (e.tick(char)) {
+				// efx end.
+				jsutils.fastCut(efx, i);
+				e.end(char);
+
+			}
+
+		}
+
+	}
+
+	async move(this: Game, char: Char, dir: string) {
 
 		const loc = await this.world.tryMove(char, toDirection(dir));
 		if (!loc) return;
@@ -114,7 +135,7 @@ export class Game {
 
 	}
 
-	async hike(char: Char, dir: DirVal) {
+	async hike(this: Game, char: Char, dir: DirVal) {
 
 		if (this.tick(char, 'hike') === false) return char.getLog();
 
@@ -283,12 +304,8 @@ export class Game {
 
 	}
 
-	async goHome(char: Char) {
-
-		if (this.tick(char, 'home') === false) return char.getLog();
-
+	async goHome(this: Game, char: Char) {
 		return char.output(await this.world.goHome(char));
-
 	}
 
 	compare(char: Char, wot: ItemIndex): string {
@@ -310,11 +327,7 @@ export class Game {
 
 	}
 
-	equip(char: Char, wot: ItemIndex) {
-
-		if (!wot) return `${char.name} equip:\n${char.listEquip()}`;
-
-		if (this.tick(char, 'equip') === false) return char.getLog();
+	equip(this: Game, char: Char, wot: ItemIndex) {
 
 		let res = char.equip(wot);
 		if (res === true) res = `${char.name} equips ${wot}`;	// TODO,echo slot used.
@@ -326,9 +339,7 @@ export class Game {
 
 	}
 
-	inscribe(char: Char, wot: ItemIndex, inscrip: string) {
-
-		if (this.tick(char, 'inscribe') === false) return char.output();
+	inscribe(this: Game, char: Char, wot: ItemIndex, inscrip: string) {
 
 		const item = char.getItem(wot) as Item | undefined;
 		if (!item) return char.output('Item not found.');
@@ -340,9 +351,7 @@ export class Game {
 
 	}
 
-	destroy(char: Char, first: string | number, end?: string | number | null) {
-
-		if (this.tick(char, 'destroy') === false) return char.output();
+	destroy(this: Game, char: Char, first: string | number, end?: string | number | null) {
 
 		if (end) {
 
@@ -364,39 +373,30 @@ export class Game {
 
 	}
 
-	sell(char: Char, first: string | number, end?: string | number | null) {
-
-		if (this.tick(char, 'sell') === false) return char.output();
+	sell(this: Game, char: Char, first: string | number, end?: string | number | null) {
 
 		return char.output(Trade.sell(char, first, end));
 
 	}
 
-	give(src: Char, dest: Char, what: string) {
+	give(this: Game, char: Char, dest: Char, what: string) {
 
-		if (this.tick(src, 'give') === false) return src.output();
-
-		return src.output(Trade.transfer(src, dest, what));
+		return char.output(Trade.transfer(char, dest, what));
 
 	}
 
-	cook(char: Char, wot: string | number | Item) {
-
-		if (this.tick(char, 'cook') === false) return char.output();
+	cook(this: Game, char: Char, wot: string | number | Item) {
 
 		return char.output(char.cook(wot));
 
 	}
 
-	brew(char: Char, itemName: string, imgURL?: string) {
+	brew(this: Game, char: Char, itemName: string, imgURL?: string) {
 
 		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
 
 		const pot = ItemGen.genPot(itemName);
 		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
-
-		if (this.tick(char, 'brew') === false) return char.output();
-
 
 		const s = this.skillRoll(char) + char.getModifier('wis');
 		if (s < 10 * pot.level) {
@@ -411,9 +411,7 @@ export class Game {
 
 	}
 
-	craft(char: Char, itemName: string, desc?: string, imgURL?: string) {
-
-		if (this.tick(char, 'craft') === false) return char.output();
+	craft(this: Game, char: Char, itemName: string, desc?: string, imgURL?: string) {
 
 		const ind = Craft(char, itemName, desc, imgURL);
 
@@ -421,9 +419,7 @@ export class Game {
 
 	}
 
-	unequip(char: Char, slot?: string) {
-
-		if (this.tick(char, 'unequip') === false) return char.output();
+	unequip(this: Game, char: Char, slot?: string) {
 
 		if (!slot) {
 			return char.output('Specify an equip slot to remove.');
@@ -434,29 +430,21 @@ export class Game {
 
 	}
 
-	async drop(char: Char, what: ItemPicker, end?: ItemIndex | null) {
-
-		if (this.tick(char, 'drop') === false) return char.output();
+	async drop(this: Game, char: Char, what: ItemPicker, end?: ItemIndex | null) {
 
 		return char.output(await this.world.drop(char, what, end));
 
 	}
 
-	async take(char: Char, first: ItemIndex, end?: ItemIndex | null) {
-
-		if (this.tick(char, 'take') === false) return char.output();
-
+	async take(this: Game, char: Char, first: ItemIndex, end?: ItemIndex | null) {
 		return char.output(await this.world.take(char, first, end));
-
 	}
 
-	revive(char: Char, targ: Char) {
+	revive(this: Game, char: Char, targ: Char) {
 
 		if (targ.state !== 'dead') return `${targ.name} is not dead.`;
 		const p = this.getParty(char);
 		if (!p || !p.includes(targ)) return `${targ.name} is not in your party.`;
-
-		if (this.tick(char, 'revive') === false) return char.output();
 
 		let roll = this.skillRoll(char) + char.getModifier('wis') + (2 * targ.hp.value) - 5 * +targ.level;
 		if (!char.hasTalent('revive')) roll -= 20;
@@ -469,9 +457,7 @@ export class Game {
 
 	}
 
-	async rest(char: Char) {
-
-		if (this.tick(char, 'rest') === false) return char.output();
+	async rest(this: Game, char: Char) {
 
 		const p = this.getParty(char);
 		if (p && p.isLeader(char)) {
@@ -486,9 +472,7 @@ export class Game {
 
 	}
 
-	scout(char: Char) {
-
-		if (this.tick(char, 'scout') === false) return char.output();
+	scout(this: Game, char: Char) {
 
 		const r = (char.skillRoll() + char.getModifier('int'));
 
@@ -502,28 +486,7 @@ export class Game {
 
 	}
 
-	private tickDots(char: Char, action?: string) {
-
-		const efx = char.effects;
-		if (!efx) return;
-
-		for (let i = efx.length - 1; i >= 0; i--) {
-
-			const e = efx[i];
-			if (e.tick(char)) {
-				// efx end.
-				jsutils.fastCut(efx, i);
-				e.end(char);
-
-			}
-
-		}
-
-	}
-
-	track(char: Char, targ: Char) {
-
-		if (this.tick(char, 'track') === false) return char.output();
+	track(this: Game, char: Char, targ: Char) {
 
 		let r = (char.skillRoll() + char.getModifier('int')); // - (targ.skillRoll() + targ.getModifier('wis') );
 		if (char.hasTalent('track')) r *= 2;
@@ -559,23 +522,19 @@ export class Game {
 
 	}
 
-	async attackNpc(src: Char, npc: Monster) {
+	async attackNpc(this: Game, char: Char, npc: Monster) {
 
-		if (this.tick(src, 'attack') === false) return src.output();
-
-		let p1: Char | Party = this.getParty(src);
-		if (!p1 || !p1.isLeader(src)) p1 = src;
+		let p1: Char | Party = this.getParty(char);
+		if (!p1 || !p1.isLeader(char)) p1 = char;
 
 		const com = new Combat(p1, npc, this.world);
 		await com.fightNpc();
 
-		return src.output(com.getText());
+		return char.output(com.getText());
 
 	}
 
-	async steal(src: Char, dest: Char, wot?: ItemPicker | null) {
-
-		if (this.tick(src, 'steal') === false) return src.output();
+	async steal(this: Game, src: Char, dest: Char, wot?: ItemPicker | null) {
 
 		const com = new Combat(src, dest, this.world);
 		await com.steal(src, wot);
@@ -584,9 +543,7 @@ export class Game {
 
 	}
 
-	async attack(src: Char, targ: Char) {
-
-		if (this.tick(src, 'attack') === false) return src.output();
+	async attack(this: Game, src: Char, targ: Char) {
 
 		const p1 = this.getParty(src) || src;
 		let p2: Char | Party = this.getParty(targ);
@@ -602,9 +559,7 @@ export class Game {
 
 	}
 
-	quaff(char: Char, wot: ItemIndex) {
-
-		if (this.tick(char, 'quaff') === false) return char.output();
+	quaff(this: Game, char: Char, wot: ItemIndex) {
 
 		const p = char.getItem(wot) as Item | undefined;
 		if (!p) return char.output('Item not found.');
@@ -623,9 +578,7 @@ export class Game {
 
 	}
 
-	eat(char: Char, wot: ItemIndex) {
-
-		if (this.tick(char, 'eat') === false) return char.output();
+	eat(this: Game, char: Char, wot: ItemIndex) {
 		char.eat(wot);
 		return char.output();
 
