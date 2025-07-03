@@ -23,7 +23,7 @@ export default NewCommand<Rpg>({
 		const t = who ? await rpg.loadChar(who) : char;
 		if (!t) return;
 
-		await SendBlock(m, rpg.game.revive(char, t));
+		await SendBlock(m, await rpg.game.action('revive', char, t));
 
 	}
 })

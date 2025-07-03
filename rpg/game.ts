@@ -1,10 +1,10 @@
-import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
 import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { ReviveChar } from 'rpg/parsers/char';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
+import { quickSplice } from 'rpg/util/array';
 import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
 import * as ItemGen from './builders/itemgen';
@@ -80,19 +80,19 @@ export class Game {
 		return true;
 	}
 
-	async tryAct<T extends keyof TGameActions>(
-		char: Char, act: T,
+	async action<T extends keyof TGameActions>(
+		act: T, char: Char,
 		...params: ActParams<T>) {
 
 		char.clearLog();
 
-		if (!this.canAct(char, act)) return false;
+		if (!this.canAct(char, act)) return char.output();
 
 		if (this.actions[act].tick) {
 			this.tickDots(char);
 		}
 
-		await (GameActions[act as T].exec as Function).apply(
+		return await (GameActions[act as T].exec as Function).apply(
 			this, [char, ...params]
 		);
 
@@ -108,7 +108,7 @@ export class Game {
 			const e = efx[i];
 			if (e.tick(char)) {
 				// efx end.
-				jsutils.fastCut(efx, i);
+				quickSplice(efx, i);
 				e.end(char);
 
 			}
@@ -137,8 +137,6 @@ export class Game {
 
 	async hike(this: Game, char: Char, dir: DirVal) {
 
-		if (this.tick(char, 'hike') === false) return char.getLog();
-
 		const d = char.at.abs();
 
 		let r = this.skillRoll(char) + char.getModifier('dex') + char.getModifier('wis');
@@ -166,6 +164,10 @@ export class Game {
 
 		return char.output(`${char.name}: ${loc.look(char)}`);
 
+	}
+
+	useLoc(char: Char, wot: ItemIndex) {
+		return this.world.useLoc(char, wot);
 	}
 
 	getParty(char: Char) { return this._charParties[char.name]; }
@@ -543,7 +545,11 @@ export class Game {
 
 	}
 
-	async attack(this: Game, src: Char, targ: Char) {
+	async attack(this: Game, src: Char, targ: Char | Monster) {
+
+		if (targ instanceof Monster) {
+			return this.attackNpc(src, targ);
+		}
 
 		const p1 = this.getParty(src) || src;
 		let p2: Char | Party = this.getParty(targ);

@@ -3,7 +3,6 @@ import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { PickNpcButtons } from "rpg/components";
 import { SendBlock } from "rpg/display/display";
-import { Monster } from "rpg/monster/monster";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -38,10 +37,7 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `'${who}' not found.`);
 		}
 
-		const res = await (targ instanceof Monster ?
-			rpg.game.attackNpc(char, targ)
-			: rpg.game.attack(char, targ)
-		);
+		const res = await rpg.game.action('attack', char, targ);
 
 		await SendBlock(m, res);
 	}

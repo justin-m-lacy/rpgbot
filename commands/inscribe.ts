@@ -18,7 +18,7 @@ export default NewCommand<Rpg>({
 
 		if (!what) return SendPrivate(m, 'Inscribe which inventory item?');
 
-		return SendPrivate(m, rpg.game.inscribe(char, what, script));
+		return SendPrivate(m, await rpg.game.action('inscribe', char, what, script));
 
 
 	}

@@ -32,7 +32,7 @@ export default NewCommand<Rpg>({
 		const dest = await rpg.loadChar(who);
 		if (!dest) return SendPrivate(m, `'${who}' not seen here.`);
 
-		const result = await rpg.game.steal(src, dest, what);
+		const result = await rpg.game.action('steal', src, dest, what);
 		await ReplyBlock(m, result);
 
 	}

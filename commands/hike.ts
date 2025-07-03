@@ -15,7 +15,7 @@ export default NewCommand<Rpg>({
 
 		const dir = m.options.getString('dir', true);
 
-		await ReplyBlock(m, await rpg.game.hike(char, toDirection(dir)));
+		await ReplyBlock(m, await rpg.game.action('hike', char, toDirection(dir)));
 
 	}
 })

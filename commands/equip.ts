@@ -18,6 +18,6 @@ export default NewCommand<Rpg>({
 			return ReplyBlock(m, `${char.name} equip:\n${char.listEquip()}`);
 		}
 
-		return ReplyBlock(m, rpg.game.equip(char, what));
+		return ReplyBlock(m, await rpg.game.action('equip', char, what));
 	}
 })

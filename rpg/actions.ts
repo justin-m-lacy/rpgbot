@@ -27,12 +27,13 @@ export const GameActions = {
 
 		tick: true,
 		exec: Game.prototype.attack,
+		rest: 0
 
 	},
 	brew: {
 		tick: true,
 		exec: Game.prototype.brew,
-		rest: 1,
+		rest: 0.8,
 	},
 	cast: {
 
@@ -42,41 +43,47 @@ export const GameActions = {
 	cook: {
 		tick: true,
 		exec: Game.prototype.cook,
-		rest: 1,
+		rest: 0.9,
 	},
 	craft: {
 		tick: true,
 		exec: Game.prototype.craft,
-		rest: 1,
+		rest: 0.5,
 	},
 	destroy: {
 		tick: true,
 		exec: Game.prototype.destroy,
-		rest: 1,
+		rest: 0.5,
 	},
 	drop: {
 		tick: true,
 		exec: Game.prototype.drop,
-		rest: 1,
+		rest: 0.8,
 	},
 	eat: {
 		tick: true,
 		exec: Game.prototype.eat,
-		rest: 1,
+		rest: 1.25,
 	},
 	equip: {
 		tick: true,
 		exec: Game.prototype.equip,
-		rest: 1,
+		rest: 0.5,
 	},
 	give: {
 		tick: true,
 		exec: Game.prototype.give,
-		rest: 1,
+		rest: 0.5,
 	},
 	hike: {
 		tick: true,
 		exec: Game.prototype.hike,
+		rest: 0
+	},
+	home: {
+		tick: true,
+		exec: Game.prototype.goHome,
+		rest: 0.5
 	},
 	inscribe: {
 		tick: true,
@@ -101,7 +108,7 @@ export const GameActions = {
 	rest: {
 		tick: true,
 		exec: Game.prototype.rest,
-		rest: 1
+		rest: 1.5
 	},
 	revive: {
 		tick: true,
@@ -123,21 +130,22 @@ export const GameActions = {
 	take: {
 		tick: true,
 		exec: Game.prototype.take,
+		rest: 0.9
 	},
 	track: {
 		tick: true,
 		exec: Game.prototype.track,
-		rest: 1,
+		rest: 0,
 	},
 	unequip: {
 		tick: true,
 		exec: Game.prototype.unequip,
-		rest: 1,
+		rest: 0.9,
 	},
 	useloc: {
 		tick: true,
-		exec: Game.prototype.unequip,
-		rest: 1
+		exec: Game.prototype.useLoc,
+		rest: 0.8
 	}
 }
 

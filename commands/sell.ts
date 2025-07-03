@@ -16,7 +16,7 @@ export default NewCommand<Rpg>({
 		const src = await rpg.userCharOrErr(m, m.user);
 		if (!src) return;
 
-		return SendBlock(m, rpg.game.sell(src, start, end));
+		return SendBlock(m, await rpg.game.action('sell', src, start, end));
 
 	}
 })

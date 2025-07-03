@@ -9,7 +9,7 @@ export default NewCommand<Rpg>({
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);
-		if (char) return SendPrivate(m, await rpg.game.rest(char));
+		if (char) return SendPrivate(m, await rpg.game.action('rest', char));
 
 	}
 })

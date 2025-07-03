@@ -21,7 +21,7 @@ export default NewCommand<Rpg>({
 				})
 			}
 
-			return m.reply(rpg.game.quaff(char, what));
+			return m.reply(await rpg.game.action('quaff', char, what));
 		}
 
 	}

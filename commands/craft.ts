@@ -26,7 +26,7 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		//const a = m.attachments.first();
-		const res = rpg.game.craft(char, what, desc);
+		const res = await rpg.game.action('craft', char, what, desc);
 
 		return SendBlock(m, res);
 

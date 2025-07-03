@@ -17,7 +17,7 @@ export default NewCommand<Rpg>({
 		const dest = await rpg.loadChar(who);
 		if (!dest) return m.reply(`'${who}' does not exist.`);
 
-		await SendBlock(m, rpg.game.track(src, dest));
+		await SendBlock(m, await rpg.game.action('track', src, dest));
 
 
 	}

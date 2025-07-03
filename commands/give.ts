@@ -19,7 +19,7 @@ export default NewCommand<Rpg>({
 		const dest = await rpg.loadChar(who);
 		if (!dest) return SendPrivate(m, `'${who}' does not exist.`);
 
-		return m.reply(rpg.game.give(src, dest, what));
+		return m.reply(await rpg.game.action('give', src, dest, what));
 
 	}
 })

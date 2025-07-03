@@ -34,15 +34,6 @@ export const random = (min: number, max: number) => {
 	return min + Math.round(Math.random() * (max - min));
 }
 
-/**
- * Quickly removes an element from an array but does
- * not preserve order. Only safe to use in a loop when
- * you are counting down from high index to low.
- * @param a - array.
- * @param i - index to remove.
- */
-export const fastCut = <T>(a: T[], i: number) => { a[i] = a[a.length - 1]; a.pop(); }
-
 // Performs a recursive merge of variables from src to dest.
 // Variables from src override variables in dest.
 export const recurMerge = (dest: any, src: any) => {

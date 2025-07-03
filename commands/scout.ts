@@ -11,7 +11,7 @@ export default NewCommand<Rpg>({
 		const char = await rpg.userCharOrErr(m, m.user);
 		if (!char) return;
 
-		await SendBlock(m, rpg.game.scout(char));
+		await SendBlock(m, await rpg.game.action('scout', char));
 
 	}
 })

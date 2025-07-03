@@ -14,7 +14,7 @@ export default NewCommand<Rpg>({
 
 		const what = m.options.getString('what', true);
 
-		return SendBlock(m, await rpg.world.useLoc(char, what));
+		return SendBlock(m, await rpg.game.action('useloc', char, what));
 
 
 	}
