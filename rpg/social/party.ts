@@ -6,7 +6,7 @@ import { SocialGroup } from './social-group';
 
 export class Party extends SocialGroup {
 
-	static Revive(json: any, cache: Cache) {
+	static Decode(json: any, cache: Cache) {
 
 		let p = new Party(json.leader, cache);
 

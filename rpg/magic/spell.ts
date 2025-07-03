@@ -8,9 +8,18 @@ import { ProtoEffect } from './effects';
 
 export class Spell extends Item {
 
-	get duration() { return this._duration; }
+	static Decode(json: any) {
 
-	private _duration: number = 0;
+		const spell = new Spell(json);
+
+		Item.InitData(json, spell);
+
+		return spell;
+
+	}
+
+
+	duration: number = 0;
 	target: ActTarget = ActTarget.none;
 	dmg?: ISimple;
 

@@ -4,6 +4,7 @@ import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
 import { Weapon } from "rpg/items/weapon";
 import { Wearable } from "rpg/items/wearable";
+import { Spell } from "rpg/magic/spell";
 
 export type ItemData = {
 	id: string,
@@ -23,6 +24,7 @@ export enum ItemType {
 
 	Weapon = 'weapon',
 	Armor = 'armor',
+	Spell = 'spell',
 	Potion = 'potion',
 	Food = 'food',
 	Drink = 'drink',
@@ -38,25 +40,28 @@ export enum ItemType {
 /**
  * revive item from JSON
 */
-export const ReviveItem = (json: any): Item | null | undefined => {
+export const DecodeItem = (json: any): Item | null | undefined => {
 
 	if (!json) return null;
 
 	switch (json.type) {
 		case ItemType.Armor:
-			return Wearable.Revive(json);
+			return Wearable.Decode(json);
 
 		case ItemType.Weapon:
-			return Weapon.Revive(json);
+			return Weapon.Decode(json);
+
+		case ItemType.Spell:
+			return Spell.Decode(json);
 
 		case ItemType.Potion:
-			return Potion.Revive(json);
+			return Potion.Decode(json);
 
 		case 'grave':
-			return Grave.Revive(json);
+			return Grave.Decode(json);
 
 		case 'chest':
-			return Chest.Revive(json);
+			return Chest.Decode(json);
 
 		default:
 			return Item.InitData(json);

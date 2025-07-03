@@ -8,7 +8,7 @@ export class Minion {
 	 */
 	static GetTemplate(s: keyof typeof templates) { return templates[s]; }
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 	}
 
 	toJSON() {

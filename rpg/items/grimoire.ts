@@ -10,7 +10,7 @@ export class Grimoire extends Item {
 		return { spells: this.spells, ...super.toJSON() }
 	}
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		if (!json || typeof json !== 'object') throw new BadTypeError(json, 'object');
 

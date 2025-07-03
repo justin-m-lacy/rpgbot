@@ -1,6 +1,4 @@
-import type { Actor } from "rpg/char/actor";
 import type { Char } from "rpg/char/char";
-import type { Effect } from "rpg/magic/effects";
 
 export type History = {
     explore?: number,
@@ -10,18 +8,6 @@ export type History = {
     died?: number,
     eat?: number,
 } & Record<string, number>;
-
-
-
-export type CharEvents = {
-
-    effectStart: (char: Actor, efx: Effect) => void;
-    effectEnd: (char: Actor, efx: Effect) => void;
-    died: (char: Char) => void;
-    revived: (char: Char) => void;
-    levelUp: (char: Char) => void;
-
-}
 
 
 export const getHistory = (char: Char) => {
@@ -42,7 +28,7 @@ export const getHistory = (char: Char) => {
 }
 
 
-const histories = {
+export const histories = {
     brew: {
         desc: '%n potions brewed.\n'
     },

@@ -51,6 +51,8 @@ export class Rpg {
 		this.charCache = this.game.charCache;
 		this.world = this.game.world;
 
+		this.game.events.addListener('levelUp', this.updateCharInfo, this);
+
 	}
 
 	async load() {
@@ -111,12 +113,8 @@ export class Rpg {
 		let char = this.charCache.get(key);
 		if (char) return char;
 
-		char = await this.charCache.fetch(key);
-		if (char) {
-			char.events.addListener('levelUp', this.updateCharInfo, this);
-		}
+		return await this.charCache.fetch(key);
 
-		return char;
 	}
 
 	clearUserChar(uid: string) { delete this.lastChars[uid]; }
@@ -125,7 +123,6 @@ export class Rpg {
 
 		this.lastChars[user.id] = char.name;
 		this.cache.cache(LAST_CHARS, this.lastChars);
-		char.events.addListener("levelUp", this.updateCharInfo, this);
 
 	}
 

@@ -1,23 +1,27 @@
 import { Char } from 'rpg/char/char';
 import { Equip, type HumanSlots } from 'rpg/char/equip';
+import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { Effect } from 'rpg/magic/effects';
-import { ReviveItem } from 'rpg/parsers/items';
+import { DecodeItem } from 'rpg/parsers/items';
 import { BadTypeError, NullDataError } from 'rpg/util/errors';
 import { Coord, IsCoord } from 'rpg/world/loc';
 import { GetClass, GetRace } from './parse-class';
 
 
-export const ReviveChar = (json: any) => {
+export const ReviveChar = (game: Game, json: any) => {
 
 	if (!json) throw new NullDataError();
 
 	const char = new Char(
 		json.name,
-		GetRace(json.race)!,
-		GetClass(json.cls)!,
-		json.owner);
+		{
+			events: game.events,
+			race: GetRace(json.race)!,
+			cls: GetClass(json.cls)!,
+			owner: json.owner
+		});
 
 	char.exp = Math.floor(json.exp) || 0;
 	char.evil = json.evil || 0
@@ -51,14 +55,14 @@ export const ReviveChar = (json: any) => {
 	char.statPoints = json.statPoints || char.stats.level;
 	char.spentPoints = json.spentPoints || 0;
 
-	if (json.inv) Inventory.Revive(json.inv, ReviveItem, char.inv);
+	if (json.inv) Inventory.Decode(json.inv, DecodeItem, char.inv);
 
 	// SET AFTER BASE STATS.
 	if (json.effects) {
 		let a = json.effects;
 		for (let i = a.length - 1; i >= 0; i--) {
 
-			const effect = Effect.Revive(a[i]);
+			const effect = Effect.Decode(a[i]);
 			if (effect) {
 				char.addEffect(effect);
 			}
@@ -92,9 +96,9 @@ export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
 		if (!wot) continue;
 		else if (Array.isArray(wot)) {
 
-			dest[k] = wot.map(v => ReviveItem(v) as Wearable);
+			dest[k] = wot.map(v => DecodeItem(v) as Wearable);
 
-		} else dest[k] = ReviveItem(wot) as Wearable;
+		} else dest[k] = DecodeItem(wot) as Wearable;
 
 	}
 

@@ -19,7 +19,7 @@ export class Weapon extends Wearable {
 
 	}
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		const w = new Weapon(json.id, json.name, json.desc);
 
@@ -28,7 +28,7 @@ export class Weapon extends Wearable {
 		if (json.mods) w.mods = json.mods;
 
 		if (json.dmg) {
-			w.damage = DamageSrc.Revive(json.dmg);
+			w.damage = DamageSrc.Decode(json.dmg);
 		} else {
 			console.log('Error weap dmg. no dmg found.')
 			w.damage = new DamageSrc(null, json.dmgType);

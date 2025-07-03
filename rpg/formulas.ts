@@ -7,7 +7,7 @@ export class DamageSrc {
 		return new DamageSrc(Dice.Parse(dmg), type);
 	}
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		if (typeof (json) === 'string') {
 			return new DamageSrc(Dice.Parse(json));

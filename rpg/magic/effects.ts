@@ -61,6 +61,23 @@ export class ProtoEffect {
 
 export class Effect {
 
+	static Decode(json: any) {
+
+		if (json == null || typeof json !== 'object') {
+			// don't throw for just a missing effect.
+			console.warn(`missing effect data: ${json}`);
+			return null;
+		}
+
+		let e = json.efx;
+		if (typeof (e) === 'string') e = Effects[e];
+		else if (e && typeof e === 'object') e = new ProtoEffect(e);
+		if (!e) return null;
+
+		return new Effect(e, json.src, json.time);
+
+	}
+
 	get name() { return this.efx.name; }
 
 	get effect() { return this.efx; }
@@ -78,22 +95,6 @@ export class Effect {
 	// spell, npc, or action that created the effect.
 	private readonly source?: string;
 
-	static Revive(json: any) {
-
-		if (json == null || typeof json !== 'object') {
-			// don't throw for just a missing effect.
-			console.warn(`missing effect data: ${json}`);
-			return null;
-		}
-
-		let e = json.efx;
-		if (typeof (e) === 'string') e = Effects[e];
-		else if (e && typeof e === 'object') e = new ProtoEffect(e);
-		if (!e) return null;
-
-		return new Effect(e, json.src, json.time);
-
-	}
 
 	toJSON() {
 

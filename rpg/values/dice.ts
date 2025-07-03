@@ -74,7 +74,7 @@ export class Dice {
 
 	}
 
-	static Revive(json: string) {
+	static Decode(json: string) {
 		if (typeof (json) === 'string') return Dice.Parse(json);
 	}
 

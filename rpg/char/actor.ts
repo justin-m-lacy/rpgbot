@@ -1,5 +1,5 @@
-import EventEmitter from 'eventemitter3';
-import type { CharEvents } from 'rpg/char/events';
+import { Char } from 'rpg/char/char';
+import { TCharEvents } from 'rpg/events';
 import type { SexType } from 'rpg/social/gender';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
@@ -112,15 +112,20 @@ export class Actor {
 	readonly mods: ModBlock<typeof this>[] = [];
 	private _state: CharState;
 
-	readonly events: EventEmitter<CharEvents> = new EventEmitter();
+	readonly events: TCharEvents;
 
-	constructor(name: string, race: Race, rpClass?: GClass) {
+	constructor(name: string, opts: {
+		events: TCharEvents,
+		race: Race, rpClass?: GClass
+	}) {
 
 		this.name = name;
 
-		this._myClass = rpClass;
+		this.events = opts.events;
 
-		this.race = race;
+		this._myClass = opts.rpClass;
+
+		this.race = opts.race;
 
 		this._at = new Coord(0, 0);
 
@@ -200,8 +205,8 @@ export class Actor {
 		}
 		this.effects.push(e);
 		e.start(this);
-		this.events.emit('effectStart', this, e);
 
+		this.events.emit('effectStart', this as any as Char, e);
 	}
 
 	rmEffect(e: Effect | ProtoEffect) { }

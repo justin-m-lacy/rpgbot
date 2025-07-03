@@ -1,6 +1,6 @@
 import { ItemMenu } from 'rpg/display/items';
 import type { ItemIndex } from 'rpg/items/container';
-import { ItemType, ReviveItem } from 'rpg/parsers/items';
+import { DecodeItem, ItemType } from 'rpg/parsers/items';
 import { Inventory, SymInventory, type IInventory } from '../inventory';
 import { Item } from "./item";
 
@@ -11,10 +11,10 @@ export class Chest extends Item implements IInventory {
 
 	readonly [SymInventory] = true;
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		const p = new Chest(
-			json.id, Inventory.Revive<Item>(json.inv, ReviveItem));
+			json.id, Inventory.Decode<Item>(json.inv, DecodeItem));
 		p.size = json.size;
 
 		return Item.InitData(json, p);

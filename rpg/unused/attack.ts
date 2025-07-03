@@ -3,7 +3,7 @@ import { Actor } from '../char/actor';
 
 export class Attack {
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		const a = new Attack();
 

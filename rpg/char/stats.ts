@@ -88,7 +88,7 @@ export class StatBlock {
 
 	constructor() { }
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		const stats = new StatBlock();
 

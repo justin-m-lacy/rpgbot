@@ -77,7 +77,7 @@ export class Wearable extends Item {
 		return it;
 	}
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		const a = new Wearable(json.id, json.name, json.desc);
 		a.material = json.material;

@@ -18,7 +18,7 @@ export class Grave extends Item {
 		return new Grave(randomUUID(), char.name, slayer.name, Grave.GetEpitaph(char, slayer));
 	}
 
-	static Revive(json: ItemData & { char: string, slayer?: string, epitaph?: string }) {
+	static Decode(json: ItemData & { char: string, slayer?: string, epitaph?: string }) {
 
 		const p = new Grave(json.id, json.char, json.slayer, json.epitaph);
 

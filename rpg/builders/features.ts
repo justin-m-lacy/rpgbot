@@ -12,7 +12,7 @@ InitFeatures();
  * @param s
  */
 export const genFeature = (s: string) => {
-	return byName[s] ? Feature.Revive(byName[s]) : null;
+	return byName[s] ? Feature.Decode(byName[s]) : null;
 }
 
 
@@ -26,5 +26,5 @@ function InitFeatures() {
 }
 
 export const RandFeature = () => {
-	return Feature.Revive(randElm(FeatureData));
+	return Feature.Decode(randElm(FeatureData));
 }

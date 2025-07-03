@@ -1,9 +1,11 @@
 import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
+import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { ReviveChar } from 'rpg/parsers/char';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import type Block from 'rpg/world/block';
+import { EventEmitter } from 'stream';
 import * as ItemGen from './builders/itemgen';
 import { Actor, LifeState } from './char/actor';
 import { Char } from './char/char';
@@ -60,6 +62,8 @@ export class Game {
 
 	private readonly guilds: GuildManager;
 
+	readonly events: GameEvents = new EventEmitter();
+
 	/**
 	 *
 	 * @param rpg
@@ -70,7 +74,9 @@ export class Game {
 
 		this.world = new World(cache.subcache<Block>('world'));
 
-		this.charCache = cache.subcache<Char>('chars', ReviveChar);
+		this.charCache = cache.subcache<Char>('chars', (data) => {
+			return ReviveChar(this, data)
+		});
 
 		this.guilds = new GuildManager(cache.subcache('guilds'));
 

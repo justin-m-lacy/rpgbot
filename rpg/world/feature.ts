@@ -16,7 +16,7 @@ export class Feature extends Item {
 	 */
 	private _fb?: string;
 
-	static Revive(
+	static Decode(
 		json: ItemData & { name: string, desc: string, action?: string, fb?: string }) {
 
 		const f = new Feature(json.name, json.desc);

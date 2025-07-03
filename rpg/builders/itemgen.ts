@@ -1,4 +1,4 @@
-import { ItemType, ReviveItem } from 'rpg/parsers/items';
+import { DecodeItem, ItemType } from 'rpg/parsers/items';
 import { Loot } from '../combat/loot';
 import BaseArmors from '../data/items/armors.json';
 import BaseWeapons from '../data/items/weapons.json';
@@ -107,7 +107,7 @@ function initArmors() {
 }
 
 export const genPot = (name: string) => {
-	return allPots[name] ? Potion.Revive(allPots[name]) : null;
+	return allPots[name] ? Potion.Decode(allPots[name]) : null;
 }
 
 export const genWeapon = (lvl: number) => {
@@ -224,7 +224,7 @@ const getDrops = (mons: Monster) => {
 }
 
 const procItem = (name: string) => {
-	return allItems[name] ? ReviveItem(allItems[name]) : null;
+	return allItems[name] ? DecodeItem(allItems[name]) : null;
 }
 
 /**
@@ -233,7 +233,7 @@ const procItem = (name: string) => {
 export const getMiscItem = () => {
 
 	const it = miscItems[Math.floor(miscItems.length * Math.random())];
-	return ReviveItem(it);
+	return DecodeItem(it);
 
 }
 

@@ -46,7 +46,7 @@ function parseTemplate(json: any) {
 		t[v] = Dice.Parse(s);
 
 	}
-	if (t.dmg) { t.dmg = DamageSrc.Revive(t.dmg); }
+	if (t.dmg) { t.dmg = DamageSrc.Decode(t.dmg); }
 	if (t.weap) {
 		t.weap = Weapon.FromData(t.weap);
 	}
@@ -140,7 +140,7 @@ export class Monster {
 
 	}
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		const m = new Monster(json.id);
 
@@ -161,7 +161,7 @@ export class Monster {
 
 		}
 
-		if (m.weap) m.weap = Weapon.Revive(m.weap);
+		if (m.weap) m.weap = Weapon.Decode(m.weap);
 		if (m.toHit) m.toHit = Number(m.toHit);
 		return m;
 

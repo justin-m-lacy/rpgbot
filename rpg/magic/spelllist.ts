@@ -1,13 +1,23 @@
 import { Inventory } from "rpg/inventory";
 import { Spell } from "rpg/magic/spell";
-import { SymEncode } from "rpg/values/types";
+import { GetSpell } from "rpg/parsers/spells";
+import { SymDecode } from "rpg/values/types";
 
 export class SpellList extends Inventory<Spell> {
 
+	[SymDecode](data: any) {
 
-	[SymEncode]() {
+		return Inventory.Decode(data, (s: string) => {
+			return GetSpell(s) ?? undefined;
+		});
 
-		return super[SymEncode]((v: Spell) => v.id);
+	}
+
+	toJSON() {
+
+		const data = super.toJSON();
+		data.items = data.items?.map((v: Spell) => v.id);
+		return data;
 
 	}
 

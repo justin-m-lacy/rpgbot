@@ -7,7 +7,7 @@ import { Item } from './item';
 
 export class Potion extends Item {
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		let p = new Potion(json.id);
 

@@ -1,5 +1,5 @@
 import Cache from 'archcache';
-import { ReviveItem } from 'rpg/parsers/items';
+import { DecodeItem } from 'rpg/parsers/items';
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Coord } from '../world/loc';
@@ -31,7 +31,7 @@ export class GuildManager {
 		data = await this.cache.fetch(name);
 		if (!data || data instanceof Guild) return data;
 
-		data = Guild.Revive(data, this.cache);
+		data = Guild.Decode(data, this.cache);
 		this.cache.cache(name, data);
 
 		return data;
@@ -58,13 +58,13 @@ export class GuildManager {
 
 export class Guild extends SocialGroup {
 
-	static Revive(json: any, cache: Cache) {
+	static Decode(json: any, cache: Cache) {
 
 		const g = new Guild(json.name, cache);
 
 		Object.assign(g, json);
 
-		if (g.inv) g.inv = Inventory.Revive(g.inv, ReviveItem, g.inv);
+		if (g.inv) g.inv = Inventory.Decode(g.inv, DecodeItem, g.inv);
 		else g.inv = new Inventory();
 
 		return g;

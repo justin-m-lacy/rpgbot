@@ -1,6 +1,6 @@
 import { ItemList } from "rpg/display/items";
 import type { ItemIndex } from "rpg/items/container";
-import { ReviveItem } from "rpg/parsers/items";
+import { DecodeItem } from "rpg/parsers/items";
 import { quickSplice } from "rpg/util/array";
 import { IsInt } from "rpg/util/parse";
 import { Char } from '../char/char';
@@ -255,7 +255,7 @@ export class Loc {
 		if (ind >= 0) quickSplice(this.chars, ind);
 	}
 
-	static Revive(json: any) {
+	static Decode(json: any) {
 
 		const loc = new Loc(new Coord(json.coord.x, json.coord.y), json.biome);
 
@@ -275,14 +275,14 @@ export class Loc {
 		}
 
 		if (json.features) {
-			Inventory.Revive<Feature>(
-				json.features, Feature.Revive, loc.features
+			Inventory.Decode<Feature>(
+				json.features, Feature.Decode, loc.features
 			);
 		}
 		if (json.attach) loc._attach = json.attach;
 
 		if (json.inv) {
-			Inventory.Revive<Item>(json.inv, ReviveItem, loc.inv);
+			Inventory.Decode<Item>(json.inv, DecodeItem, loc.inv);
 		}
 
 		loc.name = json.name;
@@ -303,7 +303,7 @@ export class Loc {
 		const len = a.length;
 		for (let i = 0; i < len; i++) {
 
-			const m = Monster.Revive(a[i]);
+			const m = Monster.Decode(a[i]);
 			if (m) loc.addNpc(m);
 
 		} //for

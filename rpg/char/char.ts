@@ -1,4 +1,6 @@
 import { TryEat } from 'rpg/char/cooking';
+import { GClass, Race } from 'rpg/char/race';
+import { TCharEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { SpellList } from 'rpg/magic/spelllist';
 import { ItemType } from 'rpg/parsers/items';
@@ -12,7 +14,6 @@ import { Actor } from './actor';
 import { Equip } from './equip';
 import { History } from './events';
 import { tryLevel } from './level';
-import { Race, type GClass } from './race';
 import { StatIds, StatKey } from './stats';
 
 const SaveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
@@ -50,22 +51,7 @@ export class Char extends Actor {
 	get evil() { return +this.stats.evil.value; }
 	set evil(v) { this.stats.evil.setTo(v); }
 
-	/// Char leveled up this turn.
-	get levelFlag() { return (this.eventFlags & CharEventFlags.LevelUp) > 0 }
-	set levelFlag(v) {
-		if (v) {
-			this.eventFlags |= CharEventFlags.LevelUp;
-		} else {
-			this.eventFlags &= ~CharEventFlags.LevelUp;
-		}
-	}
-
 	get id() { return this.name }
-	/**
-	 * Notification for level up.
-	 * TODO: replace with event system.
-	 */
-	eventFlags: CharEventFlags = 0;
 
 	toJSON() {
 
@@ -98,9 +84,13 @@ export class Char extends Actor {
 
 	readonly spelllist: SpellList = new SpellList('spells');
 
-	constructor(name: string, race: Race, cls: GClass, owner: string) {
+	constructor(name: string,
+		opts: {
+			events: TCharEvents,
+			race: Race, cls: GClass, owner: string
+		}) {
 
-		super(name, race, cls);
+		super(name, opts);
 
 		this._statPoints = 0;
 		this._spentPoints = 0;
@@ -110,7 +100,7 @@ export class Char extends Actor {
 
 		this.history = { explore: 0 };
 
-		this.owner = owner;
+		this.owner = opts.owner;
 
 	}
 
@@ -159,7 +149,7 @@ export class Char extends Actor {
 	levelUp() {
 
 		super.levelUp();
-		this.eventFlags |= CharEventFlags.LevelUp;
+
 
 		this.log(this.name + ' has leveled up.');
 		this._statPoints++;

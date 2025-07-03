@@ -41,7 +41,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	}
 
-	toJSON(): any {
+	toJSON(): Record<string, any> & { items?: any[] } {
 		const data = super.toJSON();
 		if (this.items.length > 0) {
 			data.items = this.items;
@@ -50,7 +50,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		return data;
 	}
 
-	static Revive<I extends Item = Item>(
+	static Decode<I extends Item = Item>(
 		json: any,
 		reviver: (data: any) => I | null | undefined,
 		inv?: Inventory<I>) {
