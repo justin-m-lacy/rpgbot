@@ -587,7 +587,7 @@ export class Game {
 		if (this.tick(src, 'steal') === false) return src.output();
 
 		const com = new Combat(src, dest, this.world);
-		await com.steal(wot);
+		await com.steal(src, wot);
 
 		return src.output(com.getText());
 

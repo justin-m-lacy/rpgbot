@@ -1,6 +1,5 @@
 import Cache from 'archcache';
 import { World } from 'rpg/world/world';
-import { Actor } from '../char/actor';
 import { Char } from '../char/char';
 import { Coord, Loc } from '../world/loc';
 import { SocialGroup } from './social-group';
@@ -185,7 +184,7 @@ export class Party extends SocialGroup {
 
 			const c = await this.cache.fetch(this.roster[ind]);
 
-			if (c && c.hp.value > 0 && c.state === 'alive') return c as Actor;
+			if (c && c.hp.value > 0 && c.state === 'alive') return c;
 			if (++ind >= len) ind = 0;
 
 		} while (ind != start);

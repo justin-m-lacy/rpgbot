@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { Monster } from 'rpg/monster/monster';
 import { ItemData, ItemType } from 'rpg/parsers/items';
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
@@ -13,7 +14,7 @@ export class Grave extends Item {
 	 * @param char
 	 * @param slayer
 	 */
-	static MakeGrave(char: Char, slayer: Char) {
+	static MakeGrave(char: Char, slayer: Char | Monster) {
 		return new Grave(randomUUID(), char.name, slayer.name, Grave.GetEpitaph(char, slayer));
 	}
 
@@ -27,7 +28,7 @@ export class Grave extends Item {
 
 	}
 
-	static GetEpitaph(char: Char, killer: Char) {
+	static GetEpitaph(char: Char, killer: Char | Monster) {
 
 		const eps = this._Epitaphs ?? (this._Epitaphs = require('../data/items/epitaphs.json'));
 		const ep = eps[Math.floor(Math.random() * eps.length)];
@@ -39,6 +40,9 @@ export class Grave extends Item {
 	toJSON() {
 
 		const s = super.toJSON() as any;
+
+		s.desc = undefined;
+		s.name = undefined;
 
 		s.char = this.char;
 		s.epitaph = this.epitaph;
@@ -65,7 +69,7 @@ export class Grave extends Item {
 			type: ItemType.Grave
 		});
 
-		this.char = typeof char === 'string' ? char : char.name;
+		this.char = typeof char === 'string' ? char : char?.name;
 		this.slayer = typeof slayer === 'string' ? slayer : slayer?.name;
 		this.epitaph = epitaph ?? '';
 

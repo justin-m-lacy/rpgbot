@@ -35,7 +35,7 @@ export class Combat {
 	readonly defender: Char | Monster | Party;
 	readonly world: World;
 
-	readonly attacks: any[] = [];
+	readonly attacks: AttackInfo[] = [];
 
 	constructor(char1: Char | Monster | Party, char2: Char | Monster | Party, world: World) {
 
@@ -181,7 +181,7 @@ export class Combat {
 
 	}
 
-	async tryHit(src: Actor | Monster, targ: Actor | Party | Monster, srcParty?: Party) {
+	async tryHit(src: Char | Monster, targ: Char | Party | Monster, srcParty?: Party) {
 
 		if (!src) { console.warn('tryHit() src is null'); return; }
 
@@ -203,7 +203,7 @@ export class Combat {
 
 	}
 
-	async doKill(char: Char, target: Char | Monster, party: Party) {
+	async doKill(char: Char, target: Char | Monster, party?: Party) {
 
 		const lvl = target.level;
 
@@ -227,9 +227,7 @@ export class Combat {
 	 *
 	 * @param wot - optional item to try to take.
 	 */
-	async steal(wot?: ItemPicker | null) {
-
-		const attacker = this.attacker as Actor | Monster;
+	async steal(attacker: Char, wot?: ItemPicker | null) {
 
 		let defender: Char | Monster | undefined;
 
@@ -273,7 +271,7 @@ export class Combat {
 	 * @param src
 	 * @param dest
 	 */
-	attack(src: Actor | Monster, dest: Actor | Monster) {
+	attack(src: Char | Monster, dest: Char | Monster) {
 
 		if ('at' in src && 'at' in dest && !(src.at.equals(dest.at))) {
 			this.resp += `${src.name} does not see ${dest.name} at this location.`;
@@ -361,8 +359,8 @@ class AttackInfo {
 	// defender was killed.
 	get killed() { return this._killed; }
 
-	readonly attacker: Actor | Monster;
-	readonly defender: Actor | Monster;
+	readonly attacker: Char | Monster;
+	readonly defender: Char | Monster;
 	readonly party?: Party;
 	readonly weap?: Weapon;
 	readonly _name?: string;
@@ -371,7 +369,7 @@ class AttackInfo {
 	private _dmg: any;
 	private hitroll: number = 0;
 
-	constructor(attacker: Actor | Monster, defender: Actor | Monster, party?: Party) {
+	constructor(attacker: Char | Monster, defender: Char | Monster, party?: Party) {
 
 		this.attacker = attacker;
 		this.defender = defender;
