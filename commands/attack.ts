@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { PickNpcButtons } from "rpg/actions";
+import { PickNpcButtons } from "rpg/components";
 import { SendBlock } from "rpg/display/display";
 import { Monster } from "rpg/monster/monster";
 import { Rpg } from "rpg/rpg";
@@ -13,13 +13,13 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('who', 'Who or what to attack')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const src = await rpg.userCharOrErr(m, m.user);
-		if (!src) return;
+		const char = await rpg.userCharOrErr(m, m.user);
+		if (!char) return;
 
 		let who: string | number | null = m.options.getString('who');
 		if (!who) {
 
-			const loc = await rpg.world.getOrGen(src.at);
+			const loc = await rpg.world.getOrGen(char.at);
 
 			if (loc.npcs.length === 0) {
 				return SendPrivate(m, 'Attack who?');
@@ -33,25 +33,17 @@ export default NewCommand<Rpg>({
 
 		}
 
-		let targ = await rpg.world.getNpc(src, who);
-		let res;
-
-		if (targ) {
-			res = await (targ instanceof Monster ?
-				rpg.game.attackNpc(src, targ)
-				: rpg.game.attack(src, targ)
-			);
-		} else if (typeof who === 'string') {
-
-			targ = await rpg.loadChar(who);
-			if (!targ) return SendPrivate(m, `'${who}' not found.`);
-
-			res = await rpg.game.attack(src, targ);
-
-		} else {
+		const targ = await rpg.getActor(char, who);
+		if (!targ) {
 			return SendPrivate(m, `'${who}' not found.`);
 		}
 
+		const res = await (targ instanceof Monster ?
+			rpg.game.attackNpc(char, targ)
+			: rpg.game.attack(char, targ)
+		);
+
 		await SendBlock(m, res);
 	}
+
 });

@@ -1,9 +1,9 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrChoices, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { IsLegalName } from "rpg/actions";
 import { GenChar } from "rpg/builders/chargen";
 import type { GClass, Race } from "rpg/char/race";
+import { IsLegalName } from "rpg/components";
 import { EchoChar } from "rpg/display/display";
 import { GetClass, GetClasses, GetRace, GetRaces, RandClass, RandRace } from "rpg/parsers/parse-class";
 import { Rpg } from "rpg/rpg";
@@ -59,7 +59,7 @@ export default NewCommand<Rpg>({
 
 			const char = GenChar({
 				owner: m.user.id,
-				events: rpg.game.events,
+				game: rpg.game,
 				race, cls: charCls, name: charname, sex
 			});
 

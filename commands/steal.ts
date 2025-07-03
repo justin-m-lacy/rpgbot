@@ -1,8 +1,8 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { PickCharButtons } from "rpg/actions";
 import { Char } from "rpg/char/char";
+import { PickCharButtons } from "rpg/components";
 import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 

@@ -3,6 +3,7 @@ import type { ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
+import { ItemIndex } from 'rpg/items/container';
 import { LoadActions } from 'rpg/magic/action';
 import { LoadEffectTypes } from 'rpg/magic/effects';
 import { GenName } from 'rpg/namegen';
@@ -137,6 +138,22 @@ export class Rpg {
 		this.cache.cache(LAST_CHARS, this.lastChars);
 
 	}
+
+	/**
+	 * Get char or Monster at Character's location.
+	 * @param char 
+	 * @param who 
+	 */
+	async getActor(char: Char, who: ItemIndex) {
+
+		const targ = await this.world.getNpc(char, who);
+		if (targ) return targ;
+		else if (typeof who === 'string') {
+			return await this.loadChar(who);
+		}
+
+	}
+
 
 	getCharKey(charname: string) { return charname; }
 

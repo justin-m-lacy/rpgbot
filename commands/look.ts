@@ -3,7 +3,7 @@ import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { CustomButton } from "@/bot/command-map";
 import { SendPrivate } from "@/utils/display";
 import { ActionRowBuilder, type ButtonBuilder, ButtonStyle } from "discord.js";
-import { ToActionRows, WorldItemActions } from "rpg/actions";
+import { ToActionRows, WorldItemActions } from "rpg/components";
 import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { type DirVal, type Loc, ToDirStr } from "rpg/world/loc";

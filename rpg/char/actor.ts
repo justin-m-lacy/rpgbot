@@ -1,8 +1,10 @@
 import { Char } from 'rpg/char/char';
 import { TCharEvents } from 'rpg/events';
+import { Game } from 'rpg/game';
 import type { SexType } from 'rpg/social/gender';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
+import { EventEmitter } from 'stream';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { Effect, ProtoEffect } from '../magic/effects';
@@ -112,16 +114,17 @@ export class Actor {
 	readonly mods: ModBlock<typeof this>[] = [];
 	private _state: CharState;
 
-	readonly events: TCharEvents;
+	readonly events: TCharEvents = new EventEmitter();
+	readonly game: Game;
 
 	constructor(name: string, opts: {
-		events: TCharEvents,
+		game: Game,
 		race: Race, rpClass?: GClass
 	}) {
 
 		this.name = name;
 
-		this.events = opts.events;
+		this.game = opts.game;
 
 		this._myClass = opts.rpClass;
 

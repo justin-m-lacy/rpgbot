@@ -1,6 +1,6 @@
 import { randElm } from '@/utils/jsutils';
 import type { StatKey } from 'rpg/char/stats';
-import { TCharEvents } from 'rpg/events';
+import { Game } from 'rpg/game';
 import type { SexType } from 'rpg/social/gender';
 import { IsSimple, IsValue, Numeric } from 'rpg/values/types';
 import { Char } from '../char/char';
@@ -28,7 +28,7 @@ const statRolls = [
 
 export const GenChar = (
 	opts: {
-		events: TCharEvents,
+		game: Game,
 		owner: string, race: Race, cls: GClass, name: string, sex?: SexType
 	}) => {
 

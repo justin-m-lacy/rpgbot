@@ -17,7 +17,7 @@ export const ReviveChar = (game: Game, json: any) => {
 	const char = new Char(
 		json.name,
 		{
-			events: game.events,
+			game: game,
 			race: GetRace(json.race)!,
 			cls: GetClass(json.cls)!,
 			owner: json.owner

@@ -2,6 +2,7 @@ import * as jsutils from '@/utils/jsutils';
 import Cache from 'archcache';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
+import { Spell } from 'rpg/magic/spell';
 import { ReviveChar } from 'rpg/parsers/char';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import type Block from 'rpg/world/block';
@@ -63,6 +64,32 @@ export class Game {
 	private readonly guilds: GuildManager;
 
 	readonly events: GameEvents = new EventEmitter();
+
+	readonly actions = {
+
+		attack: {
+
+			tick: true,
+			async exec(char: Char, targ: Char | Monster) {
+			}
+
+		},
+		move: {
+
+			tick: true,
+
+		},
+		cast: {
+
+			tick: true,
+			async exec(char: Char, spell: Spell, targ: Char | Monster) {
+			}
+		},
+		drop: {
+
+		},
+
+	}
 
 	/**
 	 *

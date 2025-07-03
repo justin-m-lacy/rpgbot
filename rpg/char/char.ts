@@ -1,6 +1,6 @@
 import { TryEat } from 'rpg/char/cooking';
 import { GClass, Race } from 'rpg/char/race';
-import { TCharEvents } from 'rpg/events';
+import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { SpellList } from 'rpg/magic/spelllist';
 import { ItemType } from 'rpg/parsers/items';
@@ -19,25 +19,10 @@ import { StatIds, StatKey } from './stats';
 const SaveProps = ['name', 'exp', 'owner', 'state', 'stats', 'effects',
 	'at', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
 
-
-enum CharEventFlags {
-
-	None = 0,
-	/// char died.
-	Died = 1,
-	/// char leveled up.
-	LevelUp = 2
-}
-
-
-
 export class Char extends Actor {
 
 	get exp() { return this._exp; }
 	set exp(v) { this._exp = v; }
-
-	get home() { return this._home; }
-	set home(v) { this._home = v; }
 
 	get statPoints() { return this._statPoints; }
 	set statPoints(v) { this._statPoints = v; }
@@ -60,7 +45,7 @@ export class Char extends Actor {
 			json[SaveProps[i]] = this[SaveProps[i] as keyof Char];
 		}
 
-		if (this._home) json.home = this._home;
+		if (this.home) json.home = this.home;
 
 		json.equip = this._equip;
 
@@ -79,14 +64,14 @@ export class Char extends Actor {
 	owner: string;
 	private _exp: number = 0;
 
-	private _home?: Coord;
+	home?: Coord;
 	readonly history: History;
 
 	readonly spelllist: SpellList = new SpellList('spells');
 
 	constructor(name: string,
 		opts: {
-			events: TCharEvents,
+			game: Game,
 			race: Race, cls: GClass, owner: string
 		}) {
 
@@ -149,7 +134,6 @@ export class Char extends Actor {
 	levelUp() {
 
 		super.levelUp();
-
 
 		this.log(this.name + ' has leveled up.');
 		this._statPoints++;

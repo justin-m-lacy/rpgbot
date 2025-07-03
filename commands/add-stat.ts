@@ -2,8 +2,8 @@ import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { CustomButton } from "@/bot/command-map";
 import { SendPrivate } from "@/utils/display";
 import { ButtonStyle } from "discord.js";
-import { ToActionRows } from "rpg/actions";
 import { StatIds } from "rpg/char/stats";
+import { ToActionRows } from "rpg/components";
 import { Rpg } from "rpg/rpg";
 import { ChatCommand } from '../src/bot/cmd-wrapper';
 
