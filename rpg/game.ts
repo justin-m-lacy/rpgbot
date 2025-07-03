@@ -42,6 +42,7 @@ const BlockedActs: Partial<{ [Property in LifeState]: any }> = {
 
 // actions that allow some hp recovery.
 const rest_acts = { 'move': 1, 'cook': 1, 'drop': 1 };
+/// actions that apply to entire party.
 const party_acts = ['attack', 'move'];
 
 const eventExp = {
@@ -99,7 +100,7 @@ export class Game {
 
 		if (!this.canAct(char, action)) return false;
 
-		this.tickEffects(char, action);
+		this.tickDots(char, action);
 
 	}
 
@@ -511,7 +512,7 @@ export class Game {
 
 	}
 
-	tickEffects(char: Char, action?: string) {
+	private tickDots(char: Char, action?: string) {
 
 		const efx = char.effects;
 		if (!efx) return;

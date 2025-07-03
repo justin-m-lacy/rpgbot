@@ -1,7 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { SendBlock } from "rpg/display/display";
 import { GetSpell } from "rpg/parsers/spells";
 import { Rpg } from "rpg/rpg";
 
@@ -32,9 +31,8 @@ export default NewCommand<Rpg>({
 		}
 
 		char.spelllist.add(spell);
-		char.spelllist.add();
 
-		return SendBlock(m, '');
+		return SendPrivate(m, `${char.name} has learned spell ${spell.name}`);
 
 	}
 })

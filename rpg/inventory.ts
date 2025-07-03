@@ -115,7 +115,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		if (typeof start === 'string') {
 
 			if (!IsInt(start)) {
-				return this.findItem(start);
+				return this.find(start);
 			} else {
 				start = parseInt(start);
 			}
@@ -189,7 +189,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		return false;
 	}
 
-	findItem(id: string) {
+	find(id: string) {
 
 		const lower = id.toLowerCase();
 		for (let i = this.items.length - 1; i >= 0; i--) {

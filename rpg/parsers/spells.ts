@@ -18,6 +18,8 @@ export const Spells: Partial<{ [id: string]: Spell }> = {};
 
 const parseSpell = (raw: RawSpell) => {
 
+	console.log(`parse spell: ${raw.id}`);
+
 	return new Spell({
 		id: raw.id,
 		name: raw.name,

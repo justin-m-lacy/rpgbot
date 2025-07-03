@@ -2,11 +2,13 @@
 import Emitter from 'eventemitter3';
 import CacheItem from './src/item';
 
-export type Loader<Data = any> = (key: string) => Promise<Data>;
-export type Saver = (key: string, data: any) => Promise<any>;
-export type Deleter = (key: string) => Promise<boolean>;
-export type Checker = (key: string) => Promise<boolean>;
-export type Reviver<T> = (data: any) => T | null | undefined;
+type Loader<Data = any> = (key: string) => Promise<Data>;
+type Saver = (key: string, data: any) => Promise<any>;
+type Deleter = (key: string) => Promise<boolean>;
+type Checker = (key: string) => Promise<boolean>;
+
+type Encoder<T> = (data: T) => Promise<any>;
+type Decoder<T> = (data: any) => T | null | undefined;
 
 
 export type CacheOpts<T> = {
@@ -21,7 +23,16 @@ export type CacheOpts<T> = {
 	 * function to store data at key.
 	 */
 	saver?: Saver;
-	reviver?: Reviver<T>;
+
+	/**
+	 * Encodes data before save.
+	 */
+	encoder?: Encoder<T>;
+	/**
+	 * Decodes data after save.
+	 */
+	decoder?: Decoder<T>;
+
 	/**
 	 * function to call when item is being deleted from cache.
 	 */
@@ -53,7 +64,7 @@ export default class Cache<T = any> extends Emitter {
 		this._cacheKey = this._fixKey(v);
 	}
 
-	private _dict: Map<string, CacheItem<T> | Cache<T>> = new Map();
+	private _dict: Map<string, CacheItem<T> | Cache<any>> = new Map();
 	get data() { return this._dict; }
 
 	lastAccess: number = 0;
@@ -71,7 +82,10 @@ export default class Cache<T = any> extends Emitter {
 	 * function to store data at key.
 	 */
 	saver?: Saver;
-	reviver?: Reviver<T>;
+
+	encoder?: Encoder<T>;
+	decoder?: Decoder<T>;
+
 	/**
 	 * function to call when item is being deleted from cache.
 	 */
@@ -93,7 +107,8 @@ export default class Cache<T = any> extends Emitter {
 			this.saver = opts.saver;
 			this.checker = opts.checker;
 			this.deleter = opts.deleter;
-			this.reviver = opts.reviver;
+			this.decoder = opts.decoder;
+			this.encoder = opts.encoder;
 
 		}
 
@@ -119,7 +134,7 @@ export default class Cache<T = any> extends Emitter {
 		if (opts.hasOwnProperty('saver')) this.saver = opts.saver;
 		if (opts.hasOwnProperty('checker')) this.checker = opts.checker;
 		if (opts.hasOwnProperty('deleter')) this.deleter = opts.deleter;
-		if (opts.hasOwnProperty('reviver')) this.reviver = opts.reviver;
+		if (opts.hasOwnProperty('reviver')) this.decoder = opts.decoder;
 
 		const keyChanged = opts.cacheKey !== this._cacheKey;
 		this.cacheKey = opts.cacheKey ?? this._cacheKey;
@@ -154,25 +169,24 @@ export default class Cache<T = any> extends Emitter {
 	 * Retrieves or creates a subcache with the given key.
 	 * @param subkey - key of the subcache. Final key is prefixed with
 	 * the key of the parent cache.
-	 * @param  [reviver=null]
+	 * @param  [decoder=null]
 	 */
-	subcache<S extends T>(subkey: string, reviver?: Reviver<S>): Cache<S> {
+	subcache<S extends T = T>(subkey: string,
+		decoder?: Decoder<S>, encoder?: Encoder<S>): Cache<S> {
 
 		subkey = this._subkey(this._cacheKey, subkey);
 
-		let cache = this._dict.get(subkey) as Cache<S>;
-		if (cache !== undefined && cache instanceof Cache) return cache;
+		let cache = this._dict.get(subkey);
+		if (cache !== undefined && cache instanceof Cache) return cache as Cache<S>;
 
 		this._dict.set(subkey, cache = new Cache<S>({
 			loader: this.loader,
-			saver: this.saver,
+			encoder: encoder ?? this.encoder,
 			checker: this.checker,
 			deleter: this.deleter,
 			cacheKey: subkey,
-			reviver: reviver
+			decoder: decoder
 		}));
-
-		this.emit('subcreate', this, subkey);
 
 		return cache as Cache<S>;
 	}
@@ -200,7 +214,7 @@ export default class Cache<T = any> extends Emitter {
 			const data = await this.loader(this._cacheKey + key);
 			if (data === undefined) return undefined;
 
-			const value = this.reviver ? this.reviver(data) : data;
+			const value = this.decoder ? this.decoder(data) : data;
 			this._dict.set(key, new CacheItem<T>(key, value, false));
 
 			return value as T;
@@ -227,7 +241,9 @@ export default class Cache<T = any> extends Emitter {
 		item.markSaved();
 
 		if (this.saver) {
-			await this.saver(this._cacheKey + key, value);
+			await this.saver(this._cacheKey + key,
+				this.encoder ? this.encoder?.(value) : value
+			);
 		}
 		return value;
 
@@ -309,15 +325,16 @@ export default class Cache<T = any> extends Emitter {
 
 			} else if (item && item.dirty && (now - item.lastSave) > time) {
 
-				saves.push(saver(this._cacheKey + item.key, item.data).then(
-					null, err => err
-				));
+				saves.push(
+					saver(this._cacheKey + item.key,
+						this.encoder ? this.encoder(item.data) : item.data)
+				);
 
 			}
 
 		} // for
 
-		return Promise.all(saves).then(
+		return Promise.allSettled(saves).then(
 			vals => {
 				this.emit('backup', this, vals);
 				return vals;
@@ -358,7 +375,9 @@ export default class Cache<T = any> extends Emitter {
 				if (item.dirty) {
 
 					saves.push(
-						saver(this._cacheKey + item.key, item.data).then(null, err => err)
+						saver(this._cacheKey + item.key,
+							this.encoder ? this.encoder(item.data) : item.data
+						)
 					);
 
 				}
@@ -367,7 +386,7 @@ export default class Cache<T = any> extends Emitter {
 
 		} // for
 
-		return Promise.all(saves).then(vals => {
+		return Promise.allSettled(saves).then(vals => {
 			this.emit('cleanup', this, vals); return vals
 		});
 

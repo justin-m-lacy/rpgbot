@@ -44,9 +44,6 @@ export class Char extends Actor {
 	get spentPoints() { return this._spentPoints; }
 	set spentPoints(v) { this._spentPoints = v; }
 
-	get skills() { return this._skills; }
-	set skills(v) { this._skills = v; }
-
 	get skillPts() { return this._skillPts; }
 	set skillPts(v) { this._skillPts = v; }
 
@@ -97,7 +94,6 @@ export class Char extends Actor {
 	private _exp: number = 0;
 
 	private _home?: Coord;
-	private _skills: any;
 	readonly history: History;
 
 	readonly spelllist: SpellList = new SpellList('spells');
