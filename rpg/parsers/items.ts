@@ -2,7 +2,6 @@ import { Chest } from "rpg/items/chest";
 import { Grave } from "rpg/items/grave";
 import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
-import { Weapon } from "rpg/items/weapon";
 import { Wearable } from "rpg/items/wearable";
 import { Spell } from "rpg/magic/spell";
 
@@ -37,34 +36,21 @@ export enum ItemType {
 	Unknown = 'unknown'
 }
 
+const ItemDecoders: Record<string, (data: any) => Item> = {
+	[ItemType.Armor]: Wearable.Decode,
+	[ItemType.Weapon]: Wearable.Decode,
+	[ItemType.Spell]: Spell.Decode,
+	[ItemType.Potion]: Potion.Decode,
+	[ItemType.Grave]: Grave.Decode,
+	[ItemType.Chest]: Chest.Decode,
+	[ItemType.Unknown]: Item.InitData,
+}
 /**
  * revive item from JSON
 */
 export const DecodeItem = (json: any): Item | null | undefined => {
 
 	if (!json) return null;
-
-	switch (json.type) {
-		case ItemType.Armor:
-			return Wearable.Decode(json);
-
-		case ItemType.Weapon:
-			return Weapon.Decode(json);
-
-		case ItemType.Spell:
-			return Spell.Decode(json);
-
-		case ItemType.Potion:
-			return Potion.Decode(json);
-
-		case 'grave':
-			return Grave.Decode(json);
-
-		case 'chest':
-			return Chest.Decode(json);
-
-		default:
-			return Item.InitData(json);
-	}
+	return ItemDecoders[json.type]?.(json) ?? ItemDecoders[ItemType.Unknown](json);
 
 }

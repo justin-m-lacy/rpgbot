@@ -61,6 +61,35 @@
         }
     },
     {
+        "id": "venom_1",
+        "name": "Venom I",
+        "desc": "Poisons an enemy.",
+        "level": 1,
+        "cost": {
+            "mp": 1
+        },
+        "dot": {
+            "duration": 10,
+            "dmg": "1~3",
+            "kind": "venom"
+        }
+    },
+    {
+        "id": "barkskin_1",
+        "name": "Barkskin I",
+        "desc": "Turns your skin to wood.",
+        "target": "self",
+        "level": 1,
+        "cost": {
+            "mp": 3
+        },
+        "dot": {
+            "duration": 30,
+            "dmg": "1~3",
+            "kind": "venom"
+        }
+    },
+    {
         "id": "resistpoison_1",
         "name": "Dampen",
         "target": "any",

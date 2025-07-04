@@ -63,7 +63,7 @@ export const rollArmor = (char: Char, slot?: string | null) => {
 	const mod = Math.max(1 + char.getModifier('cha'), 0);
 
 	level = Math.max(0, level + jsutils.random(-1, mod));
-	const it = ItemGen.genArmor(toSlot(slot), level);
+	const it = ItemGen.GenArmor(toSlot(slot), level);
 
 	if (!it) return 'Failed to roll armor.';
 

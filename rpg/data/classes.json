@@ -32,6 +32,9 @@
 			"brew",
 			"cook"
 		],
+		"items": [
+			"witch_tome_1"
+		],
 		"create": {
 			"gold": "1d4+1"
 		}

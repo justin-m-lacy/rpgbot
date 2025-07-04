@@ -24,6 +24,11 @@ export class Race {
 	// minimum levels required to select this race/class.
 	readonly minLevels: number;
 
+	/**
+	 * Starting items for race/class.
+	 */
+	readonly items: string[] = [];
+
 	constructor(id: string, hitDie: number = 1, minLevels: number = 0) {
 
 		this.id = this.name = id;
@@ -54,6 +59,10 @@ export class Race {
 
 		const cur = char.hp.max.base;
 		char.hp.setTo(cur + this.hitDie);
+
+		for (let i = this.items.length - 1; i >= 0; i--) {
+
+		}
 
 		AddValues(char, this.createVals);
 

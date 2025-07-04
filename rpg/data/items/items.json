@@ -1,74 +1,78 @@
 {
     "misc": [
         {
+            "id": "",
             "name": "Pickle",
-            "desc": "I wonder what kind of plant they come from?"
+            "type": "food",
+            "desc": "One to eat..."
         },
         {
+            "id": "elfroid_ear",
             "name": "Ear of Elfroid",
             "desc": "A trophy of a harmless creature.",
             "type": "ing"
         },
         {
+            "id": "elfroid_spine",
             "name": "Spine of Elfroid",
             "desc": "It's bendy.",
             "type": "ing"
         },
         {
+            "id": "elfroid_nose",
             "name": "Nose of Elfroid",
             "desc": "Elfroid noses don't work because they never bathe.",
             "type": "ing"
         },
         {
+            "id": "elfroid_eye",
             "name": "Eye of Elfroid",
             "desc": "Can't spot the rush.",
             "type": "ing"
         },
         {
-            "name": "Derpy Hooves",
-            "desc": "Put them on your feet."
-        },
-        {
+            "id": "potato_peeler",
             "name": "Potato Peeler",
             "desc": "For peeling potatoes."
         },
         {
+            "id": "stone_tablet",
             "name": "Stone Tablet",
             "desc": "For writing commandments."
         },
         {
+            "id": "tiny_gloves",
             "name": "Tiny Gloves",
             "desc": "For people with tiny fingers."
         },
         {
+            "id": "elfroid_doll",
             "name": "Elfroid",
             "desc": "Tiny stuffed doll. Completely harmless."
         },
         {
+            "id": "js_engine",
             "name": "Javascript Interpreter",
             "desc": "Totally useless."
         },
         {
+            "id": "cake",
+            "type": "food",
             "name": "Piece of Cake",
             "desc": "You can't have your cake and eat it too."
         },
         {
-            "name": "Gorilla Suit",
-            "desc": "An inconspicuous disguise."
-        },
-        {
-            "name": "Fight Club Rule Book",
-            "desc": "It's not that long."
-        },
-        {
+            "id": "pukeko",
             "name": "Pukeko",
             "desc": "They’re pesky swamp hens and they get into everything."
         },
         {
+            "id": "hitchhiker_guide",
             "name": "A Wayfarer's Guide to the Stars",
             "desc": "Don't Panic."
         },
         {
+            "id": "garn_head",
             "name": "Garn's Head on a Pike",
             "desc": "He's got plenty of em."
         },

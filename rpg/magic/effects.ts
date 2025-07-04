@@ -177,7 +177,7 @@ export class Effect {
 
 }
 
-const parseEffectType = (raw: RawEffect) => {
+export const ParseDotType = (raw: RawEffect) => {
 
 	return new ProtoEffect({
 		id: raw.id,
@@ -190,14 +190,14 @@ const parseEffectType = (raw: RawEffect) => {
 
 }
 
-export const LoadEffectTypes = async () => {
+export const LoadDotTypes = async () => {
 
 	const efx = (await import('../data/magic/dots.json', { assert: { type: 'json' } })).default;
 	for (let i = efx.length - 1; i >= 0; i--) {
-		Effects[efx[i].id] = parseEffectType(efx[i] as any);
+		Effects[efx[i].id] = ParseDotType(efx[i] as any);
 	}
 
 }
 
 
-export const GetEffect = (s: string) => Effects[s];
+export const GetDot = (s: string) => Effects[s];

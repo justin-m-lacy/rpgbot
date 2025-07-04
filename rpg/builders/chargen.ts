@@ -1,6 +1,8 @@
 import { randElm } from '@/utils/jsutils';
 import type { StatKey } from 'rpg/char/stats';
 import { Game } from 'rpg/game';
+import { GenArmor } from 'rpg/parsers/armor';
+import { GenWeapon } from 'rpg/parsers/weapon';
 import type { SexType } from 'rpg/social/gender';
 import { IsSimple, IsValue, Numeric } from 'rpg/values/types';
 import { Char } from '../char/char';
@@ -149,8 +151,8 @@ const initItems = (char: Char) => {
 	let count = Math.floor(1 + 3 * Math.random());
 
 	for (count; count >= 0; count--) {
-		char.addItem(ItemGen.getMiscItem());
+		char.addItem(ItemGen.GenMiscItem());
 	}
-	char.addItem([ItemGen.genWeapon(1), ItemGen.genArmor(null, 1)]);
+	char.addItem([GenWeapon(1), GenArmor(null, 1)]);
 
 }

@@ -4,10 +4,10 @@ import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { ReviveChar } from 'rpg/parsers/char';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
+import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
 import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
-import * as ItemGen from './builders/itemgen';
 import { Actor } from './char/actor';
 import { Char } from './char/char';
 import { Combat } from "./combat/combat";
@@ -95,7 +95,7 @@ export class Game {
 			char.recover(this.actions[act].rest);
 		}
 
-		return await (GameActions[act as T].exec as Function).apply(
+		return await (GameActions[act].exec as Function).apply(
 			this, [char, ...params]
 		);
 
@@ -398,7 +398,7 @@ export class Game {
 
 		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
 
-		const pot = ItemGen.genPot(itemName);
+		const pot = GenPotion(itemName);
 		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
 
 		const s = this.skillRoll(char) + char.getModifier('wis');

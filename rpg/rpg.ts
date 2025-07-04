@@ -5,7 +5,7 @@ import { User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
 import { ItemIndex } from 'rpg/items/container';
 import { LoadActions } from 'rpg/magic/action';
-import { LoadEffectTypes } from 'rpg/magic/effects';
+import { LoadDotTypes } from 'rpg/magic/effects';
 import { GenName } from 'rpg/namegen';
 import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
 import { LoadSpells } from 'rpg/parsers/spells';
@@ -184,7 +184,7 @@ export class Rpg {
 export const InitGame = async () => {
 
 	await Promise.all([
-		InitRaces(), InitClasses(), InitItems(), LoadEffectTypes(), LoadActions(), LoadSpells()
+		InitRaces(), InitClasses(), InitItems(), LoadDotTypes(), LoadActions(), LoadSpells()
 	]);
 
 }

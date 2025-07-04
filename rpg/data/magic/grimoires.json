@@ -1,7 +1,12 @@
 [
 	{
-		"id": "",
-		"desc": "",
-		"spells": []
+		"id": "witch_tome_1",
+		"name": "Practical Witchcraft",
+		"desc": "A small, crumpled grimoire.",
+		"kind": "pagan",
+		"spells": [
+			"barkskin_1",
+			"venom_1"
+		]
 	}
 ]
