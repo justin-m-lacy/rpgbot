@@ -40,7 +40,7 @@ export class World {
 	async setDesc(char: Char, desc?: string, attach?: string) {
 
 		const loc = await this.getOrGen(char.at, char);
-		if (attach) loc.attach = attach;
+		if (attach) loc.embed = attach;
 
 		const owner = loc.owner;
 		if (owner && owner !== char.name) return 'You do not control this location.';
@@ -166,7 +166,7 @@ export class World {
 			return it.getView();
 
 		}
-		if (loc.attach) return [char.name + ' is' + loc.look(), loc.attach];
+		if (loc.embed) return [char.name + ' is' + loc.look(), loc.embed];
 		else return char.name + ' is ' + loc.look();
 
 	}

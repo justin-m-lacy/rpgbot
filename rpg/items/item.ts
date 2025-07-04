@@ -16,8 +16,8 @@ export class Item {
 	get cost() { return this._cost; }
 	set cost(v) { this._cost = v; }
 
-	get attach() { return this._attach; }
-	set attach(v) { this._attach = v; }
+	get embed() { return this._embed; }
+	set embed(v) { this._embed = v; }
 
 	toJSON(): Record<string, any> {
 
@@ -28,9 +28,9 @@ export class Item {
 			type: this.type,
 			cost: this._cost,
 			level: this._level || undefined,
-			attach: this.attach ?? undefined,
-			maker: this.maker ?? undefined,
-			inscrip: this.inscrip || undefined
+			embed: this._embed,
+			maker: this.maker,
+			inscrip: this.inscrip
 		}
 	}
 
@@ -46,7 +46,7 @@ export class Item {
 		it.name = json.name;
 
 		if (json.cost) it.cost = json.cost;
-		if (json.attach) it.attach = json.attach;
+		if (json.embed) it.embed = json.embed;
 		if (json.maker) it.maker = json.maker;
 		if (json.inscrip) it.inscrip = json.inscrip;
 
@@ -62,13 +62,11 @@ export class Item {
 
 	private _level: number = 0;
 
-	/**
-	 * discord id of crafter.
-	 */
+	// discord id of crafter.
 	maker?: string;
 
 	/// image attachment
-	private _attach?: string;
+	private _embed?: string;
 	private _cost: number = 0;
 
 	/**
@@ -91,7 +89,7 @@ export class Item {
 	}
 
 	getView(): [string, string | undefined] {
-		return [this.getDetails(false), this._attach];
+		return [this.getDetails(false), this._embed];
 	}
 
 	/**
@@ -102,7 +100,7 @@ export class Item {
 		let s = this.name;
 		if (this.desc) s += ': ' + this.desc;
 		if (this.inscrip) s += ' { ' + this.inscrip + ' }';
-		if (this._attach && imgTag) s += ' [img]';
+		if (this._embed && imgTag) s += ' [img]';
 		if (this.maker) s += '\ncreated by ' + this.maker;
 
 		return s;

@@ -6,12 +6,12 @@ import { Char } from '../char/char';
 
 export const BlockText = (s: string) => '```' + s + '```';
 
-export const SendEmbed = async (m: ChatCommand, s: string, e: string) => m.reply(
+export const SendEmbed = async (m: ChatCommand, s: string, e?: string) => m.reply(
 	{
 		content: '```' + s + '```',
-		embeds: [
+		embeds: e ? [
 			new EmbedBuilder({ image: { url: e } })
-		]
+		] : undefined
 	});
 
 export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) =>

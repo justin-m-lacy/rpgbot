@@ -9,7 +9,11 @@ import { type TValue } from '../values/types';
 
 export type RawEffect = {
 	id: string,
-	name?: string,
+	name?: string;
+	desc?: string;
+
+	/// damage type.
+	type?: string;
 	dot?: Record<string, any>,
 	time?: number
 } &
@@ -25,6 +29,7 @@ export class ProtoEffect {
 
 	readonly id: string;
 	readonly name: string;
+	readonly desc?: string;
 	readonly mods: Path<IMod> | null;
 	readonly dot: Path<TValue> | null;
 	readonly time: number;
@@ -77,19 +82,28 @@ export class Effect {
 
 	}
 
-	get name() { return this.efx.name; }
+	toJSON() {
 
-	get template() { return this.efx; }
-	get dot() { return this.efx.dot; }
+		return {
+			src: this.source,
+			efx: this.proto.id,
+			time: this._time
+		};
 
-	get mod() { return this.efx.mods }
+	}
+
+	get name() { return this.proto.name; }
+
+	get dot() { return this.proto.dot; }
+
+	get mod() { return this.proto.mods }
 
 	get time() { return this._time; }
 
-	get id() { return this.efx.id }
+	get id() { return this.proto.id }
 
 	// template for effect.
-	private readonly efx: ProtoEffect;
+	readonly proto: ProtoEffect;
 
 	private _time: number;
 
@@ -97,21 +111,11 @@ export class Effect {
 	readonly source?: string;
 
 
-	toJSON() {
-
-		return {
-			src: this.source,
-			efx: this.efx.id,
-			time: this._time
-		};
-
-	}
-
 	constructor(effect: ProtoEffect, time?: number, src?: any) {
 
-		this.efx = effect;
+		this.proto = effect;
 		this.source = src;
-		this._time = time || this.efx.time;
+		this._time = time || this.proto.time;
 
 	}
 
@@ -135,34 +139,18 @@ export class Effect {
 	}
 
 	/**
-	 * 
 	 * @param char
 	 * @returns true if effect complete. 
 	 */
 	tick<T extends Npc>(char: T) {
 
-		if (!this._time) return false;
+		if (!this.proto.time) return false;
 
 		this._time--;
 
-		const v = this.dot;
-		if (v) {
+		if (this.dot) {
 
-			AddPath(char, v, 1);
-
-			/// TODO: logging for dot?
-			/*let len = v.setProps.size;
-			if (len > 0) {
-
-				s += ' ( ';
-				for (const k of v.setProps.keys()) {
-					if (--len > 0) s += `${k}: ${char[k as keyof Char]}, `;
-					else s += `${k}: ${char[k as keyof Char]}`;
-				}
-				s += ' )';
-
-			}*/
-
+			AddPath(char, this.dot, 1);
 			char.log(`${char.name} affected by ${this.name}.`);
 
 

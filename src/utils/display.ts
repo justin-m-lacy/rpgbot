@@ -20,7 +20,7 @@ const SendNoPerm = (m: ChatAction, cmd?: string) => {
 
 	return m.reply({
 		content: 'You do not have permission to use that command.',
-		flags: MessageFlags.Ephemeral
+		flags: MessageFlags.Ephemeral,
 	});
 
 }

@@ -7,7 +7,7 @@ type SimpleItem = {
     id: string,
     name: string,
     type: string,
-    attach?: string,
+    embed?: string,
     toString(): string
 }
 

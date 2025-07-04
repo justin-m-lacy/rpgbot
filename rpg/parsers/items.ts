@@ -18,7 +18,7 @@ export type ItemData = {
 	level?: number,
 	created?: number,
 	/// file/image attachment
-	attach?: string
+	embed?: string
 }
 
 export enum ItemType {

@@ -1,5 +1,6 @@
-import { TestRequire, type RawIf, type TRequire } from 'rpg/handlers/requires';
-import { ParseResult, type RawResult, type Result } from 'rpg/handlers/results';
+import { TestRequire, type RawIf, type TRequire } from 'rpg/magic/requires';
+import { ParseResult, type RawResult, type Result } from 'rpg/magic/results';
+import { Npc } from 'rpg/monster/monster';
 import { Char } from '../char/char';
 
 
@@ -11,7 +12,7 @@ class Action {
 
 	readonly id: string;
 	readonly name: string;
-	readonly result: Result<Char>[];
+	readonly result: Result<Npc>[];
 
 	private err?: string;
 
@@ -30,7 +31,7 @@ class Action {
 	 * @param char 
 	 * @returns 
 	 */
-	apply(char: Char) {
+	apply(char: Npc) {
 
 		if (this.need && !TestRequire(char, this.need)) {
 

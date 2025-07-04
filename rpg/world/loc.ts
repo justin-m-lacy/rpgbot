@@ -175,11 +175,11 @@ export class Loc {
 			name: this.name,
 			biome: this.biome,
 			npcs: this.npcs.length > 0 ? this.npcs : undefined,
-			features: this.features ?? undefined,
-			attach: this._attach ?? undefined,
-			maker: this._maker ?? undefined,
+			features: this.features,
+			embed: this._embed,
+			maker: this._maker,
 			time: this.time ?? undefined,
-			owner: this._owner ?? undefined
+			owner: this._owner
 
 		};
 
@@ -194,8 +194,8 @@ export class Loc {
 
 	get maker() { return this._maker; }
 
-	get attach() { return this._attach; }
-	set attach(v) { this._attach = v; }
+	get embed() { return this._embed; }
+	set embed(v) { this._embed = v; }
 
 	get owner() { return this._owner; }
 	set owner(v) { this._owner = v; }
@@ -207,7 +207,7 @@ export class Loc {
 
 	biome: string;
 	private _maker?: string;
-	private _attach: any;
+	private _embed?: string;
 	private _owner?: string;
 	time?: number;
 
@@ -279,7 +279,7 @@ export class Loc {
 				json.features, Feature.Decode, loc.features
 			);
 		}
-		if (json.attach) loc._attach = json.attach;
+		if (json.attach) loc._embed = json.attach;
 
 		if (json.inv) {
 			Inventory.Decode<Item>(json.inv, DecodeItem, loc.inv);
@@ -373,7 +373,7 @@ export class Loc {
 
 	}
 
-	view() { return [this.look(undefined, true), this._attach]; }
+	view() { return [this.look(undefined, true), this._embed]; }
 
 	/**
 	 * Returns text seen by character looking at location.
@@ -385,7 +385,7 @@ export class Loc {
 	look(looker?: Char, imgTag: boolean = true, showPaths: boolean = false) {
 
 		let r = in_prefix[this.biome as Biome] + this.biome;//+ ' (' + this._coord.toString() + ')';
-		if (this._attach && imgTag) r += ' [img]';
+		if (this._embed && imgTag) r += ' [img]';
 		r += '\n' + this.desc;
 
 		if (this.features.count > 0) r += '\nFeatures: ' + ItemList(this.features);

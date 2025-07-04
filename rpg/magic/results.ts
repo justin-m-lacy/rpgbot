@@ -1,4 +1,4 @@
-import { TestEqual, type RawIf, type TRequire } from "rpg/handlers/requires";
+import { TestEqual, type RawIf, type TRequire } from "rpg/magic/requires";
 import { ParseValue } from "rpg/parsers/values";
 import { AddPath } from "rpg/values/apply";
 import { ParsePaths, type Path } from "rpg/values/paths";
@@ -50,7 +50,7 @@ export class Result<T extends object> {
 	fb?: string;
 	if?: TRequire<T>;
 	set?: Path<TValue>;
-	add?: Path<TValue>
+	add?: Path<TValue>;
 
 	constructor(opts: {
 		if?: TRequire<T>,

@@ -21,7 +21,7 @@ export const getEmbedUrl = (m: Message) => {
     }
 }
 
-export const makeImageEmbed = (imageUrl: string) => {
+export const ImageEmbed = (imageUrl: string) => {
     return new EmbedBuilder({ image: { url: imageUrl, proxy_url: imageUrl } });
 }
 
@@ -31,7 +31,7 @@ export const ReplyEmbed = (m: ChatCommand, embedUrl: string, text?: string | nul
 
             content: (text && text.length > 0) ? text : ' ',
             embeds: [
-                makeImageEmbed(embedUrl)
+                ImageEmbed(embedUrl)
             ],
             flags: MessageFlags.Ephemeral
         }
@@ -42,7 +42,7 @@ export const sendEmbedUrl = (m: Message<true>, embedUrl: string, text?: string |
 
     return m.channel.send({
         content: (text && text.length > 0) ? text : ' ', embeds: [
-            makeImageEmbed(embedUrl)
+            ImageEmbed(embedUrl)
         ]
     });
 

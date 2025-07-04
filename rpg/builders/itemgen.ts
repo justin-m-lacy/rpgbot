@@ -157,12 +157,16 @@ export const GenItem = (protoId: string, into?: Inventory) => {
 }
 
 /**
- * Returns a useless item.
+ * Create a useless item.
  */
 export const GenMiscItem = () => {
 
 	const it = MiscItems[Math.floor(MiscItems.length * Math.random())];
-	return DecodeItem(it);
+
+	const data = Object.create(it);
+	data.id = randomUUID();
+
+	return DecodeItem(data);
 
 }
 
@@ -182,11 +186,11 @@ export const AddMasterItems = <T extends Item>(arr: T[]) => {
 	for (const it of arr) ProtoItems[it.id] = it;
 }
 
-export const Craft = (char: Char, name: string, desc?: string, attach?: string) => {
+export const Craft = (char: Char, name: string, desc?: string, embed?: string) => {
 
 	const item = new Item(randomUUID({}), { name, desc });
 
-	if (attach) item.attach = attach;
+	if (embed) item.embed = embed;
 
 	item.maker = char.name;
 	item.created = Date.now();
