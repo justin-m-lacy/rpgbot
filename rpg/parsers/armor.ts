@@ -26,7 +26,7 @@ export const GenArmor = (slot: HumanSlot | null = null, lvl: number = 0) => {
 
 }
 
-function InitArmors() {
+export function InitArmors() {
 
 	for (let k = BaseArmors.length - 1; k >= 0; k--) {
 

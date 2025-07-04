@@ -1,13 +1,13 @@
+import { ParseDotType, RawEffect } from 'rpg/magic/effects';
 import { Spell } from 'rpg/magic/spell';
 import { ParseMods } from 'rpg/parsers/mods';
-import { ParseValues } from 'rpg/parsers/values';
 
 type RawSpell = {
 	id: string;
 	name?: string;
 	level?: number;
 	cost?: Record<string, number>;
-	dot?: Record<string, any>;
+	dot?: RawEffect;
 	mods?: Record<string, any>;
 	time?: number
 } &
@@ -16,7 +16,7 @@ type RawSpell = {
 // effect types. loading at bottom.
 export const Spells: Partial<{ [id: string]: Spell }> = {};
 
-const parseSpell = (raw: RawSpell) => {
+const ParseSpell = (raw: RawSpell) => {
 
 	console.log(`parse spell: ${raw.id}`);
 
@@ -24,7 +24,7 @@ const parseSpell = (raw: RawSpell) => {
 		id: raw.id,
 		name: raw.name,
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
-		dot: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
+		dot: raw.dot ? ParseDotType(raw.dot) : null,
 		time: raw.time,
 	});
 
@@ -37,7 +37,7 @@ export const LoadSpells = async () => {
 		'../data/magic/spells.json', { assert: { type: 'json' } }
 	)).default;
 	for (let i = spellDatas.length - 1; i >= 0; i--) {
-		Spells[spellDatas[i].id] = parseSpell(spellDatas[i] as any);
+		Spells[spellDatas[i].id] = ParseSpell(spellDatas[i] as any);
 	}
 
 }

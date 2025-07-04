@@ -1,13 +1,16 @@
 import { BotContext, type ContextSource } from '@/bot/botcontext';
 import type { ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
-import { User } from "discord.js";
+import { MessageFlags, User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
 import { ItemIndex } from 'rpg/items/container';
 import { LoadActions } from 'rpg/magic/action';
 import { LoadDotTypes } from 'rpg/magic/effects';
 import { GenName } from 'rpg/namegen';
+import { InitArmors } from 'rpg/parsers/armor';
+import { ReviveChar } from 'rpg/parsers/char';
 import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
+import { InitPotions } from 'rpg/parsers/potions';
 import { LoadSpells } from 'rpg/parsers/spells';
 import { NewUserData, type UserData } from 'rpg/users/users';
 import { Char } from './char/char';
@@ -47,9 +50,16 @@ export class Rpg {
 		this.cache = this.context.subcache(Rpg.RpgDir);
 		this.userCache = this.cache.subcache('users');
 
-		this.game = new Game(this.cache);
+		this.charCache = this.cache.subcache<Char>('chars', (data) => {
 
-		this.charCache = this.game.charCache;
+			const char = ReviveChar(this.game, data);
+			char?.events.on('levelUp', this.updateCharInfo, this);
+			return char;
+
+		});
+
+		this.game = new Game(this.cache, this.charCache);
+
 		this.world = this.game.world;
 
 		this.game.events.addListener('levelUp', this.updateCharInfo, this);
@@ -68,17 +78,28 @@ export class Rpg {
 
 		const charname = this.lastChars[user.id];
 		if (!charname) {
-			m.reply(`${user.username}: No active character`);
+			m.reply(
+				{
+					content: `${user.username}: No active character`,
+					flags: MessageFlags.Ephemeral
+				}
+			);
 			return null;
 		}
 
 		const char = await this.loadChar(charname);
 		if (!char) {
-			m.reply(`Error loading '${charname}'. Load new character.`);
+			m.reply({
+				content: `Error loading '${charname}'. Load new character.`,
+				flags: MessageFlags.Ephemeral
+			});
 			return null;
 
 		} else if (char.owner !== user.id) {
-			m.reply(`You do not control '${charname}'`);
+			m.reply({
+				content: `You do not control '${charname}'`,
+				flags: MessageFlags.Ephemeral
+			});
 			return null;
 		}
 
@@ -86,7 +107,7 @@ export class Rpg {
 
 	}
 
-	async updateCharInfo(char: Char) {
+	private async updateCharInfo(char: Char) {
 
 		const userData = await this.getUserData(char.owner);
 		userData.chars[char.name].level = char.level.valueOf();
@@ -110,15 +131,21 @@ export class Rpg {
 	async loadChar(charname: string) {
 
 		const key = this.getCharKey(charname);
-
-		let char = this.charCache.get(key);
-		if (char) return char;
-
-		return await this.charCache.fetch(key);
+		return this.charCache.get(key) ?? await this.charCache.fetch(key);
 
 	}
 
 	clearUserChar(uid: string) { delete this.lastChars[uid]; }
+
+	/**
+	 * Busy work for when char created. Maybe use event.
+	 * @param user 
+	 * @param char 
+	 */
+	onCreateChar(user: User, char: Char) {
+		this.setUserChar(user, char);
+		char.events.on('levelUp', this.updateCharInfo, this);
+	}
 
 	async setUserChar(user: User, char: Char) {
 
@@ -127,7 +154,7 @@ export class Rpg {
 
 	}
 
-	async loadLastChars() {
+	private async loadLastChars() {
 
 		const lastjson = await this.cache.fetch(LAST_CHARS);
 		if (lastjson) {
@@ -184,7 +211,14 @@ export class Rpg {
 export const InitGame = async () => {
 
 	await Promise.all([
-		InitRaces(), InitClasses(), InitItems(), LoadDotTypes(), LoadActions(), LoadSpells()
+		InitRaces(),
+		InitClasses(),
+		InitItems(),
+		InitArmors(),
+		InitPotions(),
+		LoadDotTypes(),
+		LoadActions(),
+		LoadSpells()
 	]);
 
 }

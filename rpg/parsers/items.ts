@@ -1,9 +1,11 @@
 import { Chest } from "rpg/items/chest";
 import { Grave } from "rpg/items/grave";
+import { Grimoire } from "rpg/items/grimoire";
 import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
 import { Wearable } from "rpg/items/wearable";
 import { Spell } from "rpg/magic/spell";
+import { Feature } from "rpg/world/feature";
 
 export type ItemData = {
 	id: string,
@@ -41,10 +43,15 @@ const ItemDecoders: Record<string, (data: any) => Item> = {
 	[ItemType.Weapon]: Wearable.Decode,
 	[ItemType.Spell]: Spell.Decode,
 	[ItemType.Potion]: Potion.Decode,
+	[ItemType.Grimoire]: Grimoire.Decode,
 	[ItemType.Grave]: Grave.Decode,
 	[ItemType.Chest]: Chest.Decode,
+
+	[ItemType.Feature]: Feature.Decode,
 	[ItemType.Unknown]: Item.InitData,
 }
+
+
 /**
  * revive item from JSON
 */

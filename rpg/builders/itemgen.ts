@@ -1,20 +1,23 @@
+import { randomUUID } from 'crypto';
+import { Char } from 'rpg/char/char';
+import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
 import { GenArmor } from 'rpg/parsers/armor';
-import { DecodeItem } from 'rpg/parsers/items';
+import { DecodeItem, ItemData } from 'rpg/parsers/items';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Loot } from '../combat/loot';
 import { Material } from '../items/material';
 import { Monster } from '../monster/monster';
 
 
-export type RawPotionData = (typeof import('../data/items/potions.json', { assert: { type: 'json' } }))[number] & { type?: "potion" };
+
 export type RawChestsData = (typeof import('../data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" };
 type RawItemData = (typeof import('../data/items/items.json', { assert: { type: 'json' } })['misc' | 'special'][number]) & { id: string }
 
 /**
  * Master item prototypes. ( raw data)
  */
-export const ProtoItems: { [str: string]: RawItemData | RawPotionData | RawChestsData } = {};
+export const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData } = {};
 
 /**
  * Master item table. (constant items such as grimoires)
@@ -110,11 +113,11 @@ const getDrops = (mons: Monster) => {
 	if (Array.isArray(drops)) {
 
 		const it = drops[Math.floor(Math.random() * drops.length)];
-		return ProcItem(it);
+		return GenItem(it);
 
 	} else if (typeof (drops) === 'string') {
 
-		return Math.random() < 0.7 ? ProcItem(drops) : null;
+		return Math.random() < 0.7 ? GenItem(drops) : null;
 
 	} else {
 
@@ -122,7 +125,7 @@ const getDrops = (mons: Monster) => {
 		for (const k in drops) {
 
 			if (100 * Math.random() < drops[k]) {
-				const it = ProcItem(k);
+				const it = GenItem(k);
 				if (it) items.push(it);
 				else console.log('item not found: ' + k);
 			}
@@ -136,11 +139,21 @@ const getDrops = (mons: Monster) => {
 
 /**
  * Create new item from base item id.
- * @param id
+ * Gives the item a new unique id.
+ * @param protoId
  * @returns 
  */
-export const ProcItem = (id: string) => {
-	return ProtoItems[id] ? DecodeItem(ProtoItems[id]) : null;
+export const GenItem = (protoId: string, into?: Inventory) => {
+
+	if (!ProtoItems[protoId]) return null;
+
+	const data = Object.create(ProtoItems[protoId]);
+	data.id = randomUUID();
+	const it = DecodeItem(data);
+	if (it) into?.add(it);
+
+	return it;
+
 }
 
 /**
@@ -153,7 +166,36 @@ export const GenMiscItem = () => {
 
 }
 
+export const AddProtoItems = <T extends ItemData>(arr: Record<string, T> | T[]) => {
+
+	if (Array.isArray(arr)) {
+		for (const it of arr) ProtoItems[it.id] = it;
+	} else {
+		for (const k in arr) {
+			ProtoItems[arr[k].id] = arr[k];
+		}
+	}
+
+}
 
 export const AddMasterItems = <T extends Item>(arr: T[]) => {
 	for (const it of arr) ProtoItems[it.id] = it;
+}
+
+export const Craft = (char: Char, name: string, desc?: string, attach?: string) => {
+
+	const item = new Item(randomUUID({}), { name, desc });
+
+	if (attach) item.attach = attach;
+
+	item.maker = char.name;
+	item.created = Date.now();
+
+	const maxBonus = Math.max(char.level.value + char.getModifier('int') + 1, 2);
+	item.cost = Math.floor(maxBonus * Math.random());
+
+	char.addHistory('crafts');
+	char.addExp(2);
+	return char.addItem(item);
+
 }

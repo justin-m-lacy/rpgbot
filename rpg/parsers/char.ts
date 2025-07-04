@@ -64,7 +64,7 @@ export const ReviveChar = (game: Game, json: any) => {
 
 			const effect = Effect.Decode(a[i]);
 			if (effect) {
-				char.addEffect(effect);
+				char.addDot(effect);
 			}
 
 		}

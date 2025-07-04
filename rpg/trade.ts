@@ -1,6 +1,7 @@
 import * as jsutils from '@/utils/jsutils';
 import type { ItemIndex } from 'rpg/items/container';
-import * as ItemGen from './builders/itemgen';
+import { GenArmor } from 'rpg/parsers/armor';
+import { GenWeapon } from 'rpg/parsers/weapon';
 import { Char } from "./char/char";
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
@@ -40,11 +41,10 @@ export const rollWeap = (char: Char) => {
 	if (!payOrFail(char, cost))
 		return `${char.name} cannot afford to roll a new weapon. (${cost} gold)`;
 
-	const gen = require('./items/itemgen');
 	const mod = Math.max(1 + char.getModifier('cha'), 0);
 
 	level = Math.max(0, level + jsutils.random(-1, mod));
-	const it = gen.genWeapon(level);
+	const it = GenWeapon(level);
 
 	if (!it) return 'Failed to roll a weapon.';
 
@@ -63,7 +63,7 @@ export const rollArmor = (char: Char, slot?: string | null) => {
 	const mod = Math.max(1 + char.getModifier('cha'), 0);
 
 	level = Math.max(0, level + jsutils.random(-1, mod));
-	const it = ItemGen.GenArmor(toSlot(slot), level);
+	const it = GenArmor(toSlot(slot), level);
 
 	if (!it) return 'Failed to roll armor.';
 

@@ -1,8 +1,8 @@
 import Cache from 'archcache';
 import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
+import { Craft } from 'rpg/builders/itemgen';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
-import { ReviveChar } from 'rpg/parsers/char';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
@@ -12,7 +12,7 @@ import { Actor } from './char/actor';
 import { Char } from './char/char';
 import { Combat } from "./combat/combat";
 import { ItemPicker } from './inventory';
-import { Craft, Item } from './items/item';
+import { Item } from './items/item';
 import { Potion } from './items/potion';
 import { Wearable } from './items/wearable';
 import { Monster } from './monster/monster';
@@ -51,19 +51,17 @@ export class Game {
 	 *
 	 * @param rpg
 	 */
-	constructor(cache: Cache<any>) {
+	constructor(cache: Cache<any>, charCache: Cache<Char>) {
 
 		this.world = new World(cache.subcache<Block>('world'));
 
-		this.charCache = cache.subcache<Char>('chars', (data) => {
-			return ReviveChar(this, data)
-		});
+		this.charCache = charCache;
 
 		this.guilds = new GuildManager(cache.subcache('guilds'));
 
 	}
 
-	skillRoll(act: Actor) { return dice.roll(1, 5 * (+act.level + 4)); }
+	private skillRoll(act: Actor) { return dice.roll(1, 5 * (+act.level + 4)); }
 
 	/**
 	 * Test if a character can perform an action
@@ -103,7 +101,7 @@ export class Game {
 
 	private tickDots(char: Char) {
 
-		const efx = char.effects;
+		const efx = char.dots;
 		if (!efx) return;
 
 		for (let i = efx.length - 1; i >= 0; i--) {
@@ -417,7 +415,6 @@ export class Game {
 	craft(this: Game, char: Char, itemName: string, desc?: string, imgURL?: string) {
 
 		const ind = Craft(char, itemName, desc, imgURL);
-
 		return char.output(`${char.name} crafted ${itemName}. (${ind})`);
 
 	}

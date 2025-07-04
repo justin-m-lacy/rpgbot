@@ -63,7 +63,7 @@ export default NewCommand<Rpg>({
 				race, cls: charCls, name: charname, sex
 			});
 
-			await rpg.setUserChar(m.user, char);
+			await rpg.onCreateChar(m.user, char);
 			EchoChar(m, char);
 			await rpg.saveChar(char, true);
 

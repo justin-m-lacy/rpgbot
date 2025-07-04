@@ -1,3 +1,4 @@
+import { GenItem } from "rpg/builders/itemgen";
 import type { Char } from "rpg/char/char";
 import { AddValues } from "rpg/values/apply";
 import type { IMod } from "rpg/values/imod";
@@ -11,12 +12,12 @@ export class Race {
 	desc?: string;
 
 	/**
-	 * Initial values character. Not mods but
+	 * Initial values for char. Not mods but
 	 * permanent changes like starting gold.
 	 */
 	private createVals: Record<string, TValue> = {};
 
-	private _mods: Record<string, IMod> = {};
+	readonly mods: Record<string, IMod> = {};
 	private hitDie: number = 0;
 	private _expMod: number = 1;
 	readonly talents: string[] = [];
@@ -39,10 +40,15 @@ export class Race {
 	}
 
 	addCharMod(m: IMod) {
-		this._mods[m.id] = m;
+		this.mods[m.id] = m;
 
 	}
 
+	/**
+	 * Add an initial stat value set by race.
+	 * @param k 
+	 * @param v 
+	 */
 	addCreateValue(k: string, v: TValue) {
 		this.createVals[k] = v;
 	}
@@ -61,6 +67,7 @@ export class Race {
 		char.hp.setTo(cur + this.hitDie);
 
 		for (let i = this.items.length - 1; i >= 0; i--) {
+			GenItem(this.items[i], char.inv);
 
 		}
 
@@ -73,7 +80,6 @@ export class Race {
 	}
 
 	get HD() { return this.hitDie; }
-	get mods() { return this._mods }
 	get expMod() { return this._expMod; }
 
 }

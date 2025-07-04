@@ -1,10 +1,9 @@
+import { Npc } from 'rpg/monster/monster';
 import { ParseValues } from 'rpg/parsers/values';
 import { AddPath } from 'rpg/values/apply';
 import type { IMod } from 'rpg/values/imod';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import type { Path } from 'rpg/values/paths';
-import { Actor } from '../char/actor';
-import { Char } from '../char/char';
 import { ParseMods } from '../parsers/mods';
 import { type TValue } from '../values/types';
 
@@ -80,20 +79,22 @@ export class Effect {
 
 	get name() { return this.efx.name; }
 
-	get effect() { return this.efx; }
+	get template() { return this.efx; }
 	get dot() { return this.efx.dot; }
 
 	get mod() { return this.efx.mods }
 
 	get time() { return this._time; }
 
-	// source effect.
+	get id() { return this.efx.id }
+
+	// template for effect.
 	private readonly efx: ProtoEffect;
 
 	private _time: number;
 
 	// spell, npc, or action that created the effect.
-	private readonly source?: string;
+	readonly source?: string;
 
 
 	toJSON() {
@@ -114,11 +115,9 @@ export class Effect {
 
 	}
 
-	start(char: Actor) {
+	start<T extends Npc>(char: T) {
 
-		if (char instanceof Char) {
-			char.log(`${char.name} is affected by ${this.name}.`);
-		}
+		char.log(`${char.name} is affected by ${this.name}.`);
 
 		if (this.mod) {
 			ApplyMods(char, this.mod);
@@ -126,7 +125,7 @@ export class Effect {
 
 	}
 
-	end(char: Char) {
+	end<T extends Npc>(char: T) {
 
 		char.log(`${char.name}: ${this.name} has worn off.`);
 		if (this.mod) {
@@ -140,7 +139,7 @@ export class Effect {
 	 * @param char
 	 * @returns true if effect complete. 
 	 */
-	tick(char: Char) {
+	tick<T extends Npc>(char: T) {
 
 		if (!this._time) return false;
 
@@ -148,8 +147,6 @@ export class Effect {
 
 		const v = this.dot;
 		if (v) {
-
-			let s = `${char.name} affected by ${this.name}.`;
 
 			AddPath(char, v, 1);
 
@@ -166,7 +163,7 @@ export class Effect {
 
 			}*/
 
-			char.log(s);
+			char.log(`${char.name} affected by ${this.name}.`);
 
 
 		}

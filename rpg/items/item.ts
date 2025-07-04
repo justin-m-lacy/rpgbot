@@ -1,6 +1,5 @@
 import { randomUUID } from 'crypto';
 import { ItemData, ItemType } from 'rpg/parsers/items';
-import { Char } from "../char/char";
 
 export class Item {
 
@@ -111,29 +110,7 @@ export class Item {
 
 	toString() { return this.name }
 
-	static ItemMenu(a: Item[], start = 1) {
-
-		const len = a.length;
-		if (len === 0) return 'nothing';
-		else if (len === 1) return (start) + ') ' + a[0].name + (a[0].attach ? '\t[img]' : '');
-
-		let it = a[0];
-		let res = (start++) + ') ' + it.name;
-		if (it.attach) res += '\t[img]';
-
-		for (let i = 1; i < len; i++) {
-
-			it = a[i];
-			res += '\n' + (start++) + ') ' + it.name;
-			if (it.attach) res += '\t[img]';
-		}
-
-		return res;
-
-	}
-
 	/**
-	 *
 	 * @param a
 	 */
 	static DetailsList(a: Item[]) {
@@ -142,46 +119,5 @@ export class Item {
 		return a.map(it => it.getDetails()).join(",");
 
 	}
-
-	static Cook(it: Item) {
-
-		const cooking = require('../data/cooking.json');
-		const adjs = cooking.adjectives;
-
-		const adj = adjs[Math.floor(adjs.length * Math.random())];
-
-		if ('armor' in it) {
-			// @ts-ignore
-			it.armor -= 10;
-		} else if ('bonus' in it) {
-			// @ts-ignore
-			it.bonus -= 10;
-		}
-		it.type = ItemType.Food;
-
-		it.name = adj + ' ' + it.name;
-
-		const desc = cooking.descs[Math.floor(cooking.descs.length * Math.random())];
-		it.desc += ' ' + desc;
-
-	}
-
-}
-
-export const Craft = (char: Char, name: string, desc?: string, attach?: string) => {
-
-	const item = new Item(randomUUID({}), { name, desc });
-
-	if (attach) item.attach = attach;
-
-	item.maker = char.name;
-	item.created = Date.now();
-
-	const maxBonus = Math.max(char.level.value + char.getModifier('int') + 1, 2);
-	item.cost = Math.floor(maxBonus * Math.random());
-
-	char.addHistory('crafts');
-	char.addExp(2);
-	return char.addItem(item);
 
 }

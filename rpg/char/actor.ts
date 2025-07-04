@@ -2,6 +2,7 @@ import { Char } from 'rpg/char/char';
 import { TCharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
 import type { SexType } from 'rpg/social/gender';
+import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { EventEmitter } from 'stream';
@@ -95,7 +96,7 @@ export class Actor {
 	private readonly _at: Coord;
 	race: Race;
 	readonly stats: StatBlock = new StatBlock();
-	readonly effects: Effect[] = [];
+	readonly dots: Effect[] = [];
 	private _myClass?: GClass;
 	readonly talents: string[] = [];
 
@@ -157,7 +158,7 @@ export class Actor {
 
 	}
 
-	setMods(mods: ModBlock<typeof this>) {
+	private setMods(mods: ModBlock<typeof this>) {
 
 		this.applyMods(mods);
 	}
@@ -201,18 +202,31 @@ export class Actor {
 
 	}
 
-	addEffect(e: Effect | ProtoEffect) {
+	addDot(e: Effect | ProtoEffect) {
 
-		if (e instanceof ProtoEffect) {
-			e = new Effect(e);
-		}
-		this.effects.push(e);
+		if (e instanceof ProtoEffect) e = new Effect(e);
+
+		this.dots.push(e);
 		e.start(this);
 
 		this.events.emit('effectStart', this as any as Char, e);
 	}
 
-	rmEffect(e: Effect | ProtoEffect) { }
+	log(s: string) { console.log(s); }
+
+	rmDot(e: Effect | ProtoEffect) {
+
+		const ind = this.dots.findIndex(v => v.id === e.id);
+		if (ind >= 0) {
+
+			this.dots[ind].end(this);
+			quickSplice(this.dots, ind);
+
+		} else {
+
+		}
+
+	}
 
 	addGold(amt: number) { this.stats.gold += amt; }
 

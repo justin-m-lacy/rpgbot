@@ -1,8 +1,10 @@
-import { ProtoItems, RawPotionData } from 'rpg/builders/itemgen';
+import { AddProtoItems } from 'rpg/builders/itemgen';
 import { Potion } from 'rpg/items/potion';
-import { ItemType } from 'rpg/parsers/items';
+import { ItemData, ItemType } from 'rpg/parsers/items';
 
-export const allPots: { [name: string]: RawPotionData } = {};
+export type RawPotionData = (typeof import('../data/items/potions.json', { assert: { type: 'json' } }))[number] & ItemData;
+
+const potsByName: { [name: string]: RawPotionData } = {};
 const PotsByLevel: { [key: number]: RawPotionData[] } = [];
 
 export const PotsList = (level: number) => {
@@ -21,7 +23,7 @@ export const PotsList = (level: number) => {
 }
 
 export const GenPotion = (name: string) => {
-	return allPots[name] ? Potion.Decode(allPots[name]) : null;
+	return potsByName[name] ? Potion.Decode(potsByName[name]) : null;
 }
 
 export async function InitPotions() {
@@ -30,18 +32,19 @@ export async function InitPotions() {
 
 	for (let i = pots.length - 1; i >= 0; i--) {
 
-		const p: RawPotionData = pots[i];
+		const p = pots[i] as RawPotionData;
+		p.id ??= p.name.toLowerCase();
+
 		p.type = ItemType.Potion;	// assign type.
 
-		const name = p.name.toLowerCase();
-		ProtoItems[name] = allPots[name] = p;
+		potsByName[p.name] = potsByName[p.id] = p;
 
 		const a = PotsByLevel[p.level] ?? (PotsByLevel[p.level] = []);
 		a.push(p);
 
 	}
 
-	return allPots;
+	AddProtoItems(potsByName);
 
 }
 

@@ -1,13 +1,15 @@
 import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
 import { Maxable } from 'rpg/values/maxable';
-import { LifeState } from '../char/actor';
+import { Actor, LifeState } from '../char/actor';
 import * as stats from '../char/stats';
 import { DamageSrc } from '../formulas';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { Dice, roll } from '../values/dice';
 import { Biome } from '../world/loc';
+
+export type Npc = Actor | Monster;
 
 // var formulas to parse.
 const parseVars = ['hp', 'armor', 'toHit', 'mp'];
@@ -260,6 +262,12 @@ export class Monster {
 		this._toHit = 0;
 		this._state = 'alive';
 	}
+
+	/**
+	 * Compatibility for logging.
+	 * @param str 
+	 */
+	log(str: string) { }
 
 	skillRoll() { return roll(1, 5 * (this.level + 4)); }
 

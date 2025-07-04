@@ -13,7 +13,7 @@ export const GenWeapon = (lvl: number) => {
 	const tmp = BaseWeapons[Math.floor(BaseWeapons.length * Math.random())];
 
 	if (!tmp) {
-		console.log('weapon template null.');
+		console.warn('weapon template null.');
 		return null;
 	}
 

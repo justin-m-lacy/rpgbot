@@ -8,12 +8,6 @@ export const GetAdjective = () => {
 	return randElm(FoodInfo.adjectives);
 }
 
-const LoadFoods = async () => {
-
-	const Raws = (await import('../data/cooking.json', { assert: { type: 'json' } })).default;
-
-}
-
 export const TryEat = (char: Char, it: Item) => {
 
 	if (it.type !== ItemType.Food) {
@@ -21,10 +15,11 @@ export const TryEat = (char: Char, it: Item) => {
 		return false;
 	}
 
-	const cook = require('../data/cooking.json');
 	char.addHistory('eat');
 
-	let resp = cook.response[Math.floor(cook.response.length * Math.random())];
+	let resp = FoodInfo.response[Math.floor(
+		FoodInfo.response.length * Math.random())
+	];
 
 	const amt = char.heal(
 		Math.floor(5 * Math.random()) + char.level.valueOf());
@@ -35,5 +30,28 @@ export const TryEat = (char: Char, it: Item) => {
 	char.log(resp);
 
 	return true;
+
+}
+
+export const Cook = (it: Item) => {
+
+	const cooking = require('../data/cooking.json');
+	const adjs = cooking.adjectives;
+
+	const adj = adjs[Math.floor(adjs.length * Math.random())];
+
+	if ('armor' in it) {
+		// @ts-ignore
+		it.armor -= 10;
+	} else if ('bonus' in it) {
+		// @ts-ignore
+		it.bonus -= 10;
+	}
+	it.type = ItemType.Food;
+
+	it.name = adj + ' ' + it.name;
+
+	const desc = cooking.descs[Math.floor(cooking.descs.length * Math.random())];
+	it.desc += ' ' + desc;
 
 }

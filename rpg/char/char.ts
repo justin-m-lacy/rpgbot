@@ -1,4 +1,4 @@
-import { TryEat } from 'rpg/char/cooking';
+import { Cook, TryEat } from 'rpg/char/cooking';
 import { GClass, Race } from 'rpg/char/race';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
@@ -175,7 +175,7 @@ export class Char extends Actor {
 		if (item.type === ItemType.Food) return item.name + ' is already food.';
 
 		this.addHistory('cook');
-		Item.Cook(item);
+		Cook(item);
 		return `${this.name} cooks '${item.name}'`;
 
 	}
