@@ -25,15 +25,16 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `You do not know the spell, ${spellName}`);
 		}
 
-		const who = m.options.getString('at');
-		if (!who) {
+		const at = m.options.getString('at');
+		if (!at) {
 			if ((spell.target & (ActTarget.all | ActTarget.none | ActTarget.self)) === 0) {
 				return SendPrivate(m, `Cast ${spell.name} at what?`,)
 			}
 		}
-		const targ = who ? await rpg.getActor(char, who) : undefined;
-		if (who && !targ) {
-			return SendPrivate(m, `'${who}' not found.`);
+		const targ = spell.target === ActTarget.self ? char :
+			(at ? await rpg.getActor(char, at) : undefined);
+		if (at && !targ) {
+			return SendPrivate(m, `'${at}' not found.`);
 		}
 
 

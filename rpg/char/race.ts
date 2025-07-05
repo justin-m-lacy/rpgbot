@@ -2,6 +2,7 @@ import { GenItem } from "rpg/builders/itemgen";
 import type { Char } from "rpg/char/char";
 import { AddValues } from "rpg/values/apply";
 import type { IMod } from "rpg/values/imod";
+import { NewPath, Path } from "rpg/values/paths";
 import type { TValue } from "rpg/values/types";
 
 export class Race {
@@ -15,7 +16,7 @@ export class Race {
 	 * Initial values for char. Not mods but
 	 * permanent changes like starting gold.
 	 */
-	private createVals: Record<string, TValue> = {};
+	private createVals: Path<TValue> = NewPath('creates');
 
 	readonly mods: Record<string, IMod> = {};
 	private hitDie: number = 0;

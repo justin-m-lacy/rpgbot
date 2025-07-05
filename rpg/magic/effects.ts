@@ -1,6 +1,6 @@
 import { Npc } from 'rpg/monster/monster';
 import { ParseValues } from 'rpg/parsers/values';
-import { AddPath } from 'rpg/values/apply';
+import { AddValues } from 'rpg/values/apply';
 import type { IMod } from 'rpg/values/imod';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import type { Path } from 'rpg/values/paths';
@@ -150,7 +150,7 @@ export class Effect {
 
 		if (this.dot) {
 
-			AddPath(char, this.dot, 1);
+			AddValues(char, this.dot, 1);
 			char.log(`${char.name} affected by ${this.name}.`);
 
 

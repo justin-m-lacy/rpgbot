@@ -196,7 +196,7 @@ export const Craft = (char: Char, name: string, desc?: string, embed?: string) =
 	item.created = Date.now();
 
 	const maxBonus = Math.max(char.level.value + char.getModifier('int') + 1, 2);
-	item.cost = Math.floor(maxBonus * Math.random());
+	item.price = Math.floor(maxBonus * Math.random());
 
 	char.addHistory('crafts');
 	char.addExp(2);

@@ -62,7 +62,7 @@ export class Weapon extends Wearable {
 
 			w.name = mat.name + ' ' + w.name;
 			w.material = mat.name;
-			w.cost = mat.priceMod ? tmp.cost * mat.priceMod : tmp.cost;
+			w.price = mat.priceMod ? tmp.cost * mat.priceMod : tmp.cost;
 
 			w.damage.bonus += mat.dmg || mat.bonus || 0;
 		}
@@ -90,7 +90,7 @@ export class Weapon extends Wearable {
 	}
 
 	getDetails() {
-		return `${this.name} dmg: ${this.damage} hitBonus: ${this.toHit} price: ${this.cost}\n` + super.getDetails();
+		return `${this.name} dmg: ${this.damage} hitBonus: ${this.toHit} price: ${this.price}\n` + super.getDetails();
 	}
 
 	/**

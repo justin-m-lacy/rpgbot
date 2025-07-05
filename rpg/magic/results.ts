@@ -1,6 +1,6 @@
 import { TestEqual, type RawIf, type TRequire } from "rpg/magic/requires";
 import { ParseValue } from "rpg/parsers/values";
-import { AddPath } from "rpg/values/apply";
+import { AddValues } from "rpg/values/apply";
 import { ParsePaths, type Path } from "rpg/values/paths";
 import type { TValue } from "rpg/values/types";
 
@@ -84,7 +84,7 @@ export class Result<T extends object> {
 		}
 
 		if (this.add) {
-			AddPath(targ, this.add, dt);
+			AddValues(targ, this.add, dt);
 		}
 
 		if (this.set) {

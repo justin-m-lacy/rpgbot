@@ -1,5 +1,8 @@
 import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
+import { Effect, ProtoEffect } from 'rpg/magic/effects';
+import { quickSplice } from 'rpg/util/array';
+import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
 import { Actor, LifeState } from '../char/actor';
 import * as stats from '../char/stats';
@@ -178,6 +181,7 @@ export class Monster {
 			level: this._level,
 			hp: this._hp.toJSON(),
 			curHp: this._hp,
+			dots: this.dots.length > 0 ? this.dots : undefined,
 			armor: this._armor,
 			toHit: this._toHit,
 			state: this._state,
@@ -257,6 +261,8 @@ export class Monster {
 
 	private _held?: Item[];
 
+	readonly dots: Effect[] = [];
+
 	constructor(id?: string) {
 		this.id = id ?? randomUUID();
 		this._toHit = 0;
@@ -275,6 +281,23 @@ export class Monster {
 		return this._talents?.includes(s);
 	}
 
+	addDot(e: Effect | ProtoEffect) {
+		if (e instanceof ProtoEffect) e = new Effect(e);
+
+		this.dots.push(e);
+		e.start(this);
+
+	}
+	rmDot(e: Effect | ProtoEffect) {
+		const ind = this.dots.findIndex(v => v.id === e.id);
+		if (ind >= 0) {
+
+			this.dots[ind].end(this);
+			quickSplice(this.dots, ind);
+
+		}
+	}
+
 	addItem(it: Item) {
 
 		if (!this._held) this._held = [];
@@ -287,31 +310,27 @@ export class Monster {
 		}
 		return null;
 	}
-	takeItem(which: number | string | Item, sub?: number | string) {
+	takeItem(which: number | string | Item) {
 
-		if (this._held) {
+		if (!this._held) return null;
 
-			if (typeof which === 'string') {
+		if (typeof which === 'string') {
 
-				const asInt = parseInt(which);
-				if (isNaN(asInt)) {
-					which = which.toLowerCase();
-					which = this._held.findIndex(v => v.name == which);
-				} else which = asInt;
+			if (!IsInt(which)) {
 
+				which = which.toLowerCase();
+				which = this._held.findIndex(v => v.name == which);
 
-			} else if (typeof which === 'object') {
-				which = this._held.indexOf(which);
-			}
+			} else which = Number.parseInt(which);
 
-			if (which >= this._held.length || which < 0) {
-				return null;
-			}
-			return this._held.splice(which)[0];
-
-
+		} else if (typeof which === 'object') {
+			which = this._held.indexOf(which);
 		}
-		return null;
+
+		if (which >= this._held.length || which < 0) {
+			return null;
+		}
+		return this._held.splice(which)[0];
 
 	}
 
@@ -337,7 +356,6 @@ export class Monster {
 		this._hp.add(-dmg);
 		if (this._hp.value <= 0) {
 			this._state = 'dead';
-			console.log('creature dead.');
 			return true;
 		}
 		return false;

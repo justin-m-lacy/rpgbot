@@ -3,9 +3,11 @@ import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
 import { Craft } from 'rpg/builders/itemgen';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
+import { Spell } from 'rpg/magic/spell';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
+import { AddValues, HasValues } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
 import { Actor } from './char/actor';
@@ -15,7 +17,7 @@ import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
 import { Wearable } from './items/wearable';
-import { Monster } from './monster/monster';
+import { Monster, Npc } from './monster/monster';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
@@ -99,7 +101,7 @@ export class Game {
 
 	}
 
-	private tickDots(char: Char) {
+	private tickDots(char: Char | Monster) {
 
 		const efx = char.dots;
 		if (!efx) return;
@@ -115,6 +117,89 @@ export class Game {
 			}
 
 		}
+
+	}
+
+
+	brew(this: Game, char: Char, itemName: string, imgURL?: string) {
+
+		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
+
+		const pot = GenPotion(itemName);
+		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
+
+		const s = this.skillRoll(char) + char.getModifier('wis');
+		if (s < 10 * pot.level) {
+			return char.output(`${char.name} failed to brew ${itemName}.`);
+		}
+
+		if (pot.level) char.addExp(2 * pot.level);
+		char.addHistory('brew');
+		const ind = char.addItem(pot);
+
+		return char.output(`${char.name} brewed ${itemName}. (${ind})`);
+
+	}
+
+	async cast(this: Game, char: Char, spell: Spell, targ?: Npc) {
+
+		// pay cast.
+		if (spell.cost) {
+			if (HasValues(char, spell.cost)) {
+
+				AddValues(char, spell.cost);
+
+			} else {
+				char.output(`Not enough mana to cast ${spell.name}`);
+				return;
+			}
+		}
+
+		if (targ) {
+
+			if (spell.dmg) {
+				targ.hit(spell.dmg.value, spell.kind);
+			}
+			if (spell.dot) {
+				targ.addDot(spell.dot);
+			}
+
+		}
+
+	}
+
+	cook(this: Game, char: Char, wot: string | number | Item) {
+
+		return char.output(char.cook(wot));
+
+	}
+
+	craft(this: Game, char: Char, itemName: string, desc?: string, imgURL?: string) {
+
+		const ind = Craft(char, itemName, desc, imgURL);
+		return char.output(`${char.name} crafted ${itemName}. (${ind})`);
+
+	}
+
+	destroy(this: Game, char: Char, first: string | number, end?: string | number | null) {
+
+		if (end) {
+
+			const items = char.takeRange(first, end);
+			if (!items) return char.output('Invalid item range.');
+			return char.output(items.length + ' items destroyed.');
+
+		} else {
+
+			const item = char.takeItem(first);
+			if (!item) return char.output(`'${first}' not in inventory.`);
+			if (Array.isArray(item)) {
+				return char.output(`${item.length} items are gone forever.`);
+			} else {
+				return char.output(item.name + ' is gone forever.');
+			}
+
+		} //
 
 	}
 
@@ -163,10 +248,6 @@ export class Game {
 
 		return char.output(`${char.name}: ${loc.look(char)}`);
 
-	}
-
-	useLoc(char: Char, wot: ItemIndex) {
-		return this.world.useLoc(char, wot);
 	}
 
 	getParty(char: Char) { return this._charParties[char.name]; }
@@ -352,27 +433,6 @@ export class Game {
 
 	}
 
-	destroy(this: Game, char: Char, first: string | number, end?: string | number | null) {
-
-		if (end) {
-
-			const items = char.takeRange(first, end);
-			if (!items) return char.output('Invalid item range.');
-			return char.output(items.length + ' items destroyed.');
-
-		} else {
-
-			const item = char.takeItem(first);
-			if (!item) return char.output(`'${first}' not in inventory.`);
-			if (Array.isArray(item)) {
-				return char.output(`${item.length} items are gone forever.`);
-			} else {
-				return char.output(item.name + ' is gone forever.');
-			}
-
-		} //
-
-	}
 
 	sell(this: Game, char: Char, first: string | number, end?: string | number | null) {
 
@@ -386,38 +446,10 @@ export class Game {
 
 	}
 
-	cook(this: Game, char: Char, wot: string | number | Item) {
-
-		return char.output(char.cook(wot));
-
+	useLoc(char: Char, wot: ItemIndex) {
+		return this.world.useLoc(char, wot);
 	}
 
-	brew(this: Game, char: Char, itemName: string, imgURL?: string) {
-
-		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
-
-		const pot = GenPotion(itemName);
-		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
-
-		const s = this.skillRoll(char) + char.getModifier('wis');
-		if (s < 10 * pot.level) {
-			return char.output(`${char.name} failed to brew ${itemName}.`);
-		}
-
-		if (pot.level) char.addExp(2 * pot.level);
-		char.addHistory('brew');
-		const ind = char.addItem(pot);
-
-		return char.output(`${char.name} brewed ${itemName}. (${ind})`);
-
-	}
-
-	craft(this: Game, char: Char, itemName: string, desc?: string, imgURL?: string) {
-
-		const ind = Craft(char, itemName, desc, imgURL);
-		return char.output(`${char.name} crafted ${itemName}. (${ind})`);
-
-	}
 
 	unequip(this: Game, char: Char, slot?: string) {
 

@@ -84,7 +84,7 @@ export const sellRange = (src: Char, start: ItemIndex, end: ItemIndex) => {
 	let gold = 0;
 
 	for (let i = arr.length - 1; i >= 0; i--) {
-		gold += isNaN(arr[i].cost) ? (Math.random() < 0.5 ? mod : 0) : arr[i].cost + mod;
+		gold += isNaN(arr[i].price) ? (Math.random() < 0.5 ? mod : 0) : arr[i].price + mod;
 	}
 
 	src.addGold(gold);
@@ -105,7 +105,7 @@ export const sell = (src: Char, wot: ItemPicker, end?: ItemIndex | null) => {
 
 	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
 
-	const gold = isNaN(it.cost) ? (Math.random() < 0.5 ? mod : 0) : it.cost + mod;
+	const gold = isNaN(it.price) ? (Math.random() < 0.5 ? mod : 0) : it.price + mod;
 	src.addGold(gold);
 	return it.name + ' sold for ' + gold + ' gold.';
 

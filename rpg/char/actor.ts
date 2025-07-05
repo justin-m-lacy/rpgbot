@@ -222,8 +222,6 @@ export class Actor {
 			this.dots[ind].end(this);
 			quickSplice(this.dots, ind);
 
-		} else {
-
 		}
 
 	}

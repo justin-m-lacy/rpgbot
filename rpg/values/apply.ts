@@ -26,7 +26,7 @@ export const SetValues = (targ: any & object, apply: Path<TValue>) => {
 
 }
 
-export const AddValues = (dest: Record<string, any>, vals: Record<string, Numeric>) => {
+const AddObjValues = (dest: Record<string, any>, vals: Record<string, Numeric>) => {
 
 	for (let k in vals) {
 
@@ -57,7 +57,7 @@ export const AddValues = (dest: Record<string, any>, vals: Record<string, Numeri
  * @returns 
  */
 export const HasValues = (dest: Record<string, any>,
-	costs: Path<Numeric | TValue>,
+	costs: Path<Numeric>,
 	dt: number = 1) => {
 
 	for (const key in costs) {
@@ -97,10 +97,10 @@ export const HasValues = (dest: Record<string, any>,
  * @param dt - added value multiplier. usually timestep.
  * @param ctx - source of rlist. useful for debugging or special triggers.
  */
-export const AddPath = (
+export const AddValues = (
 	dest: Record<string, any>,
 	rlist: Path<Numeric | TValue>,
-	dt: number,
+	dt: number = 1
 ) => {
 
 	for (const key in rlist) {
@@ -110,7 +110,7 @@ export const AddPath = (
 
 		if (IsPath(amt)) {
 
-			AddPath(targ ?? createValue(dest, key, targ), amt, dt);
+			AddValues(targ ?? createValue(dest, key, targ), amt, dt);
 
 		} else if (IsValue(amt) || typeof amt === 'number') {
 

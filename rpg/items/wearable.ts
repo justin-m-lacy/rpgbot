@@ -67,7 +67,7 @@ export class Wearable extends Item {
 		const it = new Wearable(randomUUID(), name);
 
 		it.material = material.name;
-		it.cost = material.priceMod ? base.cost * material.priceMod : base.cost;
+		it.price = material.priceMod ? base.cost * material.priceMod : base.cost;
 
 		it.armor = material.bonus ? base.armor + material.bonus : base.armor;
 		it.slot = base.slot;
@@ -115,7 +115,7 @@ export class Wearable extends Item {
 	}
 
 	getDetails() {
-		return this.name + '\t armor: ' + this.armor + '\t price: ' + this.cost + '\n' + super.getDetails();
+		return this.name + '\t armor: ' + this.armor + '\t price: ' + this.price + '\n' + super.getDetails();
 	}
 
 

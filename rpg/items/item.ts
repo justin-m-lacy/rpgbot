@@ -13,8 +13,9 @@ export class Item {
 
 	level: number = 0
 
-	get cost() { return this._cost; }
-	set cost(v) { this._cost = v; }
+	/// price in gold.
+	get price() { return this._price; }
+	set price(v) { this._price = v; }
 
 	get embed() { return this._embed; }
 	set embed(v) { this._embed = v; }
@@ -26,7 +27,7 @@ export class Item {
 			name: this.name,
 			desc: this.desc,
 			type: this.type,
-			cost: this._cost,
+			cost: this._price,
 			level: this._level || undefined,
 			embed: this._embed,
 			maker: this.maker,
@@ -45,7 +46,7 @@ export class Item {
 		it ??= new Item(json.id);
 		it.name = json.name;
 
-		if (json.cost) it.cost = json.cost;
+		if (json.cost) it.price = json.cost;
 		if (json.embed) it.embed = json.embed;
 		if (json.maker) it.maker = json.maker;
 		if (json.inscrip) it.inscrip = json.inscrip;
@@ -67,7 +68,7 @@ export class Item {
 
 	/// image attachment
 	private _embed?: string;
-	private _cost: number = 0;
+	private _price: number = 0;
 
 	/**
 	 * @property creation timestamp.
