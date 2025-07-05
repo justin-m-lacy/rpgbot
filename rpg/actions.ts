@@ -1,4 +1,4 @@
-import { LifeState } from 'rpg/char/actor';
+import { CharState } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { Game } from './game';
 
@@ -156,7 +156,7 @@ export const GameActions = {
 /**
  * Actions blocked by each character state.
 */
-export const Blockers: Partial<{ [Property in LifeState]: any }> = {
+export const Blockers: Partial<{ [Property in CharState]: any }> = {
 	dead: {
 		attack: 1,
 		brew: 1,

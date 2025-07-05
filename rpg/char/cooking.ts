@@ -1,6 +1,6 @@
 import { randElm } from '@/utils/jsutils';
 import type { Char } from 'rpg/char/char';
-import { type Item } from 'rpg/items/item';
+import { Item } from 'rpg/items/item';
 import { ItemType } from 'rpg/parsers/items';
 import FoodInfo from '../data/cooking.json';
 
@@ -33,7 +33,7 @@ export const TryEat = (char: Char, it: Item) => {
 
 }
 
-export const Cook = (it: Item) => {
+export const CookItem = (it: Item) => {
 
 	const cooking = require('../data/cooking.json');
 	const adjs = cooking.adjectives;

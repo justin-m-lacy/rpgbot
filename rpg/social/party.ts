@@ -46,7 +46,7 @@ export class Party extends SocialGroup {
 		for (let i = this.roster.length - 1; i >= 0; i--) {
 
 			const char = await this.cache.fetch(this.roster[i]);
-			if (char && char.isAlive()) return 'alive';
+			if (char?.isAlive()) return 'alive';
 
 		} //
 		return 'dead';

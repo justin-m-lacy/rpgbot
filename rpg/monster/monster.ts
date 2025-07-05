@@ -1,149 +1,20 @@
 import { randomUUID } from 'crypto';
-import { Formula } from 'formulic';
+import { Game } from 'rpg/game';
 import { Effect, ProtoEffect } from 'rpg/magic/effects';
+import { MonsterData } from 'rpg/parsers/monster';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
-import { Actor, LifeState } from '../char/actor';
+import { Actor, CharState } from '../char/actor';
 import * as stats from '../char/stats';
-import { DamageSrc } from '../formulas';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
-import { Dice, roll } from '../values/dice';
+import { roll } from '../values/dice';
 import { Biome } from '../world/loc';
 
 export type Npc = Actor | Monster;
 
-// var formulas to parse.
-const parseVars = ['hp', 'armor', 'toHit', 'mp'];
-
-// monster template objects.
-const templates: { [name: string]: MonsterTemplate } = {};
-const byLevel: (MonsterTemplate[])[] = [];
-
-const initTemplates = async () => {
-
-	const raw = (await import('../data/npc/monster.json', { assert: { type: 'json' } })).default;
-
-	for (let k = raw.length - 1; k >= 0; k--) {
-
-		const t = parseTemplate(raw[k]);
-
-		templates[t.name] = t;
-
-		const a = byLevel[Math.floor(t.level)] ?? (byLevel[Math.floor(t.level)] = []);
-		a.push(t);
-
-	}
-}
-initTemplates();
-
-function parseTemplate(json: any) {
-
-	const t = Object.assign({}, json);
-
-	for (let i = parseVars.length - 1; i >= 0; i--) {
-
-		const v = parseVars[i];
-		const s = t[v];
-		if (typeof (s) !== 'string' || !Number.isNaN(s)) continue;
-
-		t[v] = Dice.Parse(s);
-
-	}
-	if (t.dmg) { t.dmg = DamageSrc.Decode(t.dmg); }
-	if (t.weap) {
-		t.weap = Weapon.FromData(t.weap);
-	}
-
-	return t;
-
-}
-
-const create = (template: any) => {
-
-	const m = new Monster();
-
-	for (const k in template) {
-
-		// roll data formulas into concrete numbers.
-		var v = template[k];
-		if (v instanceof Formula) {
-			// @ts-ignore
-			m[k] = v.eval(m);
-		} else if (v instanceof Dice) {
-			// @ts-ignore
-			m[k] = v.roll();
-		} else {
-			// @ts-ignore
-			m[k] = v;
-		}
-
-	} //for
-
-	return m;
-
-}
-
-
-export type MonsterTemplate = {
-
-	biome?: Biome;
-
-	name: string;
-	level: number;
-	kind?: string;
-	desc?: string;
-	hp: string | number;
-	toHit: number;
-
-	curHp: number;
-	maxHp: number;
-	armor: number;
-	evil: number;
-	size: string;
-	drops?: any;
-	dmg?: any;
-	weap?: any;
-
-}
-
 export class Monster {
-
-	static RandMonster(lvl: number, biome?: string) {
-
-		lvl = Math.floor(lvl);
-
-		if (biome) {
-
-			let ind, start;
-			do {
-
-				const a = byLevel[lvl];
-				if (!a || a.length === 0) continue;
-
-				ind = start = Math.floor(a.length * Math.random());
-				do {
-
-					const mons = a[ind];
-					if (!mons.biome || mons.biome === biome ||
-						(Array.isArray(mons.biome) && !mons.biome.includes(biome)))
-						return create(mons);
-					ind = (ind + 1) % a.length;
-
-				} while (ind !== start);
-
-			} while (--lvl >= 0);
-
-		}
-
-		do {
-			const a = byLevel[lvl];
-			if (a && a.length > 0) return create(a[Math.floor(a.length * Math.random())]);
-
-		} while (--lvl >= 0);
-
-	}
 
 	static Decode(json: any) {
 
@@ -235,10 +106,12 @@ export class Monster {
 	get state() { return this._state; }
 	set state(v) { this._state = v; }
 
+	isAlive() { return this._state !== CharState.Dead; }
+
 	biome?: Biome;
 
 	private _toHit: number;
-	private _state: LifeState;
+	private _state: CharState;
 	private _kind?: string;
 
 	name: string = 'unknown';
@@ -253,7 +126,7 @@ export class Monster {
 	private _evil: number = 0;
 	private _size!: string;
 	private _drops?: any;
-	private _template?: MonsterTemplate;
+	private _template?: MonsterData;
 	private _dmg?: any;
 	private _weap?: any;
 	private _attacks: any;
@@ -266,7 +139,7 @@ export class Monster {
 	constructor(id?: string) {
 		this.id = id ?? randomUUID();
 		this._toHit = 0;
-		this._state = 'alive';
+		this._state = CharState.Alive;
 	}
 
 	/**
@@ -281,11 +154,13 @@ export class Monster {
 		return this._talents?.includes(s);
 	}
 
-	addDot(e: Effect | ProtoEffect) {
+	addDot(e: Effect | ProtoEffect, game: Game) {
 		if (e instanceof ProtoEffect) e = new Effect(e);
 
 		this.dots.push(e);
 		e.start(this);
+
+		game.addLiveNpc(this);
 
 	}
 	rmDot(e: Effect | ProtoEffect) {
@@ -344,7 +219,7 @@ export class Monster {
 	// combat & future compatibility.
 	getModifier(stat: string) { return 0; }
 	addExp(exp: number) { }
-	updateState() { if (this._hp.value <= 0) this._state = 'dead'; }
+	updateState() { if (this._hp.value <= 0) this._state = CharState.Dead; }
 	// used in combat
 	getState() { return this._state; }
 
@@ -355,7 +230,7 @@ export class Monster {
 
 		this._hp.add(-dmg);
 		if (this._hp.value <= 0) {
-			this._state = 'dead';
+			this._state = CharState.Dead;
 			return true;
 		}
 		return false;

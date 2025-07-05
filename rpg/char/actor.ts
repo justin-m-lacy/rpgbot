@@ -14,16 +14,15 @@ import { Coord } from '../world/loc';
 import { Race, type GClass } from './race';
 import { StatBlock, type StatMod } from './stats';
 
-enum CharState {
+export enum CharState {
 	Dead = 'dead',
 	Alive = 'alive'
 }
-export type LifeState = 'alive' | 'dead';
 
 
 export class Actor {
 
-	// used to abstract await state in combat.
+	// used to abstract awaiting state in combat.
 	getState() { return this._state; }
 
 	getStatus() { return `${this.hp.value}/${this.hp.max} [${this._state}]` }
@@ -108,6 +107,8 @@ export class Actor {
 	sex: SexType = 'm';
 
 	guild?: string;
+
+	get id() { return this.name }
 
 	/**
 	 * Current mods applied to char.
@@ -212,8 +213,6 @@ export class Actor {
 		this.events.emit('effectStart', this as any as Char, e);
 	}
 
-	log(s: string) { console.log(s); }
-
 	rmDot(e: Effect | ProtoEffect) {
 
 		const ind = this.dots.findIndex(v => v.id === e.id);
@@ -225,6 +224,8 @@ export class Actor {
 		}
 
 	}
+
+	log(s: string) { console.log(s); }
 
 	addGold(amt: number) { this.stats.gold += amt; }
 

@@ -1,11 +1,9 @@
-import { Cook, TryEat } from 'rpg/char/cooking';
 import { GClass, Race } from 'rpg/char/race';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { SpellList } from 'rpg/magic/spelllist';
-import { ItemType } from 'rpg/parsers/items';
 import { Log } from '../display/log';
-import { Inventory, ItemPicker } from '../inventory';
+import { Inventory } from '../inventory';
 import { Item } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
 import { roll } from '../values/dice';
@@ -35,8 +33,6 @@ export class Char extends Actor {
 
 	get evil() { return +this.stats.evil.value; }
 	set evil(v) { this.stats.evil.setTo(v); }
-
-	get id() { return this.name }
 
 	toJSON() {
 
@@ -147,40 +143,6 @@ export class Char extends Actor {
 	}
 
 	/**
-	 * Eat an item from inventory.
-	 * @param what
-	 * @returns result message.
-	 */
-	eat(what: ItemIndex) {
-
-		const item = this.inv.get(what);
-		if (!item) {
-			this.log('Item not found.');
-		} else if (!TryEat(this, item)) {
-			// return to inventory.
-			this.inv.take(item);
-		}
-
-	}
-
-	/**
-	 *
-	 * @param what - what to cook.
-	 */
-	cook(what: ItemPicker) {
-
-		let item = what instanceof Item ? what : this.inv.get(what);
-		if (!item) return 'Item not found.';
-
-		if (item.type === ItemType.Food) return item.name + ' is already food.';
-
-		this.addHistory('cook');
-		Cook(item);
-		return `${this.name} cooks '${item.name}'`;
-
-	}
-
-	/**
 	 *
 	 * @param what
 	 * @returns Error message or true.
@@ -239,7 +201,7 @@ export class Char extends Actor {
 
 	}
 
-	applyEquip(it: Wearable) {
+	private applyEquip(it: Wearable) {
 		if (it.mods) {
 			it.mods.apply(this.stats);
 		}
@@ -250,7 +212,6 @@ export class Char extends Actor {
 	}
 
 	/**
-	 *
 	 * @param wot
 	 */
 	removeEquip(wot: Item | Item[]) {
@@ -280,12 +241,12 @@ export class Char extends Actor {
 	listEquip() { return this._equip.getList(); }
 
 	/**
-	 * Removes and returns a random item, or null.
+	 * Remove and returns a random item, or null.
 	 */
 	randItem() { return this.inv.randItem(); }
 
 	/**
-	 * Get an item from inventory without removing it.
+	 * Get item from inventory without removing it.
 	 * @param which
 	 */
 	getItem(which: number | string, sub?: number | string) {

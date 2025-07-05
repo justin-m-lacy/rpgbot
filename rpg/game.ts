@@ -1,9 +1,11 @@
 import Cache from 'archcache';
 import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
 import { Craft } from 'rpg/builders/itemgen';
+import { CookItem, TryEat } from 'rpg/char/cooking';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { Spell } from 'rpg/magic/spell';
+import { ItemType } from 'rpg/parsers/items';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
@@ -34,6 +36,7 @@ export const GetLore = (wot?: string) => {
 
 }
 
+const NPC_UPDATE_MS = 5000;
 
 
 export class Game {
@@ -50,6 +53,13 @@ export class Game {
 	readonly actions = GameActions;
 
 	/**
+	 * Npcs with dots or actions in progress.
+	 */
+	readonly liveNpcs: Record<string, Npc> = {};
+
+	private updateTimer: NodeJS.Timeout | null = null;
+
+	/**
 	 *
 	 * @param rpg
 	 */
@@ -60,6 +70,36 @@ export class Game {
 		this.charCache = charCache;
 
 		this.guilds = new GuildManager(cache.subcache('guilds'));
+
+		this.updateTimer = setInterval(() => this.updateNpcs(), NPC_UPDATE_MS);
+
+	}
+
+	/**
+	 * Add npc to list of live-updating npcs.
+	 * @param npc 
+	 */
+	addLiveNpc(npc: Npc) {
+		this.liveNpcs[npc.id] = npc;
+	}
+
+	private updateNpcs() {
+
+		for (const k in this.liveNpcs) {
+
+			const npc = this.liveNpcs[k];
+			if (npc.state === 'dead') {
+				delete this.liveNpcs[k];
+				continue;
+			}
+
+			this.tickDots(npc)
+
+			if (npc.dots.length === 0) {
+				delete this.liveNpcs[k];
+			}
+
+		}
 
 	}
 
@@ -101,7 +141,7 @@ export class Game {
 
 	}
 
-	private tickDots(char: Char | Monster) {
+	private tickDots(char: Npc) {
 
 		const efx = char.dots;
 		if (!efx) return;
@@ -161,16 +201,23 @@ export class Game {
 				targ.hit(spell.dmg.value, spell.kind);
 			}
 			if (spell.dot) {
-				targ.addDot(spell.dot);
+				targ.addDot(spell.dot, this);
 			}
 
 		}
 
 	}
 
-	cook(this: Game, char: Char, wot: string | number | Item) {
+	cook(this: Game, char: Char, what: string | number | Item) {
 
-		return char.output(char.cook(wot));
+		let item = what instanceof Item ? what : char.inv.get(what);
+		if (!item) return 'Item not found.';
+
+		if (item.type === ItemType.Food) return item.name + ' is already food.';
+
+		char.addHistory('cook');
+		CookItem(item);
+		return `${char.name} cooks '${item.name}'`;
 
 	}
 
@@ -614,8 +661,16 @@ export class Game {
 
 	}
 
-	eat(this: Game, char: Char, wot: ItemIndex) {
-		char.eat(wot);
+	eat(this: Game, char: Char, what: ItemIndex) {
+
+		const item = char.inv.get(what);
+		if (!item) {
+			char.log('Item not found.');
+		} else if (!TryEat(char, item)) {
+			// return to inventory.
+			char.inv.take(item);
+		}
+
 		return char.output();
 
 	}

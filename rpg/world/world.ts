@@ -1,4 +1,5 @@
 import Cache from 'archcache';
+import { RandMonster } from 'rpg/parsers/monster';
 import { GenLoc, GenNewLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
 import { ItemIndex, ItemPicker } from '../items/container';
@@ -14,21 +15,21 @@ const BLOCK_SIZE = 16;
 
 export class World {
 
-	readonly cache: Cache;
+	readonly cache: Cache<Block>;
 
 	/**
 	 * Note that the World is using the Context cache, not a special rpg cache.
 	 * Why?
-	 * @param {} fcache
+	 * @param fcache
 	 */
-	constructor(fcache: Cache) {
+	constructor(fcache: Cache<Block>) {
 
 		this.cache = fcache;
 		this.initWorld();
 
 	}
 
-	async initWorld() {
+	private async initWorld() {
 		await this.getOrGen(new Coord(0, 0));
 	}
 
@@ -318,7 +319,7 @@ export class World {
 		const dev = Math.random() - 0.5;
 		const lvl = Math.max(Math.floor(loc.norm / 20 + 10 * dev), 0);
 
-		const m = Monster.RandMonster(lvl, loc.biome);
+		const m = RandMonster(lvl, loc.biome);
 		if (!m) return;
 
 		loc.addNpc(m);
@@ -388,6 +389,8 @@ export class World {
 	async quickSave(loc: Loc) {
 
 		const block = await this.getBlock(loc, true);
+		if (!block) return;
+
 		block.setLoc(this.coordKey(loc.coord), loc);
 
 		this.cache.cache(block.key, block);
@@ -396,6 +399,7 @@ export class World {
 	async forceSave(loc: Loc) {
 
 		const block = await this.getBlock(loc, true);
+		if (!block) return;
 
 		block.setLoc(this.coordKey(loc.coord), loc);
 		return this.cache.store(block.key, block)
