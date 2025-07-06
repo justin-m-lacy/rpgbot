@@ -306,7 +306,7 @@ export class Loc {
 			const m = Monster.Decode(a[i]);
 			if (m) loc.addNpc(m);
 
-		} //for
+		}
 
 	}
 

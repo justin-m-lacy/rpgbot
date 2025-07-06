@@ -1,10 +1,11 @@
 import { randomUUID } from 'crypto';
 import { Game } from 'rpg/game';
 import { Effect, ProtoEffect } from 'rpg/magic/effects';
-import { MonsterData } from 'rpg/parsers/monster';
+import { GetMonster, MonsterData } from 'rpg/parsers/monster';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
+import { Numeric } from 'rpg/values/types';
 import { Actor, CharState } from '../char/actor';
 import * as stats from '../char/stats';
 import { Item } from '../items/item';
@@ -18,7 +19,7 @@ export class Monster {
 
 	static Decode(json: any) {
 
-		const m = new Monster(json.id);
+		const m = new Monster(json.id, GetMonster(json.proto));
 
 		if (json.name) m.name = json.name;
 
@@ -49,17 +50,17 @@ export class Monster {
 			id: this.id,
 			name: this.name,
 			desc: this.desc,
-			level: this._level,
+			level: this.level,
 			hp: this._hp.toJSON(),
 			curHp: this._hp,
 			dots: this.dots.length > 0 ? this.dots : undefined,
 			armor: this._armor,
 			toHit: this._toHit,
-			state: this._state,
+			state: this._state != CharState.Alive ? this._state : undefined,
 			drops: this._drops ?? undefined,
 			evil: this._evil ?? undefined,
 			kind: this._kind ?? undefined,
-			dmg: this._dmg ?? undefined,
+			dmg: this.dmg ?? undefined,
 			weap: this._weap ?? undefined
 
 		};
@@ -69,11 +70,6 @@ export class Monster {
 	get drops() { return this._drops; }
 	set drops(v) { this._drops = v; }
 
-	get template() { return this._template; }
-	set template(t) { this._template = t; }
-
-	get level() { return this._level; }
-	set level(v) { this._level = v; }
 	get toHit() { return this._toHit; }
 	set toHit(v) { this._toHit = v; }
 
@@ -90,15 +86,6 @@ export class Monster {
 	set armor(v) { this._armor = v; }
 
 	get hp() { return this._hp }
-
-	get dmg() { return this._dmg; }
-	set dmg(v) { this._dmg = v; }
-
-	/**
-	 * Not yet implemented.
-	get attacks() { return this._attacks; }
-	set attacks(v) { this._attacks = v; }
-	*/
 
 	get weap() { return this._weap; }
 	set weap(v) { this._weap = v; }
@@ -121,13 +108,13 @@ export class Monster {
 
 	readonly id: string;
 
-	private _level: number = 0;
+	level: number = 0;
 	private _armor: number = 0;
 	private _evil: number = 0;
 	private _size!: string;
 	private _drops?: any;
-	private _template?: MonsterData;
-	private _dmg?: any;
+	readonly proto?: MonsterData;
+	private dmg?: Numeric;
 	private _weap?: any;
 	private _attacks: any;
 	private _talents?: string[];
@@ -136,10 +123,12 @@ export class Monster {
 
 	readonly dots: Effect[] = [];
 
-	constructor(id?: string) {
+	constructor(id?: string, proto?: MonsterData) {
 		this.id = id ?? randomUUID();
 		this._toHit = 0;
 		this._state = CharState.Alive;
+		this.proto = proto;
+
 	}
 
 	/**
@@ -180,7 +169,7 @@ export class Monster {
 	}
 
 	randItem() {
-		if (this._held && this._held.length > 0) {
+		if (this._held?.length) {
 			return this.takeItem(Math.floor(Math.random() * this._held.length));
 		}
 		return null;
@@ -212,7 +201,7 @@ export class Monster {
 	getDetails() {
 
 		const kind = this._kind ? ` ${this._kind}` : '';
-		return `level ${this._level} ${this.name} [${stats.getEvil(this._evil)}${kind}]\nhp:${this._hp}/${this._hp.max} armor:${this._armor}\n${this.desc}`;
+		return `level ${this.level} ${this.name} [${stats.getEvil(this._evil)}${kind}]\nhp:${this._hp}/${this._hp.max} armor:${this._armor}\n${this.desc}`;
 
 	}
 
@@ -237,7 +226,7 @@ export class Monster {
 
 	}
 
-	clone() { return Object.assign(new Monster(), this); }
+	clone() { return Object.assign(new Monster(undefined, this.proto), this); }
 
 
 }

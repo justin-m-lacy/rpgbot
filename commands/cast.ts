@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { ActTarget } from "rpg/combat/targets";
+import { TargetFlags } from "rpg/combat/targets";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -27,11 +27,11 @@ export default NewCommand<Rpg>({
 
 		const at = m.options.getString('at');
 		if (!at) {
-			if ((spell.target & (ActTarget.all | ActTarget.none | ActTarget.self)) === 0) {
+			if ((spell.target & (TargetFlags.all | TargetFlags.none | TargetFlags.self)) === 0) {
 				return SendPrivate(m, `Cast ${spell.name} at what?`,)
 			}
 		}
-		const targ = spell.target === ActTarget.self ? char :
+		const targ = spell.target === TargetFlags.self ? char :
 			(at ? await rpg.getActor(char, at) : undefined);
 		if (at && !targ) {
 			return SendPrivate(m, `'${at}' not found.`);

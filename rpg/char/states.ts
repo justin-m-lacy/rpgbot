@@ -1,0 +1,203 @@
+import { TargetFlags } from "rpg/combat/targets";
+import { Effect } from "rpg/magic/effects";
+import { quickSplice } from "rpg/util/array";
+
+type StatusKeys = keyof typeof StatusFlags;
+
+export enum StatusFlags {
+	none = 0,
+	noattack = 1,
+	nodefend = 2,
+	nospells = 4,
+	confused = 8,
+	charmed = 16,
+	taunt = 32,
+	hide = 64,
+	defender = 128,
+	no_onexpire = 256,
+	no_ondeath = 512,
+
+	noact = noattack + nodefend + nospells,
+	immobile = noattack + 32
+}
+
+export const ParseStateFlags = (list: (keyof typeof StatusFlags)[] | string) => {
+
+	if (typeof list === 'string') list = list.split(',') as (keyof typeof StatusFlags)[];
+
+	let f: StatusFlags = 0;
+	for (let i = list.length - 1; i >= 0; i--) {
+		f |= StatusFlags[list[i]] ?? 0;
+	}
+
+	return f;
+
+}
+
+/**
+ * Retarget map for Confused state.
+ */
+
+const ConfuseTargets: Partial<Record<number, TargetFlags>> = {
+	[TargetFlags.all]: TargetFlags.random,
+	[TargetFlags.allies]: TargetFlags.random,
+	[TargetFlags.enemies]: TargetFlags.random,
+	[TargetFlags.mult]: TargetFlags.random,
+	[TargetFlags.self]: TargetFlags.random,
+	[TargetFlags.none]: TargetFlags.random,
+}
+
+/**
+ * Retarget map for Charmed state.
+ */
+const CharmTargets: Partial<Record<number, TargetFlags>> = {
+	[TargetFlags.all]: TargetFlags.random,
+	[TargetFlags.allies]: TargetFlags.random,
+	[TargetFlags.enemies]: TargetFlags.random,
+	[TargetFlags.mult]: TargetFlags.random,
+	[TargetFlags.self]: TargetFlags.random,
+	[TargetFlags.none]: TargetFlags.random,
+};
+
+type TCauses = Record<PropertyKey, Effect[] | undefined>;
+
+/// Character state information.
+export class CharFlags {
+
+	toJSON() { return undefined; }
+
+	/**
+	 * @property causes - causes of each state flag.
+	 */
+	private readonly _causes: TCauses = {};
+
+	get causes() { return this._causes; }
+
+	private _flags: number = 0;
+	get flags() { return this._flags; }
+	set flags(v) { this._flags = v; }
+
+	canCast() { return (this._flags & StatusFlags.nospells) === 0 }
+	canAttack() { return (this._flags & StatusFlags.noattack) === 0 }
+	canDefend() { return (this._flags & StatusFlags.nodefend) === 0 }
+	canParry() { return (this._flags & StatusFlags.defender) !== 0 }
+
+	/// flag - state flag
+	has(flag: number) {
+		return (this._causes[flag]?.length ?? 0) > 0;
+	}
+
+	constructor() {
+	}
+
+	/**
+	 * Pick new target based on char state.
+	 * e.g. confused, charmed, etc.
+	 * @param targFlags - original target
+	 */
+	retarget(targFlags: TargetFlags) {
+
+		if ((this.flags & StatusFlags.confused) > 0) {
+
+			return targFlags ? ConfuseTargets[targFlags] ?? 0 : TargetFlags.random;
+
+		} else if ((this.flags & StatusFlags.charmed) > 0) {
+
+			return targFlags ? CharmTargets[targFlags] ?? 0 : TargetFlags.ally;
+		}
+		return targFlags;
+
+	}
+
+	/**
+	 * Get cause of a flag being set, or null, if flag not set.
+	 * @param {number} flag
+	 * @returns {Dot|null}
+	 */
+	getCause(flag: number) {
+		return this._causes[flag]?.[0] ?? undefined;
+	}
+
+	/**
+	 * Blame each bit-flag in flags on cause.
+	 * @param {Dot} cause
+	 */
+	add(cause: Dot) {
+
+		const flags = cause.statusFlags;
+		if (flags === 0) return;
+
+		let f = 1;
+		while (f <= flags) {
+
+			if ((flags & f) > 0) this._addCause(f, cause);
+			f *= 2;
+
+		}
+		this._flags |= flags;
+
+	}
+
+	remove(dot?: Dot) {
+
+		if (!dot) return;
+
+		const flags = dot.statusFlags;
+		let f = 1;
+
+		while (f <= flags) {
+
+			if ((flags & f) > 0) this._rmCause(f, dot);
+			f *= 2;
+
+		}
+
+	}
+
+	_rmCause(flag: number, cause: Effect) {
+
+		const a = this._causes[flag];
+		if (!a) return;
+
+		const ind = a.indexOf(cause);
+		if (ind >= 0) {
+
+			quickSplice(a, ind);
+			if (a.length === 0) this.flags ^= flag;
+
+		}
+
+	}
+
+	_addCause(flag: number, cause: Effect) {
+
+		const a = this._causes[flag];
+		if (a) a.push(cause);
+		else this._causes[flag] = [cause]
+
+	}
+
+	/**
+	 * Refresh all state flags from active dots.
+	 * @param dots
+	 */
+	refresh(dots: Effect[]) {
+
+		this._flags = 0;
+
+		for (const p in this._causes) {
+			this._causes[p] = undefined;
+		}
+
+		for (let i = dots.length - 1; i >= 0; i--) {
+
+			const d = dots[i];
+			if (d.statusFlags) {
+				this.add(d);
+			}
+
+		}
+
+	} // refresh()
+
+}

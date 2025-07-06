@@ -14,7 +14,7 @@ import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
 import { Actor } from './char/actor';
 import { Char } from './char/char';
-import { Combat } from "./combat/combat";
+import { Fight } from "./combat/fight";
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
@@ -606,7 +606,7 @@ export class Game {
 		let p1: Char | Party = this.getParty(char);
 		if (!p1 || !p1.isLeader(char)) p1 = char;
 
-		const com = new Combat(p1, npc, this.world);
+		const com = new Fight(p1, npc, this.world);
 		await com.fightNpc();
 
 		return char.output(com.getText());
@@ -615,7 +615,7 @@ export class Game {
 
 	async steal(this: Game, src: Char, dest: Char, wot?: ItemPicker | null) {
 
-		const com = new Combat(src, dest, this.world);
+		const com = new Fight(src, dest, this.world);
 		await com.steal(src, wot);
 
 		return src.output(com.getText());
@@ -635,7 +635,7 @@ export class Game {
 			p2 = targ;
 		}
 
-		const com = new Combat(p1, p2, this.world);
+		const com = new Fight(p1, p2, this.world);
 		await com.fight();
 
 		return src.output(com.getText());

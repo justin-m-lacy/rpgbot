@@ -34,6 +34,10 @@ const parseVars = ['hp', 'armor', 'toHit', 'mp'];
 const templates: { [name: string]: MonsterData } = {};
 const byLevel: (MonsterData[])[] = [];
 
+export const GetMonster = (id: string) => {
+	return templates[id];
+}
+
 const initTemplates = async () => {
 
 	const raw = (await import('../data/npc/monster.json', { assert: { type: 'json' } })).default;
@@ -73,15 +77,15 @@ function parseTemplate(json: any) {
 
 }
 
-const create = (template: any) => {
+const create = (template: MonsterData) => {
 
-	const m = new Monster();
-	m.template = template;
+	const m = new Monster(undefined, template);
 
-	for (const k in template) {
+	let k: keyof MonsterData;
+	for (k in template) {
 
 		// roll data formulas into concrete numbers.
-		var v = template[k];
+		const v = template[k];
 		if (v instanceof Formula) {
 			// @ts-ignore
 			m[k] = v.eval(m);

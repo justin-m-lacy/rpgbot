@@ -1,4 +1,4 @@
-import { ActTarget } from 'rpg/combat/targets';
+import { TargetFlags } from 'rpg/combat/targets';
 import { Item } from 'rpg/items/item';
 import type { IMod } from 'rpg/values/imod';
 import type { Path } from 'rpg/values/paths';
@@ -24,7 +24,7 @@ export class Spell extends Item {
 	kind: string;
 
 	duration: number = 0;
-	target: ActTarget;
+	target: TargetFlags;
 	dmg?: ISimple;
 
 	dot?: ProtoEffect;
@@ -41,7 +41,7 @@ export class Spell extends Item {
 		cost?: Path<Numeric>,
 		time?: number,
 		kind?: string,
-		target?: ActTarget
+		target?: TargetFlags
 	}) {
 
 		super(data.id, data);
@@ -52,7 +52,7 @@ export class Spell extends Item {
 		this.dot = data.dot ?? undefined;
 		this.mods = data.mods ?? undefined;
 		this.duration = data.time ?? 0;
-		this.target = data.target ?? ActTarget.any;
+		this.target = data.target ?? TargetFlags.any;
 
 		this.dmg = data.dmg;
 
