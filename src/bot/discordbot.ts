@@ -146,6 +146,15 @@ export class DiscordBot {
 
 		this.initClient();
 
+		const chan = this.client.channels.resolve('resolvable');
+		if (chan?.isSendable()) {
+
+			chan.send({
+
+			});
+		}
+
+
 	}
 
 	/**

@@ -224,7 +224,7 @@ export class Loc {
 	/**
 	 * npcs at location.
 	 */
-	readonly npcs: Array<Monster | Char> = [];
+	readonly npcs: Array<Monster> = [];
 
 	readonly exits: Partial<Record<DirVal, Exit>> = {};
 	readonly inv: Inventory;
@@ -254,6 +254,8 @@ export class Loc {
 		const ind = this.chars.indexOf(char.id);
 		if (ind >= 0) quickSplice(this.chars, ind);
 	}
+
+	hasChars() { return this.chars.length > 0 }
 
 	static Decode(json: any) {
 

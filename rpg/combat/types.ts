@@ -1,13 +1,12 @@
-import { Char } from "rpg/char/char";
 import { StatusFlags } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
 import { ProtoEffect } from "rpg/magic/effects";
 import { Result } from "rpg/magic/results";
-import { Monster, Npc } from "rpg/monster/monster";
+import { Npc } from "rpg/monster/monster";
 import { Party } from "rpg/social/party";
 import { Id, Numeric, TValue } from "rpg/values/types";
 
-type CombatActor = Npc | Party;
+export type CombatActor = Npc | Party;
 
 
 export type TCombatAction = {
@@ -52,32 +51,6 @@ export type TCombatAction = {
 	dot?: ProtoEffect;
 
 }
-
-export const TryAttack = (char: Char, targ: CombatActor) => {
-
-}
-
-/**
- * Attempt to apply action to target.
- * @param char 
- * @param act 
- * @param targ 
- */
-export const TryAction = (char: Char, act: TCombatAction, targ: Char | Monster) => {
-
-}
-
-/**
- * Apply combat action to a target.
- * @param char 
- * @param act 
- * @param targ 
- */
-export const ApplyAction = (char: Char, act: TCombatAction, targ: Char | Monster) => {
-
-}
-
-
 
 /*export class Combat {
 

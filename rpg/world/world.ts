@@ -347,6 +347,15 @@ export class World {
 
 	}
 
+	/**
+	 * Attempts to get location without fetching from cache.
+	 * @param coord 
+	 */
+	tryGetLoc(coord: TCoord) {
+		const block = this.cache.get(this.getBlockKey(coord)) as Block;
+		return block?.getLoc(this.locKey(coord));
+	}
+
 	async getLoc(coord: TCoord) {
 
 		const bkey = this.getBlockKey(coord);

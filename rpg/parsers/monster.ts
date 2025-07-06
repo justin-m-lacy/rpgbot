@@ -1,4 +1,5 @@
 import { Formula } from 'formulic';
+import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
 import { DamageSrc } from 'rpg/formulas';
 import { Weapon } from 'rpg/items/weapon';
@@ -21,11 +22,12 @@ export type MonsterData = {
 	maxHp: number;
 	armor: number;
 	evil: number;
-	size: string;
+	size?: string;
 	drops?: any;
 	dmg?: any;
 	weap?: any;
 	flags?: StatusFlags;
+	team?: Faction;
 
 }
 

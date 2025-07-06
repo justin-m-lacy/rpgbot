@@ -1,3 +1,4 @@
+import { Faction } from 'rpg/char/factions';
 import { GClass, Race } from 'rpg/char/race';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
@@ -59,6 +60,8 @@ export class Char extends Actor {
 	private _skillPts: number = 0;
 	owner: string;
 	private _exp: number = 0;
+
+	team: number = Faction.Chars;
 
 	home?: Coord;
 	readonly history: History;

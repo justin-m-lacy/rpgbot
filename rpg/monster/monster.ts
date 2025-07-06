@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { Effect, ProtoEffect } from 'rpg/magic/effects';
@@ -12,7 +13,7 @@ import * as stats from '../char/stats';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { roll } from '../values/dice';
-import { Biome } from '../world/loc';
+import { Biome, Coord } from '../world/loc';
 
 export type Npc = Actor | Monster;
 
@@ -80,9 +81,6 @@ export class Monster {
 	get kind() { return this._kind; }
 	set kind(v) { this._kind = v; }
 
-	get size() { return this._size; }
-	set size(v) { this._size = v; }
-
 	get armor() { return this._armor; }
 	set armor(v) { this._armor = v; }
 
@@ -114,7 +112,7 @@ export class Monster {
 	level: number = 0;
 	private _armor: number = 0;
 	private _evil: number = 0;
-	private _size!: string;
+	size: string;
 	private _drops?: any;
 	readonly proto?: MonsterData;
 	private dmg?: Numeric;
@@ -122,8 +120,12 @@ export class Monster {
 	private _attacks: any;
 	private _talents?: string[];
 
+	team: number = 0;
+
 	private _held?: Item[];
 
+	// location of coordinate.
+	readonly at: Coord = new Coord(0, 0);
 	readonly dots: Effect[] = [];
 
 	constructor(id?: string, proto?: MonsterData) {
@@ -133,7 +135,13 @@ export class Monster {
 		this.proto = proto;
 
 		this.flags = proto?.flags ?? StatusFlags.none;
+		this.size = proto?.size ?? 'medium';
+		this.team = proto?.team ?? Faction.All;
 
+	}
+
+	setLoc(at: Coord) {
+		this.at.setTo(at);
 	}
 
 	/**

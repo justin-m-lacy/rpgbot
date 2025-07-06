@@ -83,7 +83,7 @@ export class Game {
 		this.liveNpcs[npc.id] = npc;
 	}
 
-	private updateNpcs() {
+	private async updateNpcs() {
 
 		for (const k in this.liveNpcs) {
 
@@ -96,7 +96,13 @@ export class Game {
 			this.tickDots(npc)
 
 			if (npc.dots.length === 0) {
-				delete this.liveNpcs[k];
+
+				// if location isn't loaded, npc should sleep.
+				const loc = this.world.tryGetLoc(npc.at);
+				if (!loc || loc.chars.length === 0) {
+					delete this.liveNpcs[k];
+				}
+
 			}
 
 		}

@@ -21,7 +21,7 @@ const ProtoProxy: ProxyHandler<object> = {
 	set(targ, p, val) {
 		return Reflect.set(targ, p, val);
 	},
-	get(targ, p, rec) {
+	get(targ, p) {
 
 		if (Reflect.has(targ, p)) return Reflect.get(targ, p);
 		return Reflect.get(Reflect.get(targ, 'proto'), p);
