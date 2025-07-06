@@ -3,7 +3,7 @@ import { IsValue } from "rpg/values/types";
 
 
 
-const HasJSON = (obj: any): obj is { toJSON(): any } => {
+export const HasJSON = (obj: any): obj is { toJSON(): any } => {
 	return obj && typeof obj === 'object' && typeof obj.toJSON === 'function';
 }
 

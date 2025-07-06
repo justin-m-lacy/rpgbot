@@ -111,8 +111,8 @@ export class CharFlags {
 
 	/**
 	 * Get cause of a flag being set, or null, if flag not set.
-	 * @param {number} flag
-	 * @returns {Dot|null}
+	 * @param flag
+	 * @returns 
 	 */
 	getCause(flag: number) {
 		return this._causes[flag]?.[0] ?? undefined;
@@ -120,11 +120,11 @@ export class CharFlags {
 
 	/**
 	 * Blame each bit-flag in flags on cause.
-	 * @param {Dot} cause
+	 * @param cause
 	 */
-	add(cause: Dot) {
+	add(cause: Effect) {
 
-		const flags = cause.statusFlags;
+		const flags = cause.flags;
 		if (flags === 0) return;
 
 		let f = 1;
@@ -138,11 +138,11 @@ export class CharFlags {
 
 	}
 
-	remove(dot?: Dot) {
+	remove(dot?: Effect) {
 
 		if (!dot) return;
 
-		const flags = dot.statusFlags;
+		const flags = dot.flags;
 		let f = 1;
 
 		while (f <= flags) {
@@ -192,7 +192,7 @@ export class CharFlags {
 		for (let i = dots.length - 1; i >= 0; i--) {
 
 			const d = dots[i];
-			if (d.statusFlags) {
+			if (d.flags) {
 				this.add(d);
 			}
 

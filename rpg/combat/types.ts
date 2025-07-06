@@ -1,5 +1,8 @@
 import { Char } from "rpg/char/char";
+import { StatusFlags } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
+import { ProtoEffect } from "rpg/magic/effects";
+import { Result } from "rpg/magic/results";
 import { Npc } from "rpg/monster/monster";
 import { Party } from "rpg/social/party";
 import { Id, Numeric, TValue } from "rpg/values/types";
@@ -44,15 +47,17 @@ export type TCombatAction = {
 	level?: number;
 
 	/// Status flags to set on target.
-	statusFlags?: StatusFlags;
+	setFlags?: StatusFlags;
 	/// Status flags to remove from target.	
 	cure?: StatusFlags;
-	result?: TResultPath;
+
+	result?: Result<Npc>;
 
 	/// Dot to apply if successful.
-	dot?: DotParams;
+	dot?: ProtoEffect;
 
 }
+
 export const TryAttack = (char: Char, targ: CombatActor) => {
 
 }

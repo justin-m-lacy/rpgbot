@@ -1,3 +1,4 @@
+import { StatusFlags } from 'rpg/char/states';
 import { Npc } from 'rpg/monster/monster';
 import { ParseValues } from 'rpg/parsers/values';
 import { AddValues } from 'rpg/values/apply';
@@ -34,18 +35,40 @@ export class ProtoEffect {
 	readonly dot: Path<TValue> | null;
 	readonly time: number;
 
+	// kind of damage.
+	readonly kind: string;
+
+	/**
+	 * Number of times effect can stack.
+	 */
+	readonly stack: number;
+
+
+	/**
+	 * status to apply with effect.
+	 */
+	readonly flags: StatusFlags;
+
 	constructor(data: {
 		id: string,
 		name?: string,
 		mods?: Path<IMod> | null,
 		dot?: Path<TValue> | null,
-		time?: number
+		time?: number,
+		flags?: StatusFlags;
+		stack?: number,
+		kind?: string
 	}) {
 
 		this.id = data.id;
 		this.name = data.name ?? data.id;
 		this.dot = data.dot ?? null;
 		this.mods = data.mods ?? null;
+
+		this.kind = data.kind ?? 'unknown';
+
+		this.stack = data.stack ?? 0;
+		this.flags = data.flags ?? StatusFlags.none;
 
 		this.time = data.time ?? 0;
 
@@ -91,6 +114,8 @@ export class Effect {
 		};
 
 	}
+
+	get flags() { return this.proto.flags }
 
 	get name() { return this.proto.name; }
 
