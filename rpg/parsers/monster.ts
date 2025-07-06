@@ -1,4 +1,5 @@
 import { Formula } from 'formulic';
+import { StatusFlags } from 'rpg/char/states';
 import { DamageSrc } from 'rpg/formulas';
 import { Weapon } from 'rpg/items/weapon';
 import { Monster } from 'rpg/monster/monster';
@@ -24,6 +25,7 @@ export type MonsterData = {
 	drops?: any;
 	dmg?: any;
 	weap?: any;
+	flags?: StatusFlags;
 
 }
 

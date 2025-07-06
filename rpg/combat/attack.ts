@@ -56,31 +56,20 @@ export class Attack implements TCombatAction {
 	only?: string;
 
 	/**
-	 * replace with result or spells?
-	 */
-	summon?: string;
-
-	/**
 	 * @property cure - statuses to cure/remove from target.
 	 */
 	cure?: StatusFlags;
 
 	target: TargetFlags;
-	harmless: boolean;
 
+	/**
+	 * replace with result or spells?
+	 */
+	summon?: string;
+
+	harmless: boolean;
 	/// Indicates attack will always hit.
 	nodefense?: boolean;
-
-	setName(v: string) {
-		this.name = v;
-
-		if (this.hits) {
-			for (let i = this.hits.length - 1; i >= 0; i--) {
-				this.hits[i].name ??= v;
-			}
-		}
-
-	}
 
 	/*setKind(k: string | undefined) {
 
@@ -94,24 +83,6 @@ export class Attack implements TCombatAction {
 		}
 
 	}*/
-
-
-	/// subattacks
-	private setHits(v: Attack[] | undefined) {
-
-		this.hits = v;
-		if (!v) return;
-
-		for (let i = v.length - 1; i >= 0; i--) {
-			const h = v[i];
-
-			if (!h.id) h.id = this.id;
-			if (!h.name) h.name = this.name;
-			if (!h.kind) h.kind = this.kind;
-			if (!(h instanceof Attack)) v[i] = new Attack(this.id, h);
-
-		}
-	}
 
 	constructor(id: string, data: Partial<TCombatAction> & { hits?: Attack[] }) {
 
@@ -131,16 +102,27 @@ export class Attack implements TCombatAction {
 			this.setHits(data.hits);
 		}
 
-		if (data.dot) {
-			this.dot = data.dot;
-			if (data.dot.id === undefined) {
-				data.dot.id = data.dot.name ?? this.id;
-			}
-		}
+		this.dot = data.dot;
 
 		this.harmless = data.harmless ?? (
 			(this.target & (TargetFlags.self | TargetFlags.ally | TargetFlags.allies)) > 0);
 
 	}
 
+	/// subattacks
+	private setHits(v: Attack[] | undefined) {
+
+		this.hits = v;
+		if (!v) return;
+
+		for (let i = v.length - 1; i >= 0; i--) {
+			const h = v[i];
+
+			if (!h.id) h.id = this.id;
+			if (!h.name) h.name = this.name;
+			if (!h.kind) h.kind = this.kind;
+			if (!(h instanceof Attack)) v[i] = new Attack(this.id, h);
+
+		}
+	}
 }

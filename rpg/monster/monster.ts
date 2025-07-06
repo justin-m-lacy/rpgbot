@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { StatusFlags } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { Effect, ProtoEffect } from 'rpg/magic/effects';
 import { GetMonster, MonsterData } from 'rpg/parsers/monster';
@@ -95,6 +96,8 @@ export class Monster {
 
 	isAlive() { return this._state !== CharState.Dead; }
 
+	flags: StatusFlags;
+
 	biome?: Biome;
 
 	private _toHit: number;
@@ -128,6 +131,8 @@ export class Monster {
 		this._toHit = 0;
 		this._state = CharState.Alive;
 		this.proto = proto;
+
+		this.flags = proto?.flags ?? StatusFlags.none;
 
 	}
 
