@@ -3,7 +3,7 @@ import { Equip, type HumanSlots } from 'rpg/char/equip';
 import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
-import { Effect } from 'rpg/magic/effects';
+import { Effect } from 'rpg/magic/dots';
 import { DecodeItem } from 'rpg/parsers/items';
 import { BadTypeError, NullDataError } from 'rpg/util/errors';
 import { Coord, IsCoord } from 'rpg/world/loc';

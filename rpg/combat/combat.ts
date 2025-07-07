@@ -1,5 +1,5 @@
 import { Char } from "rpg/char/char";
-import { CombatActor, TCombatAction } from "rpg/combat/types";
+import { ActionFlags, CombatActor, TCombatAction } from "rpg/combat/types";
 import { Spell } from "rpg/magic/spell";
 import { Monster, Npc } from "rpg/monster/monster";
 import { Party } from "rpg/social/party";
@@ -92,7 +92,7 @@ const ApplyDmg = (
 	}
 
 	let dmg_reduce = 0
-	if (resist < 1 && !attack.nodefense) {
+	if (resist < 1 && !((attack?.actFlags ?? 0) & ActionFlags.nodefense)) {
 
 		//dmg_reduce = (targ.defense?.valueOf() ?? 0) / ((targ.defense?.valueOf() ?? 0) + dmg);
 		//dmg -= dmg_reduce * dmg;

@@ -8,7 +8,7 @@ import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { EventEmitter } from 'stream';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
-import { Effect, ProtoEffect } from '../magic/effects';
+import { Effect, ProtoDot } from '../magic/dots';
 import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
 import { Race, type GClass } from './race';
@@ -211,9 +211,9 @@ export class Actor {
 
 	}
 
-	addDot(e: Effect | ProtoEffect) {
+	addDot(e: Effect | ProtoDot) {
 
-		if (e instanceof ProtoEffect) e = new Effect(e);
+		if (e instanceof ProtoDot) e = new Effect(e);
 
 		this.dots.push(e);
 		e.start(this);
@@ -221,7 +221,7 @@ export class Actor {
 		this.events.emit('dotStart', this as any as Char, e);
 	}
 
-	rmDot(e: Effect | ProtoEffect) {
+	rmDot(e: Effect | ProtoDot) {
 
 		const ind = this.dots.findIndex(v => v.id === e.id);
 		if (ind >= 0) {

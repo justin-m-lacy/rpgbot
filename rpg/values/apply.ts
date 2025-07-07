@@ -68,9 +68,7 @@ export const HasValues = (dest: Record<string, any>,
 
 		if (IsPath(amt)) {
 
-			if (!HasValues(targ ?? createValue(dest, key, targ), amt, dt)) {
-				return false;
-			}
+			if (!HasValues(targ, amt, dt)) return false;
 
 		} else if (IsValue(amt) || typeof amt === 'number') {
 
@@ -87,6 +85,82 @@ export const HasValues = (dest: Record<string, any>,
 
 	}
 	return true;
+
+}
+
+/**
+ * Returns the first property that is insufficient to pay cost.
+ * @param dest 
+ * @param costs 
+ * @param dt - scale factor of cost values.
+ * @returns 
+ */
+export const MissingProp = (dest: Record<string, any>,
+	costs: Path<Numeric>,
+	dt: number = 1): string | undefined => {
+
+	for (const key in costs) {
+
+		const amt = costs[key];
+		const targ = costs.getKeyed(dest, key);
+		if (!targ) return key;
+
+		if (IsPath(amt)) {
+
+			const prop = MissingProp(targ, amt, dt);
+			if (prop) return prop;
+
+		} else if (IsValue(amt) || typeof amt === 'number') {
+
+			const tot = dt * Number(amt);
+			if (IsValue(targ)) {
+				if (targ.valueOf() < tot) return key;
+			} else if (typeof targ === 'number') {
+				if (targ < tot) return key;
+			}
+
+		}
+
+	}
+	return undefined;
+
+}
+
+/**
+ * Returns the property names that are missing
+ * in order to pay costs.
+ * @param dest 
+ * @param costs 
+ * @param dt - scale factor of cost values.
+ * @returns 
+ */
+export const MissingProps = (dest: Record<string, any>,
+	costs: Path<Numeric>,
+	dt: number = 1, into: string[] = []) => {
+
+	for (const key in costs) {
+
+		const amt = costs[key];
+		const targ = costs.getKeyed(dest, key);
+		if (!targ) return false;
+
+		if (IsPath(amt)) {
+
+			MissingProps(targ, amt, dt, into);
+
+		} else if (IsValue(amt) || typeof amt === 'number') {
+
+			const tot = dt * Number(amt);
+			if (IsValue(targ)) {
+				if (targ.valueOf() < tot) into.push(key);
+			} else if (typeof targ === 'number') {
+				if (targ < tot) into.push(key);
+			}
+
+		}
+
+	}
+	return into;
 
 }
 

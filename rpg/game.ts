@@ -9,7 +9,7 @@ import { ItemType } from 'rpg/parsers/items';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
-import { AddValues, HasValues } from 'rpg/values/apply';
+import { AddValues, MissingProp } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
 import { Char } from './char/char';
@@ -111,7 +111,7 @@ export class Game {
 	}
 
 	/**
-	 * Test if a character can perform an action
+	 * Test if character can perform an action
 	 * in their current state.
 	 * @param char
 	 * @param act - action to attempt to perform.
@@ -121,7 +121,6 @@ export class Game {
 			char.log(`Cannot ${act} while ${char.state}.`);
 			return false;
 		}
-
 		return true;
 	}
 
@@ -190,14 +189,15 @@ export class Game {
 
 		// pay cast.
 		if (spell.cost) {
-			if (HasValues(char, spell.cost)) {
 
-				AddValues(char, spell.cost);
-
-			} else {
-				char.output(`Not enough mana to cast ${spell.name}`);
+			const missing = MissingProp(char, spell.cost);
+			if (missing) {
+				char.output(`Not enough ${missing} to cast ${spell.name}`);
 				return;
+			} else {
+				AddValues(char, spell.cost);
 			}
+
 		}
 
 		if (targ) {

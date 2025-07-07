@@ -3,7 +3,7 @@ import { Item } from 'rpg/items/item';
 import type { IMod } from 'rpg/values/imod';
 import type { Path } from 'rpg/values/paths';
 import type { ISimple, Numeric } from 'rpg/values/types';
-import { ProtoEffect } from './effects';
+import { ProtoDot } from './dots';
 
 export class Spell extends Item {
 
@@ -27,7 +27,7 @@ export class Spell extends Item {
 	target: TargetFlags;
 	dmg?: ISimple;
 
-	dot?: ProtoEffect;
+	dot?: ProtoDot;
 	mods?: Path<IMod>;
 
 	cost?: Path<Numeric>;
@@ -37,7 +37,7 @@ export class Spell extends Item {
 		name?: string;
 		dmg?: ISimple;
 		mods?: Path<IMod> | null,
-		dot?: ProtoEffect | null,
+		dot?: ProtoDot | null,
 		cost?: Path<Numeric>,
 		time?: number,
 		kind?: string,

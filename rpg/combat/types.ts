@@ -1,6 +1,6 @@
 import { StatusFlags } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
-import { ProtoEffect } from "rpg/magic/effects";
+import { ProtoDot } from "rpg/magic/dots";
 import { Npc } from "rpg/monster/monster";
 import { Party } from "rpg/social/party";
 import { Path } from "rpg/values/paths";
@@ -8,6 +8,14 @@ import { Id, Numeric, TValue } from "rpg/values/types";
 
 export type CombatActor = Npc | Party;
 
+export enum ActionFlags {
+	none = 0,
+
+	// action is harmless
+	harmless = 1,
+	// attack cant be blocked.
+	nodefense = 2
+}
 
 export type TCombatAction = {
 
@@ -22,9 +30,7 @@ export type TCombatAction = {
 
 	range?: Numeric;
 
-	/**
-	 * Allowed targets for action.
-	 */
+	///Allowed targets for action.
 	target: TargetFlags;
 
 	/// percent of damage leeched.
@@ -34,8 +40,8 @@ export type TCombatAction = {
 
 	hits?: TCombatAction[];
 
-	harmless?: boolean;
-	nodefense?: boolean;
+	// flags that apply to the action itself.
+	actFlags?: ActionFlags;
 
 	/// level of attack or effect.
 	level?: number;
@@ -51,7 +57,7 @@ export type TCombatAction = {
 	add?: Path<TValue>
 
 	/// Dot to apply if successful.
-	dot?: ProtoEffect;
+	dot?: ProtoDot;
 
 }
 

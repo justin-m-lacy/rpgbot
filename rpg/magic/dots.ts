@@ -21,12 +21,12 @@ export type RawEffect = {
 	typeof import('../data/magic/dots.json', { assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
-export const Effects: { [name: string]: ProtoEffect } = {};
+export const Effects: { [name: string]: ProtoDot } = {};
 
 /**
  * Effect prototype. class Effect is effect in progress.
  */
-export class ProtoEffect {
+export class ProtoDot {
 
 	readonly id: string;
 	readonly name: string;
@@ -98,7 +98,7 @@ export class Effect {
 
 		let e = json.efx;
 		if (typeof (e) === 'string') e = Effects[e];
-		else if (e && typeof e === 'object') e = new ProtoEffect(e);
+		else if (e && typeof e === 'object') e = new ProtoDot(e);
 		if (!e) return null;
 
 		return new Effect(e, json.src, json.time);
@@ -128,7 +128,7 @@ export class Effect {
 	get id() { return this.proto.id }
 
 	// template for effect.
-	readonly proto: ProtoEffect;
+	readonly proto: ProtoDot;
 
 	private _time: number;
 
@@ -136,7 +136,7 @@ export class Effect {
 	readonly source?: string;
 
 
-	constructor(effect: ProtoEffect, time?: number, src?: any) {
+	constructor(effect: ProtoDot, time?: number, src?: any) {
 
 		this.proto = effect;
 		this.source = src;
@@ -189,7 +189,7 @@ export class Effect {
 
 export const ParseDotType = (raw: RawEffect) => {
 
-	return new ProtoEffect({
+	return new ProtoDot({
 		id: raw.id,
 		name: raw.name,
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,

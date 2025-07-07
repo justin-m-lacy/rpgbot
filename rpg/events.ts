@@ -1,7 +1,7 @@
 import { EventEmitter } from 'eventemitter3';
 import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
-import { Effect } from 'rpg/magic/effects';
+import { Effect } from 'rpg/magic/dots';
 
 export type CharEvents = {
 

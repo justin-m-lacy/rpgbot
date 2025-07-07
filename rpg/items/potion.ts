@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
 import { ItemType } from 'rpg/parsers/items';
 import { Char } from '../char/char';
-import * as Effects from '../magic/effects';
+import * as Effects from '../magic/dots';
 import { Item } from './item';
 
 export class Potion extends Item {

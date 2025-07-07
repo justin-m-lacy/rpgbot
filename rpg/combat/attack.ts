@@ -1,7 +1,7 @@
 import { StatusFlags } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
-import { TCombatAction } from "rpg/combat/types";
-import { ProtoEffect } from "rpg/magic/effects";
+import { ActionFlags, TCombatAction } from "rpg/combat/types";
+import { ProtoDot } from "rpg/magic/dots";
 import { HasJSON } from "rpg/parsers/encode";
 import { Id, Numeric, TValue } from "rpg/values/types";
 
@@ -43,7 +43,7 @@ export class Attack implements TCombatAction {
 	bonus: Numeric = 0;
 
 	/// dots to set on target
-	public dot?: ProtoEffect;
+	public dot?: ProtoDot;
 
 	public hits?: Attack[];
 
@@ -62,14 +62,12 @@ export class Attack implements TCombatAction {
 
 	target: TargetFlags;
 
+	actFlags: ActionFlags = 0;
+
 	/**
 	 * replace with result or spells?
 	 */
 	summon?: string;
-
-	harmless: boolean;
-	/// Indicates attack will always hit.
-	nodefense?: boolean;
 
 	/*setKind(k: string | undefined) {
 
@@ -84,7 +82,12 @@ export class Attack implements TCombatAction {
 
 	}*/
 
-	constructor(id: string, data: Partial<TCombatAction> & { hits?: Attack[] }) {
+	constructor(id: string, data: Partial<TCombatAction> &
+	{
+		harmless?: boolean,
+		nodefend?: boolean,
+		hits?: Attack[]
+	}) {
 
 		this.id = id;
 		this.name = data.name ?? id;
@@ -104,8 +107,10 @@ export class Attack implements TCombatAction {
 
 		this.dot = data.dot;
 
-		this.harmless = data.harmless ?? (
-			(this.target & (TargetFlags.self | TargetFlags.ally | TargetFlags.allies)) > 0);
+		if (data.harmless ?? (
+			(this.target & (TargetFlags.self | TargetFlags.ally | TargetFlags.allies)))) {
+			this.actFlags |= ActionFlags.harmless;
+		}
 
 	}
 

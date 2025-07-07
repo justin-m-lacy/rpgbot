@@ -1,5 +1,5 @@
 import { TargetFlags } from "rpg/combat/targets";
-import { Effect } from "rpg/magic/effects";
+import { Effect } from "rpg/magic/dots";
 import { quickSplice } from "rpg/util/array";
 
 type StatusKeys = keyof typeof StatusFlags;

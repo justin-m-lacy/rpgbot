@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
 import { Game } from 'rpg/game';
-import { Effect, ProtoEffect } from 'rpg/magic/effects';
+import { Effect, ProtoDot } from 'rpg/magic/dots';
 import { GetMonster, MonsterData } from 'rpg/parsers/monster';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
@@ -165,8 +165,8 @@ export class Monster {
 		return this._talents?.includes(s);
 	}
 
-	addDot(e: Effect | ProtoEffect, game: Game) {
-		if (e instanceof ProtoEffect) e = new Effect(e);
+	addDot(e: Effect | ProtoDot, game: Game) {
+		if (e instanceof ProtoDot) e = new Effect(e);
 
 		this.dots.push(e);
 		e.start(this);
@@ -174,7 +174,7 @@ export class Monster {
 		game.addLiveNpc(this);
 
 	}
-	rmDot(e: Effect | ProtoEffect) {
+	rmDot(e: Effect | ProtoDot) {
 		const ind = this.dots.findIndex(v => v.id === e.id);
 		if (ind >= 0) {
 

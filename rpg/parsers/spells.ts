@@ -1,4 +1,4 @@
-import { ParseDotType, RawEffect } from 'rpg/magic/effects';
+import { ParseDotType, RawEffect } from 'rpg/magic/dots';
 import { Spell } from 'rpg/magic/spell';
 import { ParseMods } from 'rpg/parsers/mods';
 

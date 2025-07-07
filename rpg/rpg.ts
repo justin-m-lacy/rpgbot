@@ -5,7 +5,7 @@ import { MessageFlags, User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
 import { ItemIndex } from 'rpg/items/container';
 import { LoadActions } from 'rpg/magic/action';
-import { LoadDotTypes } from 'rpg/magic/effects';
+import { LoadDotTypes } from 'rpg/magic/dots';
 import { GenName } from 'rpg/namegen';
 import { InitArmors } from 'rpg/parsers/armor';
 import { ReviveChar } from 'rpg/parsers/char';
