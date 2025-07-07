@@ -1,4 +1,5 @@
 import { Char } from 'rpg/char/char';
+import { Faction } from 'rpg/char/factions';
 import { TCharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
 import type { SexType } from 'rpg/social/gender';
@@ -118,6 +119,9 @@ export class Actor {
 
 	readonly events: TCharEvents = new EventEmitter();
 	readonly game: Game;
+
+
+	team: number = Faction.Chars;
 
 	constructor(name: string, opts: {
 		game: Game,

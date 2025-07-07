@@ -2,6 +2,7 @@ import Cache from 'archcache';
 import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
 import { Craft } from 'rpg/builders/itemgen';
 import { CookItem, TryEat } from 'rpg/char/cooking';
+import { TargetFlags } from 'rpg/combat/targets';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { Spell } from 'rpg/magic/spell';
@@ -22,7 +23,7 @@ import { Monster, Npc } from './monster/monster';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
-import { DirVal, toDirection } from './world/loc';
+import { DirVal, Loc, toDirection } from './world/loc';
 import { World } from "./world/world";
 
 export const GetLore = (wot?: string) => {
@@ -42,6 +43,7 @@ export class Game {
 	readonly charCache: Cache<Char>;
 	readonly world: World
 
+	// map every character in a party to Party instance.
 	private readonly _charParties: { [char: string]: Party } = {};
 
 	private readonly guilds: GuildManager;
@@ -210,6 +212,56 @@ export class Game {
 			}
 
 		}
+
+	}
+
+	/**
+	 * Get all targets at location that are affected by target flags.
+	 * @param char 
+	 * @param flags 
+	 * @param loc 
+	 */
+	async getTargets(char: Npc, flags: TargetFlags, loc: Loc) {
+
+		const res: Npc[] = [];
+
+		const party = char instanceof Char ? this.getParty(char) : undefined;
+
+		if (flags & TargetFlags.enemies) {
+			for (const m of loc.npcs) {
+
+				if (!(char.team & m.team)) {
+					res.push(m);
+				}
+
+			}
+			for (const id of loc.chars) {
+
+				if (party?.includes(id)) continue;
+				const p = await this.charCache.fetch(id);
+				if (p) res.push(p);
+			}
+		}
+
+		if (flags & TargetFlags.allies) {
+			for (const m of loc.npcs) {
+
+				if ((char.team & m.team)) {
+					res.push(m);
+				}
+
+			}
+			if (party) {
+				for (const id of loc.chars) {
+
+					if (!party.includes(id)) continue;
+					const p = await this.charCache.fetch(id);
+					if (p) res.push(p);
+				}
+			}
+		}
+
+		return res;
 
 	}
 

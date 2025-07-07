@@ -11,13 +11,30 @@ export enum TargetFlags {
 	enemy = 2,
 	ally = 4,
 
-	/// used to mark any TargetFlag that can affect multiple chars.
+	/// used to mark any target that affects multiple chars.
 	mult = 8,
-	enemies = 16 + TargetFlags.mult,
-	allies = 32 + TargetFlags.mult,
-	all = 64 + TargetFlags.mult,
+	enemies = 16 + mult,
+	allies = 32 + mult,
 
-	random = 128,
+	/// anyone not caster.
+	others = 64 + mult,
+
+	all = 128 + mult,
+
+	random = 256,
+}
+
+/**
+ * Given a char team mask, and target flags, return a team mask
+ * that be AND'd with target's mask to determine target inclusion.
+ * e.g. if TargetFlags == enemies,
+ * 		mask = (~char.team)
+ * 		select all enemies: (enemy & mask)>0
+ * @param team 
+ * @param flags 
+ */
+const GetTargetMask = (team: number, flags: TargetFlags) => {
+
 }
 
 export const CanTarget = (char: Char | Monster, targ: Char | Monster, types: TargetFlags) => {
