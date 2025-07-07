@@ -25,7 +25,7 @@ export class Spell extends Item {
 
 	duration: number = 0;
 	target: TargetFlags;
-	dmg?: ISimple;
+	dmg?: Numeric;
 
 	dot?: ProtoDot;
 	mods?: Path<IMod>;

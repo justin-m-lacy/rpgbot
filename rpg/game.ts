@@ -1,16 +1,19 @@
 import Cache from 'archcache';
 import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
 import { Craft } from 'rpg/builders/itemgen';
+import { Actor } from 'rpg/char/actor';
 import { CookItem, TryEat } from 'rpg/char/cooking';
+import { ApplyDmg, ApplyHealing } from 'rpg/combat/combat';
 import { TargetFlags } from 'rpg/combat/targets';
+import { TCombatAction } from 'rpg/combat/types';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { Spell } from 'rpg/magic/spell';
 import { ItemType } from 'rpg/parsers/items';
-import { GetClass, GetRace } from 'rpg/parsers/parse-class';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
 import { AddValues, MissingProp } from 'rpg/values/apply';
+import { TValue } from 'rpg/values/types';
 import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
 import { Char } from './char/char';
@@ -25,15 +28,6 @@ import { Party } from './social/party';
 import * as Trade from './trade';
 import { DirVal, Loc, toDirection } from './world/loc';
 import { World } from "./world/world";
-
-export const GetLore = (wot?: string) => {
-
-	const val = GetRace(wot) ?? GetClass(wot);
-	if (val) return wot + ': ' + val.desc;
-
-	return 'Unknown entity: ' + wot;
-
-}
 
 const NPC_UPDATE_MS = 5000;
 
@@ -187,7 +181,7 @@ export class Game {
 
 	}
 
-	async cast(this: Game, char: Char, spell: Spell, targ?: Npc) {
+	async cast(this: Game, char: Char, spell: Spell, targ?: Char | Monster) {
 
 		// pay cast.
 		if (spell.cost) {
@@ -202,18 +196,57 @@ export class Game {
 
 		}
 
+		// single target.
 		if (targ) {
 
-			if (spell.dmg) {
-				targ.hit(spell.dmg.value, spell.kind);
+			this.applyAction(char, spell, targ);
+
+		} else if (spell.target & TargetFlags.mult) {
+
+			const loc = await this.world.getOrGen(char.at);
+			const targs = await this.getTargets(char, spell.target, loc);
+
+			let k: keyof typeof targs;
+			for (k in targs) {
+
+				if (targs[k]) {
+					this.applyAction(char, spell, targs[k]!);
+				}
+
 			}
-			if (spell.dot) {
-				targ.addDot(spell.dot, this);
-			}
+
+		} else if (spell.target === TargetFlags.none) {
 
 		}
 
 	}
+
+	/**
+	 * Apply combat action to a target.
+	 * @param char 
+	 * @param act 
+	 * @param targ 
+	 */
+	applyAction(char: Char, act: TCombatAction, targ: Actor | Monster) {
+
+		if (!targ?.isAlive()) return false;
+		if (targ.isImmune(act.kind)) return false;
+
+		if (act.dmg) ApplyDmg(targ, act, char);
+		if (act.heal) ApplyHealing(targ, act as TCombatAction & { heal: TValue }, char);
+
+		//if (act.cure) { targ.cure(act.cure); }
+
+		if (act.dot) {
+			targ.addDot(act.dot);
+		}
+		if (act.add) {
+			AddValues(targ, act.add, 1);
+		}
+
+		return true;
+	}
+
 
 	/**
 	 * Get all targets at location that are affected by target flags.
@@ -223,7 +256,7 @@ export class Game {
 	 */
 	async getTargets(char: Npc, flags: TargetFlags, loc: Loc) {
 
-		const res: Npc[] = [];
+		const res: Record<string, Npc | undefined> = {};
 
 		const party = char instanceof Char ? this.getParty(char) : undefined;
 
@@ -231,7 +264,7 @@ export class Game {
 			for (const m of loc.npcs) {
 
 				if (!(char.team & m.team)) {
-					res.push(m);
+					res[m.id] = m;;
 				}
 
 			}
@@ -239,7 +272,7 @@ export class Game {
 
 				if (party?.includes(id)) continue;
 				const p = await this.charCache.fetch(id);
-				if (p) res.push(p);
+				if (p) res[p.id] = p;
 			}
 		}
 
@@ -247,7 +280,7 @@ export class Game {
 			for (const m of loc.npcs) {
 
 				if ((char.team & m.team)) {
-					res.push(m);
+					res[m.id] = m;
 				}
 
 			}
@@ -256,10 +289,13 @@ export class Game {
 
 					if (!party.includes(id)) continue;
 					const p = await this.charCache.fetch(id);
-					if (p) res.push(p);
+					if (p) res[p.id] = p;
 				}
 			}
 		}
+
+		if (flags & TargetFlags.self) res[char.id] = char;
+		else res[char.id] = undefined;
 
 		return res;
 

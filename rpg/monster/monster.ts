@@ -1,8 +1,7 @@
 import { randomUUID } from 'crypto';
 import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
-import { Game } from 'rpg/game';
-import { Effect, ProtoDot } from 'rpg/magic/dots';
+import { Dot, ProtoDot } from 'rpg/magic/dots';
 import { GetMonster, MonsterData } from 'rpg/parsers/monster';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
@@ -126,7 +125,7 @@ export class Monster {
 
 	// location of coordinate.
 	readonly at: Coord = new Coord(0, 0);
-	readonly dots: Effect[] = [];
+	readonly dots: Dot[] = [];
 
 	constructor(id?: string, proto?: MonsterData) {
 		this.id = id ?? randomUUID();
@@ -165,16 +164,15 @@ export class Monster {
 		return this._talents?.includes(s);
 	}
 
-	addDot(e: Effect | ProtoDot, game: Game) {
-		if (e instanceof ProtoDot) e = new Effect(e);
+	addDot(e: Dot | ProtoDot) {
+		if (e instanceof ProtoDot) e = new Dot(e);
 
 		this.dots.push(e);
 		e.start(this);
 
-		game.addLiveNpc(this);
-
 	}
-	rmDot(e: Effect | ProtoDot) {
+
+	rmDot(e: Dot | ProtoDot) {
 		const ind = this.dots.findIndex(v => v.id === e.id);
 		if (ind >= 0) {
 

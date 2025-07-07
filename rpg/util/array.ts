@@ -14,6 +14,9 @@ export const includesAny = <T>(arr: T[], ...params: T[]) => {
 
 }
 
+export const addUnique = <T extends any>(a: T[], e: T) => {
+	if (!a.includes(e)) a.push(e);
+}
 
 /**
  * Array utilities.

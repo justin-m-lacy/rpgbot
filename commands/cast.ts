@@ -37,6 +37,7 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `'${at}' not found.`);
 		}
 
+		const res = await rpg.game.action('cast', char, spell, targ);
 
 	}
 })

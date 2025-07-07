@@ -18,10 +18,11 @@ export type RawEffect = {
 	dot?: Record<string, any>,
 	time?: number
 } &
-	typeof import('../data/magic/dots.json', { assert: { type: 'json' } })[number];
+	typeof import('../data/magic/dots.json',
+	{ assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
-export const Effects: { [name: string]: ProtoDot } = {};
+const DotTypes: { [name: string]: ProtoDot } = {};
 
 /**
  * Effect prototype. class Effect is effect in progress.
@@ -86,7 +87,10 @@ export class ProtoDot {
 
 }
 
-export class Effect {
+/**
+ * Active dot.
+ */
+export class Dot {
 
 	static Decode(json: any) {
 
@@ -97,11 +101,11 @@ export class Effect {
 		}
 
 		let e = json.efx;
-		if (typeof (e) === 'string') e = Effects[e];
+		if (typeof (e) === 'string') e = DotTypes[e];
 		else if (e && typeof e === 'object') e = new ProtoDot(e);
 		if (!e) return null;
 
-		return new Effect(e, json.src, json.time);
+		return new Dot(e, json.src, json.time);
 
 	}
 
@@ -204,10 +208,10 @@ export const LoadDotTypes = async () => {
 
 	const efx = (await import('../data/magic/dots.json', { assert: { type: 'json' } })).default;
 	for (let i = efx.length - 1; i >= 0; i--) {
-		Effects[efx[i].id] = ParseDotType(efx[i] as any);
+		DotTypes[efx[i].id] = ParseDotType(efx[i] as any);
 	}
 
 }
 
 
-export const GetDot = (s: string) => Effects[s];
+export const GetDot = (s: string) => DotTypes[s];

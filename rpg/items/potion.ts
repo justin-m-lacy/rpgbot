@@ -75,7 +75,7 @@ export class Potion extends Item {
 				console.log('adding potion effect.');
 				char.addDot(e);
 
-			} else if (this._effect instanceof Effects.Effect) char.addDot(this._effect);
+			} else if (this._effect instanceof Effects.Dot) char.addDot(this._effect);
 
 		}
 

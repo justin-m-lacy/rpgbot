@@ -3,8 +3,7 @@ import { ActionFlags, CombatActor, TCombatAction } from "rpg/combat/types";
 import { Spell } from "rpg/magic/spell";
 import { Monster, Npc } from "rpg/monster/monster";
 import { Party } from "rpg/social/party";
-import { AddValues } from "rpg/values/apply";
-import { Numeric, TValue } from "rpg/values/types";
+import { Numeric } from "rpg/values/types";
 import { Loc } from "rpg/world/loc";
 
 export const HasEnemies = (c: Char, loc: Loc) => {
@@ -52,33 +51,7 @@ export const TryAction = (char: Char, act: TCombatAction, targ: Char | Monster) 
 
 }
 
-
-/**
- * Apply combat action to a target.
- * @param char 
- * @param act 
- * @param targ 
- */
-export const ApplyAction = (char: Char, act: TCombatAction, targ: Char | Monster) => {
-
-	if (!targ?.isAlive()) return false;
-	if (targ.isImmune(act.kind)) return false;
-
-	if (act.dmg) ApplyDmg(targ, act, char);
-	if (act.heal) ApplyHealing(targ, act as TCombatAction & { heal: TValue }, char);
-
-	//if (act.cure) { targ.cure(act.cure); }
-
-	if (act.dot) {
-		targ.addDot(act.dot, char.game);
-	}
-	if (act.add) {
-		AddValues(targ, act.add, 1);
-	}
-
-	return true;
-}
-const ApplyDmg = (
+export const ApplyDmg = (
 	targ: Npc,
 	attack: TCombatAction,
 	attacker?: Npc) => {

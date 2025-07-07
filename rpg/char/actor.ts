@@ -9,7 +9,7 @@ import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { EventEmitter } from 'stream';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
-import { Effect, ProtoDot } from '../magic/dots';
+import { Dot, ProtoDot } from '../magic/dots';
 import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
 import { Race, type GClass } from './race';
@@ -96,7 +96,7 @@ export class Actor {
 	private readonly _at: Coord;
 	race: Race;
 	readonly stats: StatBlock = new StatBlock();
-	readonly dots: Effect[] = [];
+	readonly dots: Dot[] = [];
 	private _myClass?: GClass;
 	readonly talents: string[] = [];
 
@@ -215,9 +215,9 @@ export class Actor {
 
 	}
 
-	addDot(e: Effect | ProtoDot) {
+	addDot(e: Dot | ProtoDot) {
 
-		if (e instanceof ProtoDot) e = new Effect(e);
+		if (e instanceof ProtoDot) e = new Dot(e);
 
 		this.dots.push(e);
 		e.start(this);
@@ -225,7 +225,7 @@ export class Actor {
 		this.events.emit('dotStart', this as any as Char, e);
 	}
 
-	rmDot(e: Effect | ProtoDot) {
+	rmDot(e: Dot | ProtoDot) {
 
 		const ind = this.dots.findIndex(v => v.id === e.id);
 		if (ind >= 0) {

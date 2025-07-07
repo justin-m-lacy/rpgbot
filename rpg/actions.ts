@@ -21,6 +21,7 @@ type TGameAction = {
 
 }
 
+/// TODO: make these dynamically added to game act list.
 export const GameActions = {
 
 	attack: {
@@ -38,7 +39,7 @@ export const GameActions = {
 	cast: {
 
 		tick: true,
-		exec: Game.prototype.attack,
+		exec: Game.prototype.cast,
 		rest: 0
 	},
 	cook: {

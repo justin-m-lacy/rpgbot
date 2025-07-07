@@ -27,7 +27,7 @@ export const IsSimple = (t: any): t is ISimple => {
 
 export const SymSimple = Symbol('Simple');
 
-export interface ISimple {
+export interface ISimple extends TValue {
 
 	id: string;
 	readonly [SymSimple]: true,

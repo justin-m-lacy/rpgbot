@@ -1,5 +1,5 @@
 import { TargetFlags } from "rpg/combat/targets";
-import { Effect } from "rpg/magic/dots";
+import { Dot } from "rpg/magic/dots";
 import { quickSplice } from "rpg/util/array";
 
 type StatusKeys = keyof typeof StatusFlags;
@@ -54,7 +54,7 @@ const CharmTargets: Partial<Record<number, TargetFlags>> = {
 	[TargetFlags.none]: TargetFlags.random,
 };
 
-type TCauses = Record<PropertyKey, Effect[] | undefined>;
+type TCauses = Record<PropertyKey, Dot[] | undefined>;
 
 /// Character state information.
 export class CharFlags {
@@ -114,7 +114,7 @@ export class CharFlags {
 	 * Blame each bit-flag in flags on cause.
 	 * @param cause
 	 */
-	add(cause: Effect) {
+	add(cause: Dot) {
 
 		const flags = cause.flags;
 		if (flags === 0) return;
@@ -130,7 +130,7 @@ export class CharFlags {
 
 	}
 
-	remove(dot?: Effect) {
+	remove(dot?: Dot) {
 
 		if (!dot) return;
 
@@ -146,7 +146,7 @@ export class CharFlags {
 
 	}
 
-	_rmCause(flag: number, cause: Effect) {
+	_rmCause(flag: number, cause: Dot) {
 
 		const a = this._causes[flag];
 		if (!a) return;
@@ -161,7 +161,7 @@ export class CharFlags {
 
 	}
 
-	_addCause(flag: number, cause: Effect) {
+	_addCause(flag: number, cause: Dot) {
 
 		const a = this._causes[flag];
 		if (a) a.push(cause);
@@ -173,7 +173,7 @@ export class CharFlags {
 	 * Refresh all state flags from active dots.
 	 * @param dots
 	 */
-	refresh(dots: Effect[]) {
+	refresh(dots: Dot[]) {
 
 		this.flags = 0;
 

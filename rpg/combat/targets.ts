@@ -14,12 +14,13 @@ export enum TargetFlags {
 	/// used to mark any target that affects multiple chars.
 	mult = 8,
 	enemies = 16 + mult,
-	allies = 32 + mult,
+	allies = 32 + self + mult,
 
 	/// anyone not caster.
 	others = 64 + mult,
 
-	all = 128 + mult,
+	all = 128 + enemy | ally | mult,
+	any = self | enemy | ally,
 
 	random = 256,
 }
