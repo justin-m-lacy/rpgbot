@@ -1,9 +1,9 @@
 import { StatusFlags } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
 import { ProtoEffect } from "rpg/magic/effects";
-import { Result } from "rpg/magic/results";
 import { Npc } from "rpg/monster/monster";
 import { Party } from "rpg/social/party";
+import { Path } from "rpg/values/paths";
 import { Id, Numeric, TValue } from "rpg/values/types";
 
 export type CombatActor = Npc | Party;
@@ -45,7 +45,10 @@ export type TCombatAction = {
 	/// Status flags to remove from target.	
 	cure?: StatusFlags;
 
-	result?: Result<Npc>;
+	/**
+	 * Values to add from action.
+	 */
+	add?: Path<TValue>
 
 	/// Dot to apply if successful.
 	dot?: ProtoEffect;

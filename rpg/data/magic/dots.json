@@ -9,18 +9,18 @@
     {
         "id": "poison_1",
         "name": "minor poison",
-        "dot": {
+        "add": {
             "hp": "-1d2"
         },
-        "time": 4
+        "duration": 4
     },
     {
         "id": "regen_1",
         "name": "minor regeneration",
-        "dot": {
+        "add": {
             "hp": "1d2"
         },
-        "time": 4
+        "duration": 4
     },
     {
         "id": "str_1",
@@ -28,7 +28,7 @@
         "mods": {
             "str": 1
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "con_1",
@@ -36,7 +36,7 @@
         "mods": {
             "con": 1
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "dex_1",
@@ -44,7 +44,7 @@
         "mods": {
             "dex": 1
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "wis_1",
@@ -52,7 +52,7 @@
         "mods": {
             "wis": 1
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "int_1",
@@ -60,7 +60,7 @@
         "mods": {
             "int": 1
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "cha_1",
@@ -68,15 +68,15 @@
         "mods": {
             "cha": 1
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "regen_2",
         "name": "light regeneration",
-        "dot": {
+        "add": {
             "hp": "1d6"
         },
-        "time": 5
+        "duration": 5
     },
     {
         "id": "str_2",
@@ -84,7 +84,7 @@
         "mods": {
             "str": 2
         },
-        "time": 25
+        "duration": 25
     },
     {
         "id": "con_2",
@@ -92,7 +92,7 @@
         "mods": {
             "con": 2
         },
-        "time": 25
+        "duration": 25
     },
     {
         "id": "dex_2",
@@ -100,7 +100,7 @@
         "mods": {
             "dex": 2
         },
-        "time": 25
+        "duration": 25
     },
     {
         "id": "int_2",
@@ -108,7 +108,7 @@
         "mods": {
             "int": 2
         },
-        "time": 25
+        "duration": 25
     },
     {
         "id": "wis_2",
@@ -116,7 +116,7 @@
         "mods": {
             "wis": 2
         },
-        "time": 25
+        "duration": 25
     },
     {
         "id": "cha_2",
@@ -124,7 +124,7 @@
         "mods": {
             "cha": 2
         },
-        "time": 25
+        "duration": 25
     },
     {
         "id": "str_3",
@@ -132,7 +132,7 @@
         "mods": {
             "str": 4
         },
-        "time": 30
+        "duration": 30
     },
     {
         "id": "con_3",
@@ -140,7 +140,7 @@
         "mods": {
             "con": 4
         },
-        "time": 30
+        "duration": 30
     },
     {
         "id": "dex_3",
@@ -148,7 +148,7 @@
         "mods": {
             "dex": 4
         },
-        "time": 30
+        "duration": 30
     },
     {
         "id": "int_3",
@@ -156,7 +156,7 @@
         "mods": {
             "int": 4
         },
-        "time": 30
+        "duration": 30
     },
     {
         "id": "wis_3",
@@ -164,7 +164,7 @@
         "mods": {
             "wis": 4
         },
-        "time": 30
+        "duration": 30
     },
     {
         "id": "cha_3",
@@ -172,39 +172,39 @@
         "mods": {
             "cha": 4
         },
-        "time": 30
+        "duration": 30
     },
     {
         "id": "regen_3",
         "name": "regeneration",
-        "dot": {
+        "add": {
             "hp": "3d4+4"
         },
-        "time": 10
+        "duration": 10
     },
     {
         "id": "regen_4",
         "name": "strong regeneration",
-        "dot": {
+        "add": {
             "hp": "3d6+8"
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "regen_5",
         "name": "major regeneration",
-        "dot": {
+        "add": {
             "hp": "3d8+10"
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "regen_6",
         "name": "insane regeneration",
-        "dot": {
+        "add": {
             "hp": "5d8+15"
         },
-        "time": 15
+        "duration": 15
     },
     {
         "id": "revive_1",

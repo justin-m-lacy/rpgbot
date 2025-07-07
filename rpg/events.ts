@@ -5,8 +5,8 @@ import { Effect } from 'rpg/magic/effects';
 
 export type CharEvents = {
 
-	effectStart: (char: Actor, efx: Effect) => void;
-	effectEnd: (char: Actor, efx: Effect) => void;
+	dotStart: (char: Actor, efx: Effect) => void;
+	dotEnd: (char: Actor, efx: Effect) => void;
 	died: (char: Char) => void;
 	revived: (char: Char) => void;
 	levelUp: (char: Char) => void;

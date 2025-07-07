@@ -140,6 +140,12 @@ export class Monster {
 
 	}
 
+	isImmune(type?: string) { return false }
+
+	getResist(type?: string): number {
+		return 0;
+	}
+
 	setLoc(at: Coord) {
 		this.at.setTo(at);
 	}
@@ -150,7 +156,10 @@ export class Monster {
 	 */
 	log(str: string) { }
 
-	skillRoll() { return roll(1, 5 * (this.level + 4)); }
+	statRoll(...stats: string[]) {
+		/// TODO
+		return roll(1, 5 * (this.level + 4));
+	}
 
 	hasTalent(s: string) {
 		return this._talents?.includes(s);

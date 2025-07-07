@@ -8,7 +8,7 @@ import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { Monster, Npc } from '../monster/monster';
 import { Party } from '../social/party';
-import { Dice, roll } from '../values/dice';
+import { Dice } from '../values/dice';
 import { World } from '../world/world';
 import { Loot } from './loot';
 
@@ -23,7 +23,7 @@ const fist = new Weapon('fists', 'fists',
 const NpcExp = (lvl: number) => Math.floor(10 * Math.pow(1.3, lvl));
 const PvpExp = (lvl: number) => Math.floor(10 * Math.pow(1.2, lvl / 2));
 
-type CombatEntity = Char | Monster | Party;
+export type CombatEntity = Char | Monster | Party;
 
 /**
  * Single combat in progress.
@@ -246,9 +246,9 @@ export class Fight {
 			return;
 		}
 
-		let atk = attacker.skillRoll() + attacker.getModifier('dex') + attacker.getModifier('wis');
+		let atk = attacker.statRoll() + attacker.getModifier('dex') + attacker.getModifier('wis');
 		const def =
-			defender.skillRoll() + defender.getModifier('dex') + defender.getModifier('wis');
+			defender.statRoll() + defender.getModifier('dex') + defender.getModifier('wis');
 
 		if (!attacker.hasTalent('steal')) atk -= 40;
 		if (wot) atk -= 10;
@@ -345,7 +345,7 @@ export class Fight {
 
 }
 
-class AttackInfo {
+export class AttackInfo {
 
 	get dmgType() { return this.weap?.dmgType; }
 
@@ -385,15 +385,13 @@ class AttackInfo {
 
 	}
 
-	skillRoll(act: Actor | Monster) { return roll(1, 5 * (act.level.valueOf() + 4)); }
-
 	rollHit() {
 
 		if (this.weap == null) {
 			return false;
 		}
 
-		this.hitroll = this.skillRoll(this.attacker) + this.attacker.toHit + this.weap.toHit;
+		this.hitroll = this.attacker.statRoll() + this.attacker.toHit + this.weap.toHit;
 		if (this.hitroll > +this.defender.armor) {
 			this._hit = true;
 			return true;

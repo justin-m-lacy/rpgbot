@@ -12,7 +12,6 @@ import { quickSplice } from 'rpg/util/array';
 import { AddValues, HasValues } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
 import { EventEmitter } from 'stream';
-import { Actor } from './char/actor';
 import { Char } from './char/char';
 import { Fight } from "./combat/fight";
 import { ItemPicker } from './inventory';
@@ -23,7 +22,6 @@ import { Monster, Npc } from './monster/monster';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
-import * as dice from './values/dice';
 import { DirVal, toDirection } from './world/loc';
 import { World } from "./world/world";
 
@@ -83,6 +81,9 @@ export class Game {
 		this.liveNpcs[npc.id] = npc;
 	}
 
+	/**
+	 * change to live locations, not live npcs.
+	 */
 	private async updateNpcs() {
 
 		for (const k in this.liveNpcs) {
@@ -108,8 +109,6 @@ export class Game {
 		}
 
 	}
-
-	private skillRoll(act: Actor) { return dice.roll(1, 5 * (+act.level + 4)); }
 
 	/**
 	 * Test if a character can perform an action
@@ -174,7 +173,7 @@ export class Game {
 		const pot = GenPotion(itemName);
 		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
 
-		const s = this.skillRoll(char) + char.getModifier('wis');
+		const s = char.statRoll('wis');
 		if (s < 10 * pot.level) {
 			return char.output(`${char.name} failed to brew ${itemName}.`);
 		}
@@ -276,7 +275,7 @@ export class Game {
 
 		const d = char.at.abs();
 
-		let r = this.skillRoll(char) + char.getModifier('dex') + char.getModifier('wis');
+		let r = char.statRoll() + char.getModifier('dex') + char.getModifier('wis');
 		const p = this.getParty(char);
 
 		r -= d / 10;
@@ -531,7 +530,7 @@ export class Game {
 		const p = this.getParty(char);
 		if (!p || !p.includes(targ)) return `${targ.name} is not in your party.`;
 
-		let roll = this.skillRoll(char) + char.getModifier('wis') + (2 * targ.hp.value) - 5 * +targ.level;
+		let roll = char.statRoll('wis') + (2 * targ.hp.value) - 5 * +targ.level;
 		if (!char.hasTalent('revive')) roll -= 20;
 		if (roll < 10) return char.output(`You failed to revive ${targ.name}.`);
 
@@ -559,7 +558,7 @@ export class Game {
 
 	scout(this: Game, char: Char) {
 
-		const r = (char.skillRoll() + char.getModifier('int'));
+		const r = char.statRoll('int');
 
 		if (r < 5) return char.output('You are lost.');
 
@@ -573,7 +572,7 @@ export class Game {
 
 	track(this: Game, char: Char, targ: Char) {
 
-		let r = (char.skillRoll() + char.getModifier('int')); // - (targ.skillRoll() + targ.getModifier('wis') );
+		let r = (char.statRoll('int')); // - (targ.statRoll('wis')
 		if (char.hasTalent('track')) r *= 2;
 		else r -= 10;
 

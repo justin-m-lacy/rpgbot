@@ -159,6 +159,15 @@ export class Actor {
 
 	}
 
+	/// todo
+	isImmune(type?: string): boolean {
+		return false;
+	}
+	getResist(type?: string): number {
+		return this.resists[type ?? ''].valueOf() ?? 0;
+	}
+
+
 	private setMods(mods: ModBlock<typeof this>) {
 
 		this.applyMods(mods);
@@ -185,14 +194,13 @@ export class Actor {
 	}
 
 	statRoll(...stats: string[]) {
-		let roll = this.skillRoll();
+		let v = roll(1, 5 * (this.stats.level.value + 4));
 		for (let s of stats) {
-			roll += this.getModifier(s);
+			v += this.getModifier(s);
 		}
-		return roll;
+		return v;
 
 	}
-	skillRoll() { return roll(1, 5 * (this.stats.level.value + 4)); }
 
 	levelUp() {
 
@@ -210,7 +218,7 @@ export class Actor {
 		this.dots.push(e);
 		e.start(this);
 
-		this.events.emit('effectStart', this as any as Char, e);
+		this.events.emit('dotStart', this as any as Char, e);
 	}
 
 	rmDot(e: Effect | ProtoEffect) {

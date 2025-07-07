@@ -32,8 +32,8 @@ export class ProtoEffect {
 	readonly name: string;
 	readonly desc?: string;
 	readonly mods: Path<IMod> | null;
-	readonly dot: Path<TValue> | null;
-	readonly time: number;
+	readonly add: Path<TValue> | null;
+	readonly duration: number;
 
 	// kind of damage.
 	readonly kind: string;
@@ -53,8 +53,8 @@ export class ProtoEffect {
 		id: string,
 		name?: string,
 		mods?: Path<IMod> | null,
-		dot?: Path<TValue> | null,
-		time?: number,
+		add?: Path<TValue> | null,
+		duration?: number,
 		flags?: StatusFlags;
 		stack?: number,
 		kind?: string
@@ -62,7 +62,7 @@ export class ProtoEffect {
 
 		this.id = data.id;
 		this.name = data.name ?? data.id;
-		this.dot = data.dot ?? null;
+		this.add = data.add ?? null;
 		this.mods = data.mods ?? null;
 
 		this.kind = data.kind ?? 'unknown';
@@ -70,7 +70,7 @@ export class ProtoEffect {
 		this.stack = data.stack ?? 0;
 		this.flags = data.flags ?? StatusFlags.none;
 
-		this.time = data.time ?? 0;
+		this.duration = data.duration ?? 0;
 
 	}
 
@@ -78,8 +78,8 @@ export class ProtoEffect {
 
 		return {
 			mods: this.mods,
-			dot: this.dot,			// formulas have toJSON()?
-			time: this.time
+			dot: this.add,			// formulas have toJSON()?
+			time: this.duration
 		};
 
 	}
@@ -119,7 +119,7 @@ export class Effect {
 
 	get name() { return this.proto.name; }
 
-	get dot() { return this.proto.dot; }
+	get dot() { return this.proto.add; }
 
 	get mod() { return this.proto.mods }
 
@@ -140,7 +140,7 @@ export class Effect {
 
 		this.proto = effect;
 		this.source = src;
-		this._time = time || this.proto.time;
+		this._time = time || this.proto.duration;
 
 	}
 
@@ -169,7 +169,7 @@ export class Effect {
 	 */
 	tick<T extends Npc>(char: T) {
 
-		if (!this.proto.time) return false;
+		if (!this.proto.duration) return false;
 
 		this._time--;
 
@@ -193,8 +193,8 @@ export const ParseDotType = (raw: RawEffect) => {
 		id: raw.id,
 		name: raw.name,
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
-		dot: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
-		time: raw.time,
+		add: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
+		duration: raw.time,
 	});
 
 

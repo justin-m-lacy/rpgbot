@@ -18,7 +18,7 @@ export class Attack implements TCombatAction {
 			cure: this.cure || undefined,
 			state: this.setFlags || undefined,
 			target: this.target || undefined,
-			result: this.result || undefined,
+			result: this.add || undefined,
 			dot: this.dot
 		};
 
@@ -30,7 +30,7 @@ export class Attack implements TCombatAction {
 	kind?: string;
 	type?: string;
 
-	result: any;
+	add: any;
 
 	repeatHits?: number;
 

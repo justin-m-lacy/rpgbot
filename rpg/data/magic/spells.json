@@ -52,8 +52,10 @@
         "target": "any",
         "desc": "Provides a small resistence to fire.",
         "dot": {
-            "resist.fire": 5,
-            "duration": 50
+            "mod": {
+                "resist.fire": 5,
+                "duration": 50
+            }
         },
         "level": 1,
         "cost": {

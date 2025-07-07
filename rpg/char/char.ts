@@ -88,6 +88,7 @@ export class Char extends Actor {
 
 	}
 
+
 	/**
 	 * Runs every time char is loaded from storage.
 	 */

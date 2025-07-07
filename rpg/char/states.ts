@@ -11,14 +11,9 @@ export enum StatusFlags {
 	nospells = 4,
 	confused = 8,
 	charmed = 16,
-	taunt = 32,
-	hide = 64,
-	defender = 128,
-	no_onexpire = 256,
-	no_ondeath = 512,
+	hide = 32,
 
-	noact = noattack + nodefend + nospells,
-	immobile = noattack + 32
+	dead = noattack + nodefend + nospells
 }
 
 export const ParseStateFlags = (list: (keyof typeof StatusFlags)[] | string) => {
@@ -73,14 +68,11 @@ export class CharFlags {
 
 	get causes() { return this._causes; }
 
-	private _flags: number = 0;
-	get flags() { return this._flags; }
-	set flags(v) { this._flags = v; }
+	flags: number = 0;
 
-	canCast() { return (this._flags & StatusFlags.nospells) === 0 }
-	canAttack() { return (this._flags & StatusFlags.noattack) === 0 }
-	canDefend() { return (this._flags & StatusFlags.nodefend) === 0 }
-	canParry() { return (this._flags & StatusFlags.defender) !== 0 }
+	canCast() { return (this.flags & StatusFlags.nospells) === 0 }
+	canAttack() { return (this.flags & StatusFlags.noattack) === 0 }
+	canDefend() { return (this.flags & StatusFlags.nodefend) === 0 }
 
 	/// flag - state flag
 	has(flag: number) {
@@ -134,7 +126,7 @@ export class CharFlags {
 			f *= 2;
 
 		}
-		this._flags |= flags;
+		this.flags |= flags;
 
 	}
 
@@ -183,7 +175,7 @@ export class CharFlags {
 	 */
 	refresh(dots: Effect[]) {
 
-		this._flags = 0;
+		this.flags = 0;
 
 		for (const p in this._causes) {
 			this._causes[p] = undefined;
@@ -198,6 +190,6 @@ export class CharFlags {
 
 		}
 
-	} // refresh()
+	}
 
 }
