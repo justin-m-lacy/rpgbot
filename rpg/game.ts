@@ -123,9 +123,9 @@ export class Game<A extends Record<string, TGameAction>,
 		return true;
 	}
 
-	async action<T extends A[string]>(
-		act: K, char: Char,
-		...params: ActParams<T>) {
+	async action<T extends K>(
+		act: T, char: Char,
+		...params: ActParams<A[T]>) {
 
 		char.clearLog();
 
