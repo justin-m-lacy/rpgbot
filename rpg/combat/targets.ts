@@ -23,6 +23,9 @@ export enum TargetFlags {
 	any = self | enemy | ally,
 
 	random = 256,
+
+	/// location based spell.
+	loc = 512
 }
 
 /**

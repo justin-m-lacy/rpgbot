@@ -224,7 +224,7 @@ export class Loc {
 	/**
 	 * npcs at location.
 	 */
-	readonly npcs: Array<Monster> = [];
+	readonly npcs: Monster[] = [];
 
 	readonly exits: Partial<Record<DirVal, Exit>> = {};
 	readonly inv: Inventory;
@@ -486,12 +486,15 @@ export class Loc {
 
 	addNpc(m: Monster) { this.npcs.push(m); }
 
+	removeNpcAt = (ind: number) => {
+		quickSplice(this.npcs, ind);
+	}
+
 	removeNpc(m: Monster) {
 
-		let ind = this.npcs.indexOf(m);
-		console.log('removing npc at: ' + ind);
-		if (ind >= 0) return this.npcs.splice(ind, 1)[0];
-		return null;
+		const ind = this.npcs.indexOf(m);
+		console.log('remove npc at: ' + ind);
+		if (ind >= 0) quickSplice(this.npcs, ind);
 
 	}
 

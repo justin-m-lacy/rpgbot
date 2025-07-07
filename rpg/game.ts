@@ -29,7 +29,7 @@ import * as Trade from './trade';
 import { DirVal, Loc, toDirection } from './world/loc';
 import { World } from "./world/world";
 
-const NPC_UPDATE_MS = 5000;
+const LOC_UPDATE_MS = 3000;
 
 
 export class Game {
@@ -47,9 +47,9 @@ export class Game {
 	readonly actions = GameActions;
 
 	/**
-	 * Npcs with dots or actions in progress.
+	 * locations with active npcs.
 	 */
-	readonly liveNpcs: Record<string, Npc> = {};
+	readonly liveLocs: Record<string, Loc> = {}
 
 	private updateTimer: NodeJS.Timeout | null = null;
 
@@ -65,7 +65,7 @@ export class Game {
 
 		this.guilds = new GuildManager(cache.subcache('guilds'));
 
-		this.updateTimer = setInterval(() => this.updateNpcs(), NPC_UPDATE_MS);
+		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS);
 
 	}
 
@@ -73,33 +73,34 @@ export class Game {
 	 * Add npc to list of live-updating npcs.
 	 * @param npc 
 	 */
-	addLiveNpc(npc: Npc) {
-		this.liveNpcs[npc.id] = npc;
+	setLiveLoc(loc: Loc) {
+		this.liveLocs[loc.key] = loc;
 	}
 
-	/**
-	 * change to live locations, not live npcs.
-	 */
-	private async updateNpcs() {
+	private async updateLocs() {
 
-		for (const k in this.liveNpcs) {
+		let liveNpcs: number;
 
-			const npc = this.liveNpcs[k];
-			if (npc.state === 'dead') {
-				delete this.liveNpcs[k];
-				continue;
-			}
+		for (const k in this.liveLocs) {
 
-			this.tickDots(npc)
+			liveNpcs = 0;
 
-			if (npc.dots.length === 0) {
+			const loc = this.liveLocs[k];
+			for (let i = loc.npcs.length - 1; i >= 0; i--) {
 
-				// if location isn't loaded, npc should sleep.
-				const loc = this.world.tryGetLoc(npc.at);
-				if (!loc || loc.chars.length === 0) {
-					delete this.liveNpcs[k];
+				const npc = loc.npcs[i];
+				if (!npc.isAlive()) {
+					loc.removeNpcAt(i);
+				}
+				this.tickDots(npc);
+				if (npc.dots.length > 0) {
+					liveNpcs++;
 				}
 
+			}
+			if (liveNpcs === 0) {
+				// no npcs active here.
+				delete this.liveLocs[k];
 			}
 
 		}
@@ -196,10 +197,12 @@ export class Game {
 
 		}
 
+		const loc = await this.world.getOrGen(char.at);
+
 		// single target.
 		if (targ) {
 
-			this.applyAction(char, spell, targ);
+			this.applyAction(char, spell, targ, loc);
 
 		} else if (spell.target & TargetFlags.mult) {
 
@@ -210,13 +213,13 @@ export class Game {
 			for (k in targs) {
 
 				if (targs[k]) {
-					this.applyAction(char, spell, targs[k]!);
+					this.applyAction(char, spell, targs[k]!, loc);
 				}
 
 			}
 
 		} else if (spell.target === TargetFlags.none) {
-
+			// generalized spell.
 		}
 
 	}
@@ -227,7 +230,7 @@ export class Game {
 	 * @param act 
 	 * @param targ 
 	 */
-	applyAction(char: Char, act: TCombatAction, targ: Actor | Monster) {
+	applyAction(char: Char, act: TCombatAction, targ: Actor | Monster, at: Loc) {
 
 		if (!targ?.isAlive()) return false;
 		if (targ.isImmune(act.kind)) return false;
@@ -239,6 +242,7 @@ export class Game {
 
 		if (act.dot) {
 			targ.addDot(act.dot);
+			if (targ instanceof Monster) this.setLiveLoc(at);
 		}
 		if (act.add) {
 			AddValues(targ, act.add, 1);
