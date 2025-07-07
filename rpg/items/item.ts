@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
-import { ItemData, ItemType } from 'rpg/parsers/items';
+import { ItemData, ItemType } from 'rpg/items/types';
+
 
 export class Item {
 

@@ -3,44 +3,14 @@ import { Grave } from "rpg/items/grave";
 import { Grimoire } from "rpg/items/grimoire";
 import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
-import { Wearable } from "rpg/items/wearable";
+import { ItemType } from "rpg/items/types";
 import { Spell } from "rpg/magic/spell";
+import { DecodeWearable } from "rpg/parsers/armor";
 import { Feature } from "rpg/world/feature";
 
-export type ItemData = {
-	id: string,
-	name: string,
-	type?: ItemType,
-	desc?: string,
-	cost?: number,
-	maker?: string,
-	inscrip?: string,
-	level?: number,
-	created?: number,
-	/// file/image attachment
-	embed?: string
-}
-
-export enum ItemType {
-
-	Weapon = 'weapon',
-	Armor = 'armor',
-	Spell = 'spell',
-	Potion = 'potion',
-	Food = 'food',
-	Drink = 'drink',
-	Scroll = 'scroll',
-	Grimoire = 'grimoire',
-	Unique = 'unique',
-	Chest = 'chest',
-	Feature = 'feature',
-	Grave = 'grave',
-	Unknown = 'unknown'
-}
-
 const ItemDecoders: Record<string, (data: any) => Item> = {
-	[ItemType.Armor]: Wearable.Decode,
-	[ItemType.Weapon]: Wearable.Decode,
+	[ItemType.Armor]: DecodeWearable,
+	[ItemType.Weapon]: DecodeWearable,
 	[ItemType.Spell]: Spell.Decode,
 	[ItemType.Potion]: Potion.Decode,
 	[ItemType.Grimoire]: Grimoire.Decode,

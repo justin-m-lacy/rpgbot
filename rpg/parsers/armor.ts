@@ -1,4 +1,5 @@
 
+import { Item } from 'rpg/items/item';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import BaseArmors from '../data/items/armors.json';
 import { Material } from '../items/material';
@@ -6,6 +7,19 @@ import { Material } from '../items/material';
 type RawArmorData = (typeof BaseArmors)[number];
 
 const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawArmorData[] }> = {};
+
+
+export const DecodeWearable = (json: any) => {
+
+	const a = new Wearable(json.id, json.name, json.desc);
+	a.material = json.material;
+	a.slot = json.slot;
+	a.armor = json.armor;
+
+	if (json.mods) a.mods = json.mods;
+
+	return Item.InitData(json, a);
+}
 
 export const GenArmor = (slot: HumanSlot | null = null, lvl: number = 0) => {
 

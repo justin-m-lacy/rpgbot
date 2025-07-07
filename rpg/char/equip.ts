@@ -1,5 +1,5 @@
 import { ItemList } from 'rpg/display/items';
-import { ItemType } from 'rpg/parsers/items';
+import { ItemType } from 'rpg/items/types';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { HumanSlot, toSlot, Wearable } from "../items/wearable";

@@ -1,4 +1,4 @@
-import { ItemData, ItemType } from 'rpg/parsers/items';
+import { ItemData, ItemType } from 'rpg/items/types';
 import { Char } from '../char/char';
 import { Item } from '../items/item';
 import * as acts from '../magic/action';

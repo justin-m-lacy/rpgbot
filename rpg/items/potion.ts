@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
-import { ItemType } from 'rpg/parsers/items';
+import { ItemType } from 'rpg/items/types';
 import { Char } from '../char/char';
 import * as Effects from '../magic/dots';
 import { Item } from './item';

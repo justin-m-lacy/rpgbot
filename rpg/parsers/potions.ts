@@ -1,6 +1,6 @@
 import { AddProtoItems } from 'rpg/builders/itemgen';
 import { Potion } from 'rpg/items/potion';
-import { ItemData, ItemType } from 'rpg/parsers/items';
+import { ItemData, ItemType } from 'rpg/items/types';
 
 export type RawPotionData = (typeof import('../data/items/potions.json', { assert: { type: 'json' } }))[number] & ItemData;
 

@@ -1,5 +1,5 @@
 import Cache from 'archcache';
-import { ActParams, Blockers, GameActions, TGameActions } from 'rpg/actions';
+import { ActParams, Blockers, TGameAction } from 'rpg/actions';
 import { Craft } from 'rpg/builders/itemgen';
 import { Actor } from 'rpg/char/actor';
 import { CookItem, TryEat } from 'rpg/char/cooking';
@@ -8,8 +8,8 @@ import { TargetFlags } from 'rpg/combat/targets';
 import { TCombatAction } from 'rpg/combat/types';
 import { GameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
+import { ItemType } from 'rpg/items/types';
 import { Spell } from 'rpg/magic/spell';
-import { ItemType } from 'rpg/parsers/items';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
 import { AddValues, MissingProp } from 'rpg/values/apply';
@@ -31,8 +31,8 @@ import { World } from "./world/world";
 
 const LOC_UPDATE_MS = 3000;
 
-
-export class Game {
+export class Game<A extends Record<string, TGameAction>,
+	K extends string & keyof A = string & keyof A> {
 
 	readonly charCache: Cache<Char>;
 	readonly world: World
@@ -44,7 +44,7 @@ export class Game {
 
 	readonly events: GameEvents = new EventEmitter();
 
-	readonly actions = GameActions;
+	readonly actions: A;
 
 	/**
 	 * locations with active npcs.
@@ -57,7 +57,9 @@ export class Game {
 	 *
 	 * @param rpg
 	 */
-	constructor(cache: Cache<any>, charCache: Cache<Char>) {
+	constructor(cache: Cache<any>, charCache: Cache<Char>, actions: A) {
+
+		this.actions = actions;
 
 		this.world = new World(cache.subcache<Block>('world'));
 
@@ -113,7 +115,7 @@ export class Game {
 	 * @param char
 	 * @param act - action to attempt to perform.
 	 */
-	canAct(char: Char, act: string) {
+	canAct(char: Char, act: K) {
 		if (Blockers[char.state]?.[act]) {
 			char.log(`Cannot ${act} while ${char.state}.`);
 			return false;
@@ -121,8 +123,8 @@ export class Game {
 		return true;
 	}
 
-	async action<T extends keyof TGameActions>(
-		act: T, char: Char,
+	async action<T extends A[string]>(
+		act: K, char: Char,
 		...params: ActParams<T>) {
 
 		char.clearLog();
@@ -136,7 +138,7 @@ export class Game {
 			char.recover(this.actions[act].rest);
 		}
 
-		return await (GameActions[act].exec as Function).apply(
+		return await (this.actions[act].exec as Function).apply(
 			this, [char, ...params]
 		);
 
@@ -162,7 +164,7 @@ export class Game {
 	}
 
 
-	brew(this: Game, char: Char, itemName: string, imgURL?: string) {
+	brew(this: Game<A, K>, char: Char, itemName: string, imgURL?: string) {
 
 		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
 
@@ -182,7 +184,7 @@ export class Game {
 
 	}
 
-	async cast(this: Game, char: Char, spell: Spell, targ?: Char | Monster) {
+	async cast(this: Game<A, K>, char: Char, spell: Spell, targ?: Char | Monster) {
 
 		// pay cast.
 		if (spell.cost) {
@@ -305,7 +307,7 @@ export class Game {
 
 	}
 
-	cook(this: Game, char: Char, what: string | number | Item) {
+	cook(this: Game<A, K>, char: Char, what: string | number | Item) {
 
 		let item = what instanceof Item ? what : char.inv.get(what);
 		if (!item) return 'Item not found.';
@@ -318,14 +320,14 @@ export class Game {
 
 	}
 
-	craft(this: Game, char: Char, itemName: string, desc?: string, imgURL?: string) {
+	craft(this: Game<A, K>, char: Char, itemName: string, desc?: string, imgURL?: string) {
 
 		const ind = Craft(char, itemName, desc, imgURL);
 		return char.output(`${char.name} crafted ${itemName}. (${ind})`);
 
 	}
 
-	destroy(this: Game, char: Char, first: string | number, end?: string | number | null) {
+	destroy(this: Game<A, K>, char: Char, first: string | number, end?: string | number | null) {
 
 		if (end) {
 
@@ -347,7 +349,7 @@ export class Game {
 
 	}
 
-	async move(this: Game, char: Char, dir: string) {
+	async move(this: Game<A, K>, char: Char, dir: string) {
 
 		const loc = await this.world.tryMove(char, toDirection(dir));
 		if (!loc) return;
@@ -363,7 +365,7 @@ export class Game {
 
 	}
 
-	async hike(this: Game, char: Char, dir: DirVal) {
+	async hike(this: Game<A, K>, char: Char, dir: DirVal) {
 
 		const d = char.at.abs();
 
@@ -530,7 +532,7 @@ export class Game {
 
 	}
 
-	async goHome(this: Game, char: Char) {
+	async goHome(this: Game<A, K>, char: Char) {
 		return char.output(await this.world.goHome(char));
 	}
 
@@ -553,7 +555,7 @@ export class Game {
 
 	}
 
-	equip(this: Game, char: Char, wot: ItemIndex) {
+	equip(this: Game<A, K>, char: Char, wot: ItemIndex) {
 
 		let res = char.equip(wot);
 		if (res === true) res = `${char.name} equips ${wot}`;	// TODO,echo slot used.
@@ -565,7 +567,7 @@ export class Game {
 
 	}
 
-	inscribe(this: Game, char: Char, wot: ItemIndex, inscrip: string) {
+	inscribe(this: Game<A, K>, char: Char, wot: ItemIndex, inscrip: string) {
 
 		const item = char.getItem(wot) as Item | undefined;
 		if (!item) return char.output('Item not found.');
@@ -578,13 +580,13 @@ export class Game {
 	}
 
 
-	sell(this: Game, char: Char, first: string | number, end?: string | number | null) {
+	sell(this: Game<A, K>, char: Char, first: string | number, end?: string | number | null) {
 
 		return char.output(Trade.sell(char, first, end));
 
 	}
 
-	give(this: Game, char: Char, dest: Char, what: string) {
+	give(this: Game<A, K>, char: Char, dest: Char, what: string) {
 
 		return char.output(Trade.transfer(char, dest, what));
 
@@ -595,7 +597,7 @@ export class Game {
 	}
 
 
-	unequip(this: Game, char: Char, slot?: string) {
+	unequip(this: Game<A, K>, char: Char, slot?: string) {
 
 		if (!slot) {
 			return char.output('Specify an equip slot to remove.');
@@ -606,17 +608,17 @@ export class Game {
 
 	}
 
-	async drop(this: Game, char: Char, what: ItemPicker, end?: ItemIndex | null) {
+	async drop(this: Game<A, K>, char: Char, what: ItemPicker, end?: ItemIndex | null) {
 
 		return char.output(await this.world.drop(char, what, end));
 
 	}
 
-	async take(this: Game, char: Char, first: ItemIndex, end?: ItemIndex | null) {
+	async take(this: Game<A, K>, char: Char, first: ItemIndex, end?: ItemIndex | null) {
 		return char.output(await this.world.take(char, first, end));
 	}
 
-	revive(this: Game, char: Char, targ: Char) {
+	revive(this: Game<A, K>, char: Char, targ: Char) {
 
 		if (targ.state !== 'dead') return `${targ.name} is not dead.`;
 		const p = this.getParty(char);
@@ -633,7 +635,7 @@ export class Game {
 
 	}
 
-	async rest(this: Game, char: Char) {
+	async rest(this: Game<A, K>, char: Char) {
 
 		const p = this.getParty(char);
 		if (p && p.isLeader(char)) {
@@ -648,7 +650,7 @@ export class Game {
 
 	}
 
-	scout(this: Game, char: Char) {
+	scout(this: Game<A, K>, char: Char) {
 
 		const r = char.statRoll('int');
 
@@ -662,7 +664,7 @@ export class Game {
 
 	}
 
-	track(this: Game, char: Char, targ: Char) {
+	track(this: Game<A, K>, char: Char, targ: Char) {
 
 		let r = (char.statRoll('int')); // - (targ.statRoll('wis')
 		if (char.hasTalent('track')) r *= 2;
@@ -698,7 +700,7 @@ export class Game {
 
 	}
 
-	async attackNpc(this: Game, char: Char, npc: Monster) {
+	async attackNpc(this: Game<A, K>, char: Char, npc: Monster) {
 
 		let p1: Char | Party = this.getParty(char);
 		if (!p1 || !p1.isLeader(char)) p1 = char;
@@ -710,7 +712,7 @@ export class Game {
 
 	}
 
-	async steal(this: Game, src: Char, dest: Char, wot?: ItemPicker | null) {
+	async steal(this: Game<A, K>, src: Char, dest: Char, wot?: ItemPicker | null) {
 
 		const com = new Fight(src, dest, this.world);
 		await com.steal(src, wot);
@@ -719,7 +721,7 @@ export class Game {
 
 	}
 
-	async attack(this: Game, src: Char, targ: Char | Monster) {
+	async attack(this: Game<A, K>, src: Char, targ: Char | Monster) {
 
 		if (targ instanceof Monster) {
 			return this.attackNpc(src, targ);
@@ -739,7 +741,7 @@ export class Game {
 
 	}
 
-	quaff(this: Game, char: Char, wot: ItemIndex) {
+	quaff(this: Game<A, K>, char: Char, wot: ItemIndex) {
 
 		const p = char.getItem(wot) as Item | undefined;
 		if (!p) return char.output('Item not found.');
@@ -758,7 +760,7 @@ export class Game {
 
 	}
 
-	eat(this: Game, char: Char, what: ItemIndex) {
+	eat(this: Game<A, K>, char: Char, what: ItemIndex) {
 
 		const item = char.inv.get(what);
 		if (!item) {

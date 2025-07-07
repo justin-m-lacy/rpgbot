@@ -1,5 +1,5 @@
 import { Item } from "rpg/items/item";
-import { ItemType } from "rpg/parsers/items";
+import { ItemType } from "rpg/items/types";
 import { BadTypeError } from "rpg/util/errors";
 
 export class Grimoire extends Item {

@@ -3,6 +3,7 @@ import type { ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { MessageFlags, User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
+import { GameActions } from 'rpg/game-actions';
 import { ItemIndex } from 'rpg/items/container';
 import { LoadActions } from 'rpg/magic/action';
 import { LoadDotTypes } from 'rpg/magic/dots';
@@ -36,7 +37,7 @@ export class Rpg {
 	readonly context: BotContext<any>;
 
 	readonly world: World;
-	readonly game: Game;
+	readonly game: Game<typeof GameActions>;
 
 	/**
 	 * Map User id's to name of last char played as.
@@ -58,7 +59,7 @@ export class Rpg {
 
 		});
 
-		this.game = new Game(this.cache, this.charCache);
+		this.game = new Game(this.cache, this.charCache, GameActions);
 
 		this.world = this.game.world;
 

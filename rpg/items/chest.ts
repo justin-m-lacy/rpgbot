@@ -1,6 +1,7 @@
 import { ItemMenu } from 'rpg/display/items';
 import type { ItemIndex } from 'rpg/items/container';
-import { DecodeItem, ItemType } from 'rpg/parsers/items';
+import { ItemType } from 'rpg/items/types';
+import { DecodeItem } from 'rpg/parsers/items';
 import { Inventory, SymInventory, type IInventory } from '../inventory';
 import { Item } from "./item";
 

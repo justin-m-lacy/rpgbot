@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { ItemType } from 'rpg/parsers/items';
+import { ItemType } from 'rpg/items/types';
 import { DamageSrc } from '../formulas';
 import { Item } from './item';
 import { Material } from './material';
