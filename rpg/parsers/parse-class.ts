@@ -105,7 +105,7 @@ export const InitClasses = async () => {
 
 		try {
 			const cls = ParseRace(raw[i]);
-			classByName[cls.name] = cls;
+			classByName[cls.id] = cls;
 			classes.push(cls);
 
 		} catch (e) {

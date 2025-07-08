@@ -2,21 +2,10 @@ import { TargetFlags } from 'rpg/combat/targets';
 import { Item } from 'rpg/items/item';
 import type { IMod } from 'rpg/values/imod';
 import type { Path } from 'rpg/values/paths';
-import type { ISimple, Numeric } from 'rpg/values/types';
+import type { Numeric } from 'rpg/values/types';
 import { ProtoDot } from './dots';
 
 export class Spell extends Item {
-
-	static Decode(json: any) {
-
-		const spell = new Spell(json);
-
-		Item.InitData(json, spell);
-
-		return spell;
-
-	}
-
 
 	/**
 	 * type of damage.
@@ -35,7 +24,7 @@ export class Spell extends Item {
 	constructor(data: {
 		id: string;
 		name?: string;
-		dmg?: ISimple;
+		dmg?: Numeric;
 		mods?: Path<IMod> | null,
 		dot?: ProtoDot | null,
 		cost?: Path<Numeric>,
@@ -56,9 +45,6 @@ export class Spell extends Item {
 
 		this.dmg = data.dmg;
 
-	}
-
-	cast(src: any, target: any) {
 	}
 
 }

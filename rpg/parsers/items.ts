@@ -4,14 +4,14 @@ import { Grimoire } from "rpg/items/grimoire";
 import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
 import { ItemType } from "rpg/items/types";
-import { Spell } from "rpg/magic/spell";
 import { DecodeWearable } from "rpg/parsers/armor";
+import { DecodeSpell } from "rpg/parsers/spells";
 import { Feature } from "rpg/world/feature";
 
 const ItemDecoders: Record<string, (data: any) => Item> = {
 	[ItemType.Armor]: DecodeWearable,
 	[ItemType.Weapon]: DecodeWearable,
-	[ItemType.Spell]: Spell.Decode,
+	[ItemType.Spell]: DecodeSpell,
 	[ItemType.Potion]: Potion.Decode,
 	[ItemType.Grimoire]: Grimoire.Decode,
 	[ItemType.Grave]: Grave.Decode,

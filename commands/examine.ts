@@ -5,8 +5,8 @@ import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: CommandData('ex', 'Examine character or monster.')
-		.addStringOption(StrOpt('what', 'Character or monster to examine.').setRequired(true)),
+	data: CommandData('ex', 'Examine item at location.')
+		.addStringOption(StrOpt('what', 'Item on ground.').setRequired(true)),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.userCharOrErr(m, m.user);

@@ -1,4 +1,5 @@
-const rollex = /^([\+\-]?\d*)?d(\d*)([\+\-]?\d+)?/;
+import { TValue } from './types';
+const rollex = /^([\+\-]?\d*)?d([\+\-]?\d*)([\+\-]?\d+)?/;
 
 const MaxRoll = 99999;
 const MaxBonus = 999999;
@@ -7,7 +8,11 @@ const minmax = (v: number, min: number, max: number) => {
 	return (v < min) ? min : (v > max ? max : v);
 }
 
-export const parseRoll = (str: string) => {
+export const IsDiceRoll = (str: string) => {
+	return rollex.test(str);
+}
+
+export const ExecRoll = (str: string) => {
 
 	const res = rollex.exec(str);
 	if (res === null) return roll(1, 6);
@@ -22,17 +27,13 @@ export const parseRoll = (str: string) => {
 
 	let tot = bonus;
 
-	if (num >= 0) {
-
-		while (num-- > 0) tot += Math.floor(sides * Math.random()) + 1;
-		return tot;
-
-	} else {
-
-		while (num++ < 0) tot += Math.floor(sides * Math.random()) + 1;
-		return -tot;
-
+	if (num < 0) {
+		num = -num;
+		sides = -sides;
 	}
+
+	while (num-- > 0) tot += Math.floor(sides * Math.random()) + 1;
+	return tot;
 
 }
 
@@ -40,37 +41,26 @@ export const roll = (count: number, sides: number, bonus: number = 0) => {
 
 	let tot = bonus;
 
-	if (count >= 0) {
-
-		while (count-- > 0) tot += Math.floor(sides * Math.random()) + 1;
-		return tot;
-
-	} else {
-
-		while (count++ < 0) tot += Math.floor(sides * Math.random()) + 1;
-		return -tot;
-
+	if (count < 0) {
+		count = -count;
+		sides = -sides;
 	}
+
+	while (count++ < 0) tot += Math.floor(sides * Math.random()) + 1;
+	return -tot;
 
 }
 
 
-export class Dice {
+export class Dice implements TValue {
 
 	static Parse(str: string) {
 
-		const res = rollex.exec(str);
-		if (res === null) return null;
-
-		let num = parseInt(res[1]);
-		let sides = parseInt(res[2]);
-		let bonus = parseInt(res[3]);
-
-		if (Number.isNaN(num)) num = 1;
-		if (Number.isNaN(sides)) sides = 6;
-		if (Number.isNaN(bonus)) bonus = 0;
-
-		return new Dice(num, sides, bonus);
+		const res = rollex.exec(str)!;
+		return new Dice(
+			Number.parseInt(res[1]),
+			Number.parseInt(res[2]),
+			Number.parseInt(res[3]));
 
 	}
 
@@ -96,8 +86,16 @@ export class Dice {
 
 	constructor(count: number = 1, sides: number = 0, bonus: number = 0) {
 
+		if (count < 0) {
+			count = -count;
+			sides = -sides;
+		}
+		if (Number.isNaN(count)) count = 1;
+		if (Number.isNaN(bonus)) bonus = 0;
+
 		this.sides = sides;
 		this.n = count;
+
 		this.bonus = bonus;
 
 	}
@@ -106,18 +104,12 @@ export class Dice {
 
 	valueOf() {
 
-		let tot = this.bonus, s = this.sides;
+		let tot = this.bonus;
 		let i = this.n;
 
-		if (i >= 0) {
+		while (i-- > 0) tot += Math.floor(this.sides * Math.random() + 1);
+		return tot;
 
-			while (i-- > 0) tot += Math.floor(s * Math.random() + 1);
-			return tot;
-		} else {
-
-			while (i++ < 0) tot += Math.floor(s * Math.random() + 1);
-			return -tot;
-		}
 
 	}
 

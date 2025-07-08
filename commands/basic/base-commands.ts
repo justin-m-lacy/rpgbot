@@ -4,7 +4,7 @@ import { ChatCommand } from '@/bot/cmd-wrapper';
 import { CommandData, NewCommand, NumOpt, StrOpt, type Command } from '@/bot/command';
 import { SendPrivate } from '@/utils/display';
 import { PermissionFlagsBits } from 'discord.js';
-import { parseRoll } from '../../rpg/values/dice';
+import { ExecRoll } from '../../rpg/values/dice';
 
 export function GetCommands(): Command[] {
 
@@ -136,7 +136,7 @@ const CmdRoll = NewCommand({
         try {
 
             const dice = m.options.getString('dice', true);
-            const total = parseRoll(dice);
+            const total = ExecRoll(dice);
             return m.reply(m.user.displayName + ' rolled ' + total);
 
         } catch (err) {

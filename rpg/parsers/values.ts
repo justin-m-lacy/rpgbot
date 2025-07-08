@@ -1,3 +1,4 @@
+import { Dice, IsDiceRoll } from "rpg/values/dice";
 import { ParsePaths } from "rpg/values/paths";
 import { IsPercentData, ParsePercent } from "rpg/values/percent";
 import { IsRangeData, Range } from "rpg/values/range";
@@ -39,10 +40,12 @@ export const ParseValue = (id: string, v?: string | number | object): TValue | u
 
 	if (typeof v === 'string') {
 
-		if (IsSetterData(v)) return ParseSetter(id, v);
+		if (IsDiceRoll(v)) return Dice.Parse(v);
+		if (IsRangeData(v)) return new Range(v, id);
 		if (IsPercentData(v)) return ParsePercent(v, id);
 		//if (IsPctValue(v)) return ParsePctValue(v, id);
-		if (IsRangeData(v)) return new Range(v, id);
+
+		//if (IsSetterData(v)) return ParseSetter(id, v);
 
 		return undefined;
 	}

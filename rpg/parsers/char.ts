@@ -10,7 +10,7 @@ import { Coord, IsCoord } from 'rpg/world/loc';
 import { GetClass, GetRace } from './parse-class';
 
 
-export const ReviveChar = (game: Game, json: any) => {
+export const DecodeChar = (game: Game, json: any) => {
 
 	if (!json) throw new NullDataError();
 

@@ -124,14 +124,14 @@ export class Actor {
 
 	constructor(name: string, opts: {
 		game: Game,
-		race: Race, rpClass?: GClass
+		race: Race, cls?: GClass
 	}) {
 
 		this.name = name;
 
 		this.game = opts.game;
 
-		this._myClass = opts.rpClass;
+		this._myClass = opts.cls;
 
 		this.race = opts.race;
 
@@ -167,7 +167,7 @@ export class Actor {
 		return false;
 	}
 	getResist(type?: string): number {
-		return this.resists[type ?? ''].valueOf() ?? 0;
+		return this.resists[type ?? '']?.valueOf() ?? 0;
 	}
 
 

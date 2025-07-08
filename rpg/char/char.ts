@@ -46,8 +46,8 @@ export class Char extends Actor {
 
 		json.equip = this._equip;
 
-		json.race = this.race.name;
-		json.cls = this.cls?.name;
+		json.race = this.race.id;
+		json.cls = this.cls?.id;
 
 		return json;
 	}
