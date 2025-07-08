@@ -3,12 +3,10 @@ import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
-import { Actor } from 'rpg/char/actor';
 import { CookItem, TryEat } from 'rpg/char/cooking';
-import { ApplyHealing, CalcDamage } from 'rpg/combat/combat';
+import { Combat } from 'rpg/combat/combat';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
-import { ActionFlags, TCombatAction } from 'rpg/combat/types';
 import { TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
@@ -18,7 +16,6 @@ import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
 import { AddValues, MissingProp } from 'rpg/values/apply';
-import { TValue } from 'rpg/values/types';
 import type Block from 'rpg/world/block';
 import { Char } from './char/char';
 import { Fight, NpcExp, PvpExp } from "./combat/fight";
@@ -56,6 +53,11 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	readonly liveLocs: Record<string, Loc> = {}
 
 	private updateTimer: NodeJS.Timeout | null = null;
+
+	/**
+	 * Combat control for game.
+	 */
+	readonly combat = new Combat(this);
 
 	/**
 	 *
@@ -211,7 +213,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		// single target.
 		if (targ) {
 
-			this.applyAction(char, spell, targ, loc);
+			this.combat.applyAction(char, spell, targ, loc);
 
 		} else if (spell.target & TargetFlags.mult) {
 
@@ -222,94 +224,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			for (k in targs) {
 
 				if (targs[k]) {
-					this.applyAction(char, spell, targs[k]!, loc);
+					this.combat.applyAction(char, spell, targs[k]!, loc);
 				}
 
 			}
 
 		} else if (spell.target === TargetFlags.none) {
 			// generalized spell.
-		}
-
-	}
-
-	/**
-	 * Apply combat action to target.
-	 * @param char 
-	 * @param act 
-	 * @param targ 
-	 */
-	applyAction(char: Char, act: TCombatAction, targ: Actor | Mob, at: Loc) {
-
-		if (!targ?.isAlive()) return false;
-		if (targ.isImmune(act.kind)) return false;
-
-		console.log(`apply spell: ${act.dmg?.valueOf()}`);
-
-		if (act.dmg) this.applyDmg(targ, act, char);
-		if (act.heal) ApplyHealing(targ, act as TCombatAction & { heal: TValue }, char);
-
-		//if (act.cure) { targ.cure(act.cure); }
-
-		if (act.dot) {
-			targ.addDot(act.dot);
-			if (targ instanceof Mob) this.setLiveLoc(at);
-		}
-		if (act.add) {
-			AddValues(targ, act.add, 1);
-		}
-
-		return true;
-	}
-
-	applyDmg(
-		targ: TActor,
-		attack: TCombatAction,
-		attacker?: TActor) {
-
-		let dmg = CalcDamage(attack.dmg ?? 0, attack, attacker, targ);
-
-		let resist = targ.getResist(attack.kind);
-		if (resist !== 0) {
-			dmg *= (1 - Math.min(resist / 100, 1));
-
-		}
-
-		let dmg_reduce = 0
-		if (resist < 1 && !((attack?.actFlags ?? 0) & ActionFlags.nodefense)) {
-
-			//dmg_reduce = (targ.defense?.valueOf() ?? 0) / ((targ.defense?.valueOf() ?? 0) + dmg);
-			//dmg -= dmg_reduce * dmg;
-
-		}
-
-		const parried = 0;
-		if (parried) dmg *= parried;
-		targ.hp.value += (-dmg);
-
-		/*gevents.emit('charHit', ctx, {
-			target: targ,
-			attacker: attack,
-			dmg,
-			resist,
-			reduced: dmg_reduce,
-			parried
-		});*/
-
-		if (targ.hp.value <= 0) {
-			targ.updateState();
-			if (targ instanceof Char) {
-				this.events.emit('charDie', targ, attacker);
-			} else if (targ instanceof Mob) {
-				this.events.emit('mobDie', targ, attacker);
-			}
-		}
-
-
-		if (attack.leech && attacker && dmg > 0) {
-			const amt = Math.floor(100 * Number(attack.leech) * dmg) / 100;
-			attacker.hp.value += amt;
-			//gevents.emit('combat', ctx, targ, attacker, attacker.name + ' Steals ' + amt + ' Life');
 		}
 
 	}

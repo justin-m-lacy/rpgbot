@@ -60,31 +60,3 @@ export type TCombatAction = {
 	dot?: ProtoDot;
 
 }
-
-/*export class Combat {
-
-	readonly actors: Record<string, Npc | undefined> = {};
-
-	readonly loc: Loc;
-
-	constructor(at: Loc) {
-
-		this.loc = at;
-
-	}
-
-	update() {
-
-	}
-
-	addActor(m: Npc) {
-
-		this.actors[m.id] = m;
-
-	}
-
-	rmActor(m: Npc) {
-		this.actors[m.id] = undefined;
-	}
-
-}*/
