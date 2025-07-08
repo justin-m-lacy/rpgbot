@@ -3,12 +3,18 @@ import { Char } from "rpg/char/char";
 import { ActionFlags, TCombatAction } from "rpg/combat/types";
 import { AttackInfo } from "rpg/events";
 import { Game } from "rpg/game";
+import { ItemPicker } from "rpg/inventory";
+import { Item } from "rpg/items/item";
 import { Spell } from "rpg/magic/spell";
 import { Mob, TActor } from "rpg/monster/monster";
+import { PossPronoun, SubjPronoun } from "rpg/social/gender";
 import { Party } from "rpg/social/party";
 import { AddValues } from "rpg/values/apply";
 import { Numeric, TValue } from "rpg/values/types";
-import { Loc } from "rpg/world/loc";
+
+
+
+
 
 /**
  * Handle combat for a single game context.
@@ -21,23 +27,38 @@ export class Combat {
 		this.game = game;
 	}
 
-	async attack(src: TActor, act: TCombatAction, targ: TActor | Party, srcParty?: Party) {
+	/**
+	 * Exp for killing target.
+	 * @param lvl
+	 */
+	npcExp(lvl: number) { return Math.floor(10 * Math.pow(1.3, lvl)) };
+	pvpExp(lvl: number) { return Math.floor(10 * Math.pow(1.2, lvl / 2)) };
 
-		const d = targ instanceof Party ? await targ.randTarget() : targ;
-		if (!d) { console.warn('tryHit() targ null'); return; }
+	async tryAttack(char: TActor, ark: TCombatAction, who: TActor | Party) {
 
-		//const attack = new AttackInfo(src, d, srcParty);
+		const targ = who instanceof Party ? await who.randTarget() : who;
+		if (!targ) return;
 
-		this.resp += `${src.name} attacks ${targ.name} with ${attack.name}`;
+		if (!targ?.isAlive()) {
+			(char instanceof Char ? char : targ).log(`${targ.name} is already dead.`);
+		}
 
-		if (attack.hit) {
+		(targ instanceof Char ? targ : char).log(
+			`${char.name} attacks ${who.name} with ${ark.name}`
+		);
 
-			this.resp += `\n${d.name} was hit for ${attack.dmg} ${attack.dmgType} damage.`;
-			this.resp += ` hp: ${d.hp.valueOf()}/${d.hp.max.valueOf()}`;
+		const hitroll = + char.toHit + (ark.tohit?.valueOf() ?? 0);
+		if (hitroll < targ.armor.valueOf()) {
 
-		} else this.resp += `\n${src.name} misses!`;
+			(targ instanceof Char ? targ : char).log(`\n${char.name} misses!`);
 
-		this.attacks.push(attack);
+		} else {
+
+			this.doAttack(char, ark, targ);
+
+		}
+
+
 
 	}
 
@@ -47,10 +68,12 @@ export class Combat {
 	 * @param act 
 	 * @param targ 
 	 */
-	applyAction(char: TActor, act: TCombatAction, targ: Actor | Mob, at: Loc) {
+	doAttack(char: TActor, act: TCombatAction, targ: Actor | Mob) {
 
-		if (!targ?.isAlive()) return false;
-		if (targ.isImmune(act.kind)) return false;
+		if (targ.isImmune(act.kind)) {
+			char.log(`${targ.name} is immune to ${act.kind}`);
+			return false;
+		}
 
 		if (act.dmg) this.applyDmg(targ, act, char);
 		if (act.heal) this.applyHealing(targ, act as TCombatAction & { heal: TValue }, char);
@@ -61,7 +84,6 @@ export class Combat {
 
 		if (act.dot) {
 			targ.addDot(act.dot, char.id);
-			if (targ instanceof Mob) this.game.setLiveLoc(at);
 		}
 		if (act.add) {
 			AddValues(targ, act.add, 1);
@@ -116,6 +138,82 @@ export class Combat {
 
 	}
 
+	/**
+		 *
+		 * @param wot - optional item to try to take.
+		 */
+	async trySteal(char: Char, who?: TActor | Party, wot?: ItemPicker | null) {
+
+		let defender = who instanceof Party ? await who.randChar() : who;
+		if (!defender) return;
+
+		/// Mobs always have to be at same location to be targetted.
+		if (!(char.at.equals(defender.at))) {
+
+			this.resp += `${char.name} does not see ${defender.name} at their location.`;
+			return;
+
+		}
+
+		let atk = char.statRoll('dex', 'wis');
+		const def =
+			defender.statRoll('dex', 'wis');
+
+		if (!char.hasTalent('steal')) atk -= 40;
+		if (wot) atk -= 10;
+
+		const delta = atk - def;
+
+		if (delta > 15) {
+
+			this.doSteal(char, defender, wot, delta);
+
+		} else if (delta < 5 && defender.state === 'alive') {
+
+			this.resp += `${defender.name} catches ${char.name} attempting to steal.\n`;
+			this.tryAttack(defender, char);
+
+		} else this.resp += `${char.name} failed to steal from ${defender.name}`;
+
+	}
+
+	/**
+	 * 
+	 * @param src 
+	 * @param targ 
+	 * @param wot 
+	 * @param stealRoll - TODO: influence quality of item.
+	 * @returns 
+	 */
+	private doSteal(src: TActor, targ: TActor, wot?: ItemPicker | null, stealRoll: number = 0) {
+
+		let it: Item | null | undefined;
+		if (wot) {
+
+			it = targ.takeItem(wot);
+			if (!it) {
+				this.resp += `${src.name} tries to rob ${targ.name}, but could not find the item ${SubjPronoun((src as any).sex)} wanted.`;
+				return;
+			}
+
+		} else it = targ.randItem();
+
+		if (it) {
+
+			let ind = src.addItem(it);
+			this.resp += `${src.name} stole ${it.name} from ${targ.name}. (${ind})`;
+
+			if (src instanceof Char) {
+				src.addHistory('stolen');
+				src.addExp(2 * +targ.level);
+			}
+
+		} else this.resp +=
+			`${src.name} attempts to steal from ${targ.name} but ${PossPronoun((src as any).sex)} pack is empty.`;
+
+	}
+
+
 	async trySpellHit(src: Char | Mob, targ: TActor, spell: Spell, srcParty?: Party) {
 
 		src.log(`${src.name} casts ${spell.name} at ${targ.name}`);
@@ -124,19 +222,6 @@ export class Combat {
 
 		} else {
 
-		}
-
-	}
-
-	rollMeleeHit(char: TActor, defender: TActor) {
-
-		if (this.weap == null) {
-			return false;
-		}
-
-		const hitroll = char.statRoll() + char.toHit + this.weap.toHit;
-		if (hitroll > defender.armor) {
-			return true;
 		}
 
 	}

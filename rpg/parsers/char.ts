@@ -70,7 +70,9 @@ export const DecodeChar = (game: Game, json: any) => {
 		}
 	}
 
-	if (json.equip) char.setEquip(ReviveEquip(json.equip));
+	if (json.equip) char.setEquip(
+		ReviveEquip(json.equip)
+	);
 
 	char.init();
 

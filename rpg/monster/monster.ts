@@ -242,8 +242,6 @@ export class Mob {
 	// used in combat
 	getState() { return this._state; }
 
-	getWeapons() { return this._weap; }
-
 	hit(dmg: number, type?: string) {
 
 		this._hp.add(-dmg);

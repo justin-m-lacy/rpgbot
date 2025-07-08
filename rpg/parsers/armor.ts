@@ -3,6 +3,7 @@ import { AddProtoItem } from 'rpg/builders/itemgen';
 import { Item } from 'rpg/items/item';
 import { ItemData } from 'rpg/items/types';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
+import { ParseMods } from 'rpg/parsers/mods';
 import BaseArmors from '../data/items/armors.json';
 import { Material } from '../items/material';
 
@@ -18,7 +19,10 @@ export const DecodeWearable = (json: any) => {
 	a.slot = json.slot;
 	a.armor = json.armor;
 
-	if (json.mods) a.mods = json.mods;
+	if (json.mods) {
+		console.log(`wear mods: ${json.mods}`);
+		a.mods = ParseMods(json.mods, a.id);
+	}
 
 	return Item.InitData(json, a);
 }

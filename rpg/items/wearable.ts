@@ -45,18 +45,10 @@ export class Wearable extends Item {
 	set armor(v) { this._armor = v < 0 ? 0 : v }
 
 	/**
-	 * @property slot - equip slot used.
-	 */
-	slot: HumanSlot = 'hands';
-
-	/**
 	 * @property material - armor material.
 	 */
 	get material() { return this._material; }
 	set material(m) { this._material = m; }
-
-	get mods() { return this._mods; }
-	set mods(v) { this._mods = v; }
 
 	/**
 	 * From template data.
@@ -88,16 +80,20 @@ export class Wearable extends Item {
 		json.armor = this._armor;
 		json.slot = this.slot;
 		json.material = this._material;
-		if (this._mods) json.mods = this._mods;
+		if (this.mods) json.mods = this.mods;
 
 		return json;
 
 	}
 
 	private _armor: number;
-
 	private _material: string = '';
-	private _mods: Path<IMod> | undefined;
+
+	/**
+	 * @property slot - equip slot used.
+	 */
+	slot: HumanSlot = 'hands';
+	mods: Path<IMod> | undefined;
 
 	constructor(id: string, name: string, desc?: string) {
 

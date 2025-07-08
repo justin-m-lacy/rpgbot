@@ -204,8 +204,7 @@ export class Char extends Actor {
 
 			if (Array.isArray(it)) {
 				it.forEach(it => this.applyEquip(it));
-			}
-			else this.applyEquip(it);
+			} else this.applyEquip(it);
 
 		}
 		console.log(this.name + ' armor: ' + this.armor);
@@ -319,17 +318,14 @@ export class Char extends Actor {
 
 	testDmg() {
 
-		const weaps = this._equip.getWeapons();
-		if (weaps === null) return 'No weapons equipped.';
-		else if (Array.isArray(weaps)) {
+		const weaps = this.attacks;
+		if (weaps.length == 0) return 'No weapons equipped.';
 
-			let res = '';
-			for (let i = weaps.length - 1; i >= 0; i--) {
-				res += weaps[i].name + ' rolled: ' + weaps[i].roll() + '\n';
-			}
-			return res;
-
-		} else return weaps.name + ' rolled: ' + weaps.roll();
+		let res = '';
+		for (let i = weaps.length - 1; i >= 0; i--) {
+			res += weaps[i].name + ' rolled: ' + (weaps[i].dmg ?? 0).valueOf() + '\n';
+		}
+		return res;
 
 	}
 

@@ -20,7 +20,7 @@ import { quickSplice } from 'rpg/util/array';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
 import { Char } from './char/char';
-import { Fight, NpcExp, PvpExp } from "./combat/fight";
+import { Fight } from "./combat/fight";
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
@@ -118,7 +118,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 				const atk = randElm(npc.attacks);
 
 				if (targ && atk) {
-					this.combat.attack(npc, atk, targ);
+					await this.combat.tryAttack(npc, atk, targ);
 				}
 
 				liveNpcs++;
@@ -190,22 +190,18 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async attack(this: Game<A, K>, src: Char, targ: Char | Mob, atk?: TCombatAction) {
+	async attack(this: Game<A, K>, src: Char, targ: TActor, atk?: TCombatAction) {
 
-		if (targ instanceof Mob) {
-			return this.attackNpc(src, targ);
-		}
-
-		const p1 = this.getParty(src) || src;
-		let p2: Char | Party = this.getParty(targ);
-
+		let p2: TActor | Party | undefined = targ instanceof Char ? this.getParty(targ) : undefined;
 		if (!p2 || !p2.at.equals(targ.at)) {
 			p2 = targ;
 		}
 
 		atk ??= randElm(src.attacks);
 		if (atk) {
-			await this.combat.attack(src, atk, p2, p1);
+			await this.combat.tryAttack(src, atk, p2);
+
+			// reprisal.
 		}
 
 		return src.flushLog();
@@ -234,7 +230,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		// single target.
 		if (targ) {
 
-			this.combat.applyAction(char, spell, targ, loc);
+			this.combat.doAttack(char, spell, targ);
 
 		} else if (spell.target & TargetFlags.mult) {
 
@@ -245,7 +241,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			for (k in targs) {
 
 				if (targs[k]) {
-					this.combat.applyAction(char, spell, targs[k]!, loc);
+					this.combat.doAttack(char, spell, targs[k]!);
 				}
 
 			}
@@ -331,18 +327,21 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	async onSlay(slayer: Char, targ: TActor, party?: Party) {
 
-		const lvl = targ.level;
 
 		if (targ instanceof Char) {
 
-			party ? await party.addExp(PvpExp(+lvl)) : slayer.addExp(PvpExp(+lvl));
+			const exp = this.combat.pvpExp(targ.level.valueOf());
+			party ? await party.addExp(exp) : slayer.addExp(exp);
+
 			slayer.evil = +slayer.evil + (-targ.evil) / 2 + 1 + targ.getModifier('cha');
 			slayer.addHistory('pk');
 
 		} else {
 
+			const exp = this.combat.npcExp(targ.level.valueOf());
+			party ? await party.addExp(exp) : slayer.addExp(exp);
+
 			if (targ.evil) slayer.evil += (-targ.evil / 4);
-			party ? await party.addExp(NpcExp(+lvl)) : slayer.addExp(NpcExp(+lvl));
 			slayer.addHistory('slay');
 
 		}
@@ -530,7 +529,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	getParty(char: Char) { return this._charParties[char.name]; }
+	getParty(char: Char) { return this._charParties[char.id]; }
 
 	getChar(charId: string) {
 		return this.charCache.fetch(charId);
@@ -835,18 +834,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		else dist = 'imponderably far';
 
 		return char.output(`You believe ${targ.name} is ${dist ? dist + ' ' : ''}to the ${dir}.`);
-
-	}
-
-	async attackNpc(this: Game<A, K>, char: Char, npc: Mob) {
-
-		let p1: Char | Party = this.getParty(char);
-		if (!p1 || !p1.isLeader(char)) p1 = char;
-
-		const com = new Fight(p1, npc, this.world);
-		await com.fightNpc();
-
-		return char.output(com.getText());
 
 	}
 

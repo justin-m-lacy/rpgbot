@@ -55,7 +55,7 @@ let n: PronounMap = {
 	'child': 'thing'
 };
 
-let sexes: { [types: string]: PronounMap } = {
+const sexes: { [types: string]: PronounMap } = {
 
 	m,
 	male: m,
@@ -67,6 +67,13 @@ let sexes: { [types: string]: PronounMap } = {
 
 // grammatical replacement indicators.
 let genReg = /%sub|%ob|%adj|%pos|%ref|%is/g
+
+export const PossPronoun = (sex: SexType = 'n') => {
+	return sexes[sex].pos;
+}
+export const SubjPronoun = (sex: SexType = 'n') => {
+	return sexes[sex].sub;
+}
 
 /**
  * Re-sexes a string with grammatical gender markers: e.g. %sub (subjective)

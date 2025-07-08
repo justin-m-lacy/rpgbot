@@ -1,6 +1,8 @@
 import { randomUUID } from 'crypto';
 import { TCombatAction } from 'rpg/combat/types';
 import { ItemType } from 'rpg/items/types';
+import { Dice } from 'rpg/values/dice';
+import * as forms from '../formulas';
 import { DamageSrc } from '../formulas';
 import { Item } from './item';
 import { Material } from './material';
@@ -101,3 +103,7 @@ export class Weapon extends Wearable implements TCombatAction {
 
 
 }
+
+const Fists = new Weapon('fists', 'fists',
+	new forms.DamageSrc(new Dice(1, 2, 0), 'blunt'),
+	'Just plain fists.');

@@ -66,21 +66,6 @@ export class Equip {
 		return this.slots[slot] ?? null;
 	}
 
-	getWeapons(): Weapon | Weapon[] | null {
-
-		const right = this.slots.right as Weapon | null;
-		const left = this.slots.left as Weapon | null;
-
-		if (right === null) return left ? (left.type === ItemType.Weapon ? left as Weapon : null) : null;
-		else if (left === null) return right.type === ItemType.Weapon ? right : null;
-
-		if (right.type !== ItemType.Weapon) return left.type === ItemType.Weapon ? left : null;
-		if (left.type !== ItemType.Weapon) return right.type === ItemType.Weapon ? right : null;
-
-		return [left, right];
-
-	}
-
 	/**
 	 *
 	 * @param it
