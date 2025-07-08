@@ -1,10 +1,12 @@
 
+import { AddProtoItem } from 'rpg/builders/itemgen';
 import { Item } from 'rpg/items/item';
+import { ItemData } from 'rpg/items/types';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import BaseArmors from '../data/items/armors.json';
 import { Material } from '../items/material';
 
-type RawArmorData = (typeof BaseArmors)[number];
+type RawArmorData = ItemData & (typeof BaseArmors)[number];
 
 const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawArmorData[] }> = {};
 
@@ -30,7 +32,7 @@ export const GenArmor = (slot: HumanSlot | null = null, lvl: number = 0) => {
 	if (slot) {
 		tmp = getRandSlot(slot, lvl);
 	} else {
-		const list = BaseArmors.filter((t: RawArmorData) => !t.level || t.level <= lvl);
+		const list = (BaseArmors as RawArmorData[]).filter((t: RawArmorData) => !t.level || t.level <= lvl);
 		tmp = list[Math.floor(list.length * Math.random())];
 	}
 
@@ -44,9 +46,13 @@ export function InitArmors() {
 
 	for (let k = BaseArmors.length - 1; k >= 0; k--) {
 
-		const armor = BaseArmors[k];
-		const slot = armor.slot as HumanSlot;
+		const armor = BaseArmors[k] as any as RawArmorData;
+		armor.name ??= armor.id;
 
+		AddProtoItem(armor);
+
+		/// save by slot.
+		const slot = armor.slot as HumanSlot;
 		const list = ArmorBySlot[slot] ?? (ArmorBySlot[slot] = []);
 		list.push(armor);
 

@@ -49,7 +49,7 @@ export default NewCommand<Rpg>(
 			if (res) {
 				SendPrivate(m, `${stat} increased.`);
 			} else {
-				SendPrivate(m, char.getLog());
+				SendPrivate(m, char.flushLog());
 			}
 
 		}

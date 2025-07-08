@@ -2,7 +2,9 @@ import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { TargetFlags } from "rpg/combat/targets";
+import { GetSpell } from "rpg/parsers/spells";
 import { Rpg } from "rpg/rpg";
+import { SendBlock } from '../rpg/display/display';
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
@@ -20,7 +22,8 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, 'Cast what spell?');
 		}
 
-		const spell = char.spelllist.find(spellName);
+		const spell = GetSpell(spellName);
+		//char.spelllist.find(spellName);
 		if (spell == null) {
 			return SendPrivate(m, `You do not know the spell, ${spellName}`);
 		}
@@ -37,7 +40,9 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `'${at}' not found.`);
 		}
 
-		const res = await rpg.game.action('cast', char, spell, targ);
+		await rpg.game.action('cast', char, spell, targ);
+
+		SendBlock(m, char.flushLog());
 
 	}
 })

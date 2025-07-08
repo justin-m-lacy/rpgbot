@@ -1,12 +1,12 @@
 import { StatusFlags } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
 import { ProtoDot } from "rpg/magic/dots";
-import { Npc } from "rpg/monster/monster";
+import { TActor } from "rpg/monster/monster";
 import { Party } from "rpg/social/party";
 import { Path } from "rpg/values/paths";
 import { Id, Numeric, TValue } from "rpg/values/types";
 
-export type CombatActor = Npc | Party;
+export type CombatActor = TActor | Party;
 
 export enum ActionFlags {
 	none = 0,

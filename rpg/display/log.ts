@@ -11,9 +11,8 @@ export class Log {
 	 * Gets and clears the current log text.
 	 * @returns The current log text.
 	 */
-	getLog(clear: boolean = true) {
+	flushLog() {
 		const t = this._text;
-		if (clear) this._text = '';
 		return t;
 	}
 

@@ -6,7 +6,7 @@ import { IsInt } from "rpg/util/parse";
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Item } from "../items/item";
-import { Monster } from '../monster/monster';
+import { Mob } from '../monster/monster';
 import { Feature } from './feature';
 
 export type DirVal = 'n' | 's' | 'e' | 'w' | 'u' | 'd' | 'l' | 'r' | 'x' | 'enter';
@@ -135,7 +135,7 @@ export class Coord implements TCoord {
 		this.y = y;
 	}
 
-	setTo(coord: Coord) {
+	setTo(coord: TCoord) {
 		this.x = coord.x;
 		this.y = coord.y;
 	}
@@ -176,7 +176,7 @@ export class Loc {
 			biome: this.biome,
 			npcs: this.npcs.length > 0 ? this.npcs : undefined,
 			features: this.features,
-			embed: this._embed,
+			embed: this.embed,
 			maker: this._maker,
 			time: this.time ?? undefined,
 			owner: this._owner
@@ -193,10 +193,6 @@ export class Loc {
 	get norm() { return Math.abs(this.coord.x) + Math.abs(this.coord.y); }
 
 	get maker() { return this._maker; }
-
-	get embed() { return this._embed; }
-	set embed(v) { this._embed = v; }
-
 	get owner() { return this._owner; }
 	set owner(v) { this._owner = v; }
 
@@ -207,7 +203,7 @@ export class Loc {
 
 	biome: string;
 	private _maker?: string;
-	private _embed?: string;
+	embed?: string;
 	private _owner?: string;
 	time?: number;
 
@@ -224,7 +220,7 @@ export class Loc {
 	/**
 	 * npcs at location.
 	 */
-	readonly npcs: Monster[] = [];
+	readonly npcs: Mob[] = [];
 
 	readonly exits: Partial<Record<DirVal, Exit>> = {};
 	readonly inv: Inventory;
@@ -248,6 +244,10 @@ export class Loc {
 		if (!this.chars.includes(char.id)) {
 			this.chars.push(char.id);
 		}
+	}
+
+	addItem(it: Item | Item[]) {
+		return this.inv.add(it);
 	}
 
 	rmChar(char: Char) {
@@ -281,7 +281,7 @@ export class Loc {
 				json.features, Feature.Decode, loc.features
 			);
 		}
-		if (json.attach) loc._embed = json.attach;
+		if (json.attach) loc.embed = json.attach;
 
 		if (json.inv) {
 			Inventory.Decode<Item>(json.inv, DecodeItem, loc.inv);
@@ -305,7 +305,7 @@ export class Loc {
 		const len = a.length;
 		for (let i = 0; i < len; i++) {
 
-			const m = Monster.Decode(a[i]);
+			const m = Mob.Decode(a[i]);
 			if (m) loc.addNpc(m);
 
 		}
@@ -375,7 +375,7 @@ export class Loc {
 
 	}
 
-	view() { return [this.look(undefined, true), this._embed]; }
+	view() { return [this.look(undefined, true), this.embed]; }
 
 	/**
 	 * Returns text seen by character looking at location.
@@ -387,7 +387,7 @@ export class Loc {
 	look(looker?: Char, imgTag: boolean = true, showPaths: boolean = false) {
 
 		let r = in_prefix[this.biome as Biome] + this.biome;//+ ' (' + this._coord.toString() + ')';
-		if (this._embed && imgTag) r += ' [img]';
+		if (this.embed && imgTag) r += ' [img]';
 		r += '\n' + this.desc;
 
 		if (this.features.count > 0) r += '\nFeatures: ' + ItemList(this.features);
@@ -474,7 +474,6 @@ export class Loc {
 
 		if (typeof wot === 'string') {
 
-			console.log(`${wot} int: ${IsInt(wot)}`)
 			if (!IsInt(wot)) {
 				return this.npcs.find((m) => m.id === wot || m.name === wot);
 			} else {
@@ -484,13 +483,13 @@ export class Loc {
 		return this.npcs[wot - 1];
 	}
 
-	addNpc(m: Monster) { this.npcs.push(m); }
+	addNpc(m: Mob) { this.npcs.push(m); }
 
 	removeNpcAt = (ind: number) => {
 		quickSplice(this.npcs, ind);
 	}
 
-	removeNpc(m: Monster) {
+	removeNpc(m: Mob) {
 
 		const ind = this.npcs.indexOf(m);
 		console.log('remove npc at: ' + ind);

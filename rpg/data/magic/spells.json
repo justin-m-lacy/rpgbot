@@ -9,6 +9,7 @@
     },
     {
         "id": "magic_missile",
+        "name": "Magic Missile",
         "target": "any",
         "dmg": "1d4",
         "level": 1,
@@ -138,7 +139,7 @@
         }
     },
     {
-        "id": "mage armor",
+        "id": "mage_armor",
         "name": "Mage Armor",
         "target": "self",
         "dot": {

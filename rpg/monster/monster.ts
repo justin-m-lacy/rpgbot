@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
 import { Dot, ProtoDot } from 'rpg/magic/dots';
-import { GetMonster, MonsterData } from 'rpg/parsers/monster';
+import { GetMonster, MobData } from 'rpg/parsers/monster';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
@@ -12,20 +12,23 @@ import * as stats from '../char/stats';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { roll } from '../values/dice';
-import { Biome, Coord } from '../world/loc';
+import { Biome, Coord, IsCoord } from '../world/loc';
 
-export type Npc = Actor | Monster;
+export type TActor = Actor | Mob;
 
-export class Monster {
+export class Mob {
 
 	static Decode(json: any) {
 
-		const m = new Monster(json.id, GetMonster(json.proto));
+		const m = new Mob(json.id, GetMonster(json.proto));
 
 		if (json.name) m.name = json.name;
 
 		if (json.hp) {
 			m.hp.setTo(json.hp);
+		}
+		if (IsCoord(json.at)) {
+			m.at.setTo(json.at);
 		}
 
 		const desc = Object.getOwnPropertyDescriptors(m);
@@ -113,7 +116,7 @@ export class Monster {
 	private _evil: number = 0;
 	size: string;
 	private _drops?: any;
-	readonly proto?: MonsterData;
+	readonly proto?: MobData;
 	private dmg?: Numeric;
 	private _weap?: any;
 	private _attacks: any;
@@ -127,7 +130,7 @@ export class Monster {
 	readonly at: Coord = new Coord(0, 0);
 	readonly dots: Dot[] = [];
 
-	constructor(id?: string, proto?: MonsterData) {
+	constructor(id?: string, proto?: MobData) {
 		this.id = id ?? randomUUID();
 		this._toHit = 0;
 		this._state = CharState.Alive;
@@ -245,8 +248,5 @@ export class Monster {
 		return false;
 
 	}
-
-	clone() { return Object.assign(new Monster(undefined, this.proto), this); }
-
 
 }

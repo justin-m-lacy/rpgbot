@@ -8,7 +8,7 @@ import { DecodeItem } from 'rpg/parsers/items';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Loot } from '../combat/loot';
 import { Material } from '../items/material';
-import { Monster } from '../monster/monster';
+import { Mob } from '../monster/monster';
 
 
 
@@ -73,14 +73,12 @@ async function InitChests() {
 }
 
 
-export const genLoot = (mons: Monster) => {
+export const GenLoot = (mons: Mob) => {
 
 	const lvl = Math.floor(mons.level);
 
 	const loot: Loot = {
-		items: [
-
-		],
+		items: [],
 		gold: Math.random() < 0.5 ? Math.floor(20 * lvl * Math.random() + 0.1) : 0
 
 	};
@@ -106,7 +104,7 @@ export const genLoot = (mons: Monster) => {
 
 }
 
-const getDrops = (mons: Monster) => {
+const getDrops = (mons: Mob) => {
 
 	const drops = mons.drops;
 	if (!drops) return;
@@ -183,8 +181,8 @@ export const AddProtoItems = <T extends ItemData>(arr: Record<string, T> | T[]) 
 
 }
 
-export const AddMasterItems = <T extends Item>(arr: T[]) => {
-	for (const it of arr) ProtoItems[it.id] = it;
+export const AddProtoItem = <T extends ItemData>(it: T) => {
+	ProtoItems[it.id] = ProtoItems[it.name] = it;
 }
 
 export const Craft = (char: Char, name: string, desc?: string, embed?: string) => {

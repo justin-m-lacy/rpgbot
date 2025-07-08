@@ -1,5 +1,5 @@
 import { Char } from "rpg/char/char";
-import { Monster } from "rpg/monster/monster";
+import { Mob } from "rpg/monster/monster";
 
 export const ParseTarget = (s: keyof typeof TargetFlags) => {
 	return TargetFlags[s] ?? TargetFlags.none;
@@ -41,7 +41,7 @@ const GetTargetMask = (team: number, flags: TargetFlags) => {
 
 }
 
-export const CanTarget = (char: Char | Monster, targ: Char | Monster, types: TargetFlags) => {
+export const CanTarget = (char: Char | Mob, targ: Char | Mob, types: TargetFlags) => {
 
 	if (types & TargetFlags.self) {
 		return char.id === targ.id;

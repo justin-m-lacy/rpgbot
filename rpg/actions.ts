@@ -35,12 +35,10 @@ export const Blockers: Partial<{ [P in CharState]: Record<string, number> }> = {
 		inscribe: 1,
 		map: 1,
 		quaff: 1,
-		revive: 1,
 		scout: 1,
 		sell: 1,
 		steal: 1,
 		take: 1,
-		track: 1,
 		unequip: 1,
 
 	}

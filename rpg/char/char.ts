@@ -1,3 +1,4 @@
+import { TGameAction } from 'rpg/actions';
 import { GClass, Race } from 'rpg/char/race';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
@@ -67,7 +68,7 @@ export class Char extends Actor {
 
 	constructor(name: string,
 		opts: {
-			game: Game,
+			game: Game<Record<string, TGameAction>>,
 			race: Race, cls: GClass, owner: string
 		}) {
 
@@ -324,8 +325,8 @@ export class Char extends Actor {
 	log(str: string) {
 		this._log.log(str.replace('%c', this.name));
 	}
-	getLog(clear: boolean = true) {
-		return this._log.getLog(clear);
+	flushLog() {
+		return this._log.flushLog();
 	}
 	output(str?: string) { return this._log.output(str); }
 

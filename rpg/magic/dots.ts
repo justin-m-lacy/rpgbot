@@ -1,5 +1,5 @@
 import { StatusFlags } from 'rpg/char/states';
-import { Npc } from 'rpg/monster/monster';
+import { TActor } from 'rpg/monster/monster';
 import { ParseValues } from 'rpg/parsers/values';
 import { AddValues } from 'rpg/values/apply';
 import type { IMod } from 'rpg/values/imod';
@@ -148,7 +148,7 @@ export class Dot {
 
 	}
 
-	start<T extends Npc>(char: T) {
+	start<T extends TActor>(char: T) {
 
 		char.log(`${char.name} is affected by ${this.name}.`);
 
@@ -158,7 +158,7 @@ export class Dot {
 
 	}
 
-	end<T extends Npc>(char: T) {
+	end<T extends TActor>(char: T) {
 
 		char.log(`${char.name}: ${this.name} has worn off.`);
 		if (this.mod) {
@@ -171,7 +171,7 @@ export class Dot {
 	 * @param char
 	 * @returns true if effect complete. 
 	 */
-	tick<T extends Npc>(char: T) {
+	tick<T extends TActor>(char: T) {
 
 		if (!this.proto.duration) return false;
 

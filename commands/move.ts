@@ -31,7 +31,7 @@ const CmdMove = NewCommand<Rpg>({
 
 		await rpg.game.action('move', char, dir);
 		const loc = await rpg.world.getOrGen(char.at);
-		return ReplyBlock(m, char.getLog(), {
+		return ReplyBlock(m, char.flushLog(), {
 			components: WorldLocActions(loc)
 		});
 
@@ -49,7 +49,7 @@ const CmdNorth = NewCommand<Rpg>({
 
 		await rpg.game.action('move', char, 'n');
 		const loc = await rpg.world.getOrGen(char.at);
-		return ReplyBlock(m, char.getLog(), {
+		return ReplyBlock(m, char.flushLog(), {
 			components: WorldLocActions(loc)
 		});
 
@@ -67,7 +67,7 @@ const CmdSouth = NewCommand<Rpg>({
 
 		await rpg.game.action('move', char, 's');
 		const loc = await rpg.world.getOrGen(char.at);
-		return ReplyBlock(m, char.getLog(), {
+		return ReplyBlock(m, char.flushLog(), {
 			components: WorldLocActions(loc)
 		});
 
@@ -85,7 +85,7 @@ const CmdEast = NewCommand<Rpg>({
 
 		await rpg.game.action('move', char, 'e');
 		const loc = await rpg.world.getOrGen(char.at);
-		return ReplyBlock(m, char.getLog(), {
+		return ReplyBlock(m, char.flushLog(), {
 			components: WorldLocActions(loc)
 		});
 
@@ -104,7 +104,7 @@ const CmdWest = NewCommand<Rpg>({
 
 		await rpg.game.action('move', char, 'w');
 		const loc = await rpg.world.getOrGen(char.at);
-		return ReplyBlock(m, char.getLog(), {
+		return ReplyBlock(m, char.flushLog(), {
 			components: WorldLocActions(loc)
 		});
 

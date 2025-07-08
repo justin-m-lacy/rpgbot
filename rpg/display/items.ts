@@ -6,11 +6,23 @@ import { Viewable } from "rpg/values/types";
  **/
 export const ItemMenu = (inv: Inventory) => {
 
-	const len = inv.items.length;
-	if (len === 0) return '';
+	if (inv.items.length === 0) return '';
 
 	return inv.items.map((v, i) =>
 		(i + 1) + ') ' + v.toString() + (v.embed ? '\t[img]' : '')
+	).join('\n');
+
+}
+
+/**
+ * @returns list of all items in inventory.
+ **/
+export const MenuList = (items: string[]) => {
+
+	if (items.length === 0) return 'Nothing';
+
+	return items.map((v, i) =>
+		(i + 1) + ') ' + v.toString()
 	).join('\n');
 
 }

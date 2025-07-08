@@ -1,12 +1,12 @@
+import { EventEmitter } from 'eventemitter3';
 import { Char } from 'rpg/char/char';
 import { Faction } from 'rpg/char/factions';
-import { TCharEvents } from 'rpg/events';
+import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
 import type { SexType } from 'rpg/social/gender';
 import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
-import { EventEmitter } from 'stream';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
 import { Dot, ProtoDot } from '../magic/dots';
@@ -46,7 +46,6 @@ export class Actor {
 	set dr(v: Numeric) { this.stats.dr.value = v.valueOf() }
 
 	get resist() { return this.resists }
-
 
 	get level() { return this.stats.level; }
 	set level(v) { this.stats.level.value = v.valueOf() }
@@ -117,7 +116,7 @@ export class Actor {
 	readonly mods: ModBlock<typeof this>[] = [];
 	private _state: CharState;
 
-	readonly events: TCharEvents = new EventEmitter();
+	readonly events = new EventEmitter<CharEvents>();
 	readonly game: Game;
 
 
@@ -276,7 +275,7 @@ export class Actor {
 	}
 
 	/// TODO
-	addItem(it: Item) { }
+	addItem(it: Item | Item[]): number { return 0 }
 	randItem() { null; }
 	takeItem(which: number | string | Item, sub?: number | string): any { return null; }
 

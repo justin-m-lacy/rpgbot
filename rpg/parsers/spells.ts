@@ -22,7 +22,7 @@ const ParseSpell = (raw: RawSpell) => {
 
 	return new Spell({
 		id: raw.id,
-		name: raw.name,
+		name: raw.name ?? raw.id,
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
 		dot: raw.dot ? ParseDotType(raw.dot) : null,
 		time: raw.time,
@@ -37,7 +37,8 @@ export const LoadSpells = async () => {
 		'../data/magic/spells.json', { assert: { type: 'json' } }
 	)).default;
 	for (let i = spellDatas.length - 1; i >= 0; i--) {
-		Spells[spellDatas[i].id] = ParseSpell(spellDatas[i] as any);
+		const sp = Spells[spellDatas[i].id] = ParseSpell(spellDatas[i] as any);
+		Spells[sp.name] = sp;
 	}
 
 }

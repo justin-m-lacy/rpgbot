@@ -1,13 +1,18 @@
 import Cache from 'archcache';
+import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
+import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
 import { Actor } from 'rpg/char/actor';
 import { CookItem, TryEat } from 'rpg/char/cooking';
-import { ApplyDmg, ApplyHealing } from 'rpg/combat/combat';
+import { ApplyHealing, CalcDamage } from 'rpg/combat/combat';
+import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
-import { TCombatAction } from 'rpg/combat/types';
-import { GameEvents } from 'rpg/events';
+import { ActionFlags, TCombatAction } from 'rpg/combat/types';
+import { TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
+import { GoldDrop } from 'rpg/items/gold';
+import { Grave } from 'rpg/items/grave';
 import { ItemType } from 'rpg/items/types';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
@@ -15,14 +20,13 @@ import { quickSplice } from 'rpg/util/array';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 import { TValue } from 'rpg/values/types';
 import type Block from 'rpg/world/block';
-import { EventEmitter } from 'stream';
 import { Char } from './char/char';
-import { Fight } from "./combat/fight";
+import { Fight, NpcExp, PvpExp } from "./combat/fight";
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
 import { Wearable } from './items/wearable';
-import { Monster, Npc } from './monster/monster';
+import { Mob, TActor } from './monster/monster';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
@@ -31,7 +35,7 @@ import { World } from "./world/world";
 
 const LOC_UPDATE_MS = 3000;
 
-export class Game<A extends Record<string, TGameAction>,
+export class Game<A extends Record<string, TGameAction> = Record<string, TGameAction>,
 	K extends string & keyof A = string & keyof A> {
 
 	readonly charCache: Cache<Char>;
@@ -42,7 +46,7 @@ export class Game<A extends Record<string, TGameAction>,
 
 	private readonly guilds: GuildManager;
 
-	readonly events: GameEvents = new EventEmitter();
+	readonly events = new EventEmitter<TGameEvents>();
 
 	readonly actions: A;
 
@@ -69,6 +73,7 @@ export class Game<A extends Record<string, TGameAction>,
 
 		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS);
 
+		this.events.on('mobDie', this.onMobDie, this);
 	}
 
 	/**
@@ -144,7 +149,7 @@ export class Game<A extends Record<string, TGameAction>,
 
 	}
 
-	private tickDots(char: Npc) {
+	private tickDots(char: TActor) {
 
 		const efx = char.dots;
 		if (!efx) return;
@@ -184,7 +189,7 @@ export class Game<A extends Record<string, TGameAction>,
 
 	}
 
-	async cast(this: Game<A, K>, char: Char, spell: Spell, targ?: Char | Monster) {
+	async cast(this: Game<A, K>, char: Char, spell: Spell, targ?: Char | Mob) {
 
 		// pay cast.
 		if (spell.cost) {
@@ -200,6 +205,8 @@ export class Game<A extends Record<string, TGameAction>,
 		}
 
 		const loc = await this.world.getOrGen(char.at);
+
+		char.log(`${char.name} casts ${spell.name}`);
 
 		// single target.
 		if (targ) {
@@ -227,24 +234,26 @@ export class Game<A extends Record<string, TGameAction>,
 	}
 
 	/**
-	 * Apply combat action to a target.
+	 * Apply combat action to target.
 	 * @param char 
 	 * @param act 
 	 * @param targ 
 	 */
-	applyAction(char: Char, act: TCombatAction, targ: Actor | Monster, at: Loc) {
+	applyAction(char: Char, act: TCombatAction, targ: Actor | Mob, at: Loc) {
 
 		if (!targ?.isAlive()) return false;
 		if (targ.isImmune(act.kind)) return false;
 
-		if (act.dmg) ApplyDmg(targ, act, char);
+		console.log(`apply spell: ${act.dmg?.valueOf()}`);
+
+		if (act.dmg) this.applyDmg(targ, act, char);
 		if (act.heal) ApplyHealing(targ, act as TCombatAction & { heal: TValue }, char);
 
 		//if (act.cure) { targ.cure(act.cure); }
 
 		if (act.dot) {
 			targ.addDot(act.dot);
-			if (targ instanceof Monster) this.setLiveLoc(at);
+			if (targ instanceof Mob) this.setLiveLoc(at);
 		}
 		if (act.add) {
 			AddValues(targ, act.add, 1);
@@ -253,6 +262,149 @@ export class Game<A extends Record<string, TGameAction>,
 		return true;
 	}
 
+	applyDmg(
+		targ: TActor,
+		attack: TCombatAction,
+		attacker?: TActor) {
+
+		let dmg = CalcDamage(attack.dmg ?? 0, attack, attacker, targ);
+
+		let resist = targ.getResist(attack.kind);
+		if (resist !== 0) {
+			dmg *= (1 - Math.min(resist / 100, 1));
+
+		}
+
+		let dmg_reduce = 0
+		if (resist < 1 && !((attack?.actFlags ?? 0) & ActionFlags.nodefense)) {
+
+			//dmg_reduce = (targ.defense?.valueOf() ?? 0) / ((targ.defense?.valueOf() ?? 0) + dmg);
+			//dmg -= dmg_reduce * dmg;
+
+		}
+
+		const parried = 0;
+		if (parried) dmg *= parried;
+		targ.hp.value += (-dmg);
+
+		/*gevents.emit('charHit', ctx, {
+			target: targ,
+			attacker: attack,
+			dmg,
+			resist,
+			reduced: dmg_reduce,
+			parried
+		});*/
+
+		if (targ.hp.value <= 0) {
+			targ.updateState();
+			if (targ instanceof Char) {
+				this.events.emit('charDie', targ, attacker);
+			} else if (targ instanceof Mob) {
+				this.events.emit('mobDie', targ, attacker);
+			}
+		}
+
+
+		if (attack.leech && attacker && dmg > 0) {
+			const amt = Math.floor(100 * Number(attack.leech) * dmg) / 100;
+			attacker.hp.value += amt;
+			//gevents.emit('combat', ctx, targ, attacker, attacker.name + ' Steals ' + amt + ' Life');
+		}
+
+	}
+
+	async onCharDie(char: Char, slayer?: TActor) {
+
+		if (slayer instanceof Char) {
+			this.onSlay(slayer, char);
+		}
+
+		/// should be world log.
+		char.log(
+			await this.world.put(char, Grave.MakeGrave(char, slayer))
+		);
+
+	}
+
+	async onMobDie(targ: Mob, killer?: TActor) {
+
+		if (killer instanceof Char) {
+			this.onSlay(killer, targ);
+		}
+
+		const loc = await this.world.getLoc(targ.at);
+		if (loc) {
+			loc.removeNpc(targ);
+			await this.getLoot(itemgen.GenLoot(targ), loc, killer);
+		}
+
+	}
+
+	/**
+	 * Called when player character makes a kill.
+	 * @param slayer 
+	 * @param targ 
+	 * @param party 
+	 */
+	async onSlay(slayer: Char, targ: TActor, party?: Party) {
+
+		const lvl = targ.level;
+
+		if (targ instanceof Char) {
+
+			party ? await party.addExp(PvpExp(+lvl)) : slayer.addExp(PvpExp(+lvl));
+			slayer.evil = +slayer.evil + (-targ.evil) / 2 + 1 + targ.getModifier('cha');
+			slayer.addHistory('pk');
+
+		} else {
+
+			if (targ.evil) slayer.evil += (-targ.evil / 4);
+			party ? await party.addExp(NpcExp(+lvl)) : slayer.addExp(NpcExp(+lvl));
+			slayer.addHistory('slay');
+
+		}
+
+	}
+
+	async getLoot(loot: Loot, loc: Loc, dest?: TActor | Loc) {
+
+		if (!loot.gold && (loot.items.length === 0)) return;
+		if (!dest || dest instanceof Mob) dest = loc;
+
+		if (dest == null) return;
+
+		let resp = dest.name + ' loots';
+
+		if (loot.gold) {
+
+			if ('gold' in dest) {
+				dest.gold += loot.gold;
+			} else {
+				loot.items.push(new GoldDrop(loot.gold));
+			}
+			resp += ` ${loot.gold} gold`;
+
+		}
+
+		const items = loot.items;
+		if (items && items.length > 0) {
+
+			const ind = dest.addItem(items);
+
+			if (loot.gold) resp += ',';
+			for (let i = items.length - 1; i >= 1; i--) {
+
+				resp += ` ${items[i].name} (${ind + i}),`;
+
+			}
+			resp += ` ${items[0].name} (${ind})`;
+
+		}
+
+		return resp;
+
+	}
 
 	/**
 	 * Get all targets at location that are affected by target flags.
@@ -260,9 +412,9 @@ export class Game<A extends Record<string, TGameAction>,
 	 * @param flags 
 	 * @param loc 
 	 */
-	async getTargets(char: Npc, flags: TargetFlags, loc: Loc) {
+	async getTargets(char: TActor, flags: TargetFlags, loc: Loc) {
 
-		const res: Record<string, Npc | undefined> = {};
+		const res: Record<string, TActor | undefined> = {};
 
 		const party = char instanceof Char ? this.getParty(char) : undefined;
 
@@ -700,7 +852,7 @@ export class Game<A extends Record<string, TGameAction>,
 
 	}
 
-	async attackNpc(this: Game<A, K>, char: Char, npc: Monster) {
+	async attackNpc(this: Game<A, K>, char: Char, npc: Mob) {
 
 		let p1: Char | Party = this.getParty(char);
 		if (!p1 || !p1.isLeader(char)) p1 = char;
@@ -721,9 +873,9 @@ export class Game<A extends Record<string, TGameAction>,
 
 	}
 
-	async attack(this: Game<A, K>, src: Char, targ: Char | Monster) {
+	async attack(this: Game<A, K>, src: Char, targ: Char | Mob) {
 
-		if (targ instanceof Monster) {
+		if (targ instanceof Mob) {
 			return this.attackNpc(src, targ);
 		}
 

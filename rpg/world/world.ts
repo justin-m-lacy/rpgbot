@@ -4,7 +4,7 @@ import { GenLoc, GenNewLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
 import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
-import { Monster } from '../monster/monster';
+import { Mob } from '../monster/monster';
 import Block from './block';
 import { Feature } from './feature';
 import { Coord, DirString, DirVal, Exit, Loc, TCoord, ToDirStr } from './loc';
@@ -67,9 +67,21 @@ export class World {
 	 * @param char
 	 * @param who
 	 */
-	async removeNpc(char: Char, who: Monster) {
+	async removeNpcBy(char: Char, who: Mob) {
 		const loc = await this.getOrGen(char.at, char);
 		return loc.removeNpc(who);
+
+	}
+
+	/**
+	 * Remove Npc at Character location.
+	 * @param char
+	 * @param who
+	 */
+	async removeNpcAt(at: Coord, who: Mob) {
+
+		const loc = await this.getLoc(at);
+		return loc?.removeNpc(who);
 
 	}
 
@@ -319,7 +331,7 @@ export class World {
 		const dev = Math.random() - 0.5;
 		const lvl = Math.max(Math.floor(loc.norm / 20 + 10 * dev), 0);
 
-		const m = RandMonster(lvl, loc.biome);
+		const m = RandMonster(lvl, loc, loc.biome);
 		if (!m) return;
 
 		loc.addNpc(m);

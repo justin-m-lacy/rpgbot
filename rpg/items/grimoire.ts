@@ -1,3 +1,4 @@
+import { MenuList } from "rpg/display/items";
 import { Item } from "rpg/items/item";
 import { ItemType } from "rpg/items/types";
 import { BadTypeError } from "rpg/util/errors";
@@ -41,6 +42,13 @@ export class Grimoire extends Item {
 
 		this.type = ItemType.Grimoire;
 
+	}
+
+	getView(): [string, string | undefined] {
+		return [
+			super.getDetails() + '\n' +
+			MenuList(this.spells),
+			undefined];
 	}
 
 }

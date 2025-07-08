@@ -5,7 +5,7 @@ import type { Game } from "rpg/game";
 import type { Inventory } from "rpg/inventory";
 import type { Item } from "rpg/items/item";
 import { Wearable } from "rpg/items/wearable";
-import type { Monster } from "rpg/monster/monster";
+import type { Mob } from "rpg/monster/monster";
 
 export const IllegalIdChars = ['/', '\\', ':', '*', '?', '"', '|', '<', '>', '#', '='];
 
@@ -219,7 +219,7 @@ export const PickCharButtons = (cmd: string, chars: Char[], param: string = 'who
 	);
 }
 
-export const PickNpcButtons = (cmd: string, chars: Array<Char | Monster>, param: string = 'who') => {
+export const PickNpcButtons = (cmd: string, chars: Array<Char | Mob>, param: string = 'who') => {
 	if (chars.length === 0) return [];
 	return ToActionRows(
 

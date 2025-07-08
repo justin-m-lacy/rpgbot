@@ -6,7 +6,7 @@ import { ItemPicker } from '../inventory';
 import { Grave } from '../items/grave';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
-import { Monster, Npc } from '../monster/monster';
+import { Mob, TActor } from '../monster/monster';
 import { Party } from '../social/party';
 import { Dice } from '../values/dice';
 import { World } from '../world/world';
@@ -20,10 +20,10 @@ const fist = new Weapon('fists', 'fists',
  * Exp for killing target.
  * @param lvl
  */
-const NpcExp = (lvl: number) => Math.floor(10 * Math.pow(1.3, lvl));
-const PvpExp = (lvl: number) => Math.floor(10 * Math.pow(1.2, lvl / 2));
+export const NpcExp = (lvl: number) => Math.floor(10 * Math.pow(1.3, lvl));
+export const PvpExp = (lvl: number) => Math.floor(10 * Math.pow(1.2, lvl / 2));
 
-export type CombatEntity = Char | Monster | Party;
+export type CombatEntity = Char | Mob | Party;
 
 /**
  * Single combat in progress.
@@ -50,7 +50,7 @@ export class Fight {
 
 	async fightNpc() {
 
-		const defender = this.defender as Monster;
+		const defender = this.defender as Mob;
 		const attacker = this.attacker as Char;
 
 		if (defender.state !== 'alive') {
@@ -73,20 +73,19 @@ export class Fight {
 		// @ts-ignore defender may have died.
 		if (defender.state === 'dead') {
 
-			this.world.removeNpc(attacker as Char, defender);
-			await this.doLoot(attacker, itemgen.genLoot(defender));
+			this.world.removeNpcBy(attacker as Char, defender);
+			await this.doLoot(attacker, itemgen.GenLoot(defender));
 
 		}
 
 	}
 
 	/**
-	 * @async
 	 * @param p
 	 * @param targ
 	 * @returns
 	 */
-	async partyAttack(p: Party, targ: Char | Party | Monster) {
+	async partyAttack(p: Party, targ: Char | Party | Mob) {
 
 		const names = p.roster;
 		const len = names.length;
@@ -183,7 +182,7 @@ export class Fight {
 
 	}
 
-	private async tryHit(src: Char | Monster, targ: CombatEntity, srcParty?: Party) {
+	private async tryHit(src: Char | Mob, targ: CombatEntity, srcParty?: Party) {
 
 		if (!src) { console.warn('tryHit() src is null'); return; }
 
@@ -205,11 +204,11 @@ export class Fight {
 
 	}
 
-	async doKill(char: Char, target: Npc, party?: Party) {
+	async doKill(char: Char, target: TActor, party?: Party) {
 
 		const lvl = target.level;
 
-		if (target instanceof Monster) {
+		if (target instanceof Mob) {
 
 			if (target.evil) char.evil += (-target.evil / 4);
 			party ? await party.addExp(NpcExp(+lvl)) : char.addExp(NpcExp(+lvl));
@@ -231,7 +230,7 @@ export class Fight {
 	 */
 	async steal(attacker: Char, wot?: ItemPicker | null) {
 
-		let defender: Char | Monster | undefined;
+		let defender: Char | Mob | undefined;
 
 		if (this.defender instanceof Party) {
 
@@ -273,7 +272,7 @@ export class Fight {
 	 * @param src
 	 * @param dest
 	 */
-	attack(src: Char | Monster, dest: Char | Monster) {
+	attack(src: Char | Mob, dest: Char | Mob) {
 
 		if ('at' in src && 'at' in dest && !(src.at.equals(dest.at))) {
 			this.resp += `${src.name} does not see ${dest.name} at this location.`;
@@ -285,7 +284,7 @@ export class Fight {
 
 	}
 
-	take(src: Actor | Monster, targ: Char | Monster, wot?: ItemPicker | null, stealRoll: number = 0) {
+	take(src: Actor | Mob, targ: Char | Mob, wot?: ItemPicker | null, stealRoll: number = 0) {
 
 		let it: Item | null | undefined;
 		if (wot) {
@@ -326,10 +325,10 @@ export class Fight {
 			this.resp += ` ${loot.gold} gold`;
 		}
 
-		let items = loot.items;
+		const items = loot.items;
 		if (items && items.length > 0) {
 
-			var ind = targ.addItem(items);
+			const ind = targ.addItem(items);
 
 			if (loot.gold) this.resp += ',';
 			for (let i = items.length - 1; i >= 1; i--) {
@@ -341,7 +340,7 @@ export class Fight {
 
 		}
 
-	} //loot()
+	}
 
 }
 
@@ -361,8 +360,8 @@ export class AttackInfo {
 	// defender was killed.
 	get killed() { return this._killed; }
 
-	readonly attacker: Char | Monster;
-	readonly defender: Npc;
+	readonly attacker: Char | Mob;
+	readonly defender: TActor;
 	readonly party?: Party;
 	readonly weap?: Weapon;
 	readonly _name?: string;
@@ -371,7 +370,7 @@ export class AttackInfo {
 	private _dmg: any;
 	private hitroll: number = 0;
 
-	constructor(attacker: Char | Monster, defender: Npc, party?: Party) {
+	constructor(attacker: Char | Mob, defender: TActor, party?: Party) {
 
 		this.attacker = attacker;
 		this.defender = defender;
@@ -409,7 +408,7 @@ export class AttackInfo {
 		if (this.defender.hp.valueOf() <= 0) this._killed = true;
 	}
 
-	getWeapon(char: Npc) {
+	getWeapon(char: TActor) {
 
 		const w = char.getWeapons();
 		if (!w) return fist;

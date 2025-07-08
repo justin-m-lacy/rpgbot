@@ -1,7 +1,7 @@
-import { EventEmitter } from 'eventemitter3';
 import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { Dot } from 'rpg/magic/dots';
+import { Mob, TActor } from 'rpg/monster/monster';
 
 export type CharEvents = {
 
@@ -13,5 +13,8 @@ export type CharEvents = {
 
 }
 
-export type TCharEvents = EventEmitter<CharEvents>;
-export type GameEvents = EventEmitter<CharEvents>;
+
+export type TGameEvents = {
+	mobDie: (m: Mob, attacker?: TActor) => void;
+	charDie: (char: Char, attacker?: TActor) => void;
+}
