@@ -457,7 +457,7 @@ export class DiscordBot {
 	public setProxy(user: User, context: BotContext<Guild | Channel>) {
 
 		//this._contexts.set(user.id, context);
-		this._proxies.set(user.id, context.sourceID);
+		this._proxies.set(user.id, context.sourceId);
 		this.cacheData('proxies', this._proxies);
 
 	}

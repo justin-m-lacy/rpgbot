@@ -3,6 +3,26 @@ import { Char } from 'rpg/char/char';
 import { Dot } from 'rpg/magic/dots';
 import { TActor } from 'rpg/monster/monster';
 
+export type AttackInfo = {
+
+	dmg: number,
+	name: string,
+
+	// kind of damage.
+	kind?: string,
+	// amounted resisted.
+
+	// type of attack (spell, sword, claws, etc.)
+	type?: string,
+
+	resist?: number,
+	leech?: number,
+	reduced?: number,
+	parried?: number,
+
+
+}
+
 export type CharEvents = {
 
 	dotStart: (char: Actor, efx: Dot) => void;
@@ -15,5 +35,6 @@ export type CharEvents = {
 
 
 export type TGameEvents = {
-	actorDie: (char: TActor, attacker?: TActor | string) => void;
+	actorDie: (char: TActor, attacker: TActor | string) => void;
+	charHit: (char: TActor, attacker: TActor | string, info: AttackInfo) => void;
 }

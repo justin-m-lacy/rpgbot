@@ -251,7 +251,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 * @param slayer - string if no other information on attacker is known.
 	 * for example, killed by a potion, which no longer exists. 
 	 */
-	async onActorDie(char: TActor, slayer?: TActor | string) {
+	async onActorDie(char: TActor, slayer: TActor | string) {
 
 		if (slayer instanceof Char) {
 			this.onSlay(slayer, char);

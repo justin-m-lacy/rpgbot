@@ -344,7 +344,7 @@ export class Fight {
 
 }
 
-export class AttackInfo {
+class AttackInfo {
 
 	get dmgType() { return this.weap?.dmgType; }
 

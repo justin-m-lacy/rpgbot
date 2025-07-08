@@ -1,6 +1,7 @@
 import { Actor } from "rpg/char/actor";
 import { Char } from "rpg/char/char";
 import { ActionFlags, TCombatAction } from "rpg/combat/types";
+import { AttackInfo } from "rpg/events";
 import { Game } from "rpg/game";
 import { Spell } from "rpg/magic/spell";
 import { Mob, TActor } from "rpg/monster/monster";
@@ -8,6 +9,9 @@ import { Party } from "rpg/social/party";
 import { AddValues } from "rpg/values/apply";
 import { Numeric, TValue } from "rpg/values/types";
 import { Loc } from "rpg/world/loc";
+
+
+
 
 
 /**
@@ -28,15 +32,15 @@ export class Combat {
 	 * @param act 
 	 * @param targ 
 	 */
-	applyAction(char: Char, act: TCombatAction, targ: Actor | Mob, at: Loc) {
+	applyAction(char: TActor, act: TCombatAction, targ: Actor | Mob, at: Loc) {
 
 		if (!targ?.isAlive()) return false;
 		if (targ.isImmune(act.kind)) return false;
 
-		console.log(`apply spell: ${act.dmg?.valueOf()}`);
-
 		if (act.dmg) this.applyDmg(targ, act, char);
 		if (act.heal) this.applyHealing(targ, act as TCombatAction & { heal: TValue }, char);
+
+		(char instanceof Char ? char : targ).log(`${char.name} hits ${targ.name} with ${act.name}`);
 
 		//if (act.cure) { targ.cure(act.cure); }
 
@@ -56,15 +60,20 @@ export class Combat {
 		attack: TCombatAction,
 		attacker?: TActor) {
 
+		const info: AttackInfo = {
+			dmg: 0,
+			name: attack.name
+		};
+
 		let dmg = this.calcDamage(attack.dmg ?? 0, attack, attacker, targ);
 
-		let resist = targ.getResist(attack.kind);
+		const resist = targ.getResist(attack.kind);
 		if (resist !== 0) {
-			dmg *= (1 - Math.min(resist / 100, 1));
+			info.resist = dmg * Math.min(resist / 100, 1);
+			dmg -= info.resist;
 
 		}
 
-		let dmg_reduce = 0
 		if (resist < 1 && !((attack?.actFlags ?? 0) & ActionFlags.nodefense)) {
 
 			//dmg_reduce = (targ.defense?.valueOf() ?? 0) / ((targ.defense?.valueOf() ?? 0) + dmg);
@@ -72,28 +81,22 @@ export class Combat {
 
 		}
 
-		const parried = 0;
-		if (parried) dmg *= parried;
-		targ.hp.value += (-dmg);
+		if (info.parried) dmg *= info.parried;
 
-		/*gevents.emit('charHit', ctx, {
-			target: targ,
-			attacker: attack,
-			dmg,
-			resist,
-			reduced: dmg_reduce,
-			parried
-		});*/
 
 		if (attack.leech && attacker && dmg > 0) {
-			const amt = Math.floor(100 * Number(attack.leech) * dmg) / 100;
-			attacker.hp.value += amt;
-			//gevents.emit('combat', ctx, targ, attacker, attacker.name + ' Steals ' + amt + ' Life');
+			info.leech = Math.floor(100 * Number(attack.leech) * dmg) / 100;
+			attacker.hp.value += info.leech;
 		}
+
+		targ.hp.value += (-dmg);
+		info.dmg = dmg;
+
+		this.game.events.emit('charHit', targ, attacker ?? attack.name, info);
 
 		targ.updateState();
 		if (!targ.isAlive) {
-			this.game.events.emit('actorDie', targ, attacker);
+			this.game.events.emit('actorDie', targ, attacker ?? attack.name);
 		}
 
 	}

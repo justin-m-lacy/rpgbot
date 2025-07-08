@@ -44,7 +44,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	/**
 	 * @property sourceID - id of the discord object associated with this context.
 	 */
-	get sourceID() { return this.idObject.id; }
+	get sourceId() { return this.idObject.id; }
 
 	/**
 	 * @property bot
@@ -58,16 +58,13 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 */
 	readonly instances: Map<string, InstanceType<ContextClass<T>>> = new Map();
 
-	/**
-	 * @property access - Information about access to settings and commands.
-	 */
-	get access() { return this._access; }
-	set access(v) { this._access = v; }
-
 	get afs() { return afs; }
 	get botfs() { return BotFs; }
 
-	private _access?: Access;
+	/**
+	 * @property access - Information about access to settings and commands.
+	 */
+	private access?: Access;
 
 	/**
 	 * @param bot
@@ -96,13 +93,10 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 			this.addClass(classes[i]);
 		}
 
-		//const roomPerms = await this.cache.fetch('access');
-		//this.access = new Access(roomPerms);
-
 	}
 
 	/**
-	 * Send message to a text channel.
+	 * Send message to text channel.
 	 * @param channelId 
 	 * @param message 
 	 * @returns 
@@ -168,7 +162,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @returns
 	 */
 	canAccess(cmd: string, gm: GuildMember) {
-		return this._access?.canAccess(cmd, gm);
+		return this.access?.canAccess(cmd, gm);
 	}
 
 	/**

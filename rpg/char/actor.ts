@@ -264,9 +264,6 @@ export class Actor {
 		return this.state;
 	}
 
-	/**
-	 * TODO: temp
-	 */
 	hit(amt: number) {
 		this.hp.value -= amt;
 		if (this.hp.value <= 0) {
