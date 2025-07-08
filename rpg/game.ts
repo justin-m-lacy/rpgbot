@@ -20,7 +20,6 @@ import { quickSplice } from 'rpg/util/array';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
 import { Char } from './char/char';
-import { Fight } from "./combat/fight";
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
@@ -466,17 +465,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 			const items = char.takeRange(first, end);
 			if (!items) return char.output('Invalid item range.');
-			return char.output(items.length + ' items destroyed.');
+			return char.output(items.length + ' items were destroyed.');
 
 		} else {
 
 			const item = char.takeItem(first);
 			if (!item) return char.output(`'${first}' not in inventory.`);
-			if (Array.isArray(item)) {
-				return char.output(`${item.length} items are gone forever.`);
-			} else {
-				return char.output(item.name + ' is gone forever.');
-			}
+			return char.output(item.name + ' is gone forever.');
 
 		} //
 
@@ -839,10 +834,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async steal(this: Game<A, K>, src: Char, dest: Char, wot?: ItemPicker | null) {
 
-		const com = new Fight(src, dest, this.world);
-		await com.steal(src, wot);
-
-		return src.output(com.getText());
+		await this.combat.trySteal(src, dest, wot);
+		return src.output();
 
 	}
 

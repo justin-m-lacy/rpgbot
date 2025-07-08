@@ -1,6 +1,5 @@
 import { TGameAction } from 'rpg/actions';
 import { GClass, Race } from 'rpg/char/race';
-import { TCombatAction } from 'rpg/combat/types';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { Weapon } from 'rpg/items/weapon';
@@ -73,8 +72,6 @@ export class Char extends Actor {
 	// used to send public messages without explicit char commands.
 	get channel() { return this._log.channel }
 	set channel(v) { this._log.channel = v }
-
-	readonly attacks: TCombatAction[] = [];
 
 	constructor(name: string,
 		opts: {
@@ -287,12 +284,12 @@ export class Char extends Actor {
 	}
 
 	/**
-	 * Remove an item from inventory and return it.
+	 * Remove item from inventory and return it.
 	 * @param which
 	 * @returns Item removed or null.
 	 */
-	takeItem(which: number | string | Item, sub?: number | string) {
-		return this.inv.take(which, sub);
+	takeItem(which: number | string | Item) {
+		return this.inv.take(which);
 	}
 
 	takeRange(start: ItemIndex, end: ItemIndex) { return this.inv.takeRange(start, end); }

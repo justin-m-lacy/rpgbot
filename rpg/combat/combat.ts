@@ -1,3 +1,4 @@
+import { randElm } from "@/utils/jsutils";
 import { Actor } from "rpg/char/actor";
 import { Char } from "rpg/char/char";
 import { ActionFlags, TCombatAction } from "rpg/combat/types";
@@ -7,7 +8,7 @@ import { ItemPicker } from "rpg/inventory";
 import { Item } from "rpg/items/item";
 import { Spell } from "rpg/magic/spell";
 import { Mob, TActor } from "rpg/monster/monster";
-import { PossPronoun, SubjPronoun } from "rpg/social/gender";
+import { PossPronoun } from "rpg/social/gender";
 import { Party } from "rpg/social/party";
 import { AddValues } from "rpg/values/apply";
 import { Numeric, TValue } from "rpg/values/types";
@@ -144,36 +145,38 @@ export class Combat {
 		 */
 	async trySteal(char: Char, who?: TActor | Party, wot?: ItemPicker | null) {
 
-		let defender = who instanceof Party ? await who.randChar() : who;
-		if (!defender) return;
+		const targ = who instanceof Party ? await who.randChar() : who;
+		if (!targ) return;
 
 		/// Mobs always have to be at same location to be targetted.
-		if (!(char.at.equals(defender.at))) {
+		if (!(char.at.equals(targ.at))) {
 
-			this.resp += `${char.name} does not see ${defender.name} at their location.`;
+			char.log(`You not see ${targ.name} at your location.`);
 			return;
 
 		}
 
 		let atk = char.statRoll('dex', 'wis');
-		const def =
-			defender.statRoll('dex', 'wis');
-
 		if (!char.hasTalent('steal')) atk -= 40;
 		if (wot) atk -= 10;
 
+		const def = targ.statRoll('dex', 'wis');
 		const delta = atk - def;
 
 		if (delta > 15) {
 
-			this.doSteal(char, defender, wot, delta);
+			this.doSteal(char, targ, wot, delta);
 
-		} else if (delta < 5 && defender.state === 'alive') {
+		} else if (delta < 5 && targ.isAlive()) {
 
-			this.resp += `${defender.name} catches ${char.name} attempting to steal.\n`;
-			this.tryAttack(defender, char);
+			char.send(`${targ.name} catches ${char.name} attempting to steal.\n`);
+			if (targ.attacks.length) {
+				await this.tryAttack(targ, randElm(targ.attacks), char);
+			}
 
-		} else this.resp += `${char.name} failed to steal from ${defender.name}`;
+		} else {
+			char.log(`You failed to steal from ${targ.name}`);
+		}
 
 	}
 
@@ -192,7 +195,7 @@ export class Combat {
 
 			it = targ.takeItem(wot);
 			if (!it) {
-				this.resp += `${src.name} tries to rob ${targ.name}, but could not find the item ${SubjPronoun((src as any).sex)} wanted.`;
+				src.log(`You try to rob ${targ.name}, but could not find the item you wanted.`);
 				return;
 			}
 
@@ -200,16 +203,17 @@ export class Combat {
 
 		if (it) {
 
-			let ind = src.addItem(it);
-			this.resp += `${src.name} stole ${it.name} from ${targ.name}. (${ind})`;
+			const ind = src.addItem(it);
+			src.log(`${src.name} stole ${it.name} from ${targ.name}. (${ind})`);
 
 			if (src instanceof Char) {
 				src.addHistory('stolen');
 				src.addExp(2 * +targ.level);
 			}
 
-		} else this.resp +=
-			`${src.name} attempts to steal from ${targ.name} but ${PossPronoun((src as any).sex)} pack is empty.`;
+		} else {
+			src.log(`${src.name} attempts to steal from ${targ.name} but ${PossPronoun((src as any).sex)} pack is empty.`);
+		}
 
 	}
 

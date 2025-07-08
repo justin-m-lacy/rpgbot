@@ -161,7 +161,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 	 * @param  sub
 	 * @returns
 	 */
-	private takeSub(base: ItemPicker<T>, sub: ItemPicker<T> | ItemIndex): T | T[] | null {
+	takeSub(base: ItemPicker<T>, sub: ItemPicker<T> | ItemIndex): T | T[] | null {
 
 		const it = this.take(base) as Inventory<T> | null;
 		if (!it) return null;
@@ -204,15 +204,13 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 	}
 
 	/**
-	 * Attempts to remove an item by name or index.
+	 * Attempt to remove an item by name or index.
 	 * @param which
 	 * @returns item removed, or null if none found.
 	 */
-	take(which?: number | string | T,
-		sub?: ItemPicker<T>): T | T[] | null {
+	take(which?: number | string | T): T | null {
 
 		if (which === null || which === undefined) return null;
-		if (sub) return this.takeSub(which, sub);
 
 		if (typeof which === 'object') {
 

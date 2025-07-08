@@ -100,7 +100,7 @@ export const sell = (src: Char, wot: ItemPicker, end?: ItemIndex | null) => {
 		return sellRange(src, wot as ItemIndex, end);
 	}
 
-	const it = src.takeItem(wot) as Item | null;
+	const it = src.takeItem(wot);
 	if (!it) return 'Item not found.';
 
 	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
@@ -120,7 +120,7 @@ export const transfer = (src: Char, dest: Char, what: string) => {
 
 	} else {
 
-		const it = src.takeItem(what) as Item | null;
+		const it = src.takeItem(what);
 		if (it) {
 
 			const ind = dest.addItem(it);

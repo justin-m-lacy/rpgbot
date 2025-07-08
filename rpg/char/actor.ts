@@ -1,6 +1,6 @@
 import { EventEmitter } from 'eventemitter3';
-import { Char } from 'rpg/char/char';
 import { Faction } from 'rpg/char/factions';
+import { TCombatAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
 import type { SexType } from 'rpg/social/gender';
@@ -118,6 +118,7 @@ export class Actor {
 	readonly events = new EventEmitter<CharEvents>();
 	readonly game: Game;
 
+	readonly attacks: TCombatAction[] = [];
 
 	team: number = Faction.Chars;
 
@@ -224,7 +225,7 @@ export class Actor {
 		this.dots.push(e);
 		e.start(this);
 
-		this.events.emit('dotStart', this as any as Char, e);
+		this.events.emit('dotStart', this, e);
 	}
 
 	rmDot(e: Dot | ProtoDot) {
@@ -275,8 +276,8 @@ export class Actor {
 
 	/// TODO
 	addItem(it: Item | Item[]): number { return 0 }
-	randItem() { null; }
-	takeItem(which: number | string | Item, sub?: number | string): any { return null; }
+	randItem(): Item | null { return null; }
+	takeItem(which: number | string | Item, sub?: number | string): Item | null { return null; }
 
 	/**
 	 * Computes current, as opposed to base hp.
