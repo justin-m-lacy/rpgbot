@@ -102,6 +102,23 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	}
 
 	/**
+	 * Send message to a text channel.
+	 * @param channelId 
+	 * @param message 
+	 * @returns 
+	 */
+	async send(channelId: string, message: string) {
+		try {
+			const channel = await this.getChannel(channelId);
+			if (channel?.isSendable()) {
+				return channel.send(message);
+			}
+		} catch (e) {
+			console.warn(e);
+		}
+	}
+
+	/**
 	 * Backup the Context's cache.
 	 * @async
 	 * @param m
@@ -249,7 +266,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param  obj
 	 * @param  user
 	 */
-	sendUserNotFound(obj: SendableChannels | Message<true>, user: string) {
+	private sendUserNotFound(obj: SendableChannels | Message<true>, user: string) {
 
 		if (obj instanceof Message) return obj.reply('User \'' + user + '\' not found.');
 		else if (obj.isSendable()) obj.send('User \'' + user + '\' not found.');
@@ -260,16 +277,16 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * Attempts to find a user in the given Context.
 	 * An error message is sent on failure.
 	 */
-	userOrSendErr(resp: SendableChannels | Message<true>, name?: string) {
+	private userOrSendErr(resp: SendableChannels | Message<true>, name?: string) {
 
 		if (!name) {
 			(resp instanceof Message) ? resp.reply('User name expected.') : resp.send('User name expected.');
 			return null;
 		}
-		const member = this.findUser(name);
-		if (!member) this.sendUserNotFound(resp, name);
+		const user = this.findUser(name);
+		if (!user) this.sendUserNotFound(resp, name);
 
-		return member;
+		return user;
 
 	}
 
@@ -313,12 +330,8 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	}
 
 	async getChannel(id: string) {
-		try {
-			/// fetch checks cache first.
-			return await this.bot.client.channels.fetch(id);
-		} catch {
-			return null;
-		}
+		/// fetch checks cache first.
+		return this.bot.client.channels.resolve(id) ?? await this.bot.client.channels.fetch(id);
 	}
 
 	/**
@@ -470,6 +483,10 @@ export class UserContext extends BotContext<User> {
 
 	get name() { return this.idObject.username; }
 
+	async getChannel(s: string) {
+		return this.idObject.dmChannel;
+	}
+
 	/**
 	 *
 	 * @param name
@@ -507,26 +524,10 @@ export class GuildContext extends BotContext<Guild> {
 
 	}
 
-	/**
-	 * Send message to a text channel.
-	 * @param channelId 
-	 * @param message 
-	 * @returns 
-	 */
-	async send(channelId: string, message: string) {
-		const channel = await this.getChannel(channelId);
-		if (channel && channel.isTextBased()) {
-			return channel.send(message);
-		}
-	}
-
 	async getChannel(id: string) {
-		try {
-			/// fetch checks cache first.
-			return await this.idObject.channels.fetch(id);
-		} catch {
-			return null;
-		}
+
+		/// fetch checks cache first.
+		return this.idObject.channels.resolve(id) ?? await this.idObject.channels.fetch(id);
 	}
 
 

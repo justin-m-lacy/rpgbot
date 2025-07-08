@@ -14,6 +14,7 @@ import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
 import { InitPotions } from 'rpg/parsers/potions';
 import { LoadSpells } from 'rpg/parsers/spells';
 import { NewUserData, type UserData } from 'rpg/users/users';
+import { Loc } from 'rpg/world/loc';
 import { Char } from './char/char';
 import { Race } from './char/race';
 import { Game } from './game';
@@ -69,6 +70,14 @@ export class Rpg {
 
 	async load() {
 		await this.loadLastChars();
+	}
+
+	/**
+	 * send message to location.
+	 * @param loc 
+	 */
+	async SendTo(loc: Loc) {
+
 	}
 
 	getLastChar(owner: string) { return this.lastChars[owner] }
