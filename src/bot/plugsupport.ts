@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
-import { DiscordBot } from "./discordbot";
+import { type DiscordBot } from "../discordbot";
 
 const ParseExtensions = ['', '.js', '.ts'];
 

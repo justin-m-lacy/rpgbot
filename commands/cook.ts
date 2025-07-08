@@ -8,7 +8,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('what', 'item to cook')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (char) {
 			const what = m.options.getString('what', true);
 			return m.reply(await rpg.game.action('cook', char, what));

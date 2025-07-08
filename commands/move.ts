@@ -16,7 +16,7 @@ const CmdMove = NewCommand<Rpg>({
 		.addStringOption(StrOpt('dir', 'Direction to move')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		const dir = m.options.getString('dir', true);
@@ -44,7 +44,7 @@ const CmdNorth = NewCommand<Rpg>({
 	data: CommandData('north', 'Move in given direction'),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		await rpg.game.action('move', char, 'n');
@@ -62,7 +62,7 @@ const CmdSouth = NewCommand<Rpg>({
 	data: CommandData('south', 'Move in given direction'),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		await rpg.game.action('move', char, 's');
@@ -80,7 +80,7 @@ const CmdEast = NewCommand<Rpg>({
 	data: CommandData('east', 'Move in given direction'),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		await rpg.game.action('move', char, 'e');
@@ -99,7 +99,7 @@ const CmdWest = NewCommand<Rpg>({
 	data: CommandData('west', 'Move in given direction'),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		await rpg.game.action('move', char, 'w');

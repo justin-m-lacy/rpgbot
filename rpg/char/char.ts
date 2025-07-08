@@ -66,6 +66,11 @@ export class Char extends Actor {
 
 	readonly spelllist: SpellList = new SpellList('spells');
 
+	// channel where character last active.
+	// used to send public messages without explicit char commands.
+	get channel() { return this._log.channel }
+	set channel(v) { this._log.channel = v }
+
 	constructor(name: string,
 		opts: {
 			game: Game<Record<string, TGameAction>>,
@@ -318,12 +323,16 @@ export class Char extends Actor {
 
 	}
 
+	send(s: string) {
+		return this._log.send(s);
+	}
+
 	/**
 	 * Log character string, replacing %c with character name.
-	 * @param str 
+	 * @param s 
 	 */
-	log(str: string) {
-		this._log.log(str.replace('%c', this.name));
+	log(s: string) {
+		this._log.log(s.replace('%c', this.name));
 	}
 	flushLog() {
 		return this._log.flushLog();

@@ -63,5 +63,6 @@
     "src/bot/**/*.d.ts",
     "src/bot/**/*.tsx",
     "src/utils/users.ts",
+    "src/discordbot.ts",
   ]
 }

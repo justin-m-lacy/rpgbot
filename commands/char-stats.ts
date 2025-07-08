@@ -22,7 +22,7 @@ export default NewCommand<Rpg>({
 
 		if (!who) {
 
-			char = await rpg.userCharOrErr(m, m.user);
+			char = await rpg.myCharOrErr(m, m.user);
 			if (!char) return;
 
 			opts.components = [OwnCharActions()];

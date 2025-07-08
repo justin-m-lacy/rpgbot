@@ -11,7 +11,7 @@ export default NewCommand<Rpg>({
 
 		const gname = m.options.getString('guild', true);
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		await SendBlock(m, await rpg.game.joinGuild(char, gname));

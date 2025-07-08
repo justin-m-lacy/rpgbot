@@ -10,7 +10,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('end', 'End item to destroy')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user)
+		const char = await rpg.myCharOrErr(m, m.user)
 		if (!char) return;
 
 		const start = m.options.getString('start');

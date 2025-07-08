@@ -15,7 +15,7 @@ export default NewCommand<Rpg>(
 		cls: Rpg,
 		async exec(m: ChatCommand, rpg: Rpg) {
 
-			const char = await rpg.userCharOrErr(m, m.user);
+			const char = await rpg.myCharOrErr(m, m.user);
 			if (!char) return;
 
 			const stat = m.options.getString('stat');

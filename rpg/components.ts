@@ -205,12 +205,25 @@ export const WorldItemActions = (item: Item) => {
 
 }
 
-export const PickCharButtons = (cmd: string, chars: Char[], param: string = 'who') => {
+export const PickCharButtons = (cmd: string, chars: string[] | Char[], param: string = 'who') => {
 
 	if (chars.length === 0) return [];
+	if (typeof chars[0] === 'string') {
+
+		return ToActionRows(
+
+			(chars as string[]).map(c => CustomButton({
+				customId: cmd,
+				label: c
+			}, {
+				[param]: c
+			}))
+		)
+	}
+
 	return ToActionRows(
 
-		chars.map(c => CustomButton({
+		(chars as Char[]).map(c => CustomButton({
 			customId: cmd,
 			label: c.name
 		}, {

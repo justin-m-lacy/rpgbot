@@ -8,7 +8,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('guildleave', 'Leave current guild.'),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		await SendBlock(m, await rpg.game.leaveGuild(char));

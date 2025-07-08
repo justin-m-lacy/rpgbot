@@ -20,7 +20,7 @@ export default NewCommand<Rpg>({
 
 
 		if (!charname) {
-			char = await rpg.userCharOrErr(m, m.user);
+			char = await rpg.myCharOrErr(m, m.user);
 			if (!char) return;
 			opts.components = [OwnCharActions()]
 		} else {

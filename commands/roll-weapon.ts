@@ -9,7 +9,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('rollweap', 'Roll for new weapon'),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user)
+		const char = await rpg.myCharOrErr(m, m.user)
 		if (char) {
 			await ReplyBlock(m, rollWeap(char));
 		}

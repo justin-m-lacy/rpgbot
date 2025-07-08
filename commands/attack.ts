@@ -12,7 +12,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('who', 'Who or what to attack')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		let who: string | number | null = m.options.getString('who');

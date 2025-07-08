@@ -1,4 +1,4 @@
-import { DiscordBot } from '../../src/bot/discordbot';
+import { DiscordBot } from '../../src/discordbot';
 
 import { ChatCommand } from '@/bot/cmd-wrapper';
 import { CommandData, NewCommand, NumOpt, StrOpt, type Command } from '@/bot/command';

@@ -84,7 +84,7 @@ export class Rpg {
 
 	async charExists(charname: string) { return this.charCache.exists(this.getCharKey(charname)); }
 
-	async userCharOrErr(m: ChatCommand, user: User) {
+	async myCharOrErr(m: ChatCommand, user: User) {
 
 		const charname = this.lastChars[user.id];
 		if (!charname) {

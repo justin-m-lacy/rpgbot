@@ -10,6 +10,7 @@
     {
         "id": "magic_missile",
         "name": "Magic Missile",
+        "alias": "mm",
         "target": "any",
         "dmg": "1d4",
         "level": 1,

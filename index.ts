@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import path from 'path';
 import { InitGame } from 'rpg/rpg';
 import { pathToFileURL } from 'url';
-import { DiscordBot } from './src/bot/discordbot';
+import { DiscordBot } from './src/discordbot';
 
 // Ensure current working directory is directory of the base script.
 process.chdir(__dirname);

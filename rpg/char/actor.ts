@@ -240,6 +240,7 @@ export class Actor {
 
 	}
 
+	send(s: string) { console.log(s) }
 	log(s: string) { console.log(s); }
 
 	addGold(amt: number) { this.stats.gold += amt; }

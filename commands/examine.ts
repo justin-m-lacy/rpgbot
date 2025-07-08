@@ -9,7 +9,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('what', 'Item on ground.').setRequired(true)),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 		const what = m.options.getString('what', true);
 		await ReplyBlock(m, await rpg.world.examine(char, what));

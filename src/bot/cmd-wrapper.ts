@@ -1,5 +1,5 @@
 import type { Command } from "@/bot/command";
-import { type BaseMessageOptions, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type MessagePayload, type User } from "discord.js";
+import { SendableChannels, type BaseMessageOptions, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type MessagePayload, type User } from "discord.js";
 
 export type ChatCommand = ChatInputCommandInteraction | ICmdWrap;
 
@@ -101,6 +101,10 @@ export class ButtonAction implements ICmdWrap {
 	get symbol() { return SymWrap; }
 	readonly m: ButtonInteraction;
 
+	get Channel() {
+		return this.m.channel as SendableChannels;
+	}
+
 	/**
 	 * Underlying command the button action represents.
 	 */
@@ -151,6 +155,8 @@ export class MsgWrap implements ICmdWrap {
 	get user() { return this.m.author; }
 
 	get guild() { return this.m.guild }
+
+	get channel() { return this.m.channel as SendableChannels }
 
 	inGuild() { return this.m.inGuild() }
 

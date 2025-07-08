@@ -1,6 +1,6 @@
 import type { BotContext, ContextSource } from "@/bot/botcontext";
 import type { ChatCommand } from "@/bot/cmd-wrapper";
-import type { DiscordBot } from "@/bot/discordbot";
+import type { DiscordBot } from "@/discordbot";
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption, type ApplicationCommandOptionBase, type ButtonInteraction, type SharedSlashCommand } from "discord.js";
 
 type BaseCommandFunc = (it: ChatCommand, bot: DiscordBot) => Promise<any> | void | undefined;

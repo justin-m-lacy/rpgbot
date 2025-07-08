@@ -23,7 +23,7 @@ export default NewCommand<Rpg>({
 
 		} else {
 
-			char = await rpg.userCharOrErr(m, m.user);
+			char = await rpg.myCharOrErr(m, m.user);
 			if (!char) return;
 
 		}

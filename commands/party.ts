@@ -9,7 +9,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('party', 'join party, invite to party, or show party status.')
 		.addStringOption(StrOpt('who', 'player to invite to party or player\'s party to join')),
 	async exec(m: ChatCommand, rpg: Rpg) {
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		const who = m.options.getString('who');

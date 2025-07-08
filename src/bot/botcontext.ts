@@ -2,10 +2,10 @@ import type { ChatCommand } from '@/bot/cmd-wrapper';
 import ArchCache from 'archcache';
 import { Channel, Guild, GuildMember, Message, PermissionResolvable, User, type SendableChannels } from 'discord.js';
 import * as afs from '../afs';
+import { DiscordBot } from '../discordbot';
 import Access from './access';
 import BotFs from './botfs';
 import { type Command } from './command';
-import { DiscordBot } from './discordbot';
 
 /**
  * A discord object associated with this bot context.

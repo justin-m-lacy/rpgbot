@@ -22,7 +22,7 @@ export default NewCommand<Rpg>({
 		}
 		if (!desc) return SendPrivate(m, 'Crafted items require a description.');
 
-		const char = await rpg.userCharOrErr(m, m.user)
+		const char = await rpg.myCharOrErr(m, m.user)
 		if (!char) return;
 
 		//const a = m.attachments.first();

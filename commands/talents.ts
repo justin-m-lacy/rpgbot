@@ -15,7 +15,7 @@ export default NewCommand<Rpg>({
 		const who = m.options.getString('who');
 
 		if (!who) {
-			char = await rpg.userCharOrErr(m, m.user);
+			char = await rpg.myCharOrErr(m, m.user);
 			if (!char) return;
 		} else {
 			char = await rpg.loadChar(who);

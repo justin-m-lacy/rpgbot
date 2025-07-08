@@ -13,7 +13,7 @@ export default NewCommand<Rpg>({
 		const start = m.options.getString('start', true);
 		const end = m.options.getString('end');
 
-		const src = await rpg.userCharOrErr(m, m.user);
+		const src = await rpg.myCharOrErr(m, m.user);
 		if (!src) return;
 
 		return SendBlock(m, await rpg.game.action('sell', src, start, end));

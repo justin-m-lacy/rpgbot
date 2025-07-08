@@ -11,7 +11,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('slot', 'equipment slot to view')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user)
+		const char = await rpg.myCharOrErr(m, m.user)
 		if (!char) return;
 
 		const slot = m.options.getString('slot', true) as HumanSlot;

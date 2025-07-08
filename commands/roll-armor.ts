@@ -10,7 +10,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('slot', 'Slot to roll new armor for')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (char) {
 			const slot = m.options.getString('slot');
 			await ReplyBlock(m, rollArmor(char, slot));

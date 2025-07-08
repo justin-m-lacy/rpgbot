@@ -152,11 +152,17 @@ export class Mob {
 		this.at.setTo(at);
 	}
 
+	send(s: string) {
+		console.log(`mob send: ${s}`);
+	}
+
 	/**
 	 * Compatibility for logging.
-	 * @param str 
+	 * @param s 
 	 */
-	log(str: string) { console.log(`MOB: ${str}`) }
+	log(s: string) {
+		console.log(`MOB: ${s}`)
+	}
 
 	statRoll(...stats: string[]) {
 		/// TODO

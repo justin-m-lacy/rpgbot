@@ -3,12 +3,12 @@ import { MsgWrap, type ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { Channel, ChannelType, Client, Events, Guild, GuildMember, Message, MessageFlags, User, type Interaction, type SendableChannels } from 'discord.js';
 import path from 'path';
-import { Display } from '../utils/display';
-import { Auth } from './auth';
-import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './botcontext';
-import fsys from './botfs';
-import { IsTypedCmd, type Command } from './command';
-import { CommandMap } from './command-map';
+import { Auth } from './bot/auth';
+import { BotContext, ContextClass, ContextSource, GuildContext, UserContext } from './bot/botcontext';
+import fsys from './bot/botfs';
+import { IsTypedCmd, type Command } from './bot/command';
+import { CommandMap } from './bot/command-map';
+import { Display } from './utils/display';
 
 export type TBotConfig = {
 

@@ -14,7 +14,7 @@ export default NewCommand<Rpg>({
 
 		if (!potion) return SendPrivate(m, 'Brew what potion?');
 
-		const char = await rpg.userCharOrErr(m, m.user)
+		const char = await rpg.myCharOrErr(m, m.user)
 		if (!char) return;
 
 		//const a = m.attachments.first();

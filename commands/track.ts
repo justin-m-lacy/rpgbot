@@ -9,7 +9,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('who', 'Character to track').setRequired(true)),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const src = await rpg.userCharOrErr(m, m.user);
+		const src = await rpg.myCharOrErr(m, m.user);
 		if (!src) return;
 
 		const who = m.options.getString('who', true);

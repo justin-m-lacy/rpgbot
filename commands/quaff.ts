@@ -10,7 +10,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('what', 'Potion to quaff')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user)
+		const char = await rpg.myCharOrErr(m, m.user)
 		if (char) {
 			const what = m.options.getString('what');
 

@@ -13,7 +13,7 @@ export default NewCommand<Rpg>({
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		if (!rpg.context.isOwner(m.user)) return SendPrivate(m, 'You do not have permission to do that.');
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		const str = m.options.getString('formula', true);

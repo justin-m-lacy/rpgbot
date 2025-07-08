@@ -7,7 +7,7 @@ import { CookItem, TryEat } from 'rpg/char/cooking';
 import { Combat } from 'rpg/combat/combat';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
-import { TGameEvents } from 'rpg/events';
+import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
@@ -75,7 +75,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS);
 
-		this.events.on('actorDie', this.onActorDie, this);
+		this.events.on('actorDie', this.onCharDie, this);
 	}
 
 	/**
@@ -113,14 +113,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			}
 
 		}
-
-	}
-
-	/**
-	 * attempt to get Char or Mob that created an effect.
-	 * @param maker 
-	 */
-	getMaker(maker: string) {
 
 	}
 
@@ -246,12 +238,21 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
+	async onCharHit(char: TActor, attacker: TActor | string, info: AttackInfo) {
+
+		// log hit with first 'human' user.
+		(attacker instanceof Char ? attacker : char).send(
+			`${attacker.toString()} hits ${char.name} with ${info.name} for ${info.dmg} damage.`
+		);
+
+	}
+
 	/**
 	 * @param char 
 	 * @param slayer - string if no other information on attacker is known.
 	 * for example, killed by a potion, which no longer exists. 
 	 */
-	async onActorDie(char: TActor, slayer: TActor | string) {
+	async onCharDie(char: TActor, slayer: TActor | string) {
 
 		if (slayer instanceof Char) {
 			this.onSlay(slayer, char);

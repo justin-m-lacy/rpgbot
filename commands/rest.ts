@@ -8,7 +8,7 @@ export default NewCommand<Rpg>({
 	data: CommandData('rest', 'Attempt to rest'),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (char) return SendPrivate(m, await rpg.game.action('rest', char));
 
 	}

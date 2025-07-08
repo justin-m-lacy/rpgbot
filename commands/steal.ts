@@ -1,7 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { Char } from "rpg/char/char";
 import { PickCharButtons } from "rpg/components";
 import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
@@ -13,7 +12,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('what', 'What to steal')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const src = await rpg.userCharOrErr(m, m.user);
+		const src = await rpg.myCharOrErr(m, m.user);
 		if (!src) return;
 
 		const who = m.options.getString('who', true);
@@ -21,9 +20,9 @@ export default NewCommand<Rpg>({
 
 			return SendPrivate(m, 'Steal from whom?', {
 				components: PickCharButtons('steal',
-					(await rpg.world.getOrGen(src.at)).npcs.filter((v): v is Char => v instanceof Char)
+					(await rpg.world.getOrGen(src.at)).chars
 				)
-			})
+			});
 
 		}
 

@@ -14,7 +14,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('at', 'What to cast at')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		const char = await rpg.userCharOrErr(m, m.user);
+		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
 		const spellName = m.options.getString('spell');
