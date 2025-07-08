@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
 import { ItemType } from 'rpg/items/types';
+import { GetDot, ProtoDot } from 'rpg/magic/dots';
 import { Char } from '../char/char';
-import * as Effects from '../magic/dots';
 import { Item } from './item';
 
 export class Potion extends Item {
@@ -25,7 +25,7 @@ export class Potion extends Item {
 		const s = super.toJSON() as any;
 
 		//if (this._spell) s.spell = this._spell;
-		if (this._effect) s.effect = this._effect;
+		if (this.dot) s.effect = this.dot;
 		if (this._form) s.form = this._form;
 
 		return s;
@@ -35,8 +35,8 @@ export class Potion extends Item {
 	get form() { return this._form; }
 	set form(v) { this._form = v; }
 
-	get effect() { return this._effect; }
-	set effect(v) { this._effect = v; }
+	get effect() { return this.dot; }
+	set effect(v) { this.dot = v; }
 
 	/*get spell() { return this._spell; }
 	set spell(v) { this._spell = v; }
@@ -44,7 +44,7 @@ export class Potion extends Item {
 
 	_form?: Formula | string;
 
-	_effect?: any;
+	dot?: ProtoDot;
 
 	constructor(id?: string) {
 		super(id ?? randomUUID(), { name: '', desc: '', type: ItemType.Potion });
@@ -62,20 +62,22 @@ export class Potion extends Item {
 				this._form.eval(char);
 			}
 
-		} else if (this._effect) {
+		} else if (this.dot) {
 
-			if (typeof (this._effect) === 'string') {
+			if (typeof (this.dot) === 'string') {
 
-				let e = Effects.GetDot(this._effect);
+				let e = GetDot(this.dot);
 				if (!e) {
-					console.log('effect not found: ' + this._effect);
+					console.log('effect not found: ' + this.dot);
 					return;
 				}
 
 				console.log('adding potion effect.');
-				char.addDot(e);
+				char.addDot(e, this.name);
 
-			} else if (this._effect instanceof Effects.Dot) char.addDot(this._effect);
+			} else if (this.dot instanceof ProtoDot) {
+				char.addDot(this.dot, this.name);
+			}
 
 		}
 

@@ -214,9 +214,13 @@ export class Actor {
 
 	}
 
-	addDot(e: Dot | ProtoDot) {
+	/**
+	 * Add existing/created dot.
+	 * @param e 
+	 */
+	addDot(e: Dot | ProtoDot, maker?: string) {
 
-		if (e instanceof ProtoDot) e = new Dot(e);
+		if (e instanceof ProtoDot) e = new Dot(e, maker);
 
 		this.dots.push(e);
 		e.start(this);

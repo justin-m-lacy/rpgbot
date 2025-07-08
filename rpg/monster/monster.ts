@@ -156,7 +156,7 @@ export class Mob {
 	 * Compatibility for logging.
 	 * @param str 
 	 */
-	log(str: string) { }
+	log(str: string) { console.log(`MOB: ${str}`) }
 
 	statRoll(...stats: string[]) {
 		/// TODO
@@ -167,8 +167,8 @@ export class Mob {
 		return this._talents?.includes(s);
 	}
 
-	addDot(e: Dot | ProtoDot) {
-		if (e instanceof ProtoDot) e = new Dot(e);
+	addDot(e: Dot | ProtoDot, maker?: string) {
+		if (e instanceof ProtoDot) e = new Dot(e, maker);
 
 		this.dots.push(e);
 		e.start(this);

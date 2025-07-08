@@ -58,13 +58,13 @@ export const ReviveChar = (game: Game, json: any) => {
 	if (json.inv) Inventory.Decode(json.inv, DecodeItem, char.inv);
 
 	// SET AFTER BASE STATS.
-	if (json.effects) {
-		let a = json.effects;
+	if (Array.isArray(json.dots)) {
+		let a = json.dots;
 		for (let i = a.length - 1; i >= 0; i--) {
 
-			const effect = Dot.Decode(a[i]);
-			if (effect) {
-				char.addDot(effect);
+			const dot = Dot.Decode(a[i]);
+			if (dot) {
+				char.addDot(dot, dot.maker);
 			}
 
 		}

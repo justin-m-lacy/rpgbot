@@ -1,4 +1,6 @@
+import { EventEmitter } from 'eventemitter3';
 import { StatusFlags } from 'rpg/char/states';
+import { TGameEvents } from 'rpg/events';
 import { TActor } from 'rpg/monster/monster';
 import { ParseValues } from 'rpg/parsers/values';
 import { AddValues } from 'rpg/values/apply';
@@ -112,7 +114,7 @@ export class Dot {
 	toJSON() {
 
 		return {
-			src: this.source,
+			src: this.maker,
 			efx: this.proto.id,
 			time: this._time
 		};
@@ -137,13 +139,13 @@ export class Dot {
 	private _time: number;
 
 	// spell, npc, or action that created the effect.
-	readonly source?: string;
+	readonly maker?: string;
 
 
-	constructor(effect: ProtoDot, time?: number, src?: any) {
+	constructor(effect: ProtoDot, maker?: any, time?: number) {
 
 		this.proto = effect;
-		this.source = src;
+		this.maker = maker;
 		this._time = time || this.proto.duration;
 
 	}
@@ -168,10 +170,10 @@ export class Dot {
 	}
 
 	/**
-	 * @param char
+	 * @param char - char to tick. Char must be alive.
 	 * @returns true if effect complete. 
 	 */
-	tick<T extends TActor>(char: T) {
+	tick<T extends TActor>(char: T, events: EventEmitter<TGameEvents>) {
 
 		if (!this.proto.duration) return false;
 
@@ -180,8 +182,12 @@ export class Dot {
 		if (this.dot) {
 
 			AddValues(char, this.dot, 1);
-			char.log(`${char.name} affected by ${this.name}.`);
-
+			if (!char.isAlive()) {
+				char.log(`${char.name} slain by ${this.name}.`);
+				events.emit('actorDie', char, this.maker)
+			} else {
+				char.log(`${char.name} affected by ${this.name}.`);
+			}
 
 		}
 

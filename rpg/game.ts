@@ -75,7 +75,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS);
 
-		this.events.on('mobDie', this.onMobDie, this);
+		this.events.on('actorDie', this.onActorDie, this);
 	}
 
 	/**
@@ -98,9 +98,9 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			for (let i = loc.npcs.length - 1; i >= 0; i--) {
 
 				const npc = loc.npcs[i];
-				if (!npc.isAlive()) {
-					loc.removeNpcAt(i);
-				}
+				// died between frames.
+				if (!npc.isAlive()) continue;
+
 				this.tickDots(npc);
 				if (npc.dots.length > 0) {
 					liveNpcs++;
@@ -110,6 +110,34 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			if (liveNpcs === 0) {
 				// no npcs active here.
 				delete this.liveLocs[k];
+			}
+
+		}
+
+	}
+
+	/**
+	 * attempt to get Char or Mob that created an effect.
+	 * @param maker 
+	 */
+	getMaker(maker: string) {
+
+	}
+
+	private tickDots(char: TActor) {
+
+		const efx = char.dots;
+		if (!efx) return;
+
+		for (let i = efx.length - 1; i >= 0; i--) {
+
+			const e = efx[i];
+			if (e.tick(char, this.events)) {
+
+				// efx end.
+				quickSplice(efx, i);
+				e.end(char);
+
 			}
 
 		}
@@ -138,11 +166,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		if (!this.canAct(char, act)) return char.output();
 
-		if (this.actions[act].tick) {
-			this.tickDots(char);
-		}
-		if (this.actions[act].rest) {
-			char.recover(this.actions[act].rest);
+		if (char.isAlive()) {
+			if (this.actions[act].tick) {
+				this.tickDots(char);
+			}
+			if (this.actions[act].rest) {
+				char.recover(this.actions[act].rest);
+			}
 		}
 
 		return await (this.actions[act].exec as Function).apply(
@@ -150,26 +180,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		);
 
 	}
-
-	private tickDots(char: TActor) {
-
-		const efx = char.dots;
-		if (!efx) return;
-
-		for (let i = efx.length - 1; i >= 0; i--) {
-
-			const e = efx[i];
-			if (e.tick(char)) {
-				// efx end.
-				quickSplice(efx, i);
-				e.end(char);
-
-			}
-
-		}
-
-	}
-
 
 	brew(this: Game<A, K>, char: Char, itemName: string, imgURL?: string) {
 
@@ -231,34 +241,33 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		} else if (spell.target === TargetFlags.none) {
 			// generalized spell.
+			console.log(`no spell targ.`);
 		}
 
 	}
 
-	async onCharDie(char: Char, slayer?: TActor) {
+	async onActorDie(char: TActor, slayer?: TActor) {
 
 		if (slayer instanceof Char) {
 			this.onSlay(slayer, char);
 		}
 
-		/// should be world log.
-		char.log(
-			await this.world.put(char, Grave.MakeGrave(char, slayer))
-		);
+		if (char instanceof Char) {
 
-	}
+			/// should be world log.
+			char.log(
+				await this.world.put(char, Grave.MakeGrave(char, slayer))
+			);
 
-	async onMobDie(targ: Mob, killer?: TActor) {
-
-		if (killer instanceof Char) {
-			this.onSlay(killer, targ);
+		} else if (char instanceof Mob) {
+			const loc = await this.world.getLoc(char.at);
+			if (loc) {
+				loc.removeNpc(char);
+				await this.getLoot(itemgen.GenLoot(char), loc, slayer);
+			}
 		}
 
-		const loc = await this.world.getLoc(targ.at);
-		if (loc) {
-			loc.removeNpc(targ);
-			await this.getLoot(itemgen.GenLoot(targ), loc, killer);
-		}
+
 
 	}
 

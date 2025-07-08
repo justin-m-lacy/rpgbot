@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
@@ -73,9 +74,9 @@ async function InitChests() {
 }
 
 
-export const GenLoot = (mons: Mob) => {
+export const GenLoot = (mob: Mob | Actor) => {
 
-	const lvl = Math.floor(mons.level);
+	const lvl = Math.floor(mob.level.valueOf());
 
 	const loot: Loot = {
 		items: [],
@@ -94,8 +95,8 @@ export const GenLoot = (mons: Mob) => {
 		}
 	}
 
-	if (mons.drops) {
-		const itms = getDrops(mons);
+	if ('drops' in mob) {
+		const itms = getDrops(mob);
 		if (itms) loot.items = loot.items!.concat(itms);
 	}
 
