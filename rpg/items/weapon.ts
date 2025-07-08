@@ -1,11 +1,12 @@
 import { randomUUID } from 'crypto';
+import { TCombatAction } from 'rpg/combat/types';
 import { ItemType } from 'rpg/items/types';
 import { DamageSrc } from '../formulas';
 import { Item } from './item';
 import { Material } from './material';
 import { Wearable } from './wearable';
 
-export class Weapon extends Wearable {
+export class Weapon extends Wearable implements TCombatAction {
 
 	toJSON() {
 

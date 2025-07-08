@@ -1,7 +1,9 @@
 import { TGameAction } from 'rpg/actions';
 import { GClass, Race } from 'rpg/char/race';
+import { TCombatAction } from 'rpg/combat/types';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
+import { Weapon } from 'rpg/items/weapon';
 import { SpellList } from 'rpg/magic/spelllist';
 import { Log } from '../display/log';
 import { Inventory } from '../inventory';
@@ -71,6 +73,8 @@ export class Char extends Actor {
 	get channel() { return this._log.channel }
 	set channel(v) { this._log.channel = v }
 
+	readonly attacks: TCombatAction[] = [];
+
 	constructor(name: string,
 		opts: {
 			game: Game<Record<string, TGameAction>>,
@@ -90,7 +94,6 @@ export class Char extends Actor {
 		this.owner = opts.owner;
 
 	}
-
 
 	/**
 	 * Runs every time char is loaded from storage.
@@ -183,7 +186,7 @@ export class Char extends Actor {
 
 	unequip(slot?: string) {
 
-		let removed = this._equip.removeSlot(slot);
+		const removed = this._equip.removeSlot(slot);
 		if (!removed) return;
 
 		this.removeEquip(removed);
@@ -209,6 +212,7 @@ export class Char extends Actor {
 	}
 
 	private applyEquip(it: Wearable) {
+
 		if (it.mods) {
 			it.mods.apply(this.stats);
 		}
@@ -216,12 +220,16 @@ export class Char extends Actor {
 			this.stats.armor.add(it.armor);;
 			//console.log('adding armor: ' + it.armor);
 		}
+		if (it instanceof Weapon) {
+			this.attacks.push(it);
+		}
+
 	}
 
 	/**
 	 * @param wot
 	 */
-	removeEquip(wot: Item | Item[]) {
+	private removeEquip(wot: Item | Item[]) {
 
 		if (Array.isArray(wot)) {
 
@@ -235,6 +243,13 @@ export class Char extends Actor {
 			if (wot.armor) {
 				this.stats.armor.add(-wot.armor);
 			}
+
+			const ind = this.attacks.indexOf(wot);
+			if (ind >= 0) {
+				this.attacks.splice(ind, 1);
+			}
+
+
 		}
 
 	}
@@ -298,8 +313,6 @@ export class Char extends Actor {
 		return this.name + "'s Talents:" + this.talents.join('\n');
 
 	}
-
-	getWeapons() { return this._equip.getWeapons(); }
 
 	testDmg() {
 

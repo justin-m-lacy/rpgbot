@@ -29,6 +29,7 @@ import { Party } from './social/party';
 import * as Trade from './trade';
 import { DirVal, Loc, toDirection } from './world/loc';
 import { World } from "./world/world";
+import { TCombatAction } from 'rpg/combat/types';
 
 const LOC_UPDATE_MS = 3000;
 
@@ -95,6 +96,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			liveNpcs = 0;
 
 			const loc = this.liveLocs[k];
+			const chars = loc.chars;
+
 			for (let i = loc.npcs.length - 1; i >= 0; i--) {
 
 				const npc = loc.npcs[i];
@@ -102,9 +105,20 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 				if (!npc.isAlive()) continue;
 
 				this.tickDots(npc);
+				if (!npc.isAlive()) continue;
+
 				if (npc.dots.length > 0) {
 					liveNpcs++;
 				}
+
+				if (chars.length > 0 && npc.attacks.length > 0) {
+
+					const atks = npc.attacks;
+
+					liveNpcs++;
+
+				}
+
 
 			}
 			if (liveNpcs === 0) {
@@ -173,23 +187,25 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	brew(this: Game<A, K>, char: Char, itemName: string, imgURL?: string) {
+	async attack(this: Game<A, K>, src: Char, targ: Char | Mob, atk?: TCombatAction) {
 
-		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
-
-		const pot = GenPotion(itemName);
-		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
-
-		const s = char.statRoll('wis');
-		if (s < 10 * pot.level) {
-			return char.output(`${char.name} failed to brew ${itemName}.`);
+		if (targ instanceof Mob) {
+			return this.attackNpc(src, targ);
 		}
 
-		if (pot.level) char.addExp(2 * pot.level);
-		char.addHistory('brew');
-		const ind = char.addItem(pot);
+		const p1 = this.getParty(src) || src;
+		let p2: Char | Party = this.getParty(targ);
 
-		return char.output(`${char.name} brewed ${itemName}. (${ind})`);
+		if (!p2 || !p2.at.equals(targ.at)) {
+			p2 = targ;
+		}
+
+		this.combat.attack(src, src., p2, p1);
+
+		const com = new Fight(p1, p2, this.world);
+		await com.fight();
+
+		return src.output(com.getText());
 
 	}
 
@@ -238,12 +254,35 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
+	brew(this: Game<A, K>, char: Char, itemName: string, imgURL?: string) {
+
+		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
+
+		const pot = GenPotion(itemName);
+		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
+
+		const s = char.statRoll('wis');
+		if (s < 10 * pot.level) {
+			return char.output(`${char.name} failed to brew ${itemName}.`);
+		}
+
+		if (pot.level) char.addExp(2 * pot.level);
+		char.addHistory('brew');
+		const ind = char.addItem(pot);
+
+		return char.output(`${char.name} brewed ${itemName}. (${ind})`);
+
+	}
+
 	async onCharHit(char: TActor, attacker: TActor | string, info: AttackInfo) {
 
+		const logger = (attacker instanceof Char ? attacker : char);
+
 		// log hit with first 'human' user.
-		(attacker instanceof Char ? attacker : char).send(
+		logger.send(
 			`${attacker.toString()} hits ${char.name} with ${info.name} for ${info.dmg} damage.`
 		);
+		char.log(`hp: ${char.hp.valueOf()}/${char.hp.max.valueOf()}`);
 
 	}
 
@@ -812,26 +851,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		const com = new Fight(src, dest, this.world);
 		await com.steal(src, wot);
-
-		return src.output(com.getText());
-
-	}
-
-	async attack(this: Game<A, K>, src: Char, targ: Char | Mob) {
-
-		if (targ instanceof Mob) {
-			return this.attackNpc(src, targ);
-		}
-
-		const p1 = this.getParty(src) || src;
-		let p2: Char | Party = this.getParty(targ);
-
-		if (!p2 || (!p2.isLeader(targ) && !p2.at.equals(targ.at))) {
-			p2 = targ;
-		}
-
-		const com = new Fight(p1, p2, this.world);
-		await com.fight();
 
 		return src.output(com.getText());
 

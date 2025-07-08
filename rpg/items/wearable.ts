@@ -36,19 +36,18 @@ export const toSlot = (slot?: string | null) => {
 export class Wearable extends Item {
 
 	/**
-	 * @property {number} armor - armor added. replace with defense?
+	 * @property armor - armor added. replace with defense?
 	 */
 	get armor() { return this._armor; }
 	set armor(v) { this._armor = v < 0 ? 0 : v }
 
 	/**
-	 * @property {string} slot - equip slot used.
+	 * @property slot - equip slot used.
 	 */
-	get slot() { return this._slot; }
-	set slot(v) { this._slot = v; }
+	slot: HumanSlot = 'hands';
 
 	/**
-	 * @property {string} material - armor material.
+	 * @property material - armor material.
 	 */
 	get material() { return this._material; }
 	set material(m) { this._material = m; }
@@ -82,7 +81,7 @@ export class Wearable extends Item {
 		const json = super.toJSON() as any;
 
 		json.armor = this._armor;
-		json.slot = this._slot;
+		json.slot = this.slot;
 		json.material = this._material;
 		if (this._mods) json.mods = this._mods;
 
@@ -91,7 +90,7 @@ export class Wearable extends Item {
 	}
 
 	private _armor: number;
-	private _slot!: HumanSlot;
+
 	private _material: string = '';
 	private _mods: any;
 

@@ -3,7 +3,7 @@ import { SendableChannels } from "discord.js";
 export class Log {
 
 	// channel last used for public logs.
-	channel?: SendableChannels;
+	channel: SendableChannels | null = null;
 
 	private text: string = '';
 	constructor() { }

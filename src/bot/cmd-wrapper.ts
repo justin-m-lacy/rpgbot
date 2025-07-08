@@ -86,6 +86,8 @@ export interface ICmdWrap {
 
 	get guild(): Guild | null;
 
+	get channel(): SendableChannels | null;
+
 	inGuild(): boolean;
 
 	reply(opts: string | MessagePayload | BaseMessageOptions): Promise<any>;
@@ -101,7 +103,7 @@ export class ButtonAction implements ICmdWrap {
 	get symbol() { return SymWrap; }
 	readonly m: ButtonInteraction;
 
-	get Channel() {
+	get channel() {
 		return this.m.channel as SendableChannels;
 	}
 

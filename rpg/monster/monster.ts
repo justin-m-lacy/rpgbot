@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
+import { TCombatAction } from 'rpg/combat/types';
 import { Dot, ProtoDot } from 'rpg/magic/dots';
 import { GetMonster, MobData } from 'rpg/parsers/monster';
 import { quickSplice } from 'rpg/util/array';
@@ -119,7 +120,7 @@ export class Mob {
 	readonly proto?: MobData;
 	private dmg?: Numeric;
 	private _weap?: any;
-	private _attacks: any;
+	readonly attacks: TCombatAction[] = [];
 	private _talents?: string[];
 
 	team: number = 0;
@@ -242,7 +243,6 @@ export class Mob {
 	getState() { return this._state; }
 
 	getWeapons() { return this._weap; }
-	getAttacks() { return this._attacks; }
 
 	hit(dmg: number, type?: string) {
 

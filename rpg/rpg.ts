@@ -1,7 +1,7 @@
 import { BotContext, type ContextSource } from '@/bot/botcontext';
 import type { ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
-import { MessageFlags, User } from "discord.js";
+import { MessageFlags, SendableChannels, User } from "discord.js";
 import { InitItems } from 'rpg/builders/itemgen';
 import { GameActions } from 'rpg/game-actions';
 import { ItemIndex } from 'rpg/items/container';
@@ -113,6 +113,7 @@ export class Rpg {
 			return null;
 		}
 
+		char.channel = m.channel as SendableChannels | null;
 		return char;
 
 	}

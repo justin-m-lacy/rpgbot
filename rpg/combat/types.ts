@@ -31,7 +31,7 @@ export type TCombatAction = {
 	range?: Numeric;
 
 	///Allowed targets for action.
-	target: TargetFlags;
+	target?: TargetFlags;
 
 	/// percent of damage leeched.
 	leech?: TValue;

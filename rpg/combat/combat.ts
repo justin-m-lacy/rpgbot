@@ -10,12 +10,8 @@ import { AddValues } from "rpg/values/apply";
 import { Numeric, TValue } from "rpg/values/types";
 import { Loc } from "rpg/world/loc";
 
-
-
-
-
 /**
- * Handles all combat for a single game context.
+ * Handle combat for a single game context.
  */
 export class Combat {
 
@@ -25,6 +21,25 @@ export class Combat {
 		this.game = game;
 	}
 
+	async attack(src: TActor, act: TCombatAction, targ: TActor | Party, srcParty?: Party) {
+
+		const d = targ instanceof Party ? await targ.randTarget() : targ;
+		if (!d) { console.warn('tryHit() targ null'); return; }
+
+		//const attack = new AttackInfo(src, d, srcParty);
+
+		this.resp += `${src.name} attacks ${targ.name} with ${attack.name}`;
+
+		if (attack.hit) {
+
+			this.resp += `\n${d.name} was hit for ${attack.dmg} ${attack.dmgType} damage.`;
+			this.resp += ` hp: ${d.hp.valueOf()}/${d.hp.max.valueOf()}`;
+
+		} else this.resp += `\n${src.name} misses!`;
+
+		this.attacks.push(attack);
+
+	}
 
 	/**
 	 * Apply combat action to target.
@@ -109,6 +124,19 @@ export class Combat {
 
 		} else {
 
+		}
+
+	}
+
+	rollMeleeHit(char: TActor, defender: TActor) {
+
+		if (this.weap == null) {
+			return false;
+		}
+
+		const hitroll = char.statRoll() + char.toHit + this.weap.toHit;
+		if (hitroll > defender.armor) {
+			return true;
 		}
 
 	}

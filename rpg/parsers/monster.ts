@@ -42,7 +42,7 @@ export const GetMonster = (id: string) => {
 	return templates[id];
 }
 
-const initTemplates = async () => {
+const InitMobs = async () => {
 
 	const raw = (await import('../data/npc/monster.json', { assert: { type: 'json' } })).default;
 
@@ -57,7 +57,8 @@ const initTemplates = async () => {
 
 	}
 }
-initTemplates();
+
+InitMobs();
 
 function parseTemplate(json: any) {
 

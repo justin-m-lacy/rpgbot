@@ -8,7 +8,6 @@ import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { Item } from '../items/item';
-import { Weapon } from '../items/weapon';
 import { Dot, ProtoDot } from '../magic/dots';
 import { roll } from '../values/dice';
 import { Coord } from '../world/loc';
@@ -256,8 +255,6 @@ export class Actor {
 		this.state = CharState.Alive;
 
 	}
-
-	getWeapons(): Weapon | Weapon[] | null { return null; }
 
 	updateState() {
 		if (this.hp.value <= 0) this.state = CharState.Dead;
