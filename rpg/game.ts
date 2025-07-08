@@ -24,7 +24,7 @@ import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
 import { Wearable } from './items/wearable';
-import { Mob, TActor } from './monster/monster';
+import { Mob, TActor } from './monster/mobs';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
@@ -201,6 +201,9 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			await this.combat.tryAttack(src, atk, p2);
 
 			// reprisal.
+			if (targ.attacks) {
+				await this.combat.tryAttack(targ, randElm(targ.attacks), src);
+			}
 		}
 
 		return src.flushLog();

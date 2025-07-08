@@ -3,7 +3,7 @@ import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
 import { DamageSrc } from 'rpg/formulas';
 import { Weapon } from 'rpg/items/weapon';
-import { Mob } from 'rpg/monster/monster';
+import { Mob } from 'rpg/monster/mobs';
 import { Dice } from 'rpg/values/dice';
 import { Biome, TCoord } from 'rpg/world/loc';
 
@@ -44,7 +44,7 @@ export const GetMonster = (id: string) => {
 
 const InitMobs = async () => {
 
-	const raw = (await import('../data/npc/monster.json', { assert: { type: 'json' } })).default;
+	const raw = (await import('../data/npc/mobs.json', { assert: { type: 'json' } })).default;
 
 	for (let k = raw.length - 1; k >= 0; k--) {
 
@@ -75,7 +75,7 @@ function parseTemplate(json: any) {
 	}
 	if (t.dmg) { t.dmg = DamageSrc.Decode(t.dmg); }
 	if (t.weap) {
-		t.weap = Weapon.FromData(t.weap);
+		t.weap = Weapon.Decode(t.weap);
 	}
 
 	return t;

@@ -9,7 +9,7 @@ import { DecodeItem } from 'rpg/parsers/items';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Loot } from '../combat/loot';
 import { Material } from '../items/material';
-import { Mob } from '../monster/monster';
+import { Mob } from '../monster/mobs';
 
 
 

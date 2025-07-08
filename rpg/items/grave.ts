@@ -1,5 +1,5 @@
 import { ItemData, ItemType } from 'rpg/items/types';
-import { TActor } from 'rpg/monster/monster';
+import { TActor } from 'rpg/monster/mobs';
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
 import { Item } from "./item";

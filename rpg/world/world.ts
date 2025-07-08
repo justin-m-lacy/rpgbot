@@ -4,7 +4,7 @@ import { GenLoc, GenNewLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
 import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
-import { Mob } from '../monster/monster';
+import { Mob } from '../monster/mobs';
 import Block from './block';
 import { Feature } from './feature';
 import { Coord, DirString, DirVal, Exit, Loc, TCoord, ToDirStr } from './loc';

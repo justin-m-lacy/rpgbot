@@ -66,7 +66,7 @@ export class Mob {
 			evil: this._evil ?? undefined,
 			kind: this._kind ?? undefined,
 			dmg: this.dmg ?? undefined,
-			weap: this._weap ?? undefined
+			weap: this.weap ?? undefined
 
 		};
 
@@ -88,9 +88,6 @@ export class Mob {
 	set armor(v) { this._armor = v; }
 
 	get hp() { return this._hp }
-
-	get weap() { return this._weap; }
-	set weap(v) { this._weap = v; }
 
 	get state() { return this._state; }
 	set state(v) { this._state = v; }
@@ -119,7 +116,7 @@ export class Mob {
 	private _drops?: any;
 	readonly proto?: MobData;
 	private dmg?: Numeric;
-	private _weap?: any;
+	private weap?: any;
 	readonly attacks: TCombatAction[] = [];
 	private _talents?: string[];
 

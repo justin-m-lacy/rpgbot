@@ -1,11 +1,9 @@
-import { randomUUID } from 'crypto';
 import { TCombatAction } from 'rpg/combat/types';
-import { ItemType } from 'rpg/items/types';
+import { ItemData, ItemType } from 'rpg/items/types';
+import { ParseValue } from 'rpg/parsers/values';
 import { Dice } from 'rpg/values/dice';
-import * as forms from '../formulas';
 import { DamageSrc } from '../formulas';
 import { Item } from './item';
-import { Material } from './material';
 import { Wearable } from './wearable';
 
 export class Weapon extends Wearable implements TCombatAction {
@@ -13,31 +11,26 @@ export class Weapon extends Wearable implements TCombatAction {
 	toJSON() {
 
 		const json = super.toJSON();
-		json.dmg = this.damage;
-		json.hit = this.toHit;
 
-		if (this.mods) json.mods = this.mods;
+		json.dmg = this.dmg;
+		json.hit = this.toHit;
 
 		return json;
 
 	}
 
-	static Decode(json: any) {
+	static Decode(json: ItemData & { hit?: number, kind?: string, material: string, mods: any, dmg: any }) {
 
-		const w = new Weapon(json.id, json.name, json.desc);
+		const dmg = new DamageSrc(ParseValue('dmg', json.dmg || 0), json.kind || 'blunt');
+
+		const w = new Weapon(json.id, json.name, dmg, json.desc);
 
 		if (json.material) w.material = json.material;
-
-		if (json.mods) w.mods = json.mods;
-
-		if (json.dmg) {
-			w.damage = DamageSrc.Decode(json.dmg);
-		} else {
-			console.log('Error weap dmg. no dmg found.')
-			w.damage = new DamageSrc(null, json.dmgType);
+		if (json.mods) {
+			w.mods = json.mods;
 		}
 
-		if (json.dmgType) w.dmgType = json.dmgType;
+		if (json.kind) w.kind = json.kind;
 
 		w.toHit = json.hit || 0;
 
@@ -45,65 +38,33 @@ export class Weapon extends Wearable implements TCombatAction {
 
 	}
 
-	/**
-	 * Create a new weapon from a base weapon object.
-	 * @param tmp 
-	 * @param mat 
-	 */
-	static FromData(tmp: any, mat?: Material) {
-
-		const damage = DamageSrc.FromString(tmp.dmg, tmp.type);
-
-		const w = new Weapon(randomUUID(), tmp.name, damage);
-
-		if (tmp.hands) w.hands = tmp.hands;
-		if (tmp.mods) w.mods = Object.assign({}, tmp.mods);
-
-		w.toHit = tmp.hit || 0;
-
-		if (mat) {
-
-			w.name = mat.name + ' ' + w.name;
-			w.material = mat.name;
-			w.price = mat.priceMod ? tmp.cost * mat.priceMod : tmp.cost;
-
-			w.damage.bonus += mat.dmg || mat.bonus || 0;
-		}
-
-		return w;
-
-	}
-
-	get toHit() { return this._toHit; }
-	set toHit(v) { this._toHit = v; }
-
-	get dmgType() { return this.damage.type; }
-	set dmgType(s: string) { this.damage.type = s; }
-
-	private _toHit: number = 0;
+	toHit: number = 0;
 	hands: number = 1;
-	damage: DamageSrc;
+	dmg: DamageSrc;
 
-	constructor(id: string, name: string, dmg: DamageSrc, desc?: string) {
+	get kind() { return this.dmg.type };
+	set kind(s: string) { this.dmg.type = s; }
+
+	constructor(id: string | undefined, name: string, dmg: DamageSrc, desc?: string) {
 
 		super(id, name, desc);
-		this.damage = dmg;
+		this.dmg = dmg;
 
 		this.type = ItemType.Weapon;
 	}
 
 	getDetails() {
-		return `${this.name} dmg: ${this.damage} hitBonus: ${this.toHit} price: ${this.price}\n` + super.getDetails();
+		return `${this.name} dmg: ${this.dmg} hitBonus: ${this.toHit} price: ${this.price}\n` + super.getDetails();
 	}
 
 	/**
 	 * roll weapon damage.
 	*/
-	roll() { return this.damage.roll(); }
+	roll() { return this.dmg.roll(); }
 
 
 }
 
 const Fists = new Weapon('fists', 'fists',
-	new forms.DamageSrc(new Dice(1, 2, 0), 'blunt'),
+	new DamageSrc(new Dice(1, 2, 0), 'blunt'),
 	'Just plain fists.');

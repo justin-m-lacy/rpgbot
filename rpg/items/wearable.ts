@@ -61,8 +61,7 @@ export class Wearable extends Item {
 		const it = new Wearable(randomUUID(), name);
 
 		it.material = material.name;
-		it.price = material.priceMod ? base.cost * material.priceMod : base.cost;
-
+		it.price = base.price * (material.priceMod || 1);
 		it.armor = material.bonus ? base.armor + material.bonus : base.armor;
 		it.slot = base.slot;
 
@@ -95,7 +94,7 @@ export class Wearable extends Item {
 	slot: HumanSlot = 'hands';
 	mods: Path<IMod> | undefined;
 
-	constructor(id: string, name: string, desc?: string) {
+	constructor(id: string | undefined, name: string, desc?: string) {
 
 		super(id, { name, desc, type: ItemType.Armor });
 		this._armor = 0;

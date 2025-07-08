@@ -5,7 +5,7 @@ import type { Game } from "rpg/game";
 import type { Inventory } from "rpg/inventory";
 import type { Item } from "rpg/items/item";
 import { Wearable } from "rpg/items/wearable";
-import type { Mob } from "rpg/monster/monster";
+import type { Mob } from "rpg/monster/mobs";
 
 export const IllegalIdChars = ['/', '\\', ':', '*', '?', '"', '|', '<', '>', '#', '='];
 

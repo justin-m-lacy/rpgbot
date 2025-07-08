@@ -1,16 +1,13 @@
+import { ParseValue } from 'rpg/parsers/values';
 import type { Numeric, TValue } from 'rpg/values/types';
 import { Dice } from './values/dice';
 
-export class DamageSrc {
+export class DamageSrc implements TValue {
 
-	static FromString(dmg: string, type?: string) {
-		return new DamageSrc(Dice.Parse(dmg), type);
-	}
-
-	static Decode(json: any) {
+	static Decode(json: string | { dmg: any, type?: string }) {
 
 		if (typeof (json) === 'string') {
-			return new DamageSrc(Dice.Parse(json));
+			return new DamageSrc(ParseValue(json));
 		} else {
 
 			if (json.dmg) {
@@ -24,13 +21,20 @@ export class DamageSrc {
 
 	toJSON() { return { dmg: this.value.toString(), type: this.type }; }
 
+	valueOf() {
+		return this._val.valueOf();
+	}
+
+	get value() { return this._val.valueOf() }
+	set value(v) { typeof this._val === 'number' ? this._val = v : this._val.value = v; }
+
 	bonus: number = 0;
-	value: Numeric;
+	private _val: Numeric;
 	type: string;
 
 	constructor(value?: TValue | null, type?: string) {
 
-		this.value = value ?? 0;
+		this._val = value ?? 0;
 		this.type = type ?? '';
 
 	}

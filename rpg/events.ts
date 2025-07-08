@@ -1,7 +1,7 @@
 import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { Dot } from 'rpg/magic/dots';
-import { TActor } from 'rpg/monster/monster';
+import { TActor } from 'rpg/monster/mobs';
 
 export type AttackInfo = {
 

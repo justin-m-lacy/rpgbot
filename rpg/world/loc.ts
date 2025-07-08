@@ -6,7 +6,7 @@ import { IsInt } from "rpg/util/parse";
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Item } from "../items/item";
-import { Mob } from '../monster/monster';
+import { Mob } from '../monster/mobs';
 import { Feature } from './feature';
 
 export type DirVal = 'n' | 's' | 'e' | 'w' | 'u' | 'd' | 'l' | 'r' | 'x' | 'enter';

@@ -4,7 +4,7 @@ export type ItemData = {
 	name: string,
 	type?: ItemType,
 	desc?: string,
-	cost?: number,
+	price?: number,
 	maker?: string,
 	inscrip?: string,
 	level?: number,

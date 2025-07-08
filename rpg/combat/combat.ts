@@ -7,7 +7,7 @@ import { Game } from "rpg/game";
 import { ItemPicker } from "rpg/inventory";
 import { Item } from "rpg/items/item";
 import { Spell } from "rpg/magic/spell";
-import { Mob, TActor } from "rpg/monster/monster";
+import { Mob, TActor } from "rpg/monster/mobs";
 import { PossPronoun } from "rpg/social/gender";
 import { Party } from "rpg/social/party";
 import { AddValues } from "rpg/values/apply";

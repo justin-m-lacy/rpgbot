@@ -1,6 +1,6 @@
 import { StatusFlags } from 'rpg/char/states';
 import { Game } from 'rpg/game';
-import { TActor } from 'rpg/monster/monster';
+import { TActor } from 'rpg/monster/mobs';
 import { ParseValues } from 'rpg/parsers/values';
 import { AddValues } from 'rpg/values/apply';
 import type { IMod } from 'rpg/values/imod';

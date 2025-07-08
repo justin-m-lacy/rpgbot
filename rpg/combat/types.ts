@@ -1,7 +1,7 @@
 import { StatusFlags } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
 import { ProtoDot } from "rpg/magic/dots";
-import { TActor } from "rpg/monster/monster";
+import { TActor } from "rpg/monster/mobs";
 import { Party } from "rpg/social/party";
 import { Path } from "rpg/values/paths";
 import { Id, Numeric, TValue } from "rpg/values/types";

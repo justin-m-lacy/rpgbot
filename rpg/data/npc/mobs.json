@@ -8,7 +8,7 @@
         "armor": 0,
         "weap": {
             "name": "blathering",
-            "type": "noob",
+            "kind": "noob",
             "dmg": "1d1"
         },
         "biome": [
@@ -32,7 +32,7 @@
         "armor": 1,
         "weap": {
             "name": "newting",
-            "type": "squiggly",
+            "kind": "squiggly",
             "dmg": "1d2"
         },
         "biome": [
@@ -55,7 +55,7 @@
         "armor": 10,
         "weap": {
             "name": "wombatting",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d4"
         }
     },
@@ -69,7 +69,7 @@
         "armor": 4,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d2"
         },
         "drops": {
@@ -86,7 +86,7 @@
         "armor": 5,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d2+1"
         },
         "drops": [
@@ -103,7 +103,7 @@
         "armor": 7,
         "weap": {
             "name": "beak",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d4"
         },
         "drops": {
@@ -120,7 +120,7 @@
         "armor": 7,
         "weap": {
             "name": "beak",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d4"
         },
         "biome": "swamp"
@@ -135,7 +135,7 @@
         "armor": 15,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d2+1"
         },
         "drops": "bat wing"
@@ -148,7 +148,7 @@
         "armor": 7,
         "weap": {
             "name": "pointy stick",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d4"
         },
         "biome": [
@@ -168,7 +168,7 @@
         "armor": 6,
         "weap": {
             "name": "scimitar",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d4"
         },
         "drops": {
@@ -185,7 +185,7 @@
         "toHit": 2,
         "weap": {
             "name": "magic missile",
-            "type": "magic",
+            "kind": "magic",
             "dmg": "2d4"
         },
         "biome": [
@@ -208,7 +208,7 @@
         "toHit": 1,
         "weap": {
             "name": "spear",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d6"
         },
         "drops": {
@@ -226,7 +226,7 @@
         "toHit": 2,
         "weap": {
             "name": "dagger",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d5"
         },
         "biome": "town",
@@ -245,7 +245,7 @@
         "armor": 4,
         "weap": {
             "name": "smash",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d6+2"
         }
     },
@@ -259,7 +259,7 @@
         "armor": 5,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d4+1"
         }
     },
@@ -274,7 +274,7 @@
         "armor": 10,
         "weap": {
             "name": "cursed blade",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d4+1"
         },
         "drops": {
@@ -292,7 +292,7 @@
         "armor": 8,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d4+1"
         },
         "biome": "plains"
@@ -308,7 +308,7 @@
         "armor": 10,
         "weap": {
             "name": "bow",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d6"
         },
         "drops": {
@@ -332,7 +332,7 @@
         "armor": 8,
         "weap": {
             "name": "sling",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d4"
         }
     },
@@ -347,7 +347,7 @@
         "armor": 17,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d2+2"
         }
     },
@@ -362,7 +362,7 @@
         "armor": 8,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d6"
         },
         "drops": "rat tail"
@@ -378,7 +378,7 @@
         "armor": 14,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d4"
         }
     },
@@ -393,7 +393,7 @@
         "armor": 16,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "2d4"
         }
     },
@@ -407,7 +407,7 @@
         "armor": 19,
         "weap": {
             "name": "longbow",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d6"
         },
         "drops": {
@@ -425,7 +425,7 @@
         "armor": 5,
         "weap": {
             "name": "axe",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "2d6+2"
         }
     },
@@ -440,7 +440,7 @@
         "toHit": 1,
         "weap": {
             "name": "short sword",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+1"
         }
     },
@@ -454,7 +454,7 @@
         "armor": 21,
         "weap": {
             "name": "bone boomerang",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d5"
         },
         "biome": [
@@ -477,7 +477,7 @@
         "armor": 15,
         "weap": {
             "name": "beak",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d4+2"
         }
     },
@@ -490,7 +490,7 @@
         "toHit": 2,
         "weap": {
             "name": "orc hammer",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d6+2"
         }
     },
@@ -504,7 +504,7 @@
         "toHit": 2,
         "weap": {
             "name": "dagger",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d6+1"
         },
         "drops": {
@@ -519,7 +519,7 @@
         "armor": 15,
         "weap": {
             "name": "sting",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d6+1"
         }
     },
@@ -534,7 +534,7 @@
         "armor": 18,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+1"
         }
     },
@@ -547,7 +547,7 @@
         "armor": 12,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "2d4+1"
         }
     },
@@ -559,7 +559,7 @@
         "armor": 8,
         "weap": {
             "name": "squelch",
-            "type": "acid",
+            "kind": "acid",
             "dmg": "1d4+1"
         }
     },
@@ -573,7 +573,7 @@
         "armor": 10,
         "weap": {
             "name": "javelin",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "3d4+1"
         }
     },
@@ -586,7 +586,7 @@
         "armor": 18,
         "weap": {
             "name": "mallet",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d6+5"
         },
         "drops": {
@@ -604,7 +604,7 @@
         "armor": 20,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d5+2"
         },
         "drops": {
@@ -623,7 +623,7 @@
         "armor": 25,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6"
         }
     },
@@ -638,7 +638,7 @@
         "armor": 28,
         "weap": {
             "name": "short sword",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6"
         }
     },
@@ -653,7 +653,7 @@
         "armor": 22,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "3d6"
         }
     },
@@ -668,7 +668,7 @@
         "armor": 29,
         "weap": {
             "name": "fists",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d6"
         },
         "drops": {
@@ -686,7 +686,7 @@
         "armor": 22,
         "weap": {
             "name": "beak",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "3d4"
         },
         "biome": "hills"
@@ -701,7 +701,7 @@
         "armor": 30,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+2"
         },
         "drops": {
@@ -720,7 +720,7 @@
         "armor": 15,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "1d6+3"
         },
         "biome": [
@@ -740,7 +740,7 @@
         "armor": 25,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "3d2+2"
         },
         "drops": "bat wing"
@@ -756,7 +756,7 @@
         "armor": 22,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+2"
         },
         "drops": {
@@ -774,7 +774,7 @@
         "armor": 20,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "3d6+2"
         }
     },
@@ -789,7 +789,7 @@
         "armor": 26,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "2d6+3"
         }
     },
@@ -804,7 +804,7 @@
         "armor": 30,
         "weap": {
             "name": "death touch",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "1d6+2"
         },
         "drops": {
@@ -821,7 +821,7 @@
         "armor": 23,
         "weap": {
             "name": "flame claws",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "3d6"
         }
     },
@@ -836,7 +836,7 @@
         "armor": 29,
         "weap": {
             "name": "claymore",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "3d6"
         }
     },
@@ -850,7 +850,7 @@
         "toHit": 2,
         "weap": {
             "name": "mace",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d6+1"
         }
     },
@@ -864,7 +864,7 @@
         "toHit": 0,
         "weap": {
             "name": "constrict",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "3d6+1"
         }
     },
@@ -879,7 +879,7 @@
         "toHit": 5,
         "weap": {
             "name": "harm",
-            "type": "evil",
+            "kind": "evil",
             "dmg": "2d6"
         },
         "drops": {
@@ -898,7 +898,7 @@
         "armor": 30,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+3"
         },
         "drops": {
@@ -918,7 +918,7 @@
         "toHit": 0,
         "weap": {
             "name": "slam",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d8+1"
         }
     },
@@ -932,7 +932,7 @@
         "armor": 20,
         "weap": {
             "name": "spiked club",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d6+3"
         }
     },
@@ -946,7 +946,7 @@
         "armor": 33,
         "weap": {
             "name": "smash",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d6+1"
         }
     },
@@ -962,7 +962,7 @@
         "armor": 32,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "2d5+5"
         },
         "drops": {
@@ -987,7 +987,7 @@
         "armor": 30,
         "weap": {
             "name": "spiked club",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d6+4"
         }
     },
@@ -1003,7 +1003,7 @@
         "armor": 25,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "2d6+2"
         }
     },
@@ -1018,7 +1018,7 @@
         "armor": 30,
         "weap": {
             "name": "beak",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "4d4"
         }
     },
@@ -1033,7 +1033,7 @@
         "armor": 38,
         "weap": {
             "name": "cold touch",
-            "type": "cold",
+            "kind": "cold",
             "dmg": "3d5+5"
         },
         "drops": {
@@ -1050,7 +1050,7 @@
         "armor": 42,
         "weap": {
             "name": "slam",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "3d3+2"
         }
     },
@@ -1065,7 +1065,7 @@
         "armor": 35,
         "weap": {
             "name": "longsword",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+5"
         }
     },
@@ -1080,7 +1080,7 @@
         "armor": 40,
         "weap": {
             "name": "swords",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+3"
         },
         "drops": {
@@ -1099,7 +1099,7 @@
         "armor": 32,
         "weap": {
             "name": "slam",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d6+2"
         }
     },
@@ -1113,7 +1113,7 @@
         "armor": 35,
         "weap": {
             "name": "magic sword",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d6+3"
         }
     },
@@ -1132,7 +1132,7 @@
         "armor": 30,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "2d6+2"
         },
         "drops": [
@@ -1149,7 +1149,7 @@
         "armor": 28,
         "weap": {
             "name": "punch",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d6"
         },
         "drops": {
@@ -1167,7 +1167,7 @@
         "armor": 27,
         "weap": {
             "name": "trample",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d10"
         }
     },
@@ -1181,7 +1181,7 @@
         "armor": 30,
         "weap": {
             "name": "pound",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "3d6"
         },
         "drops": {
@@ -1198,7 +1198,7 @@
         "armor": 48,
         "weap": {
             "name": "air whip",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "3d4+2"
         },
         "drops": {
@@ -1215,7 +1215,7 @@
         "armor": 40,
         "weap": {
             "name": "smash",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "1d6+5"
         },
         "drops": {
@@ -1233,7 +1233,7 @@
         "armor": 30,
         "weap": {
             "name": "club",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "3d4+4"
         }
     },
@@ -1247,7 +1247,7 @@
         "armor": 32,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "3d5+2"
         }
     },
@@ -1262,7 +1262,7 @@
         "armor": 34,
         "weap": {
             "name": "longsword",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d8+4"
         },
         "drops": {
@@ -1281,7 +1281,7 @@
         "armor": 32,
         "weap": {
             "name": "horn",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "2d12"
         },
         "biome": [
@@ -1300,7 +1300,7 @@
         "armor": 37,
         "weap": {
             "name": "bite",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "1d5+3"
         },
         "drops": {
@@ -1319,7 +1319,7 @@
         "armor": 40,
         "weap": {
             "name": "death touch",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "1d5+3"
         },
         "drops": {
@@ -1336,7 +1336,7 @@
         "armor": 32,
         "weap": {
             "name": "beak",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "3d6+3"
         },
         "biome": "mountains"
@@ -1352,7 +1352,7 @@
         "armor": 25,
         "weap": {
             "name": "seduction",
-            "type": "sexy",
+            "kind": "sexy",
             "dmg": "2d6+2"
         },
         "drops": {
@@ -1371,7 +1371,7 @@
         "armor": 40,
         "weap": {
             "name": "flame wing",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "3d4+8"
         },
         "drops": {
@@ -1390,7 +1390,7 @@
         "armor": 38,
         "weap": {
             "name": "wombat magic",
-            "type": "magic",
+            "kind": "magic",
             "dmg": "8d4"
         },
         "drops": {
@@ -1411,7 +1411,7 @@
         "armor": 35,
         "weap": {
             "name": "club",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "3d6+5"
         }
     },
@@ -1425,7 +1425,7 @@
         "armor": 45,
         "weap": {
             "name": "smash",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d6+4"
         },
         "drops": {
@@ -1442,7 +1442,7 @@
         "armor": 40,
         "weap": {
             "name": "stare",
-            "type": "magic",
+            "kind": "magic",
             "dmg": "4d8+12"
         },
         "drops": {
@@ -1462,7 +1462,7 @@
         "armor": 35,
         "weap": {
             "name": "seduction",
-            "type": "sexy",
+            "kind": "sexy",
             "dmg": "3d5+5"
         },
         "drops": {
@@ -1480,7 +1480,7 @@
         "armor": 48,
         "weap": {
             "name": "scimitars",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "1d10+4"
         },
         "drops": {
@@ -1498,7 +1498,7 @@
         "armor": 40,
         "weap": {
             "name": "chill touch",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "3d4+3"
         },
         "drops": {
@@ -1515,7 +1515,7 @@
         "armor": 35,
         "weap": {
             "name": "ice shard",
-            "type": "cold",
+            "kind": "cold",
             "dmg": "2d6+3"
         },
         "drops": {
@@ -1532,7 +1532,7 @@
         "armor": 55,
         "weap": {
             "name": "flame",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "3d6+2"
         },
         "drops": {
@@ -1550,7 +1550,7 @@
         "armor": 44,
         "weap": {
             "name": "fists",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "2d5+5"
         },
         "drops": {
@@ -1567,7 +1567,7 @@
         "armor": 40,
         "weap": {
             "name": "broadsword",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "2d6+8"
         },
         "drops": {
@@ -1585,7 +1585,7 @@
         "armor": 50,
         "weap": {
             "name": "chill touch",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "2d6+4"
         }
     },
@@ -1600,7 +1600,7 @@
         "armor": 58,
         "weap": {
             "name": "life drain",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "2d5+4"
         }
     },
@@ -1614,7 +1614,7 @@
         "armor": 44,
         "weap": {
             "name": "mind flay",
-            "type": "psionic",
+            "kind": "psionic",
             "dmg": "2d6+7"
         },
         "drops": {
@@ -1630,7 +1630,7 @@
         "armor": 42,
         "weap": {
             "name": "bite",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "4d7+5"
         }
     },
@@ -1644,7 +1644,7 @@
         "armor": 32,
         "weap": {
             "name": "stare",
-            "type": "magic",
+            "kind": "magic",
             "dmg": "5d10+8"
         }
     },
@@ -1659,7 +1659,7 @@
         "armor": 30,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "5d6+3"
         },
         "biome": [
@@ -1682,7 +1682,7 @@
         "armor": 45,
         "weap": {
             "name": "club",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "4d6+5"
         },
         "drops": {
@@ -1699,7 +1699,7 @@
         "armor": 50,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "3d8+5"
         },
         "biome": [
@@ -1720,7 +1720,7 @@
         "armor": 42,
         "weap": {
             "name": "bite",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "5d5+3"
         },
         "drops": {
@@ -1738,7 +1738,7 @@
         "armor": 45,
         "weap": {
             "name": "vorpal sword",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "5d6+3"
         },
         "biome": [
@@ -1759,7 +1759,7 @@
         "armor": 48,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "4d5+3"
         },
         "drops": {
@@ -1776,7 +1776,7 @@
         "armor": 54,
         "weap": {
             "name": "claymore",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "3d5+5"
         },
         "drops": {
@@ -1793,7 +1793,7 @@
         "armor": 53,
         "weap": {
             "name": "fire punch",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "3d6+5"
         }
     },
@@ -1807,7 +1807,7 @@
         "armor": 42,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "3d10+2"
         }
     },
@@ -1822,7 +1822,7 @@
         "armor": 40,
         "weap": {
             "name": "beak",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "3d12+3"
         }
     },
@@ -1838,7 +1838,7 @@
         "armor": 43,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "4d8+4"
         },
         "drops": {
@@ -1855,7 +1855,7 @@
         "armor": 55,
         "weap": {
             "name": "claws",
-            "type": "slash",
+            "kind": "slash",
             "dmg": "4d8+5"
         }
     },
@@ -1869,7 +1869,7 @@
         "armor": 50,
         "weap": {
             "name": "kik",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "5d9+8"
         },
         "drops": {
@@ -1887,7 +1887,7 @@
         "armor": 45,
         "weap": {
             "name": "sexual aggression",
-            "type": "slap",
+            "kind": "slap",
             "dmg": "5d10"
         }
     },
@@ -1902,7 +1902,7 @@
         "armor": 48,
         "weap": {
             "name": "sting",
-            "type": "pierce",
+            "kind": "pierce",
             "dmg": "5d10+7"
         }
     },
@@ -1916,7 +1916,7 @@
         "armor": 63,
         "weap": {
             "name": "lightning",
-            "type": "electric",
+            "kind": "electric",
             "dmg": "7d6+4"
         }
     },
@@ -1931,7 +1931,7 @@
         "armor": 50,
         "weap": {
             "name": "pound",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "4d10+10"
         },
         "drops": {
@@ -1949,7 +1949,7 @@
         "armor": 60,
         "weap": {
             "name": "fire breath",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "4d10+7"
         }
     },
@@ -1964,7 +1964,7 @@
         "armor": 50,
         "weap": {
             "name": "eye beam",
-            "type": "magic",
+            "kind": "magic",
             "dmg": "5d8+3"
         }
     },
@@ -1979,7 +1979,7 @@
         "armor": 70,
         "weap": {
             "name": "light sword",
-            "type": "holy",
+            "kind": "holy",
             "dmg": "5d9+5"
         },
         "drops": {
@@ -1999,7 +1999,7 @@
         "armor": 68,
         "weap": {
             "name": "death touch",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "5d8+4"
         },
         "drops": {
@@ -2017,7 +2017,7 @@
         "armor": 65,
         "weap": {
             "name": "punch",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "5d10+7"
         },
         "drops": {
@@ -2036,7 +2036,7 @@
         "armor": 70,
         "weap": {
             "name": "darksword",
-            "type": "evil",
+            "kind": "evil",
             "dmg": "5d9+7"
         },
         "drops": {
@@ -2055,7 +2055,7 @@
         "armor": 75,
         "weap": {
             "name": "trample",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "6d10+7"
         }
     },
@@ -2070,7 +2070,7 @@
         "armor": 65,
         "weap": {
             "name": "lava slam",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "7d10+8"
         },
         "drops": {
@@ -2090,7 +2090,7 @@
         "armor": 70,
         "weap": {
             "name": "bite",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "5d8+7"
         },
         "drops": {
@@ -2108,7 +2108,7 @@
         "armor": 80,
         "weap": {
             "name": "pound",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "5d10+15"
         },
         "drops": {
@@ -2126,7 +2126,7 @@
         "armor": 75,
         "weap": {
             "name": "bite",
-            "type": "drain",
+            "kind": "drain",
             "dmg": "9d8+14"
         },
         "drops": {
@@ -2145,7 +2145,7 @@
         "armor": 80,
         "weap": {
             "name": "flame whip",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "9d15+15"
         },
         "drops": {
@@ -2162,7 +2162,7 @@
         "armor": 115,
         "weap": {
             "name": "SMASH",
-            "type": "blunt",
+            "kind": "blunt",
             "dmg": "5d20+20"
         },
         "drops": {
@@ -2180,7 +2180,7 @@
         "armor": 90,
         "weap": {
             "name": "fire breath",
-            "type": "fire",
+            "kind": "fire",
             "dmg": "5d25+10"
         }
     },
@@ -2195,7 +2195,7 @@
         "armor": 175,
         "weap": {
             "name": "Madness",
-            "type": "psychic",
+            "kind": "psychic",
             "dmg": "10d25+50"
         }
     }

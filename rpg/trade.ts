@@ -18,7 +18,7 @@ const goldAmt = /^(\d+)\s*g(?:old)?$/i;
  * @param lvl
  * @returns item cost per level.
  */
-const rollCost = (lvl: number) => {
+const rollPrice = (lvl: number) => {
 	return 40 * lvl * (Math.floor(Math.pow(1.5, Math.floor(lvl / 2))));
 }
 
@@ -37,9 +37,9 @@ const payOrFail = (char: Char, gold: number) => {
 export const rollWeap = (char: Char) => {
 
 	let level = char.level.valueOf();
-	const cost = rollCost(level);
-	if (!payOrFail(char, cost))
-		return `${char.name} cannot afford to roll a new weapon. (${cost} gold)`;
+	const price = rollPrice(level);
+	if (!payOrFail(char, price))
+		return `${char.name} cannot afford to roll a new weapon. (${price} gold)`;
 
 	const mod = Math.max(1 + char.getModifier('cha'), 0);
 
@@ -56,9 +56,9 @@ export const rollWeap = (char: Char) => {
 export const rollArmor = (char: Char, slot?: string | null) => {
 
 	let level = char.level.valueOf();
-	const cost = rollCost(level);
-	if (!payOrFail(char, cost))
-		return `${char.name} cannot afford to roll new armor. (${cost} gold)`;
+	const price = rollPrice(level);
+	if (!payOrFail(char, price))
+		return `${char.name} cannot afford to roll new armor. (${price} gold)`;
 
 	const mod = Math.max(1 + char.getModifier('cha'), 0);
 

@@ -1,10 +1,14 @@
 import { AddProtoItem } from 'rpg/builders/itemgen';
+import { DamageSrc } from 'rpg/formulas';
 import { Material } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
+import { ParseMods } from 'rpg/parsers/mods';
+import { ParseValue } from 'rpg/parsers/values';
 import BaseWeapons from '../data/items/weapons.json';
 import { Weapon } from '../items/weapon';
 
-type RawWeaponData = ItemData & (typeof BaseWeapons)[number];
+type RawWeaponData = { hit?: number, mods?: Record<string, any> } & ItemData
+	& (typeof BaseWeapons)[number];
 
 export const InitWeapons = () => {
 
@@ -24,15 +28,37 @@ export const GenWeapon = (lvl: number) => {
 	const mat = Material.Random(lvl);
 	if (mat === null) return null;
 
-	//console.log( 'weaps len: ' + baseWeapons.length );
-	const tmp = BaseWeapons[Math.floor(BaseWeapons.length * Math.random())];
-
-	if (!tmp) {
-		console.warn('weapon template null.');
-		return null;
-	}
-
-	return Weapon.FromData(tmp, mat);
+	return BuildWeapon(
+		BaseWeapons[Math.floor(BaseWeapons.length * Math.random())] as RawWeaponData,
+		mat);
 
 }
+/**
+ * Create a new weapon from a base weapon object
+ * and a weapon material.
+ * @param tmp 
+ * @param mat 
+ */
+const BuildWeapon = (tmp: RawWeaponData, mat?: Material) => {
 
+	const w = new Weapon(undefined, tmp.name, new DamageSrc(
+		ParseValue('dmg', tmp.dmg), tmp.type
+	));
+
+	if (tmp.hands) w.hands = tmp.hands;
+	if (tmp.mods) w.mods = ParseMods(tmp.mods, w.id);
+
+	w.toHit = tmp.hit || 0;
+
+	if (mat) {
+
+		w.name = mat.name + ' ' + w.name;
+		w.material = mat.name;
+		w.price = tmp.price * (mat.priceMod || 1);
+
+		w.dmg.bonus += mat.dmg || mat.bonus || 0;
+	}
+
+	return w;
+
+}

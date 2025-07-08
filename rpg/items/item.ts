@@ -28,7 +28,7 @@ export class Item {
 			name: this.name,
 			desc: this.desc,
 			type: this.type,
-			cost: this._price,
+			price: this._price,
 			level: this._level || undefined,
 			embed: this._embed,
 			maker: this.maker,
@@ -47,7 +47,7 @@ export class Item {
 		it ??= new Item(json.id);
 		it.name = json.name;
 
-		if (json.cost) it.price = json.cost;
+		if (json.price) it.price = json.price;
 		if (json.embed) it.embed = json.embed;
 		if (json.maker) it.maker = json.maker;
 		if (json.inscrip) it.inscrip = json.inscrip;

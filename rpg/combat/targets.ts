@@ -1,5 +1,5 @@
 import { Char } from "rpg/char/char";
-import { Mob } from "rpg/monster/monster";
+import { Mob } from "rpg/monster/mobs";
 
 export const ParseTarget = (s: keyof typeof TargetFlags) => {
 	return TargetFlags[s] ?? TargetFlags.none;
