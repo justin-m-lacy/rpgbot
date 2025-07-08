@@ -15,5 +15,5 @@ export type CharEvents = {
 
 
 export type TGameEvents = {
-	actorDie: (char: TActor, attacker?: TActor) => void;
+	actorDie: (char: TActor, attacker?: TActor | string) => void;
 }

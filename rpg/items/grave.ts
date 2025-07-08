@@ -13,8 +13,11 @@ export class Grave extends Item {
 	 * @param char
 	 * @param slayer
 	 */
-	static MakeGrave(char: Char, slayer?: TActor) {
-		return new Grave(undefined, char.name, slayer?.name, Grave.GetEpitaph(char, slayer));
+	static MakeGrave(char: Char, slayer?: TActor | string) {
+
+		if (slayer && typeof slayer == 'object') slayer = slayer.name;
+		return new Grave(undefined, char.name, slayer, Grave.GetEpitaph(char, slayer));
+
 	}
 
 	static Decode(json: ItemData & { char: string, slayer?: string, epitaph?: string }) {
@@ -27,7 +30,7 @@ export class Grave extends Item {
 
 	}
 
-	static GetEpitaph(char: Char, slayer?: TActor) {
+	static GetEpitaph(char: Char, slayer?: string) {
 
 		if (!slayer) {
 			return `Here lies ${char}. Died of unknown causes.`;
@@ -36,7 +39,7 @@ export class Grave extends Item {
 		const eps = this._Epitaphs ?? (this._Epitaphs = require('../data/items/epitaphs.json'));
 		const ep = eps[Math.floor(Math.random() * eps.length)];
 
-		return genderfy(char.sex, ep.replace(/%c/g, char.name).replace(/%k/g, slayer.name));
+		return genderfy(char.sex, ep.replace(/%c/g, char.name).replace(/%k/g, slayer));
 
 	}
 
@@ -63,7 +66,7 @@ export class Grave extends Item {
 
 	constructor(id: string | undefined,
 		char: Char | string,
-		slayer?: TActor | string,
+		slayer?: string,
 		epitaph?: string) {
 
 		super(id, {
@@ -73,7 +76,7 @@ export class Grave extends Item {
 		});
 
 		this.char = typeof char === 'string' ? char : char?.name;
-		this.slayer = typeof slayer === 'string' ? slayer : slayer?.name ?? 'none';
+		this.slayer = slayer ?? 'none';
 		this.epitaph = epitaph ?? '';
 
 	}

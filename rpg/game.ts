@@ -35,7 +35,7 @@ const LOC_UPDATE_MS = 3000;
 export class Game<A extends Record<string, TGameAction> = Record<string, TGameAction>,
 	K extends string & keyof A = string & keyof A> {
 
-	readonly charCache: Cache<Char>;
+	private readonly charCache: Cache<Char>;
 	readonly world: World
 
 	// map every character in a party to Party instance.
@@ -132,7 +132,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		for (let i = efx.length - 1; i >= 0; i--) {
 
 			const e = efx[i];
-			if (e.tick(char, this.events)) {
+			if (e.tick(char, this)) {
 
 				// efx end.
 				quickSplice(efx, i);
@@ -246,7 +246,12 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async onActorDie(char: TActor, slayer?: TActor) {
+	/**
+	 * @param char 
+	 * @param slayer - string if no other information on attacker is known.
+	 * for example, killed by a potion, which no longer exists. 
+	 */
+	async onActorDie(char: TActor, slayer?: TActor | string) {
 
 		if (slayer instanceof Char) {
 			this.onSlay(slayer, char);
@@ -256,14 +261,18 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 			/// should be world log.
 			char.log(
-				await this.world.put(char, Grave.MakeGrave(char, slayer))
+				await this.world.put(char, Grave.MakeGrave(char,
+					slayer
+				))
 			);
 
 		} else if (char instanceof Mob) {
 			const loc = await this.world.getLoc(char.at);
 			if (loc) {
 				loc.removeNpc(char);
-				await this.getLoot(itemgen.GenLoot(char), loc, slayer);
+				await this.getLoot(itemgen.GenLoot(char), loc,
+					typeof slayer === 'object' ? slayer : loc
+				);
 			}
 		}
 
@@ -479,6 +488,10 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	getParty(char: Char) { return this._charParties[char.name]; }
+
+	getChar(charId: string) {
+		return this.charCache.fetch(charId);
+	}
 
 	makeParty(char: Char, ...invites: string[]) {
 

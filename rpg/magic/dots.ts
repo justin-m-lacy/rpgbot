@@ -1,6 +1,5 @@
-import { EventEmitter } from 'eventemitter3';
 import { StatusFlags } from 'rpg/char/states';
-import { TGameEvents } from 'rpg/events';
+import { Game } from 'rpg/game';
 import { TActor } from 'rpg/monster/monster';
 import { ParseValues } from 'rpg/parsers/values';
 import { AddValues } from 'rpg/values/apply';
@@ -142,7 +141,7 @@ export class Dot {
 	readonly maker?: string;
 
 
-	constructor(effect: ProtoDot, maker?: any, time?: number) {
+	constructor(effect: ProtoDot, maker?: string, time?: number) {
 
 		this.proto = effect;
 		this.maker = maker;
@@ -173,7 +172,7 @@ export class Dot {
 	 * @param char - char to tick. Char must be alive.
 	 * @returns true if effect complete. 
 	 */
-	tick<T extends TActor>(char: T, events: EventEmitter<TGameEvents>) {
+	tick<T extends TActor>(char: T, game: Game) {
 
 		if (!this.proto.duration) return false;
 
@@ -184,7 +183,15 @@ export class Dot {
 			AddValues(char, this.dot, 1);
 			if (!char.isAlive()) {
 				char.log(`${char.name} slain by ${this.name}.`);
-				events.emit('actorDie', char, this.maker)
+
+				if (this.maker) {
+					game.getChar(this.maker).then((slayer) => {
+						game.events.emit('actorDie', char, slayer);
+					})
+				} else {
+					game.events.emit('actorDie', char, this.name);
+				}
+
 			} else {
 				char.log(`${char.name} affected by ${this.name}.`);
 			}
