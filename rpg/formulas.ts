@@ -1,6 +1,5 @@
 import { ParseValue } from 'rpg/parsers/values';
 import type { Numeric, TValue } from 'rpg/values/types';
-import { Dice } from './values/dice';
 
 export class DamageSrc implements TValue {
 
@@ -9,13 +8,7 @@ export class DamageSrc implements TValue {
 		if (typeof (json) === 'string') {
 			return new DamageSrc(ParseValue(json));
 		} else {
-
-			if (json.dmg) {
-				return new DamageSrc(Dice.Parse(json.dmg), json.type);
-			} else {
-				return new DamageSrc(new Dice(json.count, json.sides, json.bonus), json.type);
-			}
-
+			return new DamageSrc(ParseValue(json.dmg), json.type);
 		}
 	}
 

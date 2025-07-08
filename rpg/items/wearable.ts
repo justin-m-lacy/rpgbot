@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
 import { Path } from 'rpg/values/paths';
@@ -58,7 +57,7 @@ export class Wearable extends Item {
 	static FromData(base: any, material: Material) {
 
 		const name = material.name + ' ' + base.name;
-		const it = new Wearable(randomUUID(), name);
+		const it = new Wearable(undefined, name);
 
 		it.material = material.name;
 		it.price = base.price * (material.priceMod || 1);

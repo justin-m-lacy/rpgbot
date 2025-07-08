@@ -4,6 +4,7 @@ import { StatusFlags } from 'rpg/char/states';
 import { DamageSrc } from 'rpg/formulas';
 import { Weapon } from 'rpg/items/weapon';
 import { Mob } from 'rpg/monster/mobs';
+import { ParseValue } from 'rpg/parsers/values';
 import { Dice } from 'rpg/values/dice';
 import { Biome, TCoord } from 'rpg/world/loc';
 
@@ -31,7 +32,7 @@ export type MobData = {
 
 }
 
-// var formulas to parse.
+/// TODO: old parsing methods.
 const parseVars = ['hp', 'armor', 'toHit', 'mp'];
 
 // monster template objects.
@@ -60,25 +61,28 @@ const InitMobs = async () => {
 
 InitMobs();
 
-function parseTemplate(json: any) {
-
-	const t = Object.assign({}, json);
+function parseTemplate(data: any) {
 
 	for (let i = parseVars.length - 1; i >= 0; i--) {
 
-		const v = parseVars[i];
-		const s = t[v];
-		if (typeof (s) !== 'string' || !Number.isNaN(s)) continue;
+		const prop = parseVars[i];
 
-		t[v] = Dice.Parse(s);
+		if (typeof data[prop] === 'number') {
+			continue;
+		}
+
+		const v = ParseValue(prop, data[prop]);
+		if (v) {
+			data[prop] = v;
+		}
 
 	}
-	if (t.dmg) { t.dmg = DamageSrc.Decode(t.dmg); }
-	if (t.weap) {
-		t.weap = Weapon.Decode(t.weap);
+	if (data.dmg) { data.dmg = DamageSrc.Decode(data.dmg); }
+	if (data.weap) {
+		data.weap = Weapon.Decode(data.weap);
 	}
 
-	return t;
+	return data;
 
 }
 
