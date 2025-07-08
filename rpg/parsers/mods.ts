@@ -14,7 +14,7 @@ export const ModTest = /^([\+\-]?\d+\.?\d*\b)?(?:([\+\-]?\d+\.?\d*)\%)?$/;
  * 
  * @param mods 
  * @param id - id of base object. mod ids will be ${id}.mod.${subpath}
- * @param src 
+ * @param src - source value that multiplies the mod effect.
  * @returns 
  */
 export const ParseMods = (mods: Record<string, any>, id: string, src: Numeric = 1) => {

@@ -1,4 +1,7 @@
 import { randomUUID } from 'crypto';
+import { ParseMods } from 'rpg/parsers/mods';
+import { IMod } from 'rpg/values/imod';
+import { Path } from 'rpg/values/paths';
 import { Item, } from './item';
 import { Material } from './material';
 import { ItemType } from './types';
@@ -71,7 +74,9 @@ export class Wearable extends Item {
 		it.armor = material.bonus ? base.armor + material.bonus : base.armor;
 		it.slot = base.slot;
 
-		if (base.mods) it.mods = Object.assign({}, base.mods);
+		if (base.mods) {
+			it.mods = ParseMods(base.mods, it.id,);
+		}
 
 		return it;
 	}
@@ -92,7 +97,7 @@ export class Wearable extends Item {
 	private _armor: number;
 
 	private _material: string = '';
-	private _mods: any;
+	private _mods: Path<IMod> | undefined;
 
 	constructor(id: string, name: string, desc?: string) {
 

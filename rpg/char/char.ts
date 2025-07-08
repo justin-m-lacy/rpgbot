@@ -5,6 +5,7 @@ import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { Weapon } from 'rpg/items/weapon';
 import { SpellList } from 'rpg/magic/spelllist';
+import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import { Log } from '../display/log';
 import { Inventory } from '../inventory';
 import { Item } from '../items/item';
@@ -214,7 +215,7 @@ export class Char extends Actor {
 	private applyEquip(it: Wearable) {
 
 		if (it.mods) {
-			it.mods.apply(this.stats);
+			ApplyMods(this, it.mods);
 		}
 		if (it.armor) {
 			this.stats.armor.add(it.armor);;
@@ -239,7 +240,9 @@ export class Char extends Actor {
 
 		} else if (wot instanceof Wearable) {
 
-			if (wot.mods) { wot.mods.remove(this.stats); }
+			if (wot.mods) {
+				RemoveMods(this, wot.mods);
+			}
 			if (wot.armor) {
 				this.stats.armor.add(-wot.armor);
 			}

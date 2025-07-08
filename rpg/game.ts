@@ -1,3 +1,4 @@
+import { randElm } from '@/utils/jsutils';
 import Cache from 'archcache';
 import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
@@ -7,6 +8,7 @@ import { CookItem, TryEat } from 'rpg/char/cooking';
 import { Combat } from 'rpg/combat/combat';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
+import { TCombatAction } from 'rpg/combat/types';
 import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
@@ -29,7 +31,6 @@ import { Party } from './social/party';
 import * as Trade from './trade';
 import { DirVal, Loc, toDirection } from './world/loc';
 import { World } from "./world/world";
-import { TCombatAction } from 'rpg/combat/types';
 
 const LOC_UPDATE_MS = 3000;
 
@@ -111,14 +112,16 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 					liveNpcs++;
 				}
 
-				if (chars.length > 0 && npc.attacks.length > 0) {
+				if (!chars.length || !npc.attacks.length) continue;
 
-					const atks = npc.attacks;
+				const targ = await this.getChar(randElm(chars));
+				const atk = randElm(npc.attacks);
 
-					liveNpcs++;
-
+				if (targ && atk) {
+					this.combat.attack(npc, atk, targ);
 				}
 
+				liveNpcs++;
 
 			}
 			if (liveNpcs === 0) {
@@ -200,12 +203,12 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			p2 = targ;
 		}
 
-		this.combat.attack(src, src., p2, p1);
+		atk ??= randElm(src.attacks);
+		if (atk) {
+			await this.combat.attack(src, atk, p2, p1);
+		}
 
-		const com = new Fight(p1, p2, this.world);
-		await com.fight();
-
-		return src.output(com.getText());
+		return src.flushLog();
 
 	}
 

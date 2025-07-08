@@ -85,7 +85,6 @@ export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
 
 	if (typeof json !== 'object') throw new BadTypeError(json, 'object');
 	const src = json.slots;
-
 	const dest = e.slots;
 	if (src == null) return e;
 
