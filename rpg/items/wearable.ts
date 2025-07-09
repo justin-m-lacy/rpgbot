@@ -52,16 +52,19 @@ export class Wearable extends Item {
 	/**
 	 * From template data.
 	 * @param base
-	 * @param material
+	 * @param mat
 	 */
-	static FromData(base: any, material: Material) {
+	static FromData(base: any, mat?: Material | null) {
 
-		const name = material.name + ' ' + base.name;
+		const name = mat ? (mat?.name + ' ' + base.name) : base.name;
 		const it = new Wearable(undefined, name);
 
-		it.material = material.name;
-		it.price = base.price * (material.priceMod || 1);
-		it.armor = material.bonus ? base.armor + material.bonus : base.armor;
+		if (mat) {
+			it.material = mat?.id;
+			it.price = base.price * (mat.priceMod || 1);
+			it.armor = mat.bonus ? base.armor + mat.bonus : base.armor;
+		}
+
 		it.slot = base.slot;
 
 		if (base.mods) {
@@ -85,7 +88,7 @@ export class Wearable extends Item {
 	}
 
 	private _armor: number;
-	private _material: string = '';
+	private _material?: string;
 
 	/**
 	 * @property slot - equip slot used.

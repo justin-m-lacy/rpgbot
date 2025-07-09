@@ -1,11 +1,11 @@
 
 import { AddProtoItem } from 'rpg/builders/itemgen';
 import { Item } from 'rpg/items/item';
+import { RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
 import BaseArmors from '../data/items/armors.json';
-import { Material } from '../items/material';
 
 type RawArmorData = ItemData & (typeof BaseArmors)[number];
 
@@ -29,8 +29,7 @@ export const DecodeWearable = (json: any) => {
 
 export const GenArmor = (slot: HumanSlot | null = null, lvl: number = 0) => {
 
-	const mat = Material.Random(lvl);
-	if (mat === null) return null;
+	const mat = RandMaterial(lvl);
 
 	let tmp;
 	if (slot) {

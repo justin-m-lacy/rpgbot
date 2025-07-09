@@ -151,7 +151,7 @@ const initItems = (char: Char) => {
 	let count = Math.floor(1 + 3 * Math.random());
 
 	for (count; count >= 0; count--) {
-		char.addItem(ItemGen.GenMiscItem());
+		char.addItem(ItemGen.GenJunkItem());
 	}
 	char.addItem([GenWeapon(1), GenArmor(null, 1)]);
 

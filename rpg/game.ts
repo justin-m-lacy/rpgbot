@@ -14,7 +14,6 @@ import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
 import { ItemType } from 'rpg/items/types';
-import { Fists } from 'rpg/items/weapon';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
@@ -143,14 +142,31 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			if (!npc.isAlive() || !npc.attacks.length) continue;
 
 			const targ = randElm(chars);
-			const atk = randElm(npc.attacks);
 
-			if (targ && atk) {
-				await this.combat.tryAttack(npc, atk, targ);
+			if (targ) {
+				await this.combat.tryAttack(npc, npc.getAttack(), targ);
+
+				if (targ.isAlive() && targ.attacks.length) {
+					this.combat.tryAttack(targ, targ.getAttack(), npc);
+				}
 			}
 
 		}
 		return 1;
+
+	}
+
+	/**
+ * move mob to new location.
+ * @param mob 
+ * @param from 
+ * @param to 
+ */
+	private moveMob(mob: Mob, from: Loc, to: Loc) {
+
+		from.removeNpc(mob);
+		to.addNpc(mob);
+		this.setLiveLoc(to);
 
 	}
 
@@ -219,14 +235,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			p2 = targ;
 		}
 
-		atk ??= randElm(src.attacks) ?? Fists;
 		if (atk) {
-			await this.combat.tryAttack(src, atk, p2);
+			await this.combat.tryAttack(src, src.getAttack(), p2);
 
 			// reprisal.
 			if (targ.isAlive()) {
 				if (targ.attacks) {
-					await this.combat.tryAttack(targ, randElm(targ.attacks), src);
+					await this.combat.tryAttack(targ, targ.getAttack(), src);
 				}
 				if (targ instanceof Mob) {
 					this.setLiveLoc(src.at);
@@ -521,17 +536,29 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async move(this: Game<A, K>, char: Char, dir: string) {
 
-		const loc = await this.world.tryMove(char, toDirection(dir));
-		if (!loc) return;
+		const from = await this.world.getOrGen(char.at);
+		const to = await this.world.tryMove(char, from, toDirection(dir));
+		if (!to) return;
 
-		char.log(char.name + ' is' + loc.look(char));
+		char.log(char.name + ' is' + to.look(char));
 
 		const p = this.getParty(char);
 		if (p && p.leader === char.id) {
-			await p.move(this.world, loc);
+			await p.move(this.world, to);
 		}
 
-		return loc;
+		// mobs chase?
+		for (let i = from.npcs.length - 1; i >= 0; i--) {
+
+			const npc = from.npcs[i];
+			if (npc.evil < 0 && Math.random() < 0.1) {
+				this.moveMob(from.npcs[i], from, to);
+				char.log(`${npc.name} chases ${char.name}`);
+			}
+
+		}
+
+		return to;
 
 	}
 

@@ -3,6 +3,7 @@ import { Faction } from 'rpg/char/factions';
 import { TCombatAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
+import { Fists } from 'rpg/items/weapon';
 import type { SexType } from 'rpg/social/gender';
 import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
@@ -160,6 +161,10 @@ export class Actor {
 			}
 		}
 
+	}
+
+	getAttack() {
+		return this.attacks[Math.floor(this.attacks.length * Math.random())] ?? Fists;
 	}
 
 	/// todo

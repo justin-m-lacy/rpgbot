@@ -5,9 +5,6 @@ import { Item } from '../items/item';
 
 export class Feature extends Item {
 
-	get action() { return this._action; }
-	set action(v) { this._action = v; }
-
 	get fb() { return this._fb; }
 	set fb(b) { this._fb = b; }
 
@@ -17,7 +14,7 @@ export class Feature extends Item {
 	private _fb?: string;
 
 	static Decode(
-		json: ItemData & { name: string, desc: string, action?: string, fb?: string }) {
+		json: ItemData & { desc: string, action?: string, fb?: string }) {
 
 		const f = new Feature(json.name, json.desc);
 
@@ -41,7 +38,7 @@ export class Feature extends Item {
 
 	}
 
-	_action?: Action;
+	action?: Action;
 
 	constructor(name: string, desc: string) {
 		super(undefined, { name: name, desc: desc, type: ItemType.Feature });
@@ -53,8 +50,8 @@ export class Feature extends Item {
 			char.send(this._fb.replace('%c', char.name) + ' ');
 		}
 
-		if (this._action) {
-			return this._action.apply(char);
+		if (this.action) {
+			return this.action.apply(char);
 		}
 		char.send("Nothing happens.");
 		return false;

@@ -1,4 +1,3 @@
-import { randElm } from "@/utils/jsutils";
 import { Actor } from "rpg/char/actor";
 import { Char } from "rpg/char/char";
 import { ActionFlags, TCombatAction } from "rpg/combat/types";
@@ -35,9 +34,11 @@ export class Combat {
 	npcExp(lvl: number) { return Math.floor(10 * Math.pow(1.3, lvl)) };
 	pvpExp(lvl: number) { return Math.floor(10 * Math.pow(1.2, lvl / 2)) };
 
-	async tryAttack(char: TActor, ark: TCombatAction, who: TActor | Party) {
+	async tryAttack(char: TActor, atk: TCombatAction | null | undefined, who: TActor | Party,) {
 
-		console.log(`${char.name} attacks ${who.name} with ${ark.name}`);
+		if (!atk) return;
+
+		console.log(`${char.name} attacks ${who.name} with ${atk.name}`);
 
 		const targ = who instanceof Party ? await who.randTarget() : who;
 		if (!targ) return;
@@ -47,17 +48,17 @@ export class Combat {
 		}
 
 		(targ instanceof Char ? targ : char).send(
-			`${char.name} attacks ${who.name} with ${ark.name}`
+			`${char.name} attacks ${who.name} with ${atk.name}`
 		);
 
-		const hitroll = + char.toHit + (ark.tohit?.valueOf() ?? 0);
+		const hitroll = + char.toHit + (atk.tohit?.valueOf() ?? 0);
 		if (hitroll < targ.armor.valueOf()) {
 
 			(targ instanceof Char ? targ : char).send(`\n${char.name} misses!`);
 
 		} else {
 
-			this.doAttack(char, ark, targ);
+			this.doAttack(char, atk, targ);
 
 		}
 
@@ -172,9 +173,8 @@ export class Combat {
 		} else if (delta < 5 && targ.isAlive()) {
 
 			char.send(`${targ.name} catches ${char.name} attempting to steal.\n`);
-			if (targ.attacks.length) {
-				await this.tryAttack(targ, randElm(targ.attacks), char);
-			}
+			await this.tryAttack(targ, targ.getAttack(), char);
+
 
 		} else {
 			char.log(`You failed to steal from ${targ.name}`);

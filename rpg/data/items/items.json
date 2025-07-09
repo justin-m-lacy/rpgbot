@@ -121,6 +121,14 @@
             "desc": "You don't feel quite so lonely now."
         },
         {
+            "id": "gorillasuit",
+            "name": "Gorilla Suit",
+            "armor": 1,
+            "type": "armor",
+            "slot": "body",
+            "price": 10
+        },
+        {
             "name": "Yo-Yo Ma Solo",
             "desc": "Bach's Cello Suite No. 1 In G Major."
         },

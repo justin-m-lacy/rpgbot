@@ -1,6 +1,6 @@
 import { AddProtoItem } from 'rpg/builders/itemgen';
 import { DamageSrc } from 'rpg/formulas';
-import { Material } from 'rpg/items/material';
+import { Material, RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
 import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
@@ -25,7 +25,7 @@ export const InitWeapons = () => {
 
 export const GenWeapon = (lvl: number) => {
 
-	const mat = Material.Random(lvl);
+	const mat = RandMaterial(lvl);
 	if (mat === null) return null;
 
 	return BuildWeapon(

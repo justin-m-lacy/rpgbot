@@ -140,6 +140,10 @@ export class Mob {
 
 	}
 
+	getAttack() {
+		return this.attacks[Math.floor(this.attacks.length * Math.random())];
+	}
+
 	rmDot(e: Dot | ProtoDot) {
 		const ind = this.dots.findIndex(v => v.id === e.id);
 		if (ind >= 0) {

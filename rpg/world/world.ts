@@ -83,7 +83,7 @@ export class World {
 	 * @param char
 	 * @param who
 	 */
-	async removeNpcAt(at: Coord, who: Mob) {
+	async removeNpcAt(at: TCoord, who: Mob) {
 
 		const loc = await this.getLoc(at);
 		return loc?.removeNpc(who);
@@ -291,9 +291,8 @@ export class World {
 	 * @param dir - move direction.
 	 * @returns new Loc or error string.
 	 */
-	async tryMove(char: Char, dir: DirVal): Promise<Loc | null> {
+	async tryMove(char: Char, from: Loc, dir: DirVal): Promise<Loc | null> {
 
-		const from = await this.getOrGen(char.at, char);
 		const to = from.getExit(dir)?.to;
 
 		if (!to) {

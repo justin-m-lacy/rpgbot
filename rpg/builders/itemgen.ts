@@ -8,7 +8,7 @@ import { GenArmor } from 'rpg/parsers/armor';
 import { DecodeItem } from 'rpg/parsers/items';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Loot } from '../combat/loot';
-import { Material } from '../items/material';
+import { LoadMaterials } from '../items/material';
 import { Mob } from '../monster/mobs';
 
 
@@ -26,14 +26,14 @@ export const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData
  */
 const ItemTable: Record<string, Item> = {};
 
-const MiscItems: RawItemData[] = [];
+const JunkItems: RawItemData[] = [];
 
 export const InitItems = async () => {
 
 	return Promise.all([
 		InitBasic(),
 		InitChests(),
-		Material.LoadMaterials()
+		LoadMaterials()
 	]);
 
 }
@@ -43,11 +43,11 @@ async function InitBasic() {
 	const items = (await import('../data/items/items.json', { assert: { type: 'json' } })).default;
 	const spec = items.special as RawItemData[];
 
-	MiscItems.push(...items.misc as RawItemData[]);
+	JunkItems.push(...items.misc as RawItemData[]);
 
-	for (let i = MiscItems.length - 1; i >= 0; i--) {
-		(MiscItems[i] as RawItemData).id ??= MiscItems[i].name.toLowerCase();
-		ProtoItems[MiscItems[i].id] = MiscItems[i];
+	for (let i = JunkItems.length - 1; i >= 0; i--) {
+		(JunkItems[i] as RawItemData).id ??= JunkItems[i].name.toLowerCase();
+		ProtoItems[JunkItems[i].id] = JunkItems[i];
 	}
 
 	for (let i = spec.length - 1; i >= 0; i--) {
@@ -159,9 +159,9 @@ export const GenItem = (protoId: string, into?: Inventory) => {
 /**
  * Create a useless item.
  */
-export const GenMiscItem = () => {
+export const GenJunkItem = () => {
 
-	const it = MiscItems[Math.floor(MiscItems.length * Math.random())];
+	const it = JunkItems[Math.floor(JunkItems.length * Math.random())];
 
 	const data = Object.create(it);
 	data.id = randomUUID();
