@@ -5,22 +5,19 @@ import { Feature } from '../world/feature';
 
 const byName: { [key: string]: typeof FeatureData[number] } = {};
 
-InitFeatures();
-
 /**
  * Create named feature from data.
  * @param s
  */
-export const genFeature = (s: string) => {
+export const GenFeature = (s: string) => {
 	return byName[s] ? Feature.Decode(byName[s]) : null;
 }
 
 
-function InitFeatures() {
+export function InitFeatures() {
 
 	for (let i = FeatureData.length - 1; i >= 0; i--) {
-		byName[FeatureData[i].name] = FeatureData[i];
-
+		byName[FeatureData[i].id] = byName[FeatureData[i].name] = FeatureData[i];
 	}
 
 }

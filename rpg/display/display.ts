@@ -15,8 +15,9 @@ export const SendEmbed = async (m: ChatCommand, s: string, e?: string) => m.repl
 		] : undefined
 	});
 
-export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) =>
-	m.reply('```' + s + '```');
+export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) => {
+	return s ? m.reply('```' + s + '```') : undefined;
+}
 
 export const ReplyBlock = async (m: ChatCommand,
 	str: string,

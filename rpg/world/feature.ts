@@ -1,7 +1,7 @@
 import { ItemData, ItemType } from 'rpg/items/types';
+import { Action, GetAction } from 'rpg/magic/action';
 import { Char } from '../char/char';
 import { Item } from '../items/item';
-import * as acts from '../magic/action';
 
 export class Feature extends Item {
 
@@ -22,7 +22,7 @@ export class Feature extends Item {
 		const f = new Feature(json.name, json.desc);
 
 		if (json.action) {
-			f.action = acts.GetAction(json.action);
+			f.action = GetAction(json.action);
 		}
 		if (json.fb) f.fb = json.fb;
 
@@ -41,7 +41,7 @@ export class Feature extends Item {
 
 	}
 
-	_action?: any;
+	_action?: Action;
 
 	constructor(name: string, desc: string) {
 		super(undefined, { name: name, desc: desc, type: ItemType.Feature });
@@ -49,15 +49,15 @@ export class Feature extends Item {
 
 	use(char: Char) {
 
-		let res = '';
 		if (this._fb) {
-			res += this._fb.replace('%c', char.name) + ' ';
+			char.send(this._fb.replace('%c', char.name) + ' ');
 		}
 
 		if (this._action) {
-			return res + this._action.tryApply(char);
+			return this._action.apply(char);
 		}
-		return res + "Nothing happens.";
+		char.send("Nothing happens.");
+		return false;
 
 	}
 

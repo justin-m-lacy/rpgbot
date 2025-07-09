@@ -6,7 +6,7 @@ import { Char } from '../char/char';
 
 const actions: Record<string, Action> = {};
 
-class Action {
+export class Action {
 
 	toJSON() { return this; }
 
@@ -49,7 +49,6 @@ class Action {
 				const res = this.result[i];
 				if (res.if && !TestRequire(char, res.if)) {
 					if (res.err) char.log(res.err);
-
 				}
 				if (res.apply(char)) {
 					// any feedback.
@@ -65,9 +64,8 @@ class Action {
 
 			}
 
-		} else {
-
 		}
+		return true;
 
 
 	}

@@ -2,6 +2,7 @@ import { BotContext, type ContextSource } from '@/bot/botcontext';
 import type { ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { MessageFlags, SendableChannels, User } from "discord.js";
+import { InitFeatures } from 'rpg/builders/features';
 import { InitItems } from 'rpg/builders/itemgen';
 import { GameActions } from 'rpg/game-actions';
 import { ItemIndex } from 'rpg/items/container';
@@ -225,6 +226,7 @@ export const InitGame = async () => {
 		InitRaces(),
 		InitClasses(),
 		InitItems(),
+		InitFeatures(),
 		InitArmors(),
 		InitPotions(),
 		LoadDotTypes(),

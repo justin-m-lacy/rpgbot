@@ -6,36 +6,26 @@ import { Biome, Exit, Loc } from './loc';
 type BiomeName = keyof typeof Biomes;
 
 /**
- * Generate a new location without any starting information.
-*/
-export const GenNewLoc = (coord: Coord) => {
-
-	// note that a new coord must be used to avoid references.
-	const loc = makeBiomeLoc(new Coord(coord.x, coord.y), Biome.TOWN);
-
-	const exits = genExits(coord.x, coord.y);
-	let k: keyof typeof exits;
-	for (k in exits) {
-		loc.exits[k] = exits[k];
-	}
-
-	return loc;
-
-}
-
-/**
  * 
  * @param  coord 
  * @param  from - location arriving from.
  * @param  adj - all allowed exits.
  */
-export const GenLoc = (coord: Coord, from: Loc, exits: Exit[]): Loc => {
+export const GenLoc = (coord: Coord, from?: Loc, exits?: Exit[]): Loc => {
 
 	const biomeName = from ? randBiome(from.biome as BiomeName) : Biome.TOWN;
 	const loc = makeBiomeLoc(coord, biomeName as BiomeName);
 
-	for (let i = exits.length - 1; i >= 0; i--) {
-		loc.addExit(exits[i]);
+	if (exits) {
+		for (let i = exits.length - 1; i >= 0; i--) {
+			loc.addExit(exits[i]);
+		}
+	} else {
+		const exits = genExits(coord.x, coord.y);
+		let k: keyof typeof exits;
+		for (k in exits) {
+			loc.exits[k] = exits[k];
+		}
 	}
 
 	while (Math.random() < 0.1) {

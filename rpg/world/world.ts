@@ -1,7 +1,8 @@
 import Cache from 'archcache';
+import { GenFeature } from 'rpg/builders/features';
 import { RandMonster } from 'rpg/parsers/mobs';
 import { Coord, TCoord } from 'rpg/world/coord';
-import { GenLoc, GenNewLoc } from 'rpg/world/worldgen';
+import { GenLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
 import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
@@ -31,7 +32,10 @@ export class World {
 	}
 
 	private async initWorld() {
-		await this.getOrGen(new Coord(0, 0));
+		const st = await this.getOrGen(new Coord(0, 0));
+		if (!st.getFeature('shrine')) {
+			st.addFeature(GenFeature('shrine'));
+		}
 	}
 
 	/**
@@ -96,12 +100,11 @@ export class World {
 		const loc = await this.getOrGen(char.at, char);
 
 		const f = typeof wot !== 'object' ? loc.getFeature(wot) : wot;
-		if (!f) return 'You do not see any such thing here.';
+		if (!f) char.log('You do not see any such thing here.');
 
-		const res = f.use(char);
-
-		if (!res) return 'Nothing seems to happen.';
-		return res;
+		if (!f.use(char)) {
+			char.log('Nothing seems to happen.');
+		}
 
 	}
 
@@ -351,8 +354,7 @@ export class World {
 
 		if (loc == null) {
 
-			console.log(coord + ' NEW LOC');
-			loc = GenNewLoc(coord);
+			loc = GenLoc(coord);
 
 			if (char) loc.setMaker(char.name);
 
