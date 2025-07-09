@@ -332,9 +332,7 @@ export class Char extends Actor {
 
 	}
 
-	send(s: string) {
-		return this._log.send(s);
-	}
+	send(s: string) { return this._log.send(s); }
 
 	/**
 	 * Log character string, replacing %c with character name.

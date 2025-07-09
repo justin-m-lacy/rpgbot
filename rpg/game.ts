@@ -14,11 +14,13 @@ import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
 import { ItemType } from 'rpg/items/types';
+import { Fists } from 'rpg/items/weapon';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
+import { TCoord } from 'rpg/world/coord';
 import { Char } from './char/char';
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
@@ -77,26 +79,31 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS);
 
 		this.events.on('actorDie', this.onCharDie, this);
+		this.events.on('charHit', this.onCharHit, this);
 	}
 
 	/**
 	 * Add npc to list of live-updating npcs.
 	 * @param npc 
 	 */
-	setLiveLoc(loc: Loc) {
-		this.liveLocs[loc.key] = loc;
+	setLiveLoc(loc: Loc | TCoord) {
+		if ('id' in loc) {
+			this.liveLocs[loc.id] = loc;
+		} else {
+			const v = this.world.tryGetLoc(loc);
+			if (v) this.liveLocs[v.id] = v;
+		}
 	}
 
 	private async updateLocs() {
 
 		let liveNpcs: number;
 
-		for (const k in this.liveLocs) {
+		for (let k in this.liveLocs) {
 
 			liveNpcs = 0;
 
 			const loc = this.liveLocs[k];
-			const chars = loc.chars;
 
 			for (let i = loc.npcs.length - 1; i >= 0; i--) {
 
@@ -111,16 +118,10 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 					liveNpcs++;
 				}
 
-				if (!chars.length || !npc.attacks.length) continue;
-
-				const targ = await this.getChar(randElm(chars));
-				const atk = randElm(npc.attacks);
-
-				if (targ && atk) {
-					await this.combat.tryAttack(npc, atk, targ);
+				if (loc.chars.length) {
+					liveNpcs += await this.doLocCombat(loc);
 				}
 
-				liveNpcs++;
 
 			}
 			if (liveNpcs === 0) {
@@ -131,6 +132,29 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		}
 
 	}
+
+	private async doLocCombat(loc: Loc) {
+
+		const chars = loc.chars.map(c => this.getChar(c)).filter(c => c?.isAlive());
+		if (chars.length == 0) return 0;
+
+		for (let i = loc.npcs.length - 1; i >= 0; i--) {
+
+			const npc = loc.npcs[i];
+			if (!npc.attacks.length) continue;
+
+			const targ = randElm(chars);
+			const atk = randElm(npc.attacks);
+
+			if (targ && atk) {
+				await this.combat.tryAttack(npc, atk, targ);
+			}
+
+		}
+		return 1;
+
+	}
+
 
 	private tickDots(char: TActor) {
 
@@ -196,7 +220,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			p2 = targ;
 		}
 
-		atk ??= randElm(src.attacks);
+		atk ??= randElm(src.attacks) ?? Fists;
 		if (atk) {
 			await this.combat.tryAttack(src, atk, p2);
 
@@ -204,6 +228,11 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			if (targ.attacks) {
 				await this.combat.tryAttack(targ, randElm(targ.attacks), src);
 			}
+			if (targ instanceof Mob) {
+				this.setLiveLoc(src.at);
+			}
+		} else {
+			console.log(`no attacks found.`);
 		}
 
 		return src.flushLog();
@@ -225,14 +254,15 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		}
 
-		const loc = await this.world.getOrGen(char.at);
-
 		char.log(`${char.name} casts ${spell.name}`);
 
 		// single target.
 		if (targ) {
 
 			this.combat.doAttack(char, spell, targ);
+			if (targ instanceof Mob) {
+				this.setLiveLoc(char.at);
+			}
 
 		} else if (spell.target & TargetFlags.mult) {
 
@@ -247,6 +277,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 				}
 
 			}
+			this.setLiveLoc(loc);
 
 		} else if (spell.target === TargetFlags.none) {
 			// generalized spell.
@@ -529,9 +560,10 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	getParty(char: Char) { return this._charParties[char.id]; }
 
-	getChar(charId: string) {
+	fetchChar(charId: string) {
 		return this.charCache.fetch(charId);
 	}
+	getChar(id: string) { return this.charCache.get(id) }
 
 	makeParty(char: Char, ...invites: string[]) {
 

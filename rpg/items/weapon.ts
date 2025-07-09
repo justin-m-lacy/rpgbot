@@ -65,6 +65,6 @@ export class Weapon extends Wearable implements TCombatAction {
 
 }
 
-const Fists = new Weapon('fists', 'fists',
+export const Fists = new Weapon('fists', 'fists',
 	new DamageSrc(new Dice(1, 2, 0), 'blunt'),
 	'Just plain fists.');

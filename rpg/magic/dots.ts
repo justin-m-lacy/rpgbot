@@ -185,7 +185,7 @@ export class Dot {
 				char.log(`${char.name} slain by ${this.name}.`);
 
 				if (this.maker) {
-					game.getChar(this.maker).then((slayer) => {
+					game.fetchChar(this.maker).then((slayer) => {
 						game.events.emit('actorDie', char, slayer ?? this.name);
 					})
 				} else {

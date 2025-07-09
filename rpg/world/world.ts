@@ -315,6 +315,10 @@ export class World {
 		}
 
 		char.at.setTo(dest.coord);
+
+		from.rmChar(char);
+		dest.addChar(char);
+
 		this.trySpawn(dest);
 
 		return dest;

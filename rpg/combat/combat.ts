@@ -37,6 +37,8 @@ export class Combat {
 
 	async tryAttack(char: TActor, ark: TCombatAction, who: TActor | Party) {
 
+		console.log(`${char.name} attacks ${who.name} with ${ark.name}`);
+
 		const targ = who instanceof Party ? await who.randTarget() : who;
 		if (!targ) return;
 
@@ -44,14 +46,14 @@ export class Combat {
 			(char instanceof Char ? char : targ).log(`${targ.name} is already dead.`);
 		}
 
-		(targ instanceof Char ? targ : char).log(
+		(targ instanceof Char ? targ : char).send(
 			`${char.name} attacks ${who.name} with ${ark.name}`
 		);
 
 		const hitroll = + char.toHit + (ark.tohit?.valueOf() ?? 0);
 		if (hitroll < targ.armor.valueOf()) {
 
-			(targ instanceof Char ? targ : char).log(`\n${char.name} misses!`);
+			(targ instanceof Char ? targ : char).send(`\n${char.name} misses!`);
 
 		} else {
 

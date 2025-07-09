@@ -142,8 +142,6 @@ export class Loc {
 
 	}
 
-	get key() { return this._key; }
-
 	get x() { return this.coord.x; }
 	get y() { return this.coord.y; }
 
@@ -166,7 +164,6 @@ export class Loc {
 
 	readonly features: Inventory<Feature>;
 
-	private _key!: string;
 	readonly coord: Coord;
 
 	/**
@@ -181,11 +178,14 @@ export class Loc {
 
 	readonly exits: Partial<Record<DirVal, Exit>> = {};
 	readonly inv: Inventory;
+	readonly id: string;
 
 	constructor(coord: Coord, biome: string) {
 
 		this.coord = coord;
 		this.biome = biome;
+
+		this.id = coord.x + '_' + coord.y;
 
 		this.features = new Inventory();
 		this.inv = new Inventory();
@@ -197,7 +197,6 @@ export class Loc {
 	 * @param char 
 	 */
 	addChar(char: Char) {
-		char.at.setTo(this.coord);
 		if (!this.chars.includes(char.id)) {
 			this.chars.push(char.id);
 		}

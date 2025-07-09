@@ -23,7 +23,7 @@ export const GetClass = (id?: string) => {
 
 export const RandRace = (racename?: string | null, userLevels: number = 0) => {
 
-	const filtered = userLevels > 0 ? races.filter(v => v.minLevels <= userLevels) : races;
+	const filtered = races.filter(v => v.minLevels == 1 || v.minLevels <= userLevels);
 
 	if (racename) {
 		racename = racename.toLowerCase();
@@ -34,7 +34,7 @@ export const RandRace = (racename?: string | null, userLevels: number = 0) => {
 
 export const RandClass = (id?: string | null, userLevels: number = 0) => {
 
-	const filtered = userLevels > 0 ? classes.filter(v => v.minLevels <= userLevels) : classes;
+	const filtered = classes.filter(v => v.minLevels == 1 || v.minLevels <= userLevels);
 
 	if (id) {
 		id = id.toLowerCase();

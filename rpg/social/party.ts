@@ -75,6 +75,7 @@ export class Party extends SocialGroup {
 			if (char) {
 				prev?.rmChar(char);
 				to.addChar(char);
+				char.at.setTo(to.coord);
 				char.recover();
 			}
 
