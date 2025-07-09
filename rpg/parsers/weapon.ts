@@ -50,6 +50,7 @@ const BuildWeapon = (tmp: RawWeaponData, mat?: Material) => {
 
 	w.toHit = tmp.hit || 0;
 
+	/// todo: apply as a mod.
 	if (mat) {
 
 		w.name = mat.name + ' ' + w.name;

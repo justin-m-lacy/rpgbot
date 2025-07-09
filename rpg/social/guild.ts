@@ -2,7 +2,7 @@ import Cache from 'archcache';
 import { DecodeItem } from 'rpg/parsers/items';
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
-import { Coord } from '../world/loc';
+import { Coord } from '../world/coord';
 import { SocialGroup } from './social-group';
 
 

@@ -3,51 +3,19 @@ import { Faction } from 'rpg/char/factions';
 import { StatusFlags } from 'rpg/char/states';
 import { TCombatAction } from 'rpg/combat/types';
 import { Dot, ProtoDot } from 'rpg/magic/dots';
-import { GetMonster, MobData } from 'rpg/parsers/monster';
+import { type MobData } from 'rpg/parsers/mobs';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
-import { Numeric } from 'rpg/values/types';
 import { Actor, CharState } from '../char/actor';
 import * as stats from '../char/stats';
 import { Item } from '../items/item';
-import { Weapon } from '../items/weapon';
 import { roll } from '../values/dice';
-import { Biome, Coord, IsCoord } from '../world/loc';
+import { Coord } from '../world/coord';
 
 export type TActor = Actor | Mob;
 
 export class Mob {
-
-	static Decode(json: any) {
-
-		const m = new Mob(json.id, GetMonster(json.proto));
-
-		if (json.name) m.name = json.name;
-
-		if (json.hp) {
-			m.hp.setTo(json.hp);
-		}
-		if (IsCoord(json.at)) {
-			m.at.setTo(json.at);
-		}
-
-		const desc = Object.getOwnPropertyDescriptors(m);
-		for (const k in json) {
-
-			if (!desc[k] || desc[k].writable) {
-				desc[k] = json[k];
-			} else {
-				console.log(`no write: ${k}`);
-			}
-
-		}
-
-		if (m.weap) m.weap = Weapon.Decode(m.weap);
-		if (m.toHit) m.toHit = Number(m.toHit);
-		return m;
-
-	}
 
 	toJSON() {
 
@@ -56,24 +24,19 @@ export class Mob {
 			name: this.name,
 			desc: this.desc,
 			level: this.level,
-			hp: this._hp.toJSON(),
-			curHp: this._hp,
+			hp: this._hp,
 			dots: this.dots.length > 0 ? this.dots : undefined,
 			armor: this._armor,
 			toHit: this._toHit,
 			state: this._state != CharState.Alive ? this._state : undefined,
-			drops: this._drops ?? undefined,
 			evil: this._evil ?? undefined,
-			kind: this._kind ?? undefined,
-			dmg: this.dmg ?? undefined,
-			weap: this.weap ?? undefined
+			//weap: this.weap ?? undefined
 
 		};
 
 	}
 
-	get drops() { return this._drops; }
-	set drops(v) { this._drops = v; }
+	get drops() { return this.proto?.drops; }
 
 	get toHit() { return this._toHit; }
 	set toHit(v) { this._toHit = v; }
@@ -81,29 +44,29 @@ export class Mob {
 	get evil() { return this._evil; }
 	set evil(v) { this._evil = v; }
 
-	get kind() { return this._kind; }
-	set kind(v) { this._kind = v; }
+	get kind() { return this.proto?.kind; }
 
 	get armor() { return this._armor; }
 	set armor(v) { this._armor = v; }
 
-	get hp() { return this._hp }
+	// convenience for shorter formulas.
+	get hp() { return this._hp; }
+	set hp(v) { this._hp.value = v.valueOf(); }
 
 	get state() { return this._state; }
 	set state(v) { this._state = v; }
+
+	get biome() { return this.proto?.biome }
+	get desc() { return this.proto?.desc ?? '' }
 
 	isAlive() { return this._state !== CharState.Dead; }
 
 	flags: StatusFlags;
 
-	biome?: Biome;
-
 	private _toHit: number;
 	private _state: CharState;
-	private _kind?: string;
 
 	name: string = 'unknown';
-	desc?: string;
 
 	private readonly _hp: Maxable = new Maxable('hp');
 
@@ -113,10 +76,7 @@ export class Mob {
 	private _armor: number = 0;
 	private _evil: number = 0;
 	size: string;
-	private _drops?: any;
 	readonly proto?: MobData;
-	private dmg?: Numeric;
-	private weap?: any;
 	readonly attacks: TCombatAction[] = [];
 	private _talents?: string[];
 
@@ -227,8 +187,7 @@ export class Mob {
 
 	getDetails() {
 
-		const kind = this._kind ? ` ${this._kind}` : '';
-		return `level ${this.level} ${this.name} [${stats.getEvil(this._evil)}${kind}]\nhp:${this._hp}/${this._hp.max} armor:${this._armor}\n${this.desc}`;
+		return `level ${this.level} ${this.name} [${stats.getEvil(this._evil)}${this.kind ?? ''}] \nhp:${this._hp}/${this._hp.max} armor:${this._armor}\n${this.desc}`;
 
 	}
 

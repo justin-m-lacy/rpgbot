@@ -1,5 +1,6 @@
 import Cache from 'archcache';
-import { RandMonster } from 'rpg/parsers/monster';
+import { RandMonster } from 'rpg/parsers/mobs';
+import { Coord, TCoord } from 'rpg/world/coord';
 import { GenLoc, GenNewLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
 import { ItemIndex, ItemPicker } from '../items/container';
@@ -7,7 +8,7 @@ import { Item } from '../items/item';
 import { Mob } from '../monster/mobs';
 import Block from './block';
 import { Feature } from './feature';
-import { Coord, DirString, DirVal, Exit, Loc, TCoord, ToDirStr } from './loc';
+import { DirString, DirVal, Exit, Loc, ToDirStr } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching of existing world data.

@@ -1,8 +1,9 @@
 import Cache from 'archcache';
 import { CharState } from 'rpg/char/actor';
+import { Coord } from 'rpg/world/coord';
 import { World } from 'rpg/world/world';
 import { Char } from '../char/char';
-import { Coord, Loc } from '../world/loc';
+import { Loc } from '../world/loc';
 import { SocialGroup } from './social-group';
 
 export class Party extends SocialGroup {

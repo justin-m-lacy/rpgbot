@@ -10,7 +10,7 @@ import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { Item } from '../items/item';
 import { Dot, ProtoDot } from '../magic/dots';
 import { roll } from '../values/dice';
-import { Coord } from '../world/loc';
+import { Coord } from '../world/coord';
 import { Race, type GClass } from './race';
 import { StatBlock, type StatMod } from './stats';
 

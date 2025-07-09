@@ -12,3 +12,7 @@ export type Replace<T extends object, R extends object> =
 	Omit<T, keyof R> & R;
 
 export type Maybe<Maybe extends object, Always = object> = (Maybe & Always) | Always;
+
+export type TWritable<T> = {
+	-readonly [K in keyof T]: T[K]
+}

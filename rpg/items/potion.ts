@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { Formula } from 'formulic';
 import { ItemType } from 'rpg/items/types';
 import { GetDot, ProtoDot } from 'rpg/magic/dots';
@@ -47,7 +46,7 @@ export class Potion extends Item {
 	dot?: ProtoDot;
 
 	constructor(id?: string) {
-		super(id ?? randomUUID(), { name: '', desc: '', type: ItemType.Potion });
+		super(id, { name: '', desc: '', type: ItemType.Potion });
 	}
 
 	quaff(char: Char) {

@@ -4,12 +4,12 @@
         "level": 0.1,
         "kind": "humanoid",
         "desc": "Completely harmless.",
-        "hp": "1d1",
+        "hp": 1,
         "armor": 0,
         "weap": {
             "name": "blathering",
             "kind": "noob",
-            "dmg": "1d1"
+            "dmg": 1
         },
         "biome": [
             "town",
@@ -28,12 +28,12 @@
         "level": 0.2,
         "kind": "beast",
         "desc": "Wriggly.",
-        "hp": "1d2",
+        "hp": "1~2",
         "armor": 1,
         "weap": {
             "name": "newting",
             "kind": "squiggly",
-            "dmg": "1d2"
+            "dmg": "1~2"
         },
         "biome": [
             "swamp",
@@ -65,12 +65,12 @@
         "kind": "goblinoid",
         "evil": 5,
         "desc": "Na-na-na-na-Na-na Na-na-na-na-Na-na...",
-        "hp": "1d3+1",
+        "hp": "1~4",
         "armor": 4,
         "weap": {
             "name": "claws",
             "kind": "slash",
-            "dmg": "1d2"
+            "dmg": "1~2"
         },
         "drops": {
             "potion of cure minor wounds": 5
@@ -81,7 +81,7 @@
         "level": 0.5,
         "desc": "Smelly rat.",
         "kind": "beast",
-        "hp": "1d4",
+        "hp": "1~4",
         "toHit": -1,
         "armor": 5,
         "weap": {
@@ -98,13 +98,13 @@
         "level": 0.5,
         "kind": "beast",
         "desc": "Don't kill it! They're endangered!",
-        "hp": "1d3+1",
+        "hp": "2~4",
         "toHit": 1,
         "armor": 7,
         "weap": {
             "name": "beak",
             "kind": "pierce",
-            "dmg": "1d4"
+            "dmg": "1~4"
         },
         "drops": {
             "kakapo feather": 10
@@ -121,7 +121,7 @@
         "weap": {
             "name": "beak",
             "kind": "pierce",
-            "dmg": "1d4"
+            "dmg": "1~4"
         },
         "biome": "swamp"
     },
@@ -130,13 +130,13 @@
         "level": 0.5,
         "kind": "beast",
         "desc": "Careful. They carry rabies.",
-        "hp": "1d2",
+        "hp": "1~2",
         "toHit": 4,
         "armor": 15,
         "weap": {
             "name": "bite",
             "kind": "pierce",
-            "dmg": "1d2+1"
+            "dmg": "2~3"
         },
         "drops": "bat wing"
     },
@@ -144,12 +144,12 @@
         "name": "kobold",
         "level": 0.75,
         "desc": "You no take candle!",
-        "hp": "1d4+1",
+        "hp": "2~5",
         "armor": 7,
         "weap": {
             "name": "pointy stick",
             "kind": "pierce",
-            "dmg": "1d4"
+            "dmg": "1~4"
         },
         "biome": [
             "mountains",
@@ -164,12 +164,12 @@
         "name": "goblin",
         "level": 0.75,
         "desc": "It reminds you of the babe...",
-        "hp": "1d4+2",
+        "hp": "3~6",
         "armor": 6,
         "weap": {
             "name": "scimitar",
             "kind": "slash",
-            "dmg": "1d4"
+            "dmg": "1~4"
         },
         "drops": {
             "potion of cure minor wounds": 5,
@@ -180,7 +180,7 @@
         "name": "garden gnome",
         "level": 0.75,
         "desc": "Standard variety garden gnome.",
-        "hp": "1d4+2",
+        "hp": "3~6",
         "armor": 4,
         "toHit": 2,
         "weap": {
@@ -209,7 +209,7 @@
         "weap": {
             "name": "spear",
             "kind": "pierce",
-            "dmg": "1d6"
+            "dmg": "1~6"
         },
         "drops": {
             "potion of cure light wounds": 3
@@ -227,7 +227,7 @@
         "weap": {
             "name": "dagger",
             "kind": "pierce",
-            "dmg": "1d5"
+            "dmg": "1~5"
         },
         "biome": "town",
         "drops": {
@@ -309,7 +309,7 @@
         "weap": {
             "name": "bow",
             "kind": "pierce",
-            "dmg": "1d6"
+            "dmg": "1~6"
         },
         "drops": {
             "potion of cure light wounds": 5
@@ -333,7 +333,7 @@
         "weap": {
             "name": "sling",
             "kind": "blunt",
-            "dmg": "1d4"
+            "dmg": "1~4"
         }
     },
     {
@@ -363,7 +363,7 @@
         "weap": {
             "name": "bite",
             "kind": "pierce",
-            "dmg": "1d6"
+            "dmg": "1~6"
         },
         "drops": "rat tail"
     },

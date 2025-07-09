@@ -54,6 +54,17 @@ export const ParseValue = (id: string, v?: string | number | object): TValue | u
 }
 
 
+/**
+ * Return a number or TValue, using number if possible.
+ * @param id 
+ * @param v 
+ */
+export const ParseNum = (id: string, v: string | number | object): TValue | number | undefined => {
+
+	if (typeof v === 'number') return v;
+	return ParseValue(id, v);
+}
+
 export const ParseSetter = (id: string, str: string) => {
 
 	// slice start chars.

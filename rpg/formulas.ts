@@ -14,9 +14,7 @@ export class DamageSrc implements TValue {
 
 	toJSON() { return { dmg: this.value.toString(), type: this.type }; }
 
-	valueOf() {
-		return this._val.valueOf();
-	}
+	valueOf() { return this._val.valueOf(); }
 
 	get value() { return this._val.valueOf() }
 	set value(v) { typeof this._val === 'number' ? this._val = v : this._val.value = v; }

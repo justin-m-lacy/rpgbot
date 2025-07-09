@@ -6,7 +6,7 @@ import type { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { Dot } from 'rpg/magic/dots';
 import { DecodeItem } from 'rpg/parsers/items';
 import { BadTypeError, NullDataError } from 'rpg/util/errors';
-import { Coord, IsCoord } from 'rpg/world/loc';
+import { Coord, IsCoord } from 'rpg/world/coord';
 import { GetClass, GetRace } from './parse-class';
 
 

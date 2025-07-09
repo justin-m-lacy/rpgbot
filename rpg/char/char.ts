@@ -10,7 +10,7 @@ import { Inventory } from '../inventory';
 import { Item } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
 import { roll } from '../values/dice';
-import { Coord } from '../world/loc';
+import { Coord } from '../world/coord';
 import { Actor } from './actor';
 import { Equip } from './equip';
 import { History } from './events';

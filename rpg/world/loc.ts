@@ -1,8 +1,10 @@
 import { ItemList } from "rpg/display/items";
 import type { ItemIndex } from "rpg/items/container";
 import { DecodeItem } from "rpg/parsers/items";
+import { DecodeMob } from "rpg/parsers/mobs";
 import { quickSplice } from "rpg/util/array";
 import { IsInt } from "rpg/util/parse";
+import { Coord } from "rpg/world/coord";
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Item } from "../items/item";
@@ -116,51 +118,6 @@ const OppositeDirs: Partial<Record<DirString, DirVal>> = {
 	exit: DirMap.enter,
 	x: DirMap.enter
 };
-
-export const IsCoord = (obj: any): obj is { x: number, y: number } => {
-	return obj && typeof obj === 'object' && typeof obj.x === 'number' && typeof obj.y === 'number';
-}
-
-export type TCoord = {
-	x: number, y: number
-}
-
-export class Coord implements TCoord {
-
-	x: number;
-	y: number;
-
-	constructor(x: number = 0, y: number = 0) {
-		this.x = x;
-		this.y = y;
-	}
-
-	setTo(coord: TCoord) {
-		this.x = coord.x;
-		this.y = coord.y;
-	}
-
-	/**
-	 * @returns absolute distance from origin.
-	 */
-	abs() { return Math.abs(this.x) + Math.abs(this.y); }
-
-	/**
-	 * Get distance to another coordinate.
-	 * @param c - second coordinate
-	 * @returns
-	 */
-	dist(c: Coord) { return Math.abs(c.x - this.x) + Math.abs(c.y - this.y); }
-
-	equals(c: Coord) {
-		return c.x === this.x && c.y === this.y;
-	}
-
-	toString() {
-		return this.x + ',' + this.y;
-	}
-
-}
 
 export class Loc {
 
@@ -305,7 +262,7 @@ export class Loc {
 		const len = a.length;
 		for (let i = 0; i < len; i++) {
 
-			const m = Mob.Decode(a[i]);
+			const m = DecodeMob(a[i]);
 			if (m) loc.addNpc(m);
 
 		}
