@@ -78,11 +78,6 @@ export class Combat {
 			return false;
 		}
 
-		if (act.dmg) this.applyDmg(targ, act, char);
-		if (act.heal) this.applyHealing(targ, act as TCombatAction & { heal: TValue }, char);
-
-		(char instanceof Char ? char : targ).log(`${char.name} hits ${targ.name} with ${act.name}`);
-
 		//if (act.cure) { targ.cure(act.cure); }
 
 		if (act.dot) {
@@ -91,6 +86,11 @@ export class Combat {
 		if (act.add) {
 			AddValues(targ, act.add, 1);
 		}
+
+		if (act.dmg) this.applyDmg(targ, act, char);
+		if (act.heal) this.applyHealing(targ, act as TCombatAction & { heal: TValue }, char);
+
+		(char instanceof Char ? char : targ).log(`${char.name} hits ${targ.name} with ${act.name}`);
 
 		return true;
 	}
@@ -135,8 +135,8 @@ export class Combat {
 		this.game.events.emit('charHit', targ, attacker ?? attack.name, info);
 
 		targ.updateState();
-		if (!targ.isAlive) {
-			this.game.events.emit('actorDie', targ, attacker ?? attack.name);
+		if (!targ.isAlive()) {
+			this.game.events.emit('charDie', targ, attacker ?? attack.name);
 		}
 
 	}

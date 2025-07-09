@@ -35,6 +35,6 @@ export type CharEvents = {
 
 
 export type TGameEvents = {
-	actorDie: (char: TActor, attacker: TActor | string) => void;
+	charDie: (char: TActor, attacker: TActor | string) => void;
 	charHit: (char: TActor, attacker: TActor | string, info: AttackInfo) => void;
 }

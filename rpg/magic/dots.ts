@@ -185,10 +185,10 @@ export class Dot {
 
 				if (this.maker) {
 					game.fetchChar(this.maker).then((slayer) => {
-						game.events.emit('actorDie', char, slayer ?? this.name);
+						game.events.emit('charDie', char, slayer ?? this.name);
 					})
 				} else {
-					game.events.emit('actorDie', char, this.name);
+					game.events.emit('charDie', char, this.name);
 				}
 
 			} else {

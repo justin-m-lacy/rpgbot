@@ -336,7 +336,7 @@ export class World {
 		const dev = Math.random() - 0.5;
 		const lvl = Math.max(Math.floor(loc.norm / 20 + 10 * dev), 0);
 
-		const m = RandMonster(lvl, loc, loc.biome);
+		const m = RandMonster(lvl, loc.biome);
 		if (!m) return;
 
 		loc.addNpc(m);

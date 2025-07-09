@@ -4,6 +4,7 @@ import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { Weapon } from 'rpg/items/weapon';
 import { SpellList } from 'rpg/magic/spelllist';
+import { smallNum } from 'rpg/util/format';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import { Log } from '../display/log';
 import { Inventory } from '../inventory';
@@ -328,7 +329,7 @@ export class Char extends Actor {
 
 	getDetails() {
 
-		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.stats.evil}]\nhp:${this.hp}/${this.hp.max} armor:${this.armor}`;
+		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.stats.evil}]\nhp:${smallNum(this.hp)}/${smallNum(this.hp.max)} armor:${this.armor}`;
 
 	}
 

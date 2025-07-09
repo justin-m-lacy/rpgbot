@@ -18,6 +18,7 @@ import { Fists } from 'rpg/items/weapon';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
+import { smallNum } from 'rpg/util/format';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
 import { TCoord } from 'rpg/world/coord';
@@ -33,7 +34,7 @@ import * as Trade from './trade';
 import { DirVal, Loc, toDirection } from './world/loc';
 import { World } from "./world/world";
 
-const LOC_UPDATE_MS = 5000;
+const LOC_UPDATE_MS = 10000;
 
 export class Game<A extends Record<string, TGameAction> = Record<string, TGameAction>,
 	K extends string & keyof A = string & keyof A> {
@@ -78,7 +79,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS);
 
-		this.events.on('actorDie', this.onCharDie, this);
+		this.events.on('charDie', this.onCharDie, this);
 		this.events.on('charHit', this.onCharHit, this);
 	}
 
@@ -118,11 +119,9 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 					liveNpcs++;
 				}
 
-				if (loc.chars.length) {
-					liveNpcs += await this.doLocCombat(loc);
-				}
-
-
+			}
+			if (loc.chars.length) {
+				liveNpcs += await this.doLocCombat(loc);
 			}
 			if (liveNpcs === 0) {
 				// no npcs active here.
@@ -141,7 +140,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		for (let i = loc.npcs.length - 1; i >= 0; i--) {
 
 			const npc = loc.npcs[i];
-			if (!npc.attacks.length) continue;
+			if (!npc.isAlive() || !npc.attacks.length) continue;
 
 			const targ = randElm(chars);
 			const atk = randElm(npc.attacks);
@@ -225,11 +224,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			await this.combat.tryAttack(src, atk, p2);
 
 			// reprisal.
-			if (targ.attacks) {
-				await this.combat.tryAttack(targ, randElm(targ.attacks), src);
-			}
-			if (targ instanceof Mob) {
-				this.setLiveLoc(src.at);
+			if (targ.isAlive()) {
+				if (targ.attacks) {
+					await this.combat.tryAttack(targ, randElm(targ.attacks), src);
+				}
+				if (targ instanceof Mob) {
+					this.setLiveLoc(src.at);
+				}
 			}
 		} else {
 			console.log(`no attacks found.`);
@@ -314,7 +315,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		logger.send(
 			`${typeof attacker === 'string' ? attacker : attacker.name} hits ${char.name} with ${info.name} for ${info.dmg.toFixed(1)} damage.`
 		);
-		char.log(`hp: ${char.hp.valueOf()}/${char.hp.max.valueOf()}`);
+		char.log(`hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
 
 	}
 
@@ -334,7 +335,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (char instanceof Char) {
 
 			/// should be world log.
-			char.log(
+			char.send(
 				await this.world.put(char, Grave.MakeGrave(char,
 					slayer
 				))
@@ -343,11 +344,16 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		} else if (char instanceof Mob) {
 			const loc = await this.world.getLoc(char.at);
 			if (loc) {
+				console.log(`try remove npc`);
 				loc.removeNpc(char);
 				await this.getLoot(itemgen.GenLoot(char), loc,
 					typeof slayer === 'object' ? slayer : loc
 				);
+			} else {
+				console.log(`npc no loc: ${char.at}`);
 			}
+		} else {
+			console.log(`dead char is not npc or mob or anything`);
 		}
 
 
@@ -608,7 +614,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		} else if (other) {
 
 			// attempt to accept.
-			if (!other.acceptInvite(char)) return `${other.getList()}\\nnYou have not been invited to ${other.leader}'s awesome party.`;
+			if (!other.acceptInvite(char)) return `${other.getList()}\nYou have not been invited to ${other.leader}'s awesome party.`;
 
 			this._charParties[char.name] = other;
 			return `${char.name} Joined ${other.leader}'s party.`;
@@ -816,7 +822,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		} else char.rest();
 
-		return char.output(`${char.name} rested. hp: ${char.hp.value.toFixed(1)}/${char.hp.max}`);
+		return char.output(`${char.name} rested. hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
 
 	}
 

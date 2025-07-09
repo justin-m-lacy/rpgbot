@@ -439,7 +439,10 @@ export class Loc {
 		return this.npcs[wot - 1];
 	}
 
-	addNpc(m: Mob) { this.npcs.push(m); }
+	addNpc(m: Mob) {
+		m.at.setTo(this);
+		this.npcs.push(m);
+	}
 
 	removeNpcAt = (ind: number) => {
 		quickSplice(this.npcs, ind);

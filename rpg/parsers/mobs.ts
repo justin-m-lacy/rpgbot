@@ -6,7 +6,7 @@ import { Weapon } from 'rpg/items/weapon';
 import { Mob } from 'rpg/monster/mobs';
 import { ParseValue } from 'rpg/parsers/values';
 import { TWritable } from 'rpg/util/type-utils';
-import { IsCoord, TCoord } from 'rpg/world/coord';
+import { IsCoord } from 'rpg/world/coord';
 import { Biome } from 'rpg/world/loc';
 import { Numeric } from '../values/types';
 
@@ -119,7 +119,7 @@ const parseTemplate = (data: RawMobData) => {
 
 }
 
-const create = (tpl: MobData, at: TCoord) => {
+const create = (tpl: MobData) => {
 
 	const m = new Mob(undefined, tpl);
 
@@ -152,13 +152,12 @@ const create = (tpl: MobData, at: TCoord) => {
 	}
 
 	m.hp.setTo(tpl.hp.valueOf())
-	m.at.setTo(at);
 
 	return m;
 
 }
 
-export const RandMonster = (lvl: number, at: TCoord, biome?: string) => {
+export const RandMonster = (lvl: number, biome?: string) => {
 
 	lvl = Math.floor(lvl);
 
@@ -176,7 +175,7 @@ export const RandMonster = (lvl: number, at: TCoord, biome?: string) => {
 				const mons = a[ind];
 				if (!mons.biome || mons.biome === biome ||
 					(Array.isArray(mons.biome) && mons.biome.includes(biome)))
-					return create(mons, at);
+					return create(mons);
 				ind = (ind + 1) % a.length;
 
 			} while (ind !== start);
@@ -188,9 +187,7 @@ export const RandMonster = (lvl: number, at: TCoord, biome?: string) => {
 	do {
 		const a = byLevel[lvl];
 		if (a?.length) return create(
-			a[Math.floor(a.length * Math.random())],
-			at
-		);
+			a[Math.floor(a.length * Math.random())]);
 
 	} while (--lvl >= 0);
 

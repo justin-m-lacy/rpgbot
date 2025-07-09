@@ -34,7 +34,7 @@ export const abbr = (it?: { name?: string }) => {
 export const smallNum = (v: Numeric) => {
 
   const val = +(v);
-  return (Math.floor(val) === val) ? val : precise(val);
+  return (Math.floor(val) === val) ? val : val.toFixed(1);
 }
 
 /**
@@ -42,7 +42,7 @@ export const smallNum = (v: Numeric) => {
  * @param v - number to display.
  * @param n - maximum rounding digits to display.
  */
-export const precise = (v: Numeric, n: number = 2): string => {
+export const precise = (v: Numeric, n: number = 1): string => {
 
   if (typeof v === 'object') v = v.value;
 

@@ -2,6 +2,7 @@ import { type ChatCommand } from "@/bot/cmd-wrapper";
 import { EmbedBuilder, MessageFlags, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
 import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
+import { smallNum } from "rpg/util/format";
 import { Char } from '../char/char';
 
 export const BlockText = (s: string) => '```' + s + '```';
@@ -66,8 +67,8 @@ export const EchoChar = async function (chan: ChatCommand, char: Char,
 export const CharLongDesc = (char: Char): string => {
 
 	let desc = `level ${char.level.value} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
-	desc += `\nage: ${char.age.valueOf()} sex: ${char.sex} gold: ${char.gold} exp: ${char.exp}/ ${getNextExp(char)}`;
-	desc += `\nhp: ${char.hp.valueOf()}/${char.hp.max.valueOf()} armor: ${char.armor.valueOf()}\n`;
+	desc += `\nage: ${smallNum(char.age)} sex: ${char.sex} gold: ${char.gold} exp: ${char.exp}/ ${getNextExp(char)}`;
+	desc += `\nhp: ${smallNum(char.hp)}/${smallNum(char.hp.max)} armor: ${smallNum(char.armor)}\n`;
 	desc += statString(char);
 
 	if (char.spentPoints < char.statPoints) desc += '\n' + (char.statPoints - char.spentPoints) + ' stat points available.';
