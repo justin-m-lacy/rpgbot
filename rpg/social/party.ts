@@ -34,7 +34,7 @@ export class Party extends SocialGroup {
 
 		super(cache);
 
-		this.roster = [leader.name];
+		this.roster.push(leader.id);
 
 		this.leader = leader.name;
 		this.name = this.leader + "'s Party";

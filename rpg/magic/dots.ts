@@ -182,7 +182,6 @@ export class Dot {
 
 			AddValues(char, this.dot, 1);
 			if (!char.isAlive()) {
-				char.log(`${char.name} slain by ${this.name}.`);
 
 				if (this.maker) {
 					game.fetchChar(this.maker).then((slayer) => {

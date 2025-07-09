@@ -7,30 +7,27 @@ import { Char } from '../char/char';
 export class SocialGroup {
 
 	/**
-	 * @property {string} leader - group leader.
+	 * @property leader - group leader.
 	 */
 	get leader() { return this._leader; }
 	set leader(v) { this._leader = v; }
 
 	/**
-	 * @property {string[]} roster - Names of characters in the group.
-	 */
-	get roster() { return this._roster; }
-	set roster(v) { this._roster = v; }
-
-	/**
-	 * @property {string[]} invites - Active invites to join the group.
-	 */
-	get invites() { return this._invites; }
-	set invites(v) { this._invites = v; }
-
-	/**
 	 * @property {string} name - Name of group.
 	 */
 	name?: string;
-	private _invites!: string[];
-	private _roster!: string[];
-	private _leader!: string;
+
+	/**
+	 * @property invites - Active invites to join the group.
+	 */
+	readonly invites: string[] = [];
+
+	/**
+	 * @property roster - Names of characters in the group.
+	 */
+	readonly roster: string[] = [];
+
+	private _leader: string = '';
 
 	readonly cache: Cache<Char>;
 
@@ -47,8 +44,8 @@ export class SocialGroup {
 
 		const name = typeof char === 'string' ? char : char.name;
 
-		if (this._invites.includes(name) || this._roster.includes(name)) return;
-		this._invites.push(name);
+		if (this.invites.includes(name) || this.roster.includes(name)) return;
+		this.invites.push(name);
 
 	}
 
@@ -91,14 +88,14 @@ export class SocialGroup {
 	leave(char: Char) {
 
 		const name = char.name;
-		const ind = this._roster.indexOf(name);
+		const ind = this.roster.indexOf(name);
 		if (ind >= 0) {
 
-			this._roster.splice(ind, 1);
-			if (this._roster.length === 0 ||
-				(this._roster.length === 1 && this._invites.length === 0)) return true;
+			this.roster.splice(ind, 1);
+			if (this.roster.length === 0 ||
+				(this.roster.length === 1 && this.invites.length === 0)) return true;
 
-			if (this._leader === name) this._leader = this._roster[0];
+			if (this._leader === name) this._leader = this.roster[0];
 
 		}
 		return false;
@@ -109,7 +106,7 @@ export class SocialGroup {
 	 * @param char
 	 */
 	includes(char: Char | string) {
-		return this._roster.includes(typeof char === 'string' ? char : char.name);
+		return this.roster.includes(typeof char === 'string' ? char : char.name);
 	}
 
 	isLeader(char: Char | string) { return this._leader === (typeof char === 'string' ? char : char.name); }
@@ -125,7 +122,7 @@ export class SocialGroup {
 	}
 
 	getList() {
-		return this.name + ":\n" + this._roster.join('\n');
+		return this.name + ":\n" + this.roster.join('\n');
 	}
 
 }

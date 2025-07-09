@@ -33,7 +33,7 @@ import * as Trade from './trade';
 import { DirVal, Loc, toDirection } from './world/loc';
 import { World } from "./world/world";
 
-const LOC_UPDATE_MS = 3000;
+const LOC_UPDATE_MS = 5000;
 
 export class Game<A extends Record<string, TGameAction> = Record<string, TGameAction>,
 	K extends string & keyof A = string & keyof A> {
@@ -312,7 +312,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		// log hit with first 'human' user.
 		logger.send(
-			`${attacker.toString()} hits ${char.name} with ${info.name} for ${info.dmg} damage.`
+			`${typeof attacker === 'string' ? attacker : attacker.name} hits ${char.name} with ${info.name} for ${info.dmg.toFixed(1)} damage.`
 		);
 		char.log(`hp: ${char.hp.valueOf()}/${char.hp.max.valueOf()}`);
 
@@ -328,6 +328,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (slayer instanceof Char) {
 			this.onSlay(slayer, char);
 		}
+
+		char.send(`${char.name} slain by ${typeof slayer === 'string' ? slayer : slayer.name}.`);
 
 		if (char instanceof Char) {
 
@@ -788,6 +790,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	revive(this: Game<A, K>, char: Char, targ: Char) {
 
 		if (targ.state !== 'dead') return `${targ.name} is not dead.`;
+
 		const p = this.getParty(char);
 		if (!p || !p.includes(targ)) return `${targ.name} is not in your party.`;
 
@@ -813,7 +816,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		} else char.rest();
 
-		return char.output(`${char.name} rested. hp: ${char.hp}/${char.hp.max}`);
+		return char.output(`${char.name} rested. hp: ${char.hp.value.toFixed(1)}/${char.hp.max}`);
 
 	}
 

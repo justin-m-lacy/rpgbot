@@ -18,6 +18,7 @@ export type MobData = {
 
 	biome?: Biome;
 
+	id: string;
 	name: string;
 	level: number;
 	kind?: string;
@@ -203,8 +204,7 @@ export const RandMonster = (lvl: number, at: TCoord, biome?: string) => {
  */
 export const DecodeMob = (json: any) => {
 
-	const proto = GetMob(json.proto);
-
+	const proto = GetMob(json.proto ?? json.name);
 	const m = new Mob(json.id, proto);
 
 	if (json.name) m.name = json.name;
@@ -227,7 +227,7 @@ export const DecodeMob = (json: any) => {
 
 	}
 
-	if (proto.weap) {
+	if (proto?.weap) {
 		m.attacks.push(Weapon.Decode(proto.weap));
 	}
 

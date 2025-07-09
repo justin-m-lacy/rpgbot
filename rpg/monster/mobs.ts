@@ -30,6 +30,7 @@ export class Mob {
 			toHit: this._toHit,
 			state: this._state != CharState.Alive ? this._state : undefined,
 			evil: this._evil ?? undefined,
+			proto: this.proto?.id
 			//weap: this.weap ?? undefined
 
 		};
