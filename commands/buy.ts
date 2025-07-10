@@ -10,7 +10,7 @@ export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('buy', 'Buy items from a shop')
 		.addStringOption(StrOpt('item', 'Item to buy').setRequired(true))
-		.addStringOption(StrOpt('shop', 'Shop to purchase from')),
+		.addStringOption(StrOpt('shop', 'Shop to buy from')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const item = m.options.getString('item', true);
@@ -20,14 +20,11 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const loc = await rpg.world.getLoc(char.at);
-		if (!loc) {
-			return SendPrivate(m, `You do not see a shop here.`);
-		}
 
 		let shop: Shop | Feature | null;
 
-		if (!shopName) {
-			const shops = loc.features.filter<Shop>(IsShop);
+		if (!shopName || !loc) {
+			const shops = loc?.features.filter<Shop>(IsShop) ?? [];
 			if (shops.length === 0) {
 				return SendPrivate(m, `You do not see a shop here.`);
 			} else if (shops.length > 1) {
@@ -52,9 +49,9 @@ export default NewCommand<Rpg>({
 			}
 		}
 
-		return SendPrivate(m,
-			await rpg.game.action('buy', char, shop, item)
-		);
+		await rpg.game.action('buy', char, shop, item)
+
+		return SendPrivate(m, char.flushLog());
 
 	}
-})
+});
