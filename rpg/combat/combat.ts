@@ -59,6 +59,7 @@ export class Combat {
 
 		if (!targ?.isAlive()) {
 			(char instanceof Char ? char : targ).log(`${targ.name} is already dead.`);
+			return;
 		}
 
 		(targ instanceof Char ? targ : char).send(
@@ -87,11 +88,6 @@ export class Combat {
 	 * @param targ 
 	 */
 	doAttack(char: TActor, act: TCombatAction, targ: Actor | Mob) {
-
-		if (!targ.isAlive()) {
-			char.log(`${targ.name} is already dead`);
-			return false;
-		}
 
 		if (targ.isImmune(act.kind)) {
 			char.log(`${targ.name} is immune to ${act.kind}`);
