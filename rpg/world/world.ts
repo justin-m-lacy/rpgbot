@@ -100,9 +100,9 @@ export class World {
 		const loc = await this.getOrGen(char.at, char);
 
 		const f = typeof wot !== 'object' ? loc.getFeature(wot) : wot;
-		if (!f) char.log('You do not see any such thing here.');
-
-		if (!f.use(char)) {
+		if (!f) {
+			char.log('You do not see any such thing here.');
+		} else if (!f.use(char)) {
 			char.log('Nothing seems to happen.');
 		}
 
@@ -314,6 +314,11 @@ export class World {
 
 			this.quickSave(dest);
 
+		}
+
+		const feats = dest.features;
+		for (let i = feats.length - 1; i >= 0; i--) {
+			feats[i].onEnter?.(feats[i], char, dest);
 		}
 
 		char.at.setTo(dest.coord);

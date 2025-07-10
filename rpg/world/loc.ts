@@ -3,6 +3,7 @@ import type { ItemIndex } from "rpg/items/container";
 import { DecodeItem } from "rpg/parsers/items";
 import { DecodeMob } from "rpg/parsers/mobs";
 import { quickSplice } from "rpg/util/array";
+import { FindIndex } from "rpg/util/items";
 import { IsInt } from "rpg/util/parse";
 import { Coord } from "rpg/world/coord";
 import { Char } from '../char/char';
@@ -162,7 +163,7 @@ export class Loc {
 	private _owner?: string;
 	time?: number;
 
-	readonly features: Inventory<Feature>;
+	readonly features: Feature[] = [];
 
 	readonly coord: Coord;
 
@@ -187,7 +188,6 @@ export class Loc {
 
 		this.id = coord.x + '_' + coord.y;
 
-		this.features = new Inventory();
 		this.inv = new Inventory();
 
 	}
@@ -232,10 +232,13 @@ export class Loc {
 			console.error(`No exits: ${json}`);
 		}
 
-		if (json.features) {
-			Inventory.Decode<Feature>(
-				json.features, Feature.Decode, loc.features
-			);
+		if (json.features && Array.isArray(json.features)) {
+
+			for (let i = 0; i < json.features.length; i++) {
+				const f = Feature.Decode(json.features[i]);
+				if (f) loc.features.push(f);
+			}
+
 		}
 		if (json.attach) loc.embed = json.attach;
 
@@ -346,7 +349,7 @@ export class Loc {
 		if (this.embed && imgTag) r += ' [img]';
 		r += '\n' + this.desc;
 
-		if (this.features.count > 0) r += '\nFeatures: ' + ItemList(this.features);
+		if (this.features.length > 0) r += '\nFeatures: ' + ItemList(this.features);
 		r += '\nOn ground: ' + ItemList(this.inv);
 
 
@@ -383,7 +386,7 @@ export class Loc {
 
 		let f: Feature | null;
 		if (typeof wot !== 'object') {
-			f = this.features.get(wot) as Feature;
+			f = FindIndex(this.features, wot);
 			if (!f) return false;
 		} else {
 			f = wot;
@@ -397,13 +400,13 @@ export class Loc {
 	 *
 	 * @param f
 	 */
-	addFeature(f: Feature | null) { if (f) this.features.add(f); }
+	addFeature(f: Feature | null) { if (f) this.features.push(f); }
 
 	/**
 	 *
 	 * @param wot
 	 */
-	getFeature(wot: string | number) { return this.features.get(wot) as Feature; }
+	getFeature(wot: string | number) { return FindIndex(this.features, wot); }
 
 	/**
 	 * Get item data without taking it.

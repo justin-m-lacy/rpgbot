@@ -1,5 +1,6 @@
 import { ItemData, ItemType } from 'rpg/items/types';
 import { Action, GetAction } from 'rpg/magic/action';
+import { type Loc } from 'rpg/world/loc';
 import { Char } from '../char/char';
 import { Item } from '../items/item';
 
@@ -43,6 +44,13 @@ export class Feature extends Item {
 	constructor(name: string, desc: string) {
 		super(undefined, { name: name, desc: desc, type: ItemType.Feature });
 	}
+
+	/**
+	 * override func for char enter location.
+	 * @param char
+	 * @param loc 
+	 */
+	onEnter?: (f: typeof this, char: Char, loc: Loc) => void;
 
 	use(char: Char) {
 

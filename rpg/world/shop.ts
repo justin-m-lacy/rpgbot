@@ -5,6 +5,7 @@ import { Item } from "rpg/items/item";
 import { ItemData } from "rpg/items/types";
 import { PayOrFail } from "rpg/trade";
 import { Feature } from "rpg/world/feature";
+import { Loc } from "rpg/world/loc";
 
 type SaleItem = ItemData & { price: number };
 
@@ -15,10 +16,10 @@ export class Shop<T extends Item> extends Feature {
 	/**
 	 * function for restocking inventory.
 	 */
-	genFunc?: (lvl: number) => T;
+	genItem?: (lvl: number) => T;
 
 	constructor(name: string,
-		opts: { level?: number, kind: string, desc?: string, gen?: (lvl: number) => T }
+		opts: { level?: number, kind: string, desc?: string, genItem?: (lvl: number) => T }
 	) {
 
 		super(name, opts.desc ?? `${opts.kind} Shop`);
@@ -62,10 +63,30 @@ export class Shop<T extends Item> extends Feature {
 
 	}
 
+	onEnter = (shop: Shop<T>, char: Char, loc: Loc) => {
+		if (Math.random() < 0.1) {
+			shop.restock();
+		}
+	}
+
 	/**
 	 * restock inventory
 	 */
 	restock() {
+
+		if (!this.genItem) return;
+
+		while (this.inv.count < 10) {
+
+			const item = this.genItem(this.level);
+			if (item) {
+				this.inv.add(item);
+			} else {
+				break;
+			}
+			if (Math.random() < 0.05) break;
+		}
+
 	}
 
 }
