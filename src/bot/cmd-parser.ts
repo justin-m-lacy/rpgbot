@@ -3,7 +3,7 @@ import type { Command } from "@/bot/command";
 import { ApplicationCommandOptionBase, ApplicationCommandOptionType } from "discord.js";
 import { NotEnoughArgs } from "rpg/util/errors";
 
-//const splitter = /\s+/gi;
+const splitter = /(\'|\w+)|"([^"]+)"|“([^”“]+)”/gi;
 
 const ParseOpType = (text: string, type: ApplicationCommandOptionType) => {
 	if (type === ApplicationCommandOptionType.String) {
@@ -32,7 +32,13 @@ export class CmdParser {
 
 		if (cmd.maxArgs === 0) return [];
 
-		const parts = text.split(' ');
+		const parts: string[] = [];
+		let p: RegExpExecArray | null;
+		while (p = splitter.exec(text)) {
+			parts.push(p[1] ?? p[2] ?? p[3]);
+		}
+		if (parts.length == 0) parts.push(text);
+
 		if (parts.length < cmd.minArgs) {
 			throw new NotEnoughArgs(cmd.id, parts.length, cmd.minArgs);
 		}
@@ -79,6 +85,7 @@ export class CmdParser {
 				raw = parts.slice(partInd, partInd + excess + 1).join(' ');
 				/// ind: +1 below, + excess parts
 				partInd += excess;
+				excess = 0;
 			} else {
 				raw = parts[partInd];
 			}
@@ -113,6 +120,7 @@ export class CmdParser {
 				raw = parts.slice(partInd - excess, partInd + 1).join(' ');
 				/// ind: +1 below, + excess parts
 				partInd -= excess;
+				excess = 0;
 			} else {
 				raw = parts[partInd];
 			}

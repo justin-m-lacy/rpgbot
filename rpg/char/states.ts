@@ -17,7 +17,7 @@ export enum StatusFlags {
 	nospells = 8,
 	confused = 16,
 	charmed = 32,
-	stealth = 64,
+	hidden = 64,
 }
 
 export const ParseStateFlags = (list: (keyof typeof StatusFlags)[] | string) => {

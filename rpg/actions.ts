@@ -24,6 +24,7 @@ export const Blockers: Partial<{ [P in CharState]: Record<string, number> }> = {
 	dead: {
 		attack: 1,
 		brew: 1,
+		cast: 1,
 		destroy: 1,
 		drop: 1,
 		eat: 1,

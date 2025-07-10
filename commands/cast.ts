@@ -23,9 +23,10 @@ export default NewCommand<Rpg>({
 		}
 
 		const spell = GetSpell(spellName);
+
 		//char.spelllist.find(spellName);
 		if (spell == null) {
-			return SendPrivate(m, `You do not know the spell, ${spellName}`);
+			return SendPrivate(m, `You do not know the spell ${spellName}`);
 		}
 
 		const at = m.options.getString('at');

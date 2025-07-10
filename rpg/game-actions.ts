@@ -66,6 +66,11 @@ export const GameActions = {
 		exec: Game.prototype.hike,
 		rest: 0
 	},
+	hide: {
+		tick: true,
+		exec: Game.prototype.hide,
+		rest: 0.1
+	},
 	home: {
 		tick: true,
 		exec: Game.prototype.goHome,

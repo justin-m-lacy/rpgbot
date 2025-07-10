@@ -279,9 +279,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		// single target.
 		if (targ) {
 
-			this.combat.doAttack(char, spell, targ);
-			if (targ instanceof Mob) {
-				this.setLiveLoc(char.at);
+			if (targ.isAlive()) {
+				this.combat.doAttack(char, spell, targ);
+				if (targ instanceof Mob) {
+					this.setLiveLoc(char.at);
+				}
+			} else {
+				char.log(`${targ.name} is already dead.`);
 			}
 
 		} else if (spell.target & TargetFlags.mult) {
@@ -569,6 +573,44 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		}
 
 		return to;
+
+	}
+
+	async hide(this: Game<A, K>, char: Char) {
+
+		const loc = await this.world.getLoc(char.at);
+
+		if (loc) {
+
+			let spotter: TActor | null = null;
+			for (let i = loc.npcs.length - 1; i >= 0; i--) {
+				// -10 for hiding in view.
+				if (this.combat.spotTest(char, loc.npcs[i], -10)) {
+					spotter = loc.npcs[i];
+					break;
+				}
+			}
+			if (!spotter) {
+				for (let i = loc.chars.length - 1; i >= 0; i--) {
+
+					const other = this.getChar(loc.chars[i])
+					if (other && this.combat.spotTest(char, other), -10) {
+						spotter = other ?? null;
+						break;
+					}
+
+				}
+			}
+			if (spotter) {
+				char.send(`${char.name} was spotted by ${spotter.name}.`);
+				return;
+			}
+
+		}
+
+		char.flags |= StatusFlags.hidden;
+		char.log(`${char.name} is moving steathily.`);
+
 
 	}
 

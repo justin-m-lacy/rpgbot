@@ -38,10 +38,11 @@ export class Combat {
 	 * Test if one character can see a hiding character.
 	 * @param hider
 	 * @param looker 
+	 * @param mod - extra modifier for hider
 	 */
-	spotTest(hider: Char, looker: TActor) {
+	spotTest(hider: Char, looker: TActor, mod: number = 0) {
 
-		const def = hider.statRoll('dex', 'wis') + (hider.hasTalent('stealth') ? 10 : 0);
+		const def = hider.statRoll('dex', 'wis') + (hider.hasTalent('stealth') ? 10 : 0) + mod;
 		const atk = looker.statRoll('wis') + (looker.hasTalent('track') ? 10 : 0);
 		return Math.random() * atk > Math.random() * def;
 

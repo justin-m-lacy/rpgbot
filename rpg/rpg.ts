@@ -122,7 +122,14 @@ export class Rpg {
 	private async updateCharInfo(char: Char) {
 
 		const userData = await this.getUserData(char.owner);
-		userData.chars[char.name].level = char.level.valueOf();
+		if (!userData.chars[char.id]) {
+			userData.chars[char.id] ??= {
+				id: char.id,
+				level: char.level.valueOf()
+			}
+		} else {
+			userData.chars[char.id].level = char.level.valueOf();
+		}
 
 	}
 

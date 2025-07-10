@@ -4,7 +4,7 @@ export type UserData = {
 	id: string;
 
 	// chars on server.
-	chars: Record<string, { name: string, level: number }>;
+	chars: Record<string, { id: string, level: number }>;
 
 	// name of last loaded char.
 	curChar: string | null;

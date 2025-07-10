@@ -56,10 +56,10 @@ export const LoadSpells = async () => {
 	)).default;
 	for (let i = spellDatas.length - 1; i >= 0; i--) {
 		const sp = Spells[spellDatas[i].id] = ParseSpell(spellDatas[i] as any);
-		Spells[sp.name] = sp;
+		Spells[sp.name.toLowerCase()] = sp;
 	}
 
 }
 
 
-export const GetSpell = (s: string) => Spells[s];
+export const GetSpell = (s: string) => Spells[s.toLowerCase()];

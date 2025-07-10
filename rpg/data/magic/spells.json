@@ -8,7 +8,7 @@
         }
     },
     {
-        "id": "magic_missile",
+        "id": "mmissile",
         "name": "Magic Missile",
         "alias": "mm",
         "target": "any",

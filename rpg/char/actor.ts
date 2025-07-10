@@ -20,7 +20,7 @@ export class Actor {
 
 	getStatus() { return `${this.hp.value}/${this.hp.max} [${this.state}]` }
 
-	isAlive() { return (this.flags & StatusFlags.alive) > 0; }
+	isAlive() { return this._state === CharState.Alive }
 	/**
 	 * messy text-based state. flags makes it harder to test for blockers.
 	 * in theory could have states that set multiple flags, as well as
@@ -32,7 +32,7 @@ export class Actor {
 	set state(v) {
 		this._state = v;
 		if (v === CharState.Dead) {
-			this.flags &= ~StatusFlags.alive;
+			this.flags &= (~StatusFlags.alive);
 		} else {
 			this.flags |= StatusFlags.alive;
 		}
