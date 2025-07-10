@@ -835,7 +835,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		return char.output(await this.world.take(char, first, end));
 	}
 
-	revive(this: Game<A, K>, char: Char, targ: Char) {
+	async revive(this: Game<A, K>, char: Char, targ: Char) {
 
 		if (targ.state !== 'dead') return `${targ.name} is not dead.`;
 

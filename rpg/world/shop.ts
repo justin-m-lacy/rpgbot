@@ -113,9 +113,9 @@ export class Shop<T extends Item = Item> extends Feature {
 
 	}
 
-	onEnter = (shop: Shop<T>, char: Char, _: Loc) => {
+	onEnter = (shop: Feature, _char: Char, _loc: Loc) => {
 		if (Math.random() < 0.1) {
-			shop.restock();
+			(shop as Shop<T>).restock();
 		}
 	}
 

@@ -400,7 +400,7 @@ export class Loc {
 	 *
 	 * @param f
 	 */
-	addFeature(f: Feature | null) { if (f) this.features.push(f); }
+	addFeature<T extends Feature>(f: T | null) { if (f) this.features.push(f); }
 
 	/**
 	 *

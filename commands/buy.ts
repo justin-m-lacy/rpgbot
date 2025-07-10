@@ -20,7 +20,6 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const loc = await rpg.world.getLoc(char.at);
-
 		let shop: Shop | Feature | null;
 
 		if (!shopName || !loc) {

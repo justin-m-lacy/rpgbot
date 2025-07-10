@@ -1,7 +1,10 @@
 
 import { randElm } from '@/utils/jsutils';
+import { GenShop } from 'rpg/builders/shopgen';
+import { DecodeFeature } from 'rpg/parsers/items';
+import { Feature } from 'rpg/world/feature';
+import { Biome, Loc } from 'rpg/world/loc';
 import FeatureData from '../data/world/features.json';
-import { Feature } from '../world/feature';
 
 const byName: { [key: string]: typeof FeatureData[number] } = {};
 
@@ -10,7 +13,7 @@ const byName: { [key: string]: typeof FeatureData[number] } = {};
  * @param s
  */
 export const GenFeature = (s: string) => {
-	return byName[s] ? Feature.Decode(byName[s]) : null;
+	return byName[s] ? DecodeFeature(byName[s]) : null;
 }
 
 
@@ -22,6 +25,20 @@ export function InitFeatures() {
 
 }
 
-export const RandFeature = () => {
-	return Feature.Decode(randElm(FeatureData));
+export const RandFeature = (loc: Loc): Feature => {
+
+	if (loc.biome === Biome.TOWN) {
+
+		if (Math.random() < 0.5) {
+			return GenShop(loc.biome, (loc.norm) / 15);
+		}
+
+	} else {
+		if (Math.random() < 0.1) {
+			return GenShop(loc.biome, (loc.norm) / 15);
+		}
+	}
+
+	return DecodeFeature(randElm(FeatureData));
+
 }

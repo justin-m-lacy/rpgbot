@@ -29,7 +29,7 @@ export const GenLoc = (coord: Coord, from?: Loc, exits?: Exit[]): Loc => {
 	}
 
 	while (Math.random() < 0.1) {
-		loc.addFeature(RandFeature());
+		loc.addFeature(RandFeature(loc));
 	}
 
 	return loc;

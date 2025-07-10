@@ -1,5 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import { SendPrivate } from "@/utils/display";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -17,6 +18,14 @@ export default NewCommand<Rpg>({
 		if (!who && char.isAlive()) {
 
 			// get char list at location.
+			const loc = await rpg.world.getLoc(char.at);
+			const shrine = loc?.getFeature('shrine');
+			if (shrine) {
+				await rpg.game.action('useloc', char, 'shrine');
+				return SendPrivate(m, char.flushLog());
+			} else {
+				return SendPrivate(m, `You may only revive yourself at a shrine.`);
+			}
 
 		}
 
