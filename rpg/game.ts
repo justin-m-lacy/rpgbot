@@ -30,7 +30,7 @@ import { Mob, TActor } from './monster/mobs';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
-import { DirVal, Loc, toDirection } from './world/loc';
+import { DirVal, Loc, toDirection, ToDirStr } from './world/loc';
 import { World } from "./world/world";
 
 const LOC_UPDATE_MS = 10000;
@@ -534,11 +534,17 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async move(this: Game<A, K>, char: Char, dir: string) {
+	async move(this: Game<A, K>, char: Char, dir: DirVal) {
 
 		const from = await this.world.getOrGen(char.at);
-		const to = await this.world.tryMove(char, from, toDirection(dir));
-		if (!to) return;
+
+		const toCoord = from.getExit(dir)?.to;
+		if (!toCoord) {
+			char.log(`There is no path ${ToDirStr(dir)}`);
+			return;
+		}
+
+		const to = await this.world.move(char, from, toCoord);
 
 		char.log(char.name + ' is' + to.look(char));
 

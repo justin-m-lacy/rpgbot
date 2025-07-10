@@ -9,7 +9,7 @@ import { Item } from '../items/item';
 import { Mob } from '../monster/mobs';
 import Block from './block';
 import { Feature } from './feature';
-import { DirString, DirVal, Exit, Loc, ToDirStr } from './loc';
+import { DirString, DirVal, Exit, Loc } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching of existing world data.
@@ -129,8 +129,8 @@ export class World {
 
 	async hike(char: Char, dir: DirString) {
 
-		const coord = char.at || new Coord(0, 0);
-		let loc;
+		const coord = char.at;
+		let loc: Loc;
 
 		switch (dir) {
 			case 'n':
@@ -153,8 +153,7 @@ export class World {
 				return;
 		}
 
-		char.at.setTo(loc.coord);
-		return loc;
+		return this.move(char, await this.getOrGen(char.at, char), loc);
 
 	}
 
@@ -291,17 +290,9 @@ export class World {
 	 * @param dir - move direction.
 	 * @returns new Loc or error string.
 	 */
-	async tryMove(char: Char, from: Loc, dir: DirVal): Promise<Loc | null> {
-
-		const to = from.getExit(dir)?.to;
-
-		if (!to) {
-			char.log(`There is no path ${ToDirStr(dir)}`);
-			return null;
-		}
+	async move(char: Char, from: Loc, to: TCoord): Promise<Loc> {
 
 		let dest = await this.getLoc(to);
-
 		if (dest == null) {
 
 			const exits = await this.getRandExits(to);
@@ -461,7 +452,7 @@ export class World {
 	 * @param y
 	 * @returns all exits allowed from this location.
 	 */
-	private async getRandExits({ x, y }: Coord) {
+	private async getRandExits({ x, y }: TCoord) {
 		return Promise.all([
 			this.getExitTo(new Coord(x - 1, y), 'w'),
 			this.getExitTo(new Coord(x + 1, y), 'e'),

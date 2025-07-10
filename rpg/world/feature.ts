@@ -6,13 +6,10 @@ import { Item } from '../items/item';
 
 export class Feature extends Item {
 
-	get fb() { return this._fb; }
-	set fb(b) { this._fb = b; }
-
 	/**
 	 * feedback when using item.
 	 */
-	private _fb?: string;
+	fb?: string;
 
 	static Decode(
 		json: ItemData & { desc: string, action?: string, fb?: string }) {
@@ -54,8 +51,8 @@ export class Feature extends Item {
 
 	use(char: Char) {
 
-		if (this._fb) {
-			char.send(this._fb.replace('%c', char.name) + ' ');
+		if (this.fb) {
+			char.send(this.fb.replace('%c', char.name) + ' ');
 		}
 
 		if (this.action) {
