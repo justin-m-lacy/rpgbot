@@ -1,5 +1,7 @@
 import Cache from 'archcache';
 import { GenFeature } from 'rpg/builders/features';
+import { GenShop } from 'rpg/builders/shopgen';
+import { ItemType } from 'rpg/items/types';
 import { RandMonster } from 'rpg/parsers/mobs';
 import { Coord, TCoord } from 'rpg/world/coord';
 import { GenLoc } from 'rpg/world/worldgen';
@@ -35,6 +37,9 @@ export class World {
 		const st = await this.getOrGen(new Coord(0, 0));
 		if (!st.getFeature('shrine')) {
 			st.addFeature(GenFeature('shrine'));
+		}
+		if (!st.features.find(f => f.type === ItemType.Shop)) {
+			st.addFeature(GenShop(st.biome, 1));
 		}
 	}
 
@@ -169,6 +174,27 @@ export class World {
 
 		loc.setMaker(char.name);
 		return 'You are the first to explore ' + loc.coord;
+
+	}
+
+	/**
+	 * View feature at location.
+	 * @param char 
+	 * @param what 
+	 * @returns 
+	 */
+	async viewloc(char: Char, what?: string | number | null) {
+
+		const loc = await this.getOrGen(char.at);
+		if (what) {
+
+			const it = loc.getFeature(what);
+			if (!it) { return 'You do not see that here.'; }
+			return it.getView(char);
+
+		}
+		if (loc.embed) return [char.name + ' is' + loc.look(), loc.embed];
+		else return char.name + ' is ' + loc.look();
 
 	}
 

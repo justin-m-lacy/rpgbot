@@ -14,6 +14,7 @@ import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
 import { ItemType } from 'rpg/items/types';
+import { HumanSlot } from 'rpg/items/wearable';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
@@ -26,7 +27,6 @@ import { Char } from './char/char';
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
-import { Wearable } from './items/wearable';
 import { Mob, TActor } from './monster/mobs';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
@@ -750,13 +750,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		const it = char.getItem(wot) as Item | undefined;
 		if (!it) return 'Item not found.';
 
-		let res = 'In Pack: ' + it.getDetails() + '\n';
-		if (it instanceof Wearable) {
-			const eq = char.getEquip(it.slot);
+		let res = 'In Pack: ' + it.getDetails(char) + '\n';
+		if ('slot' in it) {
+			const eq = char.getEquip(it.slot as HumanSlot);
 
 			if (!eq) res += 'Equip: nothing';
 			else if (Array.isArray(eq)) res += 'Equip: ' + Item.DetailsList(eq);
-			else res += 'Equip: ' + eq.getDetails();
+			else res += 'Equip: ' + eq.getDetails(char);
 		} else {
 			res += `${it.name} cannot be equipped.\n`;
 		}

@@ -1,3 +1,4 @@
+import { Char } from 'rpg/char/char';
 import { TCombatAction } from 'rpg/combat/types';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { ParseValue } from 'rpg/parsers/values';
@@ -53,8 +54,8 @@ export class Weapon extends Wearable implements TCombatAction {
 		this.type = ItemType.Weapon;
 	}
 
-	getDetails() {
-		return `${this.name} dmg: ${this.dmg} hitBonus: ${this.toHit} price: ${this.price}\n` + super.getDetails();
+	getDetails(char?: Char) {
+		return `${this.name} dmg: ${this.dmg} hitBonus: ${this.toHit} price: ${this.price}\n` + super.getDetails(char);
 	}
 
 	/**

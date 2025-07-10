@@ -95,7 +95,7 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, 'Item not found');
 		}
 
-		return ReplyBlock(m, item.getDetails(), {
+		return ReplyBlock(m, item.getDetails(char), {
 			components: [WorldItemActions(item)]
 		});
 

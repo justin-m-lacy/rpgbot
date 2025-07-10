@@ -96,14 +96,14 @@ export class Item {
 	 */
 	onTake(char: Char): Item | null | undefined { return this }
 
-	getView(): [string, string | undefined] {
-		return [this.getDetails(false), this._embed];
+	getView(char?: Char): [string, string | undefined] {
+		return [this.getDetails(char, false), this._embed];
 	}
 
 	/**
 	 * @returns detailed string description of item.
 	*/
-	getDetails(imgTag = true) {
+	getDetails(viewer?: Char, imgTag = true) {
 
 		let s = this.name;
 		if (this.desc) s += ': ' + this.desc;

@@ -3,7 +3,7 @@ import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
-import { ItemData } from 'rpg/items/types';
+import { ItemData, ItemType } from 'rpg/items/types';
 import { GenArmor } from 'rpg/parsers/armor';
 import { DecodeItem } from 'rpg/parsers/items';
 import { GenWeapon } from 'rpg/parsers/weapon';
@@ -25,8 +25,8 @@ const JunkItems: RawItemData[] = [];
 
 const ItemTypeGen: Record<string, (lvl?: number) => Item | null> = {
 
-	'weapon': GenWeapon,
-	'armor': GenArmor
+	[ItemType.Weapon]: GenWeapon,
+	[ItemType.Armor]: GenArmor
 }
 
 export const InitItems = async () => {

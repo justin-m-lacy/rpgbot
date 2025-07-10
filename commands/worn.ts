@@ -25,7 +25,7 @@ export default NewCommand<Rpg>({
 
 				let r = '';
 				for (let i = item.length - 1; i >= 0; i--) {
-					r += item[i].getDetails() + '\n';
+					r += item[i].getDetails(char) + '\n';
 				}
 				return SendPrivate(m, r);
 

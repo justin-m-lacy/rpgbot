@@ -1,3 +1,4 @@
+import { Char } from "rpg/char/char";
 import { MenuList } from "rpg/display/items";
 import { Item } from "rpg/items/item";
 import { ItemType } from "rpg/items/types";
@@ -44,9 +45,9 @@ export class Grimoire extends Item {
 
 	}
 
-	getView(): [string, string | undefined] {
+	getView(char?: Char): [string, string | undefined] {
 		return [
-			super.getDetails() + '\n' +
+			super.getDetails(char) + '\n' +
 			MenuList(this.spells),
 			undefined];
 	}

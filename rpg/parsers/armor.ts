@@ -1,10 +1,13 @@
 
 import { AddProtoItem } from 'rpg/builders/itemgen';
+import { DamageSrc } from 'rpg/formulas';
 import { Item } from 'rpg/items/item';
 import { RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
+import { Weapon } from 'rpg/items/weapon';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
+import { ParseValue } from 'rpg/parsers/values';
 import BaseArmors from '../data/items/armors.json';
 
 type RawArmorData = ItemData & (typeof BaseArmors)[number];
@@ -25,6 +28,26 @@ export const DecodeWearable = (json: any) => {
 	}
 
 	return Item.InitData(json, a);
+}
+
+export const DecodeWeapon = (tmp: any) => {
+
+	const dmg = new DamageSrc(
+		ParseValue('dmg', tmp.dmg), tmp.type
+	);
+	const w = new Weapon(tmp.id, tmp.name, dmg, tmp.desc);
+	if (tmp.mods) w.mods = ParseMods(tmp.mods, w.id);
+
+	w.toHit = tmp.hit || 0;
+	w.material = tmp.material;
+	w.slot = tmp.slot ?? 'hands';
+	w.armor = tmp.armor;
+
+	if (tmp.mods) {
+		w.mods = ParseMods(tmp.mods, w.id);
+	}
+
+	return Item.InitData(tmp, w);
 }
 
 export const GenArmor = (lvl?: number, slot?: HumanSlot | null) => {

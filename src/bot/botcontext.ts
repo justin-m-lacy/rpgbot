@@ -402,7 +402,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 			}
 		}
 
-		return cmd.exec(it, target, ...args);
+		return cmd.exec(it, target, ...args)?.catch(e => console.error(e));
 
 	}
 

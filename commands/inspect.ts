@@ -23,7 +23,7 @@ export default NewCommand<Rpg>({
 		let item = char.getItem(what);
 		if (Array.isArray(item)) item = item[0];
 		if (!item) return SendPrivate(m, 'Item not found.');
-		return SendPrivate(m, item.getDetails(), {
+		return SendPrivate(m, item.getDetails(char), {
 			components: [CharItemActions(item)]
 		});
 

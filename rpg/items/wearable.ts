@@ -1,3 +1,4 @@
+import { Char } from 'rpg/char/char';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
 import { Path } from 'rpg/values/paths';
@@ -103,8 +104,8 @@ export class Wearable extends Item {
 
 	}
 
-	getDetails() {
-		return this.name + '\t armor: ' + this.armor + '\t price: ' + this.price + '\n' + super.getDetails();
+	getDetails(char?: Char) {
+		return this.name + '\t armor: ' + this.armor + '\t price: ' + this.price + '\n' + super.getDetails(char);
 	}
 
 

@@ -32,6 +32,8 @@ export class Shop<T extends Item = Item> extends Feature {
 
 		super(name, opts.desc ?? `${opts.kind} Shop`);
 
+		this.genItem = opts.genItem;
+
 		this.level = opts.level ?? 0;
 		this.type = ItemType.Shop;
 
@@ -55,7 +57,9 @@ export class Shop<T extends Item = Item> extends Feature {
 		}
 
 		if (item.price) {
-			if (!PayOrFail(char, item.price)) {
+			if (!PayOrFail(
+				char, this.buyCost(item, GetTradeMod(char))
+			)) {
 				char.log(`${char.name} cannot afford ${item.name}`);
 				return false;
 			}
@@ -75,8 +79,18 @@ export class Shop<T extends Item = Item> extends Feature {
 	 * @param it 
 	 * @param mod 
 	 */
-	private sellGold(it: Item, mod: number) {
+	private sellCost(it: Item, mod: number) {
 		return Math.max(Math.ceil(it.price * (1 + 0.1 * mod)), 0);
+	}
+
+	/**
+	 * Modified price to buy item.
+	 * @param it 
+	 * @param mod 
+	 * @returns 
+	 */
+	private buyCost(it: Item, mod: number) {
+		return Math.max(Math.ceil(it.price * (10 - 0.05 * mod)), 1);
 	}
 
 	sellRange(char: Char, ind: ItemIndex, end: ItemIndex) {
@@ -90,7 +104,7 @@ export class Shop<T extends Item = Item> extends Feature {
 		const mod = GetTradeMod(char);
 		let gold = 0;
 		for (let i = items.length - 1; i >= 0; i--) {
-			gold += this.sellGold(items[i], mod);
+			gold += this.sellCost(items[i], mod);
 		}
 
 		char.addGold(gold);
@@ -106,7 +120,7 @@ export class Shop<T extends Item = Item> extends Feature {
 		}
 		this.inv.add(it);
 
-		const gold = this.sellGold(it, GetTradeMod(char));
+		const gold = this.sellCost(it, GetTradeMod(char));
 
 		char.addGold(gold);
 		char.log(it.name + ' sold for ' + gold + ' gold.');
@@ -124,8 +138,12 @@ export class Shop<T extends Item = Item> extends Feature {
 	 */
 	restock() {
 
-		if (!this.genItem) return;
+		if (!this.genItem) {
+			console.log(`cant restock no gen`);
+			return this;
+		}
 
+		console.log(`restocking...`);
 		while (this.inv.count < 10) {
 
 			const item = this.genItem(this.level);
@@ -137,6 +155,19 @@ export class Shop<T extends Item = Item> extends Feature {
 			if (Math.random() < 0.05) break;
 		}
 
+		return this;
+	}
+
+	getDetails(char?: Char, imgTag?: boolean): string {
+
+		const mod = char ? GetTradeMod(char) : 1;
+
+		if (this.inv.count === 0) {
+			return super.getDetails(char) + '\nThe shop is empty.'
+		}
+		return this.inv.items.map((v, ind) => {
+			return `${ind + 1}) ${v.name}\t\t${this.buyCost(v, mod)}`
+		}).join('\n')
 	}
 
 }

@@ -1,3 +1,4 @@
+import { Char } from 'rpg/char/char';
 import { ItemMenu } from 'rpg/display/items';
 import type { ItemIndex } from 'rpg/items/container';
 import { ItemType } from 'rpg/items/types';
@@ -60,8 +61,8 @@ export class Chest extends Item implements IInventory {
 		return this._inv.takeRange(start, end);
 	}
 
-	getDetails() {
-		return ItemMenu(this._inv) + '\n' + super.getDetails();
+	getDetails(char?: Char) {
+		return ItemMenu(this._inv) + '\n' + super.getDetails(char);
 	}
 
 	/**

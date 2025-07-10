@@ -5,8 +5,8 @@ import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: CommandData('view', 'View location or item at location')
-		.addStringOption(StrOpt('what', 'Item to view.')),
+	data: CommandData('viewloc', 'View feature at location')
+		.addStringOption(StrOpt('what', 'Feature to view.')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.myCharOrErr(m, m.user);
@@ -14,7 +14,7 @@ export default NewCommand<Rpg>({
 
 		const what = m.options.getString('what');
 
-		const info = await rpg.world.view(char, what);
+		const info = await rpg.world.viewloc(char, what);
 
 		if (typeof (info) === 'string') await SendBlock(m, info);
 		else SendEmbed(m, info[0], info[1]);

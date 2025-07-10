@@ -81,8 +81,9 @@ export class Grave extends Item {
 
 	}
 
-	getDetails(imgTag = true) {
-		return super.getDetails() + '\n' + this.epitaph;
+	getDetails(char?: Char, imgTag = true) {
+		return (super.getDetails(char) + '\n' + this.epitaph) +
+			(char?.id == this.char ? 'Oh god... Is that.. me?' : '');
 	}
 
 }

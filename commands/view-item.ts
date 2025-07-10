@@ -20,7 +20,7 @@ export default NewCommand<Rpg>({
 		const item = char.getItem(what);
 		if (!item) return SendPrivate(m, 'Item not found.');
 
-		const view = Array.isArray(item) ? item[0].getView() : item.getView();
+		const view = Array.isArray(item) ? item[0].getView(char) : item.getView(char);
 		if (view[1]) {
 
 			return ReplyEmbed(m, view[1], view[0]);
