@@ -3,11 +3,15 @@ import { Inventory } from "rpg/inventory";
 import { ItemIndex } from "rpg/items/container";
 import { Item } from "rpg/items/item";
 import { ItemData, ItemType } from "rpg/items/types";
-import { PayOrFail } from "rpg/trade";
+import { GetTradeMod, PayOrFail } from "rpg/trade";
 import { Feature } from "rpg/world/feature";
 import { Loc } from "rpg/world/loc";
 
 type SaleItem = ItemData & { price: number };
+
+export const IsShop = (t: Item): t is Shop => {
+	return t.type === ItemType.Shop;
+}
 
 export class Shop<T extends Item = Item> extends Feature {
 
@@ -46,29 +50,70 @@ export class Shop<T extends Item = Item> extends Feature {
 
 		const item = this.inv.get(which);
 		if (!item) {
-			char.log(`Item not found: ${which}`);
-			return -1;
+			char.log(`Item ${which} not found in ${this.name}`);
+			return false;
 		}
 
 		if (item.price) {
-			if (!PayOrFail(char, item.price)) return -1;
+			if (!PayOrFail(char, item.price)) {
+				char.log(`${char.name} cannot afford ${item.name}`);
+				return false;
+			}
 		}
 		this.inv.removeId(item.id);
 
-		return char.addItem(item);
+		const ind = char.addItem(item);
+		char.log(`${char.name} buys ${item.name} [${ind}]`);
+
+		return true;
+
+	}
+
+	/**
+	 * Get sell price of an item based on character
+	 * sell modifier.
+	 * @param it 
+	 * @param mod 
+	 */
+	private sellGold(it: Item, mod: number) {
+		return Math.max(Math.ceil(it.price * (1 + 0.1 * mod)), 0);
+	}
+
+	sellRange(char: Char, ind: ItemIndex, end: ItemIndex) {
+
+		const items = char.takeRange(ind, end);
+		if (!items || !items.length) {
+			return char.log(`No items to sell.`);
+		}
+		this.inv.add(items);
+
+		const mod = GetTradeMod(char);
+		let gold = 0;
+		for (let i = items.length - 1; i >= 0; i--) {
+			gold += this.sellGold(items[i], mod);
+		}
+
+		char.addGold(gold);
+		char.log(`Sold ${items.length} item for ${gold} gold`);
 
 	}
 
 	sell(char: Char, ind: ItemIndex) {
 
-		const item = char.takeItem(ind);
-		if (item) {
-			this.inv.add(item);
+		const it = char.takeItem(ind);
+		if (!it) {
+			return char.log(`Item ${ind} not found.`);
 		}
+		this.inv.add(it);
+
+		const gold = this.sellGold(it, GetTradeMod(char));
+
+		char.addGold(gold);
+		char.log(it.name + ' sold for ' + gold + ' gold.');
 
 	}
 
-	onEnter = (shop: Shop<T>, char: Char, loc: Loc) => {
+	onEnter = (shop: Shop<T>, char: Char, _: Loc) => {
 		if (Math.random() < 0.1) {
 			shop.restock();
 		}

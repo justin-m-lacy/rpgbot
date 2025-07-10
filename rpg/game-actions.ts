@@ -15,6 +15,11 @@ export const GameActions = {
 		exec: Game.prototype.brew,
 		rest: 0.8,
 	},
+	buy: {
+		tick: true,
+		exec: Game.prototype.buy,
+		rest: 0.9
+	},
 	cast: {
 
 		tick: true,

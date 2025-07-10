@@ -21,6 +21,7 @@ import { smallNum } from 'rpg/util/format';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 import type Block from 'rpg/world/block';
 import { TCoord } from 'rpg/world/coord';
+import { Shop } from 'rpg/world/shop';
 import { Char } from './char/char';
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
@@ -787,10 +788,18 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
+	buy(this: Game<A, K>, char: Char, shop: Shop, item: ItemIndex) {
+		shop.buy(char, item);
+	}
 
-	sell(this: Game<A, K>, char: Char, first: string | number, end?: string | number | null) {
 
-		return char.output(Trade.sell(char, first, end));
+	sell(this: Game<A, K>, char: Char, shop: Shop, ind: ItemIndex, end?: ItemIndex | null) {
+
+		if (end) {
+			shop.sellRange(char, ind, end);
+		} else {
+			shop.sell(char, ind)
+		}
 
 	}
 

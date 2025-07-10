@@ -1,6 +1,6 @@
 import { ItemList } from "rpg/display/items";
 import type { ItemIndex } from "rpg/items/container";
-import { DecodeItem } from "rpg/parsers/items";
+import { DecodeFeature, DecodeItem } from "rpg/parsers/items";
 import { DecodeMob } from "rpg/parsers/mobs";
 import { quickSplice } from "rpg/util/array";
 import { FindIndex } from "rpg/util/items";
@@ -235,7 +235,7 @@ export class Loc {
 		if (json.features && Array.isArray(json.features)) {
 
 			for (let i = 0; i < json.features.length; i++) {
-				const f = Feature.Decode(json.features[i]);
+				const f = DecodeFeature(json.features[i]);
 				if (f) loc.features.push(f);
 			}
 
@@ -406,7 +406,7 @@ export class Loc {
 	 *
 	 * @param wot
 	 */
-	getFeature(wot: string | number) { return FindIndex(this.features, wot); }
+	getFeature(wot: ItemIndex) { return FindIndex(this.features, wot); }
 
 	/**
 	 * Get item data without taking it.

@@ -23,6 +23,14 @@ const rollPrice = (lvl: number) => {
 }
 
 /**
+ * get the trade bonus modifier for a character.
+ * @param char 
+ */
+export const GetTradeMod = (char: Char) => {
+	return char.level.valueOf() / 5 + 2 * char.getModifier('cha');
+}
+
+/**
  * Removes a gold amount or returns false.
  * @param amt
  */
@@ -34,82 +42,6 @@ export const PayOrFail = (char: Char, gold: number) => {
 
 }
 
-export const rollWeap = (char: Char) => {
-
-	let level = char.level.valueOf();
-	const price = rollPrice(level);
-	if (!PayOrFail(char, price))
-		return `${char.name} cannot afford to roll a new weapon. (${price} gold)`;
-
-	const mod = Math.max(1 + char.getModifier('cha'), 0);
-
-	level = Math.max(0, level + jsutils.random(-1, mod));
-	const it = GenWeapon(level);
-
-	if (!it) return 'Failed to roll a weapon.';
-
-	const ind = char.addItem(it);
-	return `${char.name} rolled a shiny new ${it.name}. (${ind})`;
-
-}
-
-export const rollArmor = (char: Char, slot?: string | null) => {
-
-	let level = char.level.valueOf();
-	const price = rollPrice(level);
-	if (!PayOrFail(char, price))
-		return `${char.name} cannot afford to roll new armor. (${price} gold)`;
-
-	const mod = Math.max(1 + char.getModifier('cha'), 0);
-
-	level = Math.max(0, level + jsutils.random(-1, mod));
-	const it = GenArmor(level, toSlot(slot));
-
-	if (!it) return 'Failed to roll armor.';
-
-	const ind = char.addItem(it);
-
-	return `${char.name} rolled a spiffy new ${it.name}. (${ind})`;
-
-}
-
-export const sellRange = (src: Char, start: ItemIndex, end: ItemIndex) => {
-
-	const arr = src.takeRange(start, end);
-	if (arr === null) return 'Invalid item range.';
-	if (arr.length === 0) return 'No items in range.';
-
-	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
-
-	let gold = 0;
-
-	for (let i = arr.length - 1; i >= 0; i--) {
-		gold += isNaN(arr[i].price) ? (Math.random() < 0.5 ? mod : 0) : arr[i].price + mod;
-	}
-
-	src.addGold(gold);
-
-	return arr.length + ' items sold for ' + gold + ' gold.';
-
-}
-
-export const sell = (src: Char, wot: ItemPicker, end?: ItemIndex | null) => {
-
-	if (end != null) {
-		if (typeof wot === 'object') return 'Invalid item range.';
-		return sellRange(src, wot as ItemIndex, end);
-	}
-
-	const it = src.takeItem(wot);
-	if (!it) return 'Item not found.';
-
-	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
-
-	const gold = isNaN(it.price) ? (Math.random() < 0.5 ? mod : 0) : it.price + mod;
-	src.addGold(gold);
-	return it.name + ' sold for ' + gold + ' gold.';
-
-}
 
 export const transfer = (src: Char, dest: Char, what: string) => {
 
@@ -172,5 +104,83 @@ export const nerfItems = (char: Char) => {
 
 	const removed = char.inv.removeWhere(test);
 	return 'Removed Items: ' + removed.map(it => it.name).join(', ');
+
+}
+
+
+const rollWeap = (char: Char) => {
+
+	let level = char.level.valueOf();
+	const price = rollPrice(level);
+	if (!PayOrFail(char, price))
+		return `${char.name} cannot afford to roll a new weapon. (${price} gold)`;
+
+	const mod = Math.max(1 + char.getModifier('cha'), 0);
+
+	level = Math.max(0, level + jsutils.random(-1, mod));
+	const it = GenWeapon(level);
+
+	if (!it) return 'Failed to roll a weapon.';
+
+	const ind = char.addItem(it);
+	return `${char.name} rolled a shiny new ${it.name}. (${ind})`;
+
+}
+
+const rollArmor = (char: Char, slot?: string | null) => {
+
+	let level = char.level.valueOf();
+	const price = rollPrice(level);
+	if (!PayOrFail(char, price))
+		return `${char.name} cannot afford to roll new armor. (${price} gold)`;
+
+	const mod = Math.max(1 + char.getModifier('cha'), 0);
+
+	level = Math.max(0, level + jsutils.random(-1, mod));
+	const it = GenArmor(level, toSlot(slot));
+
+	if (!it) return 'Failed to roll armor.';
+
+	const ind = char.addItem(it);
+
+	return `${char.name} rolled a spiffy new ${it.name}. (${ind})`;
+
+}
+
+const sellRange = (src: Char, start: ItemIndex, end: ItemIndex) => {
+
+	const arr = src.takeRange(start, end);
+	if (arr === null) return 'Invalid item range.';
+	if (arr.length === 0) return 'No items in range.';
+
+	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
+
+	let gold = 0;
+
+	for (let i = arr.length - 1; i >= 0; i--) {
+		gold += isNaN(arr[i].price) ? (Math.random() < 0.5 ? mod : 0) : arr[i].price + mod;
+	}
+
+	src.addGold(gold);
+
+	return arr.length + ' items sold for ' + gold + ' gold.';
+
+}
+
+const sell = (src: Char, wot: ItemPicker, end?: ItemIndex | null) => {
+
+	if (end != null) {
+		if (typeof wot === 'object') return 'Invalid item range.';
+		return sellRange(src, wot as ItemIndex, end);
+	}
+
+	const it = src.takeItem(wot);
+	if (!it) return 'Item not found.';
+
+	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
+
+	const gold = isNaN(it.price) ? (Math.random() < 0.5 ? mod : 0) : it.price + mod;
+	src.addGold(gold);
+	return it.name + ' sold for ' + gold + ' gold.';
 
 }

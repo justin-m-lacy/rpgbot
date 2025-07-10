@@ -49,7 +49,7 @@ function DecodeShop(json: any): Shop {
 
 }
 
-function DecodeFeature<T extends Feature>(
+export function DecodeFeature<T extends Feature>(
 	json: ItemData & { desc: string, action?: string, fb?: string }, f?: T | Feature) {
 
 	f ??= new Feature(json.name, json.desc);

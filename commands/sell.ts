@@ -1,13 +1,14 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendBlock } from "rpg/display/display";
+import { SendPrivate } from "@/utils/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
-	data: CommandData('sell', 'Sell items from inventory')
+	data: CommandData('sell', 'Sell items to a shop')
 		.addStringOption(StrOpt('start', 'Starting item to sell').setRequired(true))
-		.addStringOption(StrOpt('end', 'End item to sell')),
+		.addStringOption(StrOpt('shop', 'Shop to sell to'))
+		.addStringOption(StrOpt('end', 'End of range of items to sell.')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const start = m.options.getString('start', true);
@@ -16,7 +17,7 @@ export default NewCommand<Rpg>({
 		const src = await rpg.myCharOrErr(m, m.user);
 		if (!src) return;
 
-		return SendBlock(m, await rpg.game.action('sell', src, start, end));
+		return SendPrivate(m, await rpg.game.action('sell', src, start, end));
 
 	}
 })

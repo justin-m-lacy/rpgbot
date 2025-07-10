@@ -265,3 +265,28 @@ export const PickItemButtons = (cmd: string, inv: Inventory<Item>, param: string
 	);
 
 }
+
+/**
+ * Make buttons for a command with Array options.
+ * @param cmd - command name.
+ * @param opts 
+ * @param param - name of command parameter to set to picked id. (e.g. 'item' or 'char')
+ * @param params - additional paramaters to send to command.
+ */
+export const OptionButtons = <T extends { id: string, name: string }>(
+	cmd: string, opts: T[], param: string, params?: Record<string, string | number>) => {
+
+	if (opts.length == 0) return [];
+	return ToActionRows(
+
+		opts.map(it => CustomButton({
+			customId: cmd,
+			label: it.name
+		}, {
+			[param]: it.id,
+			...params
+		}))
+	);
+
+
+}

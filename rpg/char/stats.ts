@@ -134,8 +134,9 @@ export class StatBlock {
 	 * @param stat 
 	 */
 	getModifier(stat: string) {
-		const val = stat in this ? +this[stat as StatKey] : 0;
-		return Math.floor(((val ?? 0) - 10) / 2);
+		return (
+			((this[stat as StatKey]?.valueOf() ?? 10) - 10) / 2
+		);
 	}
 
 	addMaxHp(amt: number) {
