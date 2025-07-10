@@ -103,7 +103,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 	}
 
 	/**
-	 * Retrieve item by name or index.
+	 * Return item without removing it.
 	 * @param  start
 	 * @returns  Item found, or null on failure.
 	 */
@@ -127,9 +127,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 
 		start--;
-		if (start >= 0 && start < this.items.length) return this.items[start];
-
-		return null;
+		return this.items[start];
 
 	}
 
@@ -270,6 +268,13 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 		return this.items.splice(start, end - start);
 
+	}
+
+	removeId(id: string) {
+		for (let i = this.items.length - 1; i >= 0; i--) {
+			if (this.items[i].id == id) return this.items.splice(i, 1)[0];
+		}
+		return undefined;
 	}
 
 	/**

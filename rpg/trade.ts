@@ -26,7 +26,7 @@ const rollPrice = (lvl: number) => {
  * Removes a gold amount or returns false.
  * @param amt
  */
-const payOrFail = (char: Char, gold: number) => {
+export const PayOrFail = (char: Char, gold: number) => {
 
 	if (gold > char.gold) return false;
 	char.gold -= gold;
@@ -38,7 +38,7 @@ export const rollWeap = (char: Char) => {
 
 	let level = char.level.valueOf();
 	const price = rollPrice(level);
-	if (!payOrFail(char, price))
+	if (!PayOrFail(char, price))
 		return `${char.name} cannot afford to roll a new weapon. (${price} gold)`;
 
 	const mod = Math.max(1 + char.getModifier('cha'), 0);
@@ -57,7 +57,7 @@ export const rollArmor = (char: Char, slot?: string | null) => {
 
 	let level = char.level.valueOf();
 	const price = rollPrice(level);
-	if (!payOrFail(char, price))
+	if (!PayOrFail(char, price))
 		return `${char.name} cannot afford to roll new armor. (${price} gold)`;
 
 	const mod = Math.max(1 + char.getModifier('cha'), 0);
