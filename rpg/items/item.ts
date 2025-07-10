@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { Char } from 'rpg/char/char';
 import { ItemData, ItemType } from 'rpg/items/types';
 
 
@@ -89,6 +90,11 @@ export class Item {
 		this.desc = info?.desc ?? '';
 
 	}
+
+	/**
+	 * Option to remap Item on player take.
+	 */
+	onTake(char: Char): Item | null | undefined { return this }
 
 	getView(): [string, string | undefined] {
 		return [this.getDetails(false), this._embed];

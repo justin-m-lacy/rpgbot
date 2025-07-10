@@ -21,6 +21,7 @@ export class GoldDrop extends Item {
 	onTake(char: Char) {
 
 		char.gold += this.amt;
+		return undefined;
 
 	}
 

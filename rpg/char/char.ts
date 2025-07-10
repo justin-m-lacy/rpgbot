@@ -280,7 +280,16 @@ export class Char extends Actor {
 	 * @param it
 	 */
 	addItem(it?: Item | (Item | null | undefined)[] | null) {
-		return this.inv.add(it);
+
+		if (Array.isArray(it)) {
+			const ind = this.inv.count;
+			for (let i = 0; i < it.length; i++) {
+				this.inv.add(it[i]?.onTake(this));
+			}
+			return ind;
+		} else {
+			return this.inv.add(it?.onTake(this));
+		}
 
 	}
 
