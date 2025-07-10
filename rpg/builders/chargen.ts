@@ -153,6 +153,6 @@ const initItems = (char: Char) => {
 	for (count; count >= 0; count--) {
 		char.addItem(ItemGen.GenJunkItem());
 	}
-	char.addItem([GenWeapon(1), GenArmor(null, 1)]);
+	char.addItem([GenWeapon(1), GenArmor(1)]);
 
 }

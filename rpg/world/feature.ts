@@ -1,5 +1,5 @@
-import { ItemData, ItemType } from 'rpg/items/types';
-import { Action, GetAction } from 'rpg/magic/action';
+import { ItemType } from 'rpg/items/types';
+import { Action } from 'rpg/magic/action';
 import { type Loc } from 'rpg/world/loc';
 import { Char } from '../char/char';
 import { Item } from '../items/item';
@@ -10,20 +10,6 @@ export class Feature extends Item {
 	 * feedback when using item.
 	 */
 	fb?: string;
-
-	static Decode(
-		json: ItemData & { desc: string, action?: string, fb?: string }) {
-
-		const f = new Feature(json.name, json.desc);
-
-		if (json.action) {
-			f.action = GetAction(json.action);
-		}
-		if (json.fb) f.fb = json.fb;
-
-		return Item.InitData(json, f) as Feature;
-
-	}
 
 	toJSON() {
 

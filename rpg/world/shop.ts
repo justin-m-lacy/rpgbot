@@ -2,29 +2,34 @@ import { Char } from "rpg/char/char";
 import { Inventory } from "rpg/inventory";
 import { ItemIndex } from "rpg/items/container";
 import { Item } from "rpg/items/item";
-import { ItemData } from "rpg/items/types";
+import { ItemData, ItemType } from "rpg/items/types";
 import { PayOrFail } from "rpg/trade";
 import { Feature } from "rpg/world/feature";
 import { Loc } from "rpg/world/loc";
 
 type SaleItem = ItemData & { price: number };
 
-export class Shop<T extends Item> extends Feature {
+export class Shop<T extends Item = Item> extends Feature {
 
 	inv: Inventory;
 
 	/**
 	 * function for restocking inventory.
 	 */
-	genItem?: (lvl: number) => T;
+	genItem?: (lvl: number) => T | null;
 
 	constructor(name: string,
-		opts: { level?: number, kind: string, desc?: string, genItem?: (lvl: number) => T }
+		opts: {
+			level?: number, kind: string,
+			desc?: string,
+			genItem?: (lvl: number) => T | null
+		}
 	) {
 
 		super(name, opts.desc ?? `${opts.kind} Shop`);
 
 		this.level = opts.level ?? 0;
+		this.type = ItemType.Shop;
 
 		this.inv = new Inventory(undefined);
 

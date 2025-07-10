@@ -23,9 +23,9 @@ export const InitWeapons = () => {
 	}
 }
 
-export const GenWeapon = (lvl: number) => {
+export const GenWeapon = (lvl?: number) => {
 
-	const mat = RandMaterial(lvl);
+	const mat = RandMaterial(lvl ?? 0);
 	if (mat === null) return null;
 
 	return BuildWeapon(

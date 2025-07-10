@@ -27,8 +27,9 @@ export const DecodeWearable = (json: any) => {
 	return Item.InitData(json, a);
 }
 
-export const GenArmor = (slot: HumanSlot | null = null, lvl: number = 0) => {
+export const GenArmor = (lvl?: number, slot?: HumanSlot | null) => {
 
+	lvl ??= 0;
 	const mat = RandMaterial(lvl);
 
 	let tmp;
@@ -39,7 +40,7 @@ export const GenArmor = (slot: HumanSlot | null = null, lvl: number = 0) => {
 		tmp = list[Math.floor(list.length * Math.random())];
 	}
 
-	if (!tmp) return;
+	if (!tmp) return null;
 
 	return Wearable.FromData(tmp, mat);
 

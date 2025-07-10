@@ -21,12 +21,13 @@ type RawItemData = (typeof import('../data/items/items.json', { assert: { type: 
  */
 export const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData } = {};
 
-/**
- * Master item table. (constant items such as grimoires)
- */
-const ItemTable: Record<string, Item> = {};
-
 const JunkItems: RawItemData[] = [];
+
+const ItemTypeGen: Record<string, (lvl?: number) => Item | null> = {
+
+	'weapon': GenWeapon,
+	'armor': GenArmor
+}
 
 export const InitItems = async () => {
 
@@ -85,7 +86,7 @@ export const GenLoot = (mob: Mob | Actor) => {
 	};
 
 	if (Math.random() < 0.2) {
-		const armor = GenArmor(null, lvl);
+		const armor = GenArmor(lvl);
 		if (armor) loot.items!.push(armor);
 	}
 	if (Math.random() < 0.1) {
@@ -155,6 +156,16 @@ export const GenItem = (protoId: string, into?: Inventory) => {
 	return it;
 
 }
+
+/**
+ * Get generator for specific item type.
+ * @param type 
+ * @returns 
+ */
+export const GetTypeGenerator = (type: string) => {
+	return ItemTypeGen[type];
+}
+
 
 /**
  * Create a useless item.

@@ -18,6 +18,7 @@ export enum ItemType {
 	Weapon = 'weapon',
 	Armor = 'armor',
 	Spell = 'spell',
+	Shop = 'shop',
 	Potion = 'potion',
 	Food = 'food',
 	Drink = 'drink',
