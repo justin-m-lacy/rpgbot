@@ -88,6 +88,11 @@ export class Combat {
 	 */
 	doAttack(char: TActor, act: TCombatAction, targ: Actor | Mob) {
 
+		if (!targ.isAlive()) {
+			char.log(`${targ.name} is already dead`);
+			return false;
+		}
+
 		if (targ.isImmune(act.kind)) {
 			char.log(`${targ.name} is immune to ${act.kind}`);
 			return false;

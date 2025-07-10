@@ -273,14 +273,11 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		// single target.
 		if (targ) {
 
-			if (targ.isAlive()) {
-				this.combat.doAttack(char, spell, targ);
-				if (targ instanceof Mob) {
-					this.setLiveLoc(char.at);
-				}
-			} else {
-				char.log(`${targ.name} is already dead.`);
+			this.combat.doAttack(char, spell, targ);
+			if (targ.isAlive() && targ instanceof Mob) {
+				this.setLiveLoc(char.at);
 			}
+
 
 		} else if (spell.target & TargetFlags.mult) {
 
@@ -361,7 +358,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		} else if (char instanceof Mob) {
 			const loc = await this.world.getLoc(char.at);
 			if (loc) {
-				console.log(`try remove npc`);
 				loc.removeNpc(char);
 				await this.getLoot(itemgen.GenLoot(char), loc,
 					typeof slayer === 'object' ? slayer : loc
@@ -848,8 +844,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	useLoc(char: Char, wot: ItemIndex) {
-		return this.world.useLoc(char, wot);
+	async useLoc(char: Char, wot: ItemIndex) {
+		await this.world.useLoc(char, wot);
 	}
 
 
@@ -876,14 +872,21 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async revive(this: Game<A, K>, char: Char, targ: Char) {
 
-		if (targ.flags & StatusFlags.alive) return `${targ.name} is not dead.`;
+		if (targ.flags & StatusFlags.alive) {
+			char.log(`${targ.name} is not dead.`);
+		}
 
 		const p = this.getParty(char);
-		if (!p || !p.includes(targ)) return `${targ.name} is not in your party.`;
+		if (!p || !p.includes(targ)) {
+			char.log(`${targ.name} is not in your party.`);
+		}
 
 		let roll = char.statRoll('wis') + (2 * targ.hp.value) - 5 * +targ.level;
 		if (!char.hasTalent('revive')) roll -= 20;
-		if (roll < 10) return char.output(`You failed to revive ${targ.name}.`);
+		if (roll < 10) {
+			char.log(`You failed to revive ${targ.name}.`);
+			return;
+		}
 
 		char.addHistory('revived');
 
