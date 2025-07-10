@@ -5,6 +5,7 @@ import { ActParams, Blockers, TGameAction } from 'rpg/actions';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
 import { CookItem, TryEat } from 'rpg/char/cooking';
+import { StatusFlags } from 'rpg/char/states';
 import { Combat } from 'rpg/combat/combat';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
@@ -199,11 +200,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 * @param act - action to attempt to perform.
 	 */
 	canAct(char: Char, act: K) {
+
 		if (Blockers[char.state]?.[act]) {
 			char.log(`Cannot ${act} while ${char.state}.`);
 			return false;
 		}
 		return true;
+
 	}
 
 	async action<T extends K>(
@@ -837,7 +840,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async revive(this: Game<A, K>, char: Char, targ: Char) {
 
-		if (targ.state !== 'dead') return `${targ.name} is not dead.`;
+		if (targ.flags & StatusFlags.alive) return `${targ.name} is not dead.`;
 
 		const p = this.getParty(char);
 		if (!p || !p.includes(targ)) return `${targ.name} is not in your party.`;

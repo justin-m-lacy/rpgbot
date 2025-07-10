@@ -18,7 +18,7 @@ import { History } from './events';
 import { tryLevel } from './level';
 import { StatIds, StatKey } from './stats';
 
-const SaveProps: Array<keyof Char> = ['name', 'exp', 'owner', 'state', 'stats', 'dots',
+const SaveProps: Array<keyof Char> = ['name', 'exp', 'owner', 'flags', 'stats', 'dots',
 	'at', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
 
 export class Char extends Actor {

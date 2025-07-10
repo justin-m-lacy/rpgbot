@@ -7,7 +7,7 @@ import { type MobData } from 'rpg/parsers/mobs';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
-import { Actor, CharState } from '../char/actor';
+import { Actor } from '../char/actor';
 import * as stats from '../char/stats';
 import { Item } from '../items/item';
 import { roll } from '../values/dice';
@@ -28,7 +28,7 @@ export class Mob {
 			dots: this.dots.length > 0 ? this.dots : undefined,
 			armor: this._armor,
 			toHit: this._toHit,
-			state: this._state != CharState.Alive ? this._state : undefined,
+			flags: this.flags,
 			evil: this._evil ?? undefined,
 			proto: this.proto?.id
 			//weap: this.weap ?? undefined
@@ -54,18 +54,14 @@ export class Mob {
 	get hp() { return this._hp; }
 	set hp(v) { this._hp.value = v.valueOf(); }
 
-	get state() { return this._state; }
-	set state(v) { this._state = v; }
-
 	get biome() { return this.proto?.biome }
 	get desc() { return this.proto?.desc ?? '' }
 
-	isAlive() { return this._state !== CharState.Dead; }
+	isAlive() { return (this.flags & StatusFlags.alive) > 0 }
 
 	flags: StatusFlags;
 
 	private _toHit: number;
-	private _state: CharState;
 
 	name: string = 'unknown';
 
@@ -90,12 +86,12 @@ export class Mob {
 	readonly dots: Dot[] = [];
 
 	constructor(id?: string, proto?: MobData) {
+
 		this.id = id ?? randomUUID();
 		this._toHit = 0;
-		this._state = CharState.Alive;
 		this.proto = proto;
 
-		this.flags = proto?.flags ?? StatusFlags.none;
+		this.flags = (proto?.flags ?? StatusFlags.none) | StatusFlags.alive;
 		this.size = proto?.size ?? 'medium';
 		this.team = proto?.team ?? Faction.All;
 
@@ -199,15 +195,14 @@ export class Mob {
 	// combat & future compatibility.
 	getModifier(stat: string) { return 0; }
 	addExp(exp: number) { }
-	updateState() { if (this._hp.value <= 0) this._state = CharState.Dead; }
+	updateState() { if (this._hp.value <= 0) this.flags &= (~StatusFlags.alive) }
 	// used in combat
-	getState() { return this._state; }
 
 	hit(dmg: number, type?: string) {
 
 		this._hp.add(-dmg);
 		if (this._hp.value <= 0) {
-			this._state = CharState.Dead;
+			this.flags &= (~StatusFlags.alive);
 			return true;
 		}
 		return false;

@@ -34,6 +34,19 @@ export class Combat {
 	npcExp(lvl: number) { return Math.floor(10 * Math.pow(1.3, lvl)) };
 	pvpExp(lvl: number) { return Math.floor(10 * Math.pow(1.2, lvl / 2)) };
 
+	/**
+	 * Test if one character can see a hiding character.
+	 * @param hider
+	 * @param looker 
+	 */
+	spotTest(hider: Char, looker: TActor) {
+
+		const def = hider.statRoll('dex', 'wis') + (hider.hasTalent('stealth') ? 10 : 0);
+		const atk = looker.statRoll('wis') + (looker.hasTalent('track') ? 10 : 0);
+		return Math.random() * atk > Math.random() * def;
+
+	}
+
 	async tryAttack(char: TActor, atk: TCombatAction | null | undefined, who: TActor | Party,) {
 
 		if (!atk) return;

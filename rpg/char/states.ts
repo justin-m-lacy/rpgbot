@@ -4,16 +4,20 @@ import { quickSplice } from "rpg/util/array";
 
 type StatusKeys = keyof typeof StatusFlags;
 
+export enum CharState {
+	Dead = 'dead',
+	Alive = 'alive',
+}
+
 export enum StatusFlags {
 	none = 0,
-	noattack = 1,
-	nodefend = 2,
-	nospells = 4,
-	confused = 8,
-	charmed = 16,
-	hide = 32,
-
-	dead = noattack + nodefend + nospells
+	alive = 1,
+	noattack = 2,
+	nodefend = 4,
+	nospells = 8,
+	confused = 16,
+	charmed = 32,
+	stealth = 64,
 }
 
 export const ParseStateFlags = (list: (keyof typeof StatusFlags)[] | string) => {

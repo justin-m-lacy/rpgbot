@@ -1,5 +1,6 @@
 import { Char } from 'rpg/char/char';
 import { Equip, type HumanSlots } from 'rpg/char/equip';
+import { CharState, StatusFlags } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
@@ -50,7 +51,11 @@ export const DecodeChar = (game: Game, json: any) => {
 		char.at.setTo(json.loc)
 	}
 
-	if (json.state) char.state = json.state;
+	if (json.flags) {
+		char.flags = json.flags;
+		if (json.flags & StatusFlags.alive) char.state = CharState.Alive;
+		else { char.state = CharState.Dead }
+	}
 
 	char.statPoints = json.statPoints || char.stats.level;
 	char.spentPoints = json.spentPoints || 0;

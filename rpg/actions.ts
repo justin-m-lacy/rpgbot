@@ -1,5 +1,5 @@
-import { type CharState } from 'rpg/char/actor';
 import { type Char } from 'rpg/char/char';
+import { type CharState } from 'rpg/char/states';
 
 
 export type TGameAction = {

@@ -1,5 +1,6 @@
 import { EventEmitter } from 'eventemitter3';
 import { Faction } from 'rpg/char/factions';
+import { CharState, StatusFlags } from 'rpg/char/states';
 import { TCombatAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
@@ -15,22 +16,27 @@ import { Coord } from '../world/coord';
 import { Race, type GClass } from './race';
 import { StatBlock, type StatMod } from './stats';
 
-export enum CharState {
-	Dead = 'dead',
-	Alive = 'alive'
-}
-
-
 export class Actor {
 
-	// used to abstract awaiting state in combat.
-	getState() { return this._state; }
+	getStatus() { return `${this.hp.value}/${this.hp.max} [${this.state}]` }
 
-	getStatus() { return `${this.hp.value}/${this.hp.max} [${this._state}]` }
-
+	isAlive() { return (this.flags & StatusFlags.alive) > 0; }
+	/**
+	 * messy text-based state. flags makes it harder to test for blockers.
+	 * in theory could have states that set multiple flags, as well as
+	 * other mods.
+	 * also: action uses set-state=alive to revive.
+	 */
+	_state: CharState = CharState.Alive;
 	get state() { return this._state; }
-	set state(v) { this._state = v; }
-	isAlive() { return this._state !== CharState.Dead; }
+	set state(v) {
+		this._state = v;
+		if (v === CharState.Dead) {
+			this.flags &= ~StatusFlags.alive;
+		} else {
+			this.flags |= StatusFlags.alive;
+		}
+	}
 
 	get evil() { return this.stats.evil; }
 	set evil(v: Numeric) { this.stats.evil.setTo(+v); }
@@ -114,12 +120,13 @@ export class Actor {
 	 * Current mods applied to char.
 	 */
 	readonly mods: ModBlock<typeof this>[] = [];
-	private _state: CharState;
 
 	readonly events = new EventEmitter<CharEvents>();
 	readonly game: Game;
 
 	readonly attacks: TCombatAction[] = [];
+
+	flags: StatusFlags = StatusFlags.alive;
 
 	team: number = Faction.Chars;
 
@@ -137,8 +144,6 @@ export class Actor {
 		this.race = opts.race;
 
 		this._at = new Coord(0, 0);
-
-		this._state = CharState.Alive;
 
 	}
 
@@ -173,12 +178,6 @@ export class Actor {
 	}
 	getResist(type?: string): number {
 		return this.resists[type ?? '']?.valueOf() ?? 0;
-	}
-
-
-	private setMods(mods: ModBlock<typeof this>) {
-
-		this.applyMods(mods);
 	}
 
 	applyMods(mods: ModBlock<typeof this>) {
@@ -263,15 +262,15 @@ export class Actor {
 	}
 
 	updateState() {
-		if (this.hp.value <= 0) this.state = CharState.Dead;
-		else this.state = CharState.Alive;
-		return this.state;
+		if (this.hp.value <= 0) {
+			this.state = CharState.Alive;
+		}
 	}
 
 	hit(amt: number) {
 		this.hp.value -= amt;
 		if (this.hp.value <= 0) {
-			return this.state = CharState.Dead;
+			this.flags &= (~StatusFlags.alive);
 		}
 	}
 
