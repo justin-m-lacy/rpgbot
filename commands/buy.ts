@@ -36,19 +36,19 @@ export default NewCommand<Rpg>({
 					});
 
 			} else {
-				shop = shops[0];
+				shop = shops[0] as Shop;
 			}
 
 		} else {
 			shop = loc.getFeature(shopName ?? 1);
 			if (!shop) {
 				return SendPrivate(m, `Shop ${shopName} not found.`);
-			} else if (!(shop instanceof Shop)) {
+			} else if (!IsShop(shop)) {
 				return SendPrivate(m, `${shop.name} is not a shop`);
 			}
 		}
 
-		await rpg.game.action('buy', char, shop, item)
+		await rpg.game.action('buy', char, shop as Shop, item)
 
 		return SendPrivate(m, char.flushLog());
 

@@ -38,6 +38,9 @@ export class Char extends Actor {
 	get evil() { return +this.stats.evil.value; }
 	set evil(v) { this.stats.evil.setTo(v); }
 
+	// time of last action, for checking spam.
+	lastTime: number = 0;
+
 	toJSON() {
 
 		const json: any = {};
@@ -148,7 +151,7 @@ export class Char extends Actor {
 
 	addExp(amt: number) {
 		this.exp += amt;
-		return tryLevel(this);
+		tryLevel(this);
 	}
 
 	/**

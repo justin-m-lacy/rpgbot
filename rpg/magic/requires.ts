@@ -27,7 +27,7 @@ export const TestRequire = <T extends object>(targ: T, req: TRequire<T>) => {
  * @param req 
  * @returns 
  */
-export const TestEqual = (targ: Record<string, any>, req?: RawIf) => {
+const TestEqual = (targ: Record<string, any>, req?: RawIf) => {
 
 	if (!req) return true;
 

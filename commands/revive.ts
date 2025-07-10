@@ -15,7 +15,7 @@ export default NewCommand<Rpg>({
 
 		const who = m.options.getString('who');
 
-		if (!who && char.isAlive()) {
+		if (!who && !char.isAlive()) {
 
 			// get char list at location.
 			const loc = await rpg.world.getLoc(char.at);

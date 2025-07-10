@@ -1,4 +1,4 @@
-import { TestEqual, type RawIf, type TRequire } from "rpg/magic/requires";
+import { TestRequire, type RawIf, type TRequire } from "rpg/magic/requires";
 import { ParseValue } from "rpg/parsers/values";
 import { AddValues } from "rpg/values/apply";
 import { ParsePaths, type Path } from "rpg/values/paths";
@@ -65,22 +65,15 @@ export class Result<T extends object> {
 		this.fb = opts.fb;
 		this.err = opts.err;
 
+		console.log(`result: ${this.set}`);
 	}
 
 	apply(targ: T, dt: number = 1): boolean {
 
 		if (this.if) {
-
-			if (typeof this.if === 'function') {
-
-				if (!this.if(targ)) {
-					return false;
-				}
-
-			} else if (!TestEqual(targ, this.if)) {
-
+			if (!TestRequire(targ, this.if)) {
+				return false;
 			}
-
 		}
 
 		if (this.add) {

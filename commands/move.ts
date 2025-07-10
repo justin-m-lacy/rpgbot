@@ -4,6 +4,7 @@ import { SendPrivate } from "@/utils/display";
 import { WorldLocActions } from "commands/look";
 import { ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
+import { DirVal } from "rpg/world/loc";
 
 
 export function GetCommands(): Command[] {
@@ -19,7 +20,7 @@ const CmdMove = NewCommand<Rpg>({
 		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
-		const dir = m.options.getString('dir', true);
+		const dir = m.options.getString('dir', true) as DirVal;
 		if (!dir) {
 
 			const loc = await rpg.world.getOrGen(char.at);

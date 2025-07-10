@@ -24,6 +24,7 @@ export class Action {
 		this.name = name ?? id;
 		this.result = [];
 
+		console.log(`parse action: ${this.id}`);
 	}
 
 	/**
@@ -40,23 +41,21 @@ export class Action {
 
 		}
 
-		// effects with different conditions for each one.
 		if (this.result) {
 
 			const len = this.result.length;
 			for (let i = 0; i < len; i++) {
 
 				const res = this.result[i];
-				if (res.if && !TestRequire(char, res.if)) {
-					if (res.err) char.log(res.err);
-				}
 				if (res.apply(char)) {
+					console.log(`success: ${this.id}`);
 					// any feedback.
 					if (res.fb) {
 						char.log(res.fb);
 					}
 				} else {
 					/// feedback.
+					console.log(`fail: ${this.id}`);
 					if (res.err) {
 						char.log(res.err);
 					}

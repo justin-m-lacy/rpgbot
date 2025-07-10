@@ -235,16 +235,23 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	async store(key: string, value: T): Promise<T> {
 
-		const item = new CacheItem(key, value);
-		this._dict.set(key, item);
-
-		item.markSaved();
+		let item = this._dict.get(key);
+		if (item instanceof CacheItem) {
+			item.data = value;
+		} else {
+			item = new CacheItem(key, value);
+			this._dict.set(key, item);
+		}
 
 		if (this.saver) {
 			await this.saver(this._cacheKey + key,
 				this.encoder ? this.encoder?.(value) : value
 			);
+		} else {
+			console.log(`no saver for: ${key}`);
 		}
+
+		item.markSaved();
 		return value;
 
 	}
@@ -316,6 +323,8 @@ export default class Cache<T = any> extends Emitter {
 
 		const saves = [];
 
+		console.log(`running backup...`);
+
 		for (const item of dict.values()) {
 
 			if (item instanceof Cache) {
@@ -323,7 +332,7 @@ export default class Cache<T = any> extends Emitter {
 				//subcache.
 				saves.push(item.backup(time));
 
-			} else if (item && item.dirty && (now - item.lastSave) > time) {
+			} else if ((now - item.lastSave) > time) {
 
 				saves.push(
 					saver(this._cacheKey + item.key,
@@ -334,6 +343,7 @@ export default class Cache<T = any> extends Emitter {
 
 		} // for
 
+		console.log(`backup: ${saves.length} items`);
 		return Promise.allSettled(saves).then(
 			vals => {
 				this.emit('backup', this, vals);
@@ -345,7 +355,7 @@ export default class Cache<T = any> extends Emitter {
 
 	/**
 	 * Clear items from cache that have not been accessed recently.
-	 * Dirty entries are first saved to file.
+	 * entries are first saved to file.
 	 * @async
 	 * @param [time=300000] - Time in ms since last access.
 	 * Items not accessed in this time are purged.
@@ -372,15 +382,15 @@ export default class Cache<T = any> extends Emitter {
 				// done first to prevent race conditions on save.
 				dict.delete(k);
 
-				if (item.dirty) {
 
-					saves.push(
-						saver(this._cacheKey + item.key,
-							this.encoder ? this.encoder(item.data) : item.data
-						)
-					);
 
-				}
+				saves.push(
+					saver(this._cacheKey + item.key,
+						this.encoder ? this.encoder(item.data) : item.data
+					)
+				);
+
+
 
 			}
 

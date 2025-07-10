@@ -47,6 +47,7 @@ export class Simple implements ISimple {
 
 	add(v: number): void {
 		this._base += v;
+		this.recalc();
 	}
 
 	addMod(m: IMod) {

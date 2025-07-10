@@ -38,7 +38,7 @@ export class Feature extends Item {
 	use(char: Char) {
 
 		if (this.fb) {
-			char.send(this.fb.replace('%c', char.name) + ' ');
+			char.log(this.fb.replace('%c', char.name) + ' ');
 		}
 
 		if (this.action) {

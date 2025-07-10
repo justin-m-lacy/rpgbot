@@ -213,6 +213,11 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		act: T, char: Char,
 		...params: ActParams<A[T]>) {
 
+		if (Date.now() - char.lastTime < 900) {
+			char.log(`Too many requests.`);
+			return;
+		}
+		char.lastTime = Date.now();
 		char.clearLog();
 
 		if (!this.canAct(char, act)) return char.output();
@@ -271,7 +276,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		char.log(`${char.name} casts ${spell.name}`);
 
 		// single target.
-		if (targ) {
+		if (targ && targ.isAlive()) {
 
 			this.combat.doAttack(char, spell, targ);
 			if (targ.isAlive() && targ instanceof Mob) {
