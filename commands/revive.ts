@@ -28,11 +28,14 @@ export default NewCommand<Rpg>({
 			}
 
 		}
-
 		const t = who ? await rpg.loadChar(who) : char;
-		if (!t) return;
+		if (!t) {
+			return SendPrivate(m, `${who} not found`);
+		}
 
-		await SendBlock(m, await rpg.game.action('revive', char, t));
+		await rpg.game.action('revive', char, t)
+
+		await SendBlock(m, char.flushLog());
 
 	}
 })

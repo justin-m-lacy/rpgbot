@@ -239,23 +239,17 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			p2 = targ;
 		}
 
-		if (atk) {
-			await this.combat.tryAttack(src, src.getAttack(), p2);
+		await this.combat.tryAttack(src, atk ?? src.getAttack(), p2);
 
-			// reprisal.
-			if (targ.isAlive()) {
-				if (targ.attacks) {
-					await this.combat.tryAttack(targ, targ.getAttack(), src);
-				}
-				if (targ instanceof Mob) {
-					this.setLiveLoc(src.at);
-				}
+		// reprisal.
+		if (targ.isAlive()) {
+			if (targ.attacks) {
+				await this.combat.tryAttack(targ, targ.getAttack(), src);
 			}
-		} else {
-			console.log(`no attacks found.`);
+			if (targ instanceof Mob) {
+				this.setLiveLoc(src.at);
+			}
 		}
-
-		return src.flushLog();
 
 	}
 
@@ -894,7 +888,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		char.addHistory('revived');
 
 		targ.revive();
-		return char.output(`You have revived ${targ.name}.`);
+		char.log(`You have revived ${targ.name}.`);
 
 	}
 

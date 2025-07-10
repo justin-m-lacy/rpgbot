@@ -195,7 +195,11 @@ export class Mob {
 	// combat & future compatibility.
 	getModifier(stat: string) { return 0; }
 	addExp(exp: number) { }
-	updateState() { if (this._hp.value <= 0) this.flags &= (~StatusFlags.alive) }
+	updateState() {
+		if (this._hp.value <= 0) {
+			this.flags &= (~StatusFlags.alive);
+		}
+	}
 	// used in combat
 
 	hit(dmg: number, type?: string) {

@@ -105,7 +105,7 @@ export class Combat {
 		if (act.dmg) this.applyDmg(targ, act, char);
 		if (act.heal) this.applyHealing(targ, act as TCombatAction & { heal: TValue }, char);
 
-		(char instanceof Char ? char : targ).log(`${char.name} hits ${targ.name} with ${act.name}`);
+		(char instanceof Char ? char : targ).send(`${char.name} hits ${targ.name} with ${act.name}`);
 
 		return true;
 	}
@@ -147,9 +147,9 @@ export class Combat {
 		targ.hp.value += (-dmg);
 		info.dmg = dmg;
 
-		this.game.events.emit('charHit', targ, attacker ?? attack.name, info);
-
 		targ.updateState();
+
+		this.game.events.emit('charHit', targ, attacker ?? attack.name, info);
 		if (!targ.isAlive()) {
 			this.game.events.emit('charDie', targ, attacker ?? attack.name);
 		}

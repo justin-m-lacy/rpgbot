@@ -37,9 +37,9 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `'${who}' not found.`);
 		}
 
-		const res = await rpg.game.action('attack', char, targ);
+		await rpg.game.action('attack', char, targ);
 
-		await SendBlock(m, res);
+		await SendBlock(m, char.flushLog());
 	}
 
 });

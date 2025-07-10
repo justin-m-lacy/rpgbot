@@ -263,7 +263,7 @@ export class Actor {
 
 	updateState() {
 		if (this.hp.value <= 0) {
-			this.state = CharState.Alive;
+			this.state = CharState.Dead;
 		}
 	}
 
