@@ -49,7 +49,7 @@ export type CacheOpts<T> = {
 	 * subcache keys are joined with the seperator and prepended
 	 * to the keys of items entered in the cache.
 	 */
-	subcacheSeparator?: string
+	cacheSeparator?: string
 }
 
 
@@ -64,7 +64,8 @@ export default class Cache<T = any> extends Emitter {
 		this._cacheKey = this._fixKey(v);
 	}
 
-	private _dict: Map<string, CacheItem<T> | Cache<any>> = new Map();
+	private _subs: Map<string, Cache<any>> = new Map();
+	private _dict: Map<string, CacheItem<T>> = new Map();
 	get data() { return this._dict; }
 
 	lastAccess: number = 0;
@@ -112,7 +113,7 @@ export default class Cache<T = any> extends Emitter {
 
 		}
 
-		this._separator = opts?.subcacheSeparator ?? '/';
+		this._separator = opts?.cacheSeparator ?? '/';
 		this._cacheKey = opts?.cacheKey ?? this._separator;
 
 	}
@@ -141,23 +142,17 @@ export default class Cache<T = any> extends Emitter {
 
 		if (propagate) {
 
-			const dict = this._dict;
 			const baseKey = this.cacheKey;
 
-			for (const k in dict) {
+			for (const [k, item] of this._subs.entries()) {
 
-				const item = dict.get(k);
-				if (item instanceof Cache) {
+				const subkey = keyChanged ? this._subkey(baseKey, k) : undefined;
+				item.settings({
 
-					const subkey = keyChanged ? this._subkey(baseKey, k) : undefined;
-					item.settings({
+					...opts,
+					cacheKey: subkey
 
-						...opts,
-						cacheKey: subkey
-
-					});
-
-				}
+				});
 
 			}
 
@@ -176,10 +171,12 @@ export default class Cache<T = any> extends Emitter {
 
 		subkey = this._subkey(this._cacheKey, subkey);
 
-		let cache = this._dict.get(subkey);
+		console.log(`new subcache: ${subkey}`);
+
+		let cache = this._subs.get(subkey);
 		if (cache !== undefined && cache instanceof Cache) return cache as Cache<S>;
 
-		this._dict.set(subkey, cache = new Cache<S>({
+		this._subs.set(subkey, cache = new Cache<S>({
 			loader: this.loader,
 			encoder: encoder ?? this.encoder,
 			checker: this.checker,
@@ -202,12 +199,14 @@ export default class Cache<T = any> extends Emitter {
 
 		const item = this._dict.get(key);
 		if (item) {
-			if (item instanceof Cache) return undefined;
 			item.lastAccess = Date.now();
 			return item.data;
 		}
 
-		if (!this.loader) return undefined;
+		if (!this.loader) {
+			console.warn(`no loader for cache: ${this.cacheKey}`);
+			return undefined;
+		}
 
 		try {
 
@@ -236,7 +235,7 @@ export default class Cache<T = any> extends Emitter {
 	async store(key: string, value: T): Promise<T> {
 
 		let item = this._dict.get(key);
-		if (item instanceof CacheItem) {
+		if (item) {
 			item.data = value;
 		} else {
 			item = new CacheItem(key, value);
@@ -248,7 +247,7 @@ export default class Cache<T = any> extends Emitter {
 				this.encoder ? this.encoder?.(value) : value
 			);
 		} else {
-			console.log(`no saver for: ${key}`);
+			console.warn(`no saver for: ${key}`);
 		}
 
 		item.markSaved();
@@ -261,7 +260,7 @@ export default class Cache<T = any> extends Emitter {
 	 * @param key
 	 * @returns - Undefined if key invalid.
 	 */
-	get<D = T>(key: string): D | undefined {
+	get<D extends T = T>(key: string): D | undefined {
 
 		const it = this._dict.get(key);
 		if (it !== undefined) {
@@ -281,7 +280,7 @@ export default class Cache<T = any> extends Emitter {
 	cache(key: string, value: any) {
 
 		const cur = this._dict.get(key);
-		if (cur instanceof CacheItem) cur.update(value);
+		if (cur) cur.update(value);
 		else this._dict.set(key, new CacheItem(key, value));
 
 	}
@@ -313,26 +312,28 @@ export default class Cache<T = any> extends Emitter {
 	 * @param [time=120000] - Time in ms since last save.
 	 * @returns
 	 */
-	async backup(time: number = 1000 * 60 * 2): Promise<any[] | undefined> {
+	backup(time: number = 1000 * 60 * 2
+	): Promise<any[] | undefined> {
 
 		const saver = this.saver;
-		if (!saver) return;
+		if (!saver) return Promise.resolve(undefined);
 
 		const now = Date.now();
 		const dict = this._dict;
 
-		const saves = [];
+		const saves: Promise<any>[] = [];
 
 		console.log(`run backup...`);
 
+		for (const cache of this._subs.values()) {
+
+			console.log(`backup subcache: ${cache.cacheKey}`);
+			saves.push(cache.backup(time));
+		}
+
 		for (const item of dict.values()) {
 
-			if (item instanceof Cache) {
-
-				//subcache.
-				saves.push(item.backup(time));
-
-			} else if ((now - item.lastSave) > time) {
+			if ((now - item.lastSave) > time) {
 
 				saves.push(
 					saver(this._cacheKey + item.key,
@@ -344,14 +345,7 @@ export default class Cache<T = any> extends Emitter {
 		} // for
 
 		console.log(`backup: ${saves.length} items`);
-		Promise.allSettled(saves).then(
-			vals => {
-				this.emit('backup', this, vals);
-				return vals;
-			}
-		).catch(err => {
-			console.error(`backup err: ${err}`)
-		})
+		return Promise.allSettled(saves);
 
 	}
 
@@ -372,27 +366,26 @@ export default class Cache<T = any> extends Emitter {
 
 		const saves = [];
 
+		for (const cache of this._subs.values()) {
+
+			console.log(`cleanup subcache: ${cache.cacheKey}`);
+			saves.push(cache.cleanup(time));
+		}
+
+
 		for (const k in dict) {
 
 			const item = dict.get(k);
-			if (item instanceof Cache) {
-
-				saves.push(item.cleanup(time));
-
-			} else if (item && now - item.lastAccess > time) {
+			if (item && now - item.lastAccess > time) {
 
 				// done first to prevent race conditions on save.
 				dict.delete(k);
-
-
 
 				saves.push(
 					saver(this._cacheKey + item.key,
 						this.encoder ? this.encoder(item.data) : item.data
 					)
 				);
-
-
 
 			}
 
@@ -416,14 +409,13 @@ export default class Cache<T = any> extends Emitter {
 		const now = Date.now();
 		const dict = this._dict;
 
-		for (const k in dict) {
+		for (const v of this._subs.values()) {
+			v._cleanNoSave(time);
+		}
 
-			const item = dict.get(k);
-			if (item instanceof Cache) {
+		for (const [k, item] of dict.entries()) {
 
-				item._cleanNoSave(time);
-
-			} else if (item && now - item.lastAccess > time) {
+			if (item && now - item.lastAccess > time) {
 				dict.delete(k);
 			}
 
