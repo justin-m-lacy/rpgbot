@@ -135,8 +135,8 @@ export class DiscordBot {
 
 		setInterval(
 			() => {
-				this.cache.backup(1000 * 10).catch(err => console.error(err));
-			}, 1000 * 10).unref();
+				this.cache.backup(60 * 1000 * 15).catch(err => console.error(err));
+			}, 60 * 1000 * 10).unref();
 
 		this.initClient();
 

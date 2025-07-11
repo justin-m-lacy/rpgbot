@@ -171,8 +171,6 @@ export default class Cache<T = any> extends Emitter {
 
 		subkey = this._subkey(this._cacheKey, subkey);
 
-		console.log(`new subcache: ${subkey}`);
-
 		let cache = this._subs.get(subkey);
 		if (cache !== undefined && cache instanceof Cache) return cache as Cache<S>;
 
@@ -181,6 +179,7 @@ export default class Cache<T = any> extends Emitter {
 			encoder: encoder ?? this.encoder,
 			checker: this.checker,
 			deleter: this.deleter,
+			saver: this.saver,
 			cacheKey: subkey,
 			decoder: decoder
 		}));
@@ -246,11 +245,11 @@ export default class Cache<T = any> extends Emitter {
 			await this.saver(this._cacheKey + key,
 				this.encoder ? this.encoder?.(value) : value
 			);
+			item.markSaved();
 		} else {
 			console.warn(`no saver for: ${key}`);
 		}
 
-		item.markSaved();
 		return value;
 
 	}
@@ -323,11 +322,8 @@ export default class Cache<T = any> extends Emitter {
 
 		const saves: Promise<any>[] = [];
 
-		console.log(`run backup...`);
-
 		for (const cache of this._subs.values()) {
 
-			console.log(`backup subcache: ${cache.cacheKey}`);
 			saves.push(cache.backup(time));
 		}
 
@@ -344,7 +340,6 @@ export default class Cache<T = any> extends Emitter {
 
 		} // for
 
-		console.log(`backup: ${saves.length} items`);
 		return Promise.allSettled(saves);
 
 	}

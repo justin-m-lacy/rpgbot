@@ -118,7 +118,7 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 	 * @param m
 	 * @returns
 	 */
-	async doBackup() { return this.cache.backup(0); }
+	backup() { return this.cache.backup(0); }
 
 	/**
 	 * Return access permission string for the given command.
