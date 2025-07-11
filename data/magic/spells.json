@@ -1,5 +1,213 @@
 [
     {
+        "id": "clarity",
+        "level": 7,
+        "school": "enchant",
+        "desc": "Cure yourself or an ally of a charm.",
+        "target": "any",
+        "cost": {
+            "mp": 10
+        },
+        "cure": "charmed"
+    },
+    {
+        "id": "darkbolt",
+        "name": "dark bolt",
+        "level": 2,
+        "school": "shadow",
+        "kind": "shadow",
+        "buy": {
+            "research": 25,
+            "scrolls": 1
+        },
+        "cost": {
+            "mp": 2
+        },
+        "at": {
+            "25": {
+                "attack.dmg.max": 1
+            },
+            "75": {
+                "attack.dmg.min": 1
+            },
+            "300": {
+                "attack.dmg.max": 2,
+                "attack.dmg.min": 1,
+                "attack.tohit": 2
+            }
+        },
+        "dmg": "0.5~2",
+        "dot": {
+            "duration": 15,
+            "dmg": 1
+        }
+    },
+    {
+        "id": "deathbolt",
+        "name": "death bolt",
+        "level": 7,
+        "require": "darkbolt",
+        "school": "shadow",
+        "cost": {
+            "mp": 5
+        },
+        "kind": "drain",
+        "at": {
+            "25": {
+                "attack.dmg.max": 4
+            },
+            "75": {
+                "attack.dmg.min": 5
+            },
+            "300": {
+                "attack.dmg.max": 4,
+                "attack.dmg.min": 4,
+                "attack.tohit": 4
+            }
+        },
+        "dmg": "15~20",
+        "dot": {
+            "duration": 30,
+            "dmg": 3
+        }
+    },
+    {
+        "id": "lifedrain",
+        "name": "drain life",
+        "level": 12,
+        "school": "shadow",
+        "cost": {
+            "mp": 7
+        },
+        "at": {
+            "25": {
+                "attack.dot.dmg.max": 5
+            },
+            "75": {
+                "attack.dot.dmg.min": 5
+            },
+            "300": {
+                "attack.dot.dmg.max": 5,
+                "attack.dot.dmg.min": 5
+            }
+        },
+        "dot": {
+            "kind": "drain",
+            "leech": 0.75,
+            "duration": 60,
+            "dmg": "15~30"
+        }
+    },
+    {
+        "id": "gloom",
+        "level": 2,
+        "school": "shadow",
+        "desc": "Decrease the target's resistance to shadow magic.",
+        "cost": {
+            "mp": 2
+        },
+        "target": "enemies",
+        "dot": {
+            "kind": "shadow",
+            "duration": 100,
+            "mod": {
+                "resist.shadow": -10
+            }
+        }
+    },
+    {
+        "id": "poisonnettle",
+        "name": "Poison Nettle",
+        "level": 1,
+        "school": "pagan",
+        "cost": {
+            "mp": 1
+        },
+        "dot": {
+            "kind": "poison",
+            "duration": 10,
+            "dmg": "0.5~1"
+        }
+    },
+    {
+        "id": "whirlstep1",
+        "name": "Whirling Step",
+        "level": 1,
+        "school": "air",
+        "desc": "Increases the casters's ability to dodge attacks.",
+        "target": "self",
+        "cost": {
+            "mp": 1
+        },
+        "dot": {
+            "duration": 45,
+            "mod": {
+                "dodge": 1
+            }
+        }
+    },
+    {
+        "id": "wake",
+        "level": 5,
+        "school": "enchant",
+        "desc": "Wake a slumbering ally.",
+        "target": "any",
+        "cost": {
+            "mana": 1,
+            "herbs": 1
+        },
+        "cure": "sleep"
+    },
+    {
+        "id": "embolden",
+        "level": 3,
+        "school": "fire",
+        "target": "any",
+        "desc": "Remove fear from yourself or a frightened creature.",
+        "cost": {
+            "mp": 4
+        },
+        "cure": "fear"
+    },
+    {
+        "id": "speak",
+        "level": 8,
+        "school": "air",
+        "desc": "Breaks a curse of silence.",
+        "silent": true,
+        "target": "any",
+        "cost": {
+            "mp": 12
+        },
+        "cure": "silence"
+    },
+    {
+        "id": "cureparalyze",
+        "name": "cure paralysis",
+        "level": 7,
+        "school": "mana",
+        "target": "any",
+        "silent": true,
+        "desc": "Loosens rigid muscles, nerves, and bones.",
+        "cost": {
+            "mp": 10
+        },
+        "cure": "paralysis"
+    },
+    {
+        "id": "curesick",
+        "name": "Cure sickness",
+        "level": 1,
+        "require": "spellbook",
+        "school": "light",
+        "silent": true,
+        "desc": "Cure sickness of yourself or an ally.",
+        "cost": {
+            "mp": 1
+        },
+        "cure": "sick"
+    },
+    {
         "id": "phase",
         "target": "self",
         "level": 1,
