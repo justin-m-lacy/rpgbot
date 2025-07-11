@@ -162,7 +162,7 @@ export class Mob {
 		}
 		return null;
 	}
-	takeItem(which: number | string | Item) {
+	takeItem(which: number | string | Item): Item | null {
 
 		if (!this._held) return null;
 

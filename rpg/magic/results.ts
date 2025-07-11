@@ -65,7 +65,6 @@ export class Result<T extends object> {
 		this.fb = opts.fb;
 		this.err = opts.err;
 
-		console.log(`result: ${this.set}`);
 	}
 
 	apply(targ: T, dt: number = 1): boolean {

@@ -161,7 +161,7 @@ export class Combat {
 		 *
 		 * @param wot - optional item to try to take.
 		 */
-	async trySteal(char: Char, who?: TActor | Party, wot?: ItemPicker | null) {
+	async trySteal(char: Char, who: TActor | Party, wot?: ItemPicker | null) {
 
 		const targ = who instanceof Party ? await who.randChar() : who;
 		if (!targ) return;

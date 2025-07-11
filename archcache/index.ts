@@ -22,7 +22,7 @@ export type CacheOpts<T> = {
 	/**
 	 * function to store data at key.
 	 */
-	saver?: Saver;
+	saver: Saver;
 
 	/**
 	 * Encodes data before save.
@@ -64,57 +64,52 @@ export default class Cache<T = any> extends Emitter {
 		this._cacheKey = this._fixKey(v);
 	}
 
-	private _subs: Map<string, Cache<any>> = new Map();
-	private _dict: Map<string, CacheItem<T>> = new Map();
-	get data() { return this._dict; }
+	private readonly _subs: Map<string, Cache<any>> = new Map();
+	readonly dict: Map<string, CacheItem<T>> = new Map();
 
-	lastAccess: number = 0;
-	_cacheKey: string;
+	private lastAccess: number = 0;
+	private _cacheKey: string;
 
-	_separator: string = '/';
+	private _separator: string = '/';
 
 	/**
 	 * function to load items not found in cache from a data
 	 * key is the key of the item not found.
 	 */
-	loader?: Loader<any>;
+	private loader?: Loader<any>;
 
 	/**
 	 * function to store data at key.
 	 */
-	saver?: Saver;
+	private saver: Saver;
 
-	encoder?: Encoder<T>;
-	decoder?: Decoder<T>;
+	private encoder?: Encoder<T>;
+	private decoder?: Decoder<T>;
 
 	/**
 	 * function to call when item is being deleted from cache.
 	 */
-	deleter?: Deleter;
+	private deleter?: Deleter;
 
 	/**
 	 * function that checks the existence of item
 	 * in an underlying data store.
 	 */
-	checker?: (key: string) => Promise<boolean>
+	private checker?: (key: string) => Promise<boolean>
 
-	constructor(opts?: CacheOpts<T>) {
+	constructor(opts: CacheOpts<T>) {
 
 		super();
 
-		if (opts) {
+		this.loader = opts.loader;
+		this.saver = opts.saver;
+		this.checker = opts.checker;
+		this.deleter = opts.deleter;
+		this.decoder = opts.decoder;
+		this.encoder = opts.encoder;
 
-			this.loader = opts.loader;
-			this.saver = opts.saver;
-			this.checker = opts.checker;
-			this.deleter = opts.deleter;
-			this.decoder = opts.decoder;
-			this.encoder = opts.encoder;
-
-		}
-
-		this._separator = opts?.cacheSeparator ?? '/';
-		this._cacheKey = opts?.cacheKey ?? this._separator;
+		this._separator = opts.cacheSeparator ?? '/';
+		this._cacheKey = opts.cacheKey ?? this._separator;
 
 	}
 
@@ -196,7 +191,7 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	async fetch(key: string): Promise<T | undefined> {
 
-		const item = this._dict.get(key);
+		const item = this.dict.get(key);
 		if (item) {
 			item.lastAccess = Date.now();
 			return item.data;
@@ -213,7 +208,7 @@ export default class Cache<T = any> extends Emitter {
 			if (data === undefined) return undefined;
 
 			const value = this.decoder ? this.decoder(data) : data;
-			this._dict.set(key, new CacheItem<T>(key, value, false));
+			this.dict.set(key, new CacheItem<T>(key, value, false));
 
 			return value as T;
 
@@ -233,12 +228,12 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	async store(key: string, value: T): Promise<T> {
 
-		let item = this._dict.get(key);
+		let item = this.dict.get(key);
 		if (item) {
 			item.data = value;
 		} else {
 			item = new CacheItem(key, value);
-			this._dict.set(key, item);
+			this.dict.set(key, item);
 		}
 
 		if (this.saver) {
@@ -261,7 +256,7 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	get<D extends T = T>(key: string): D | undefined {
 
-		const it = this._dict.get(key);
+		const it = this.dict.get(key);
 		if (it !== undefined) {
 			it.lastAccess = Date.now();
 			return it.data as D;
@@ -278,9 +273,9 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	cache(key: string, value: any) {
 
-		const cur = this._dict.get(key);
+		const cur = this.dict.get(key);
 		if (cur) cur.update(value);
-		else this._dict.set(key, new CacheItem(key, value));
+		else this.dict.set(key, new CacheItem(key, value));
 
 	}
 
@@ -292,7 +287,7 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	async delete(key: string) {
 
-		this._dict.delete(key);
+		this.dict.delete(key);
 		if (this.deleter != null) {
 
 			return this.deleter(this._cacheKey + key).then(
@@ -315,10 +310,9 @@ export default class Cache<T = any> extends Emitter {
 	): Promise<any[] | undefined> {
 
 		const saver = this.saver;
-		if (!saver) return Promise.resolve(undefined);
 
 		const now = Date.now();
-		const dict = this._dict;
+		const dict = this.dict;
 
 		const saves: Promise<any>[] = [];
 
@@ -354,10 +348,9 @@ export default class Cache<T = any> extends Emitter {
 	async cleanup(time: number = 1000 * 60 * 5): Promise<any[] | void> {
 
 		const saver = this.saver;
-		if (!saver) return this._cleanNoSave(time);
 
 		const now = Date.now();
-		const dict = this._dict;
+		const dict = this.dict;
 
 		const saves = [];
 
@@ -402,7 +395,7 @@ export default class Cache<T = any> extends Emitter {
 	_cleanNoSave(time: number) {
 
 		const now = Date.now();
-		const dict = this._dict;
+		const dict = this.dict;
 
 		for (const v of this._subs.values()) {
 			v._cleanNoSave(time);
@@ -422,7 +415,7 @@ export default class Cache<T = any> extends Emitter {
 	 * Remove an item from cache, without deleting it from the data store.
 	 * @param key
 	 */
-	free(key: string) { this._dict.delete(key); }
+	free(key: string) { this.dict.delete(key); }
 
 
 	/**
@@ -433,7 +426,7 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	async exists(key: string) {
 
-		if (this._dict.has(key)) return true;
+		if (this.dict.has(key)) return true;
 
 		if (this.checker) return this.checker(this._cacheKey + key);
 
@@ -448,7 +441,7 @@ export default class Cache<T = any> extends Emitter {
 	 * @returns
 	 */
 	has(key: string) {
-		return this._dict.has(key);
+		return this.dict.has(key);
 	}
 
 	/**

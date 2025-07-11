@@ -26,10 +26,12 @@ export default NewCommand<Rpg>({
 
 		}
 
-		const what = m.options.getString('what');
-
 		const dest = await rpg.loadChar(who);
-		if (!dest) return SendPrivate(m, `'${who}' not seen here.`);
+		if (!dest?.at.equals(src.at)) {
+			return SendPrivate(m, `${src.name} does not see '${who}' here.`);
+		}
+
+		const what = m.options.getString('what');
 
 		const result = await rpg.game.action('steal', src, dest, what);
 		await ReplyBlock(m, result);
