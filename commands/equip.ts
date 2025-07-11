@@ -17,7 +17,7 @@ export default NewCommand<Rpg>({
 		if (!what) {
 			return ReplyBlock(m, `${char.name} equip:\n${char.listEquip()}`);
 		}
-
-		return ReplyBlock(m, await rpg.game.action('equip', char, what));
+		await rpg.game.action('equip', char, what)
+		return ReplyBlock(m, char.flushLog());
 	}
 })

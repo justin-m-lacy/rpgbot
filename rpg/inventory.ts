@@ -66,7 +66,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 			const it = reviver(arr[i]);
 			if (it) items.push(it);
-			else console.warn('Inventory: ERR PARSING: ' + arr[i]);
+			else console.warn('Inventory PARSING: ' + arr[i]);
 
 		}
 
@@ -117,7 +117,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 			if (!IsInt(start)) {
 				return this.find(start);
 			} else {
-				start = parseInt(start);
+				start = Number.parseInt(start);
 			}
 
 		} else if (Number.isNaN(start)) {
@@ -190,12 +190,13 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 	find(id: string) {
 
 		const lower = id.toLowerCase();
+
 		for (let i = this.items.length - 1; i >= 0; i--) {
 
 			const it = this.items[i];
 			if (!it) continue;
 			if (it.id === lower) return this.items[i];
-			else if (it.name && it.name.toLowerCase() === lower) return this.items[i];
+			else if (it.name?.toLowerCase() === lower) return this.items[i];
 
 		}
 		return null;

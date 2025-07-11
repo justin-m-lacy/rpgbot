@@ -130,11 +130,11 @@ export default class Cache<T = any> extends Emitter {
 	 */
 	settings(opts: CacheOpts<T>, propagate: boolean = true) {
 
-		if (opts.hasOwnProperty('loader')) this.loader = opts.loader;
-		if (opts.hasOwnProperty('saver')) this.saver = opts.saver;
-		if (opts.hasOwnProperty('checker')) this.checker = opts.checker;
-		if (opts.hasOwnProperty('deleter')) this.deleter = opts.deleter;
-		if (opts.hasOwnProperty('reviver')) this.decoder = opts.decoder;
+		if (opts.loader) this.loader = opts.loader;
+		if (opts.saver) this.saver = opts.saver;
+		if (opts.checker) this.checker = opts.checker;
+		if (opts.deleter) this.deleter = opts.deleter;
+		if (opts.decoder) this.decoder = opts.decoder;
 
 		const keyChanged = opts.cacheKey !== this._cacheKey;
 		this.cacheKey = opts.cacheKey ?? this._cacheKey;
@@ -323,7 +323,7 @@ export default class Cache<T = any> extends Emitter {
 
 		const saves = [];
 
-		console.log(`running backup...`);
+		console.log(`run backup...`);
 
 		for (const item of dict.values()) {
 
@@ -344,12 +344,14 @@ export default class Cache<T = any> extends Emitter {
 		} // for
 
 		console.log(`backup: ${saves.length} items`);
-		return Promise.allSettled(saves).then(
+		Promise.allSettled(saves).then(
 			vals => {
 				this.emit('backup', this, vals);
 				return vals;
 			}
-		);
+		).catch(err => {
+			console.error(`backup err: ${err}`)
+		})
 
 	}
 
@@ -396,9 +398,12 @@ export default class Cache<T = any> extends Emitter {
 
 		} // for
 
+		console.log(`run cleanup`);
 		return Promise.allSettled(saves).then(vals => {
 			this.emit('cleanup', this, vals); return vals
-		});
+		}).catch(err => {
+			console.log(`cleanup failed: ${err}`);
+		})
 
 	}
 

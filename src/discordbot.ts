@@ -130,30 +130,15 @@ export class DiscordBot {
 
 		setInterval(
 			() => {
-
-				try {
-					this.cache.cleanup(60 * 1000 * 30);
-				} catch (e) { console.error(e); }
-
+				this.cache.cleanup(60 * 1000 * 30);
 			}, 60 * 1000 * 30).unref();
 
 		setInterval(
 			() => {
-				try {
-					this.cache.backup(60 * 1000 * 15);
-				} catch (e) { console.error(e); }
-			}, 60 * 1000 * 15).unref();
+				this.cache.backup(60 * 1000 * 10);
+			}, 60 * 1000 * 8).unref();
 
 		this.initClient();
-
-		const chan = this.client.channels.resolve('resolvable');
-		if (chan?.isSendable()) {
-
-			chan.send({
-
-			});
-		}
-
 
 	}
 
@@ -581,7 +566,7 @@ export class DiscordBot {
 		} else if (idobj instanceof User) {
 			context = new UserContext(this, idobj as User, this.cache.subcache(fsys.getUserDir(idobj)));
 		} else {
-			console.log(`skip context for type: ${idobj.type}`)
+			console.log(`no context type: ${idobj.type}`)
 		}
 
 		if (context) {

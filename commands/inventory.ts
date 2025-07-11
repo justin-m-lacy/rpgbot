@@ -1,6 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
+import { Char } from "rpg/char/char";
 import { ReplyBlock } from "rpg/display/display";
 import { ItemMenu } from "rpg/display/items";
 import { Rpg } from "rpg/rpg";
@@ -11,7 +12,7 @@ export default NewCommand<Rpg>({
 		.addStringOption(StrOpt('who', 'Character\'s inventory to view. Defaults to own inventory')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
-		let char;
+		let char: Char | undefined | null;
 
 		const who = m.options.getString('who');
 

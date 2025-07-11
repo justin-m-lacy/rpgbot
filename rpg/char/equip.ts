@@ -143,7 +143,7 @@ export class Equip {
 
 		if (it.hands === 2) {
 
-			console.log('Setting two handed weapon.');
+			console.log('set two handed weapon.');
 			this.slots.right = it;
 			this.slots.left = null;
 
@@ -155,7 +155,7 @@ export class Equip {
 
 			if (right === null) {
 
-				console.log('setting right hand.');
+				console.log('set right hand.');
 
 				this.slots.right = it;
 				if (left !== null && (left as Weapon).hands === 2) {
@@ -165,7 +165,7 @@ export class Equip {
 
 			} else if (left === null) {
 
-				console.log('setting left hand.');
+				console.log('set left hand.');
 
 				this.slots.left = it;
 				if (right !== null && (right as Weapon).hands === 2) {
@@ -175,7 +175,7 @@ export class Equip {
 
 			} else {
 
-				console.log('changing hands.');
+				console.log('change hands.');
 
 				// can't both be two-handed.
 				this.slots.right = it;

@@ -78,7 +78,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.guilds = new GuildManager(cache.subcache('guilds'));
 
-		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS);
+		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS).unref();
 
 		this.events.on('charDie', this.onCharDie, this);
 		this.events.on('charHit', this.onCharHit, this);
@@ -807,12 +807,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	equip(this: Game<A, K>, char: Char, wot: ItemIndex) {
 
 		let res = char.equip(wot);
-		if (res === true) res = `${char.name} equips ${wot}`;	// TODO,echo slot used.
+		// TODO,echo slot used.
+		if (res === true) char.log(`${char.name} equips ${wot}`);
 		else if (typeof res === 'string') {
-			return res;
-		} else res = `${char.name} does not have ${wot}`;
-
-		return char.output(res);
+			char.log(res);
+		} else {
+			char.log(`${char.name} does not have ${wot}`);
+		}
 
 	}
 
