@@ -1,8 +1,8 @@
 import { randElm } from '@/utils/jsutils';
+import FoodInfo from 'data/cooking.json';
 import type { Char } from 'rpg/char/char';
 import { Item } from 'rpg/items/item';
 import { ItemType } from 'rpg/items/types';
-import FoodInfo from '../data/cooking.json';
 
 export const GetAdjective = () => {
 	return randElm(FoodInfo.adjectives);
@@ -35,7 +35,7 @@ export const TryEat = (char: Char, it: Item) => {
 
 export const CookItem = (it: Item) => {
 
-	const cooking = require('../data/cooking.json');
+	const cooking = require('data/cooking.json');
 	const adjs = cooking.adjectives;
 
 	const adj = adjs[Math.floor(adjs.length * Math.random())];

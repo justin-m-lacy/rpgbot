@@ -36,7 +36,7 @@ export class Grave extends Item {
 			return `Here lies ${char}. Died of unknown causes.`;
 		}
 
-		const eps = this._Epitaphs ?? (this._Epitaphs = require('../data/items/epitaphs.json'));
+		const eps = this._Epitaphs ?? (this._Epitaphs = require('data/items/epitaphs.json'));
 		const ep = eps[Math.floor(Math.random() * eps.length)];
 
 		return genderfy(char.sex, ep.replace(/%c/g, char.name).replace(/%k/g, slayer));

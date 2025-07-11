@@ -1,6 +1,6 @@
+import Biomes from 'data/world/biomes.json';
 import { RandFeature } from 'rpg/builders/features';
 import { Coord } from 'rpg/world/coord';
-import Biomes from '../data/world/biomes.json';
 import { Biome, Exit, Loc } from './loc';
 
 type BiomeName = keyof typeof Biomes;

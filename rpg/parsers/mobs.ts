@@ -69,7 +69,7 @@ export const GetMob = (id: string) => {
 
 const InitMobs = async () => {
 
-	const raw = (await import('../data/npc/mobs.json', { assert: { type: 'json' } })).default;
+	const raw = (await import('data/npc/mobs.json', { assert: { type: 'json' } })).default;
 
 	for (let k = raw.length - 1; k >= 0; k--) {
 

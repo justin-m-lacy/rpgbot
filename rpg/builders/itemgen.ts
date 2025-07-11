@@ -13,8 +13,8 @@ import { Mob } from '../monster/mobs';
 
 
 
-export type RawChestsData = (typeof import('../data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" };
-type RawItemData = (typeof import('../data/items/items.json', { assert: { type: 'json' } })['misc' | 'special'][number]) & { id: string }
+export type RawChestsData = (typeof import('data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" };
+type RawItemData = (typeof import('data/items/items.json', { assert: { type: 'json' } })['misc' | 'special'][number]) & { id: string }
 
 /**
  * Master item prototypes. ( raw data)
@@ -41,7 +41,7 @@ export const InitItems = async () => {
 
 async function InitBasic() {
 
-	const items = (await import('../data/items/items.json', { assert: { type: 'json' } })).default;
+	const items = (await import('data/items/items.json', { assert: { type: 'json' } })).default;
 	const spec = items.special as RawItemData[];
 
 	JunkItems.push(...items.misc as RawItemData[]);
@@ -61,7 +61,7 @@ async function InitBasic() {
 
 async function InitChests() {
 
-	const packs = (await import('../data/items/chests.json', { assert: { type: 'json' } })).default;
+	const packs = (await import('data/items/chests.json', { assert: { type: 'json' } })).default;
 
 	for (let i = packs.length - 1; i >= 0; i--) {
 

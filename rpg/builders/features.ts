@@ -1,10 +1,10 @@
 
 import { randElm } from '@/utils/jsutils';
+import FeatureData from 'data/world/features.json';
 import { GenShop } from 'rpg/builders/shopgen';
 import { DecodeFeature } from 'rpg/parsers/items';
 import { Feature } from 'rpg/world/feature';
 import { Biome, Loc } from 'rpg/world/loc';
-import FeatureData from '../data/world/features.json';
 
 const byName: { [key: string]: typeof FeatureData[number] } = {};
 

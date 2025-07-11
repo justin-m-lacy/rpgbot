@@ -14,7 +14,7 @@ type RawSpell = {
 	mods?: Record<string, any>;
 	time?: number
 } &
-	typeof import('../data/magic/spells.json', { assert: { type: 'json' } })[number];
+	typeof import('data/magic/spells.json', { assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
 export const Spells: Partial<{ [id: string]: Spell }> = {};
@@ -52,7 +52,7 @@ export const ParseSpell = (raw: RawSpell) => {
 export const LoadSpells = async () => {
 
 	const spellDatas = (await import(
-		'../data/magic/spells.json', { assert: { type: 'json' } }
+		'data/magic/spells.json', { assert: { type: 'json' } }
 	)).default;
 	for (let i = spellDatas.length - 1; i >= 0; i--) {
 		const sp = Spells[spellDatas[i].id] = ParseSpell(spellDatas[i] as any);

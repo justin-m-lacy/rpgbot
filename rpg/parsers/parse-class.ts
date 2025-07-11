@@ -2,7 +2,7 @@ import { ParseMod } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
 import { Race, type GClass } from '../char/race';
 
-type RawRaceData = typeof import('../data/races.json')[number] | typeof import('../data/classes.json')[number];
+type RawRaceData = typeof import('data/races.json')[number] | typeof import('data/classes.json')[number];
 
 const races: Race[] = [];
 const raceByName: Record<string, Race> = {};
@@ -80,7 +80,7 @@ const ParseRace = (raw: RawRaceData) => {
 
 export const InitRaces = async () => {
 
-	const raws = (await import('../data/races.json', { assert: { type: 'json' } })).default;
+	const raws = (await import('data/races.json', { assert: { type: 'json' } })).default;
 
 	for (let i = raws.length - 1; i >= 0; i--) {
 		try {
@@ -99,7 +99,7 @@ export const InitRaces = async () => {
 
 export const InitClasses = async () => {
 
-	const raw = (await import('../data/classes.json', { assert: { type: 'json' } })).default;
+	const raw = (await import('data/classes.json', { assert: { type: 'json' } })).default;
 
 	for (let i = raw.length - 1; i >= 0; i--) {
 

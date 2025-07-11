@@ -2,7 +2,7 @@ import { AddProtoItems } from 'rpg/builders/itemgen';
 import { Potion } from 'rpg/items/potion';
 import { ItemData, ItemType } from 'rpg/items/types';
 
-export type RawPotionData = (typeof import('../data/items/potions.json', { assert: { type: 'json' } }))[number] & ItemData;
+export type RawPotionData = (typeof import('data/items/potions.json', { assert: { type: 'json' } }))[number] & ItemData;
 
 const potsByName: { [name: string]: RawPotionData } = {};
 const PotsByLevel: { [key: number]: RawPotionData[] } = [];
@@ -28,7 +28,7 @@ export const GenPotion = (name: string) => {
 
 export async function InitPotions() {
 
-	const pots = (await import('../data/items/potions.json', { assert: { type: 'json' } })).default;
+	const pots = (await import('data/items/potions.json', { assert: { type: 'json' } })).default;
 
 	for (let i = pots.length - 1; i >= 0; i--) {
 

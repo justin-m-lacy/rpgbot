@@ -1,4 +1,4 @@
-import templates from '../data/minions.json';
+import templates from 'data/minions.json';
 
 export class Minion {
 

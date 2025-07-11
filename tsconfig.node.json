@@ -45,6 +45,7 @@
   "include": [
     "src/**/*.ts",
     "./*.ts",
+    "data/**/*.json",
     "scripts",
     "archcache",
     "auth.json",

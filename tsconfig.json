@@ -52,6 +52,7 @@
     "index.ts",
     "auth.json",
     "scripts",
+    "data/**/*.json",
     "src/**/*.json",
     "config.json",
     "auth.json",

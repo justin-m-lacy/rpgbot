@@ -51,7 +51,7 @@ export const LoadMaterials = () => {
 	if (materials != null) return;
 
 
-	const objs = require('../data/items/materials.json');
+	const objs = require('data/items/materials.json');
 	materials = [];
 	byName = {};
 	byLevel = {};

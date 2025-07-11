@@ -1,4 +1,5 @@
 
+import BaseArmors from 'data/items/armors.json';
 import { AddProtoItem } from 'rpg/builders/itemgen';
 import { DamageSrc } from 'rpg/formulas';
 import { Item } from 'rpg/items/item';
@@ -8,7 +9,6 @@ import { Weapon } from 'rpg/items/weapon';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
-import BaseArmors from '../data/items/armors.json';
 
 type RawArmorData = ItemData & (typeof BaseArmors)[number];
 

@@ -1,10 +1,10 @@
+import BaseWeapons from 'data/items/weapons.json';
 import { AddProtoItem } from 'rpg/builders/itemgen';
 import { DamageSrc } from 'rpg/formulas';
 import { Material, RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
 import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
-import BaseWeapons from '../data/items/weapons.json';
 import { Weapon } from '../items/weapon';
 
 type RawWeaponData = { hit?: number, mods?: Record<string, any> } & ItemData
