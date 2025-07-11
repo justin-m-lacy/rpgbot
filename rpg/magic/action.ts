@@ -47,14 +47,12 @@ export class Action {
 
 				const res = this.result[i];
 				if (res.apply(char)) {
-					console.log(`success: ${this.id}`);
-					// any feedback.
+
 					if (res.fb) {
 						char.log(res.fb);
 					}
 				} else {
-					/// feedback.
-					console.log(`fail: ${this.id}`);
+
 					if (res.err) {
 						char.log(res.err);
 					}

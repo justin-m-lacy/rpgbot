@@ -53,6 +53,15 @@ export const ParseValue = (id: string, v?: string | number | object): TValue | u
 
 }
 
+/**
+ * Parse value or return the original unparsed value.
+ * @param id 
+ * @param v 
+ * @returns 
+ */
+export const ValueOrFb = <T extends string | number | object>(id: string, v?: T): TValue | T | undefined => {
+	return ParseValue(id, v) ?? v;
+}
 
 /**
  * Return a number or TValue, using number if possible.

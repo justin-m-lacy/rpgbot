@@ -1,8 +1,8 @@
 import { TestRequire, type RawIf, type TRequire } from "rpg/magic/requires";
-import { ParseValue } from "rpg/parsers/values";
+import { ParseValue, ValueOrFb } from "rpg/parsers/values";
 import { AddValues } from "rpg/values/apply";
 import { ParsePaths, type Path } from "rpg/values/paths";
-import type { TValue } from "rpg/values/types";
+import type { Numeric, TValue } from "rpg/values/types";
 
 export type RawResult = {
 	if?: RawIf,
@@ -23,7 +23,7 @@ type BaseResult<T extends object> = {
 export type TResult<T extends object> = {
 
 	if?: TRequire<T>,
-	set?: Path<TValue>,
+	set?: Path<Numeric | string | object>,
 	add?: Path<TValue>,
 	fb?: string,
 	err?: string,
@@ -36,8 +36,8 @@ export const ParseResult = <T extends object>(raw: RawResult): TResult<T> => {
 	return new Result<T>({
 
 		if: raw.if,
-		set: raw.set ? ParsePaths(raw.set, 'set', ParseValue) : undefined,
-		add: raw.add ? ParsePaths(raw.add, 'set', ParseValue) : undefined,
+		set: raw.set ? ParsePaths(raw.set, 'set', ValueOrFb) : undefined,
+		add: raw.add ? ParsePaths(raw.add, 'add', ParseValue) : undefined,
 		fb: raw.fb,
 		err: raw.err,
 	});
@@ -49,12 +49,12 @@ export class Result<T extends object> {
 	err?: string;
 	fb?: string;
 	if?: TRequire<T>;
-	set?: Path<TValue>;
+	set?: Path<Numeric | string | object>;
 	add?: Path<TValue>;
 
 	constructor(opts: {
 		if?: TRequire<T>,
-		set?: Path<TValue>,
+		set?: Path<TValue | string | object>,
 		add?: Path<TValue>,
 		fb?: string, err?: string
 	}) {
