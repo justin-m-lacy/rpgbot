@@ -1,3 +1,4 @@
+import { randElm } from '@/utils/jsutils';
 import { AddProtoItems } from 'rpg/builders/itemgen';
 import { Potion } from 'rpg/items/potion';
 import { ItemData, ItemType } from 'rpg/items/types';
@@ -19,6 +20,29 @@ export const PotsList = (level: number) => {
 	s += '.';
 
 	return s;
+
+}
+
+/**
+ * Generate a potion up to level.
+ * @param level 
+ * @returns 
+ */
+export const LvlPotion = (level: number = 0) => {
+
+	while (level >= 0) {
+		const list = PotsByLevel[level];
+		if (list?.length && Math.random() < 0.4) {
+			return Potion.Decode(randElm(list));
+		}
+
+	}
+	const list = PotsByLevel[1];
+	if (list.length) {
+		return Potion.Decode(randElm(list));
+	}
+	return null;
+
 
 }
 

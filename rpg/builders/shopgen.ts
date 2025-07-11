@@ -6,7 +6,7 @@ import { Shop } from "rpg/world/shop";
 
 
 //const kinds = ['magic', 'potion', 'armor', 'weapon', 'junk', 'jewelry'];
-const kinds = [ItemType.Armor, ItemType.Weapon];
+const kinds = [ItemType.Armor, ItemType.Weapon, ItemType.Potion];
 
 export const GenShop = (biome: string, level: number) => {
 

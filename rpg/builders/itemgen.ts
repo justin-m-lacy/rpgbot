@@ -6,6 +6,7 @@ import { Item } from 'rpg/items/item';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { GenArmor } from 'rpg/parsers/armor';
 import { DecodeItem } from 'rpg/parsers/items';
+import { LvlPotion } from 'rpg/parsers/potions';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Loot } from '../combat/loot';
 import { LoadMaterials } from '../items/material';
@@ -23,10 +24,11 @@ export const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData
 
 const JunkItems: RawItemData[] = [];
 
-const ItemTypeGen: Record<string, (lvl?: number) => Item | null> = {
+const ItemTypeGen: Partial<Record<string, (lvl?: number) => Item | null>> = {
 
 	[ItemType.Weapon]: GenWeapon,
-	[ItemType.Armor]: GenArmor
+	[ItemType.Armor]: GenArmor,
+	[ItemType.Potion]: LvlPotion
 }
 
 export const InitItems = async () => {
