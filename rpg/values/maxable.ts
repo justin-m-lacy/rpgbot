@@ -9,7 +9,21 @@ export class Maxable implements ISimple {
 
 	toJSON() {
 		return this._value === this.max.value ?
-			this._value : { v: this._value, m: this.max.toJSON() }
+			this._value : { v: this._value, m: this.max }
+	}
+
+	/**
+	 * Decode stored value.
+	 * @param data 
+	 */
+	decode(data: any) {
+		if (typeof data === 'number') this.setTo(data);
+		else if (typeof data === 'object') {
+			this.value = data.v;
+			this.setMax(data.m);
+		} else {
+			this.setTo(0);
+		}
 	}
 
 	valueOf() { return this._value }

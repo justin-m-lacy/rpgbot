@@ -51,7 +51,7 @@ export const DecodeChar = (game: Game, json: any) => {
 		char.at.setTo(json.loc)
 	}
 
-	if (json.flags) {
+	if (typeof json.flags === 'number') {
 		char.flags = json.flags;
 		if (json.flags & StatusFlags.alive) char.state = CharState.Alive;
 		else { char.state = CharState.Dead }

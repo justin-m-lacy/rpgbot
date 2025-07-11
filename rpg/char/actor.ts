@@ -8,6 +8,7 @@ import { Fists } from 'rpg/items/weapon';
 import type { SexType } from 'rpg/social/gender';
 import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
+import { Maxable } from 'rpg/values/maxable';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { Item } from '../items/item';
 import { Dot, ProtoDot } from '../magic/dots';
@@ -152,14 +153,18 @@ export class Actor {
 		let k: keyof Extract<StatBlock, TValue>;
 		for (k in stats) {
 
-			if (!(k in this)) {
+			if (!(k in this.stats)) {
 				console.warn(`unknown stat: ${k}`)
 				continue;
 			};
 
-			const targ = this[k as keyof this];
+			const targ = this.stats[k as keyof StatBlock];
 			if (IsSimple(targ)) {
-				targ.setTo(stats[k].valueOf());
+				if (targ instanceof Maxable) {
+					targ.decode(stats[k]);
+				} else {
+					targ.setTo(stats[k].valueOf());
+				}
 
 			} else if (IsValue(targ)) {
 				targ.value = stats[k].valueOf();

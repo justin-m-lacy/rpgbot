@@ -16,7 +16,7 @@ export class Action {
 
 	private err?: string;
 
-	private need?: TRequire<Char>;
+	private need?: TRequire<Char> = undefined;
 
 	constructor(id: string, name?: string) {
 
@@ -24,7 +24,6 @@ export class Action {
 		this.name = name ?? id;
 		this.result = [];
 
-		console.log(`parse action: ${this.id}`);
 	}
 
 	/**
@@ -88,7 +87,7 @@ const ParseAction = (data: RawAction) => {
 	const a = new Action(data.id, data.name);
 
 	if (data.result) {
-		a.result.concat(...data.result.map(ParseResult<Char>));
+		a.result.push(...data.result.map(ParseResult<Char>));
 	}
 
 	return a;

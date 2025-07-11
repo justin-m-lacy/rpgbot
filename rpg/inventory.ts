@@ -56,19 +56,22 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		inv?: Inventory<I>) {
 
 		const arr = json.items;
-		const len = arr.length;
+		if (arr && Array.isArray(arr)) {
+			const len = arr.length;
 
-		if (!inv) inv = new Inventory<I>();
-		const items = inv.items;
-		items.length = 0;
+			if (!inv) inv = new Inventory<I>();
+			const into = inv.items;
+			into.length = 0;
 
-		for (let i = 0; i < len; i++) {
+			for (let i = 0; i < len; i++) {
 
-			const it = reviver(arr[i]);
-			if (it) items.push(it);
-			else console.warn('Inventory PARSING: ' + arr[i]);
+				const it = reviver(arr[i]);
+				if (it) into.push(it);
+				else console.warn('Inventory PARSING: ' + arr[i]);
 
+			}
 		}
+
 
 		return inv;
 
