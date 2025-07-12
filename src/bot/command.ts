@@ -83,11 +83,12 @@ export const NumOpt = (name: string, desc: string, min: number = 0) => new Slash
 export const IsTypedCmd = (cmd: Command): cmd is TypedCommand<any> => 'cls' in cmd;
 /**
  * Allows automate add 'id' and other useful command funcs.
+ * @type E - extra command data.
  * @param cmd 
  * @returns 
  */
-export const NewCommand = <T extends object | undefined>(
-	cmd: Omit<Command<T>, | 'id' | 'maxArgs' | 'minArgs'>): Command<T> => {
+export const NewCommand = <T extends object | undefined, E extends object = {}>(
+	cmd: E & Omit<Command<T>, | 'id' | 'maxArgs' | 'minArgs'>): Command<T> => {
 
 	return {
 		id: cmd.data.name,
@@ -96,7 +97,7 @@ export const NewCommand = <T extends object | undefined>(
 		).length,
 		maxArgs: cmd.data.options.length,
 		...cmd
-	} as Command<T>;
+	} as E & Command<T>;
 
 }
 

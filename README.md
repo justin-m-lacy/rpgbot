@@ -47,18 +47,6 @@ Create a file called `config.json` in the project directory with the following o
 	"pluginsdir": "./plugins/",
 	"savedir": "./savedata",
 	"cmdprefix": "!",
-	"spamblock": {
-		"71322723764242184": {
-			"301832693452339780": true,
-			"317196432374310868": true
-		},
-		"328369275237283926": {
-			"412644371232641306": true
-		},
-		"612495527484046435": {
-			"612577144123785776": true
-		}
-	},
 	"dev": {
 		"cmdprefix": ">",
 		"savedir": "./devdata"
@@ -71,18 +59,6 @@ Create a file called `config.json` in the project directory with the following o
 `savedir` - directory where bot save files will be kept.
 
 `cmdprefix` - prefix text that triggers bot commands. e.g. `!` in `!help`
-
-`spamblock` - Set channelIds for each discord server where bot will not interact. Format is:
-
-			```
-			{
-				"discord-server-id": {
-					"discord-channel-id" : true,
-					"another-discord-channel-id" : false
-				}
-			}
-			```
-Every discord channel id marked as `true` will block bot interactions for that discord channel.
 
 `dev` - Separate `cmdprefix` and `savedir` options for a bot running in `development` mode.
 

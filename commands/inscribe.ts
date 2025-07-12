@@ -1,6 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
+import { InventoryButtons } from "rpg/components";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -14,11 +15,17 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const what = m.options.getString('what', true);
-		const script = m.options.getString('text') ?? '';
+		const text = m.options.getString('text');
 
-		if (!what) return SendPrivate(m, 'Inscribe which inventory item?');
+		if (!what) {
+			return SendPrivate(m, 'Inscribe which inventory item?', {
+				components: InventoryButtons('inscribe', char.inv, 'what', {
+					text: text || undefined
+				})
+			});
+		}
 
-		return SendPrivate(m, await rpg.game.action('inscribe', char, what, script));
+		return SendPrivate(m, await rpg.game.action('inscribe', char, what, text || ''));
 
 
 	}

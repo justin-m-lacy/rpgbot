@@ -69,7 +69,10 @@ export class DiscordBot {
 	private readonly owner: string;
 	private readonly admins?: string[];
 
-	private readonly spamblock: Record<string, Record<string, boolean>>;
+	/**
+	 * track users with operations in progress.
+	 */
+	private readonly busy: Record<string, boolean> = Object.create(null);
 
 	private readonly commands: ReturnType<typeof CommandMap> = CommandMap();
 
@@ -96,8 +99,6 @@ export class DiscordBot {
 		this.ctxClasses = [];
 
 		this.client = client;
-
-		this.spamblock = config.spamblock ?? {};
 		this.cmdPrefix = config.cmdprefix ?? '!';
 
 		console.log(`pref: ${this.cmdPrefix}`);
@@ -187,8 +188,19 @@ export class DiscordBot {
 
 		this.client.on(Events.InteractionCreate, async (it) => {
 
+			if (this.isBusy(it.user)) {
+				if (it.isRepliable()) {
+					it.reply({
+						content: 'You already have an action in progress',
+						flags: MessageFlags.Ephemeral
+					});
+				}
+				return;
+			}
+
 			try {
 
+				this.setBusy(it.user, true);
 				if (it.isChatInputCommand()) {
 					const cmd = this.commands.get(it.commandName);
 					if (!cmd) return;
@@ -196,7 +208,7 @@ export class DiscordBot {
 					if (IsTypedCmd(cmd)) {
 
 						const ctx = await this.getCmdContext(it);
-						ctx?.routeCommand(it, cmd);
+						await ctx?.routeCommand(it, cmd);
 
 					} else {
 						await cmd.exec(it, this);
@@ -210,7 +222,7 @@ export class DiscordBot {
 					if (IsTypedCmd(wrap.cmd)) {
 
 						const ctx = await this.getCmdContext(it);
-						ctx?.routeCommand(wrap, wrap.cmd);
+						await ctx?.routeCommand(wrap, wrap.cmd);
 
 					} else {
 						await wrap.cmd.exec(wrap, this);
@@ -221,6 +233,8 @@ export class DiscordBot {
 
 			} catch (e) {
 				console.error(e);
+			} finally {
+				this.setBusy(it.user, false);
 			}
 		});
 
@@ -229,13 +243,18 @@ export class DiscordBot {
 			if (m.author.id === this.botId) return;
 			if (!m.content.startsWith(this.cmdPrefix)) return;
 
-			if (this.isSpam(m)) return;
+			if (this.isBusy(m.author)) {
+				m.reply('You already have an action in progress');
+				return;
+			}
 
 			try {
+
 				const ind = m.content.indexOf(' ');
 				const cmdStr = ind < 0 ? m.content.slice(1) : m.content.slice(1, ind);
 
 				const cmd = this.commands.get(cmdStr);
+
 				if (cmd) this.onMessage(m, cmd, ind > 0 ? m.content.slice(ind + 1) : '');
 			} catch (e) {
 				console.error(e);
@@ -245,9 +264,21 @@ export class DiscordBot {
 
 	}
 
+	/**
+	 * @returns return true to block bot by guild/channel message.
+	 */
+	private isBusy(m: { id: string }) {
+		return this.busy[m.id] === true;
+	}
+	private setBusy(m: { id: string }, b: boolean) {
+		this.busy[m.id] = b;
+	}
+
 	private async onMessage(m: Message, cmd: Command, argLine: string) {
 
 		try {
+
+			this.setBusy(m.author, true);
 
 			const args = this.parser.parse(argLine, cmd);
 			const wrap = new MsgWrap(m, args);
@@ -264,8 +295,11 @@ export class DiscordBot {
 				await cmd.exec(wrap, this);
 			}
 
+
 		} catch (err) {
 			console.warn(err);
+		} finally {
+			this.setBusy(m.author, false);
 		}
 
 	}
@@ -358,17 +392,6 @@ export class DiscordBot {
 			return true;
 		}
 		return false;
-
-	}
-
-	/**
-	 * @returns return true to block bot by guild/channel message.
-	 */
-	private isSpam(m: Message) {
-
-		if (!m.guild) return false;
-		const block = this.spamblock[m.guild.id];
-		return (m.channel && block?.[m.channel.id]);
 
 	}
 

@@ -108,7 +108,7 @@ export class ButtonAction implements ICmdWrap {
 	}
 
 	/**
-	 * Underlying command the button action represents.
+	 * Underlying command the button represents.
 	 */
 	readonly cmd: Command;
 

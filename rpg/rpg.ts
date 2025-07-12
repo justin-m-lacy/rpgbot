@@ -78,8 +78,8 @@ export class Rpg {
 
 	async myCharOrErr(m: ChatCommand, user: User) {
 
-		const charname = this.lastChars[user.id];
-		if (!charname) {
+		const charId = this.lastChars[user.id];
+		if (!charId) {
 			m.reply(
 				{
 					content: `${user.username}: No active character`,
@@ -89,17 +89,17 @@ export class Rpg {
 			return null;
 		}
 
-		const char = await this.loadChar(charname);
+		const char = await this.loadChar(charId);
 		if (!char) {
 			m.reply({
-				content: `Error loading '${charname}'. Load new character.`,
+				content: `Error loading '${charId}'. Load new character.`,
 				flags: MessageFlags.Ephemeral
 			});
 			return null;
 
 		} else if (char.owner !== user.id) {
 			m.reply({
-				content: `You do not control '${charname}'`,
+				content: `You do not control '${charId}'`,
 				flags: MessageFlags.Ephemeral
 			});
 			return null;

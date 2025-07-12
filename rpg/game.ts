@@ -213,11 +213,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		act: T, char: Char,
 		...params: ActParams<A[T]>) {
 
-		if (Date.now() - char.lastTime < 900) {
-			char.log(`Too many requests.`);
-			return;
-		}
-		char.lastTime = Date.now();
 		char.clearLog();
 
 		if (!this.canAct(char, act)) return char.output();

@@ -284,8 +284,9 @@ export const PickNpcButtons = (cmd: string, chars: Array<Char | Mob>, param: str
  * @param cmd - command to apply to selected item.
  * @param inv - selectable items. max 25.
  * @param param - id of param to set to item id.
+ * @param props - additional props to pass to command.
  */
-export const InventoryButtons = (cmd: string, inv: Inventory<Item>, param: string = 'item') => {
+export const InventoryButtons = (cmd: string, inv: Inventory<Item>, param: string = 'item', props?: Record<string, number | string | null | undefined>) => {
 
 	if (inv.items.length == 0) return [];
 	return ToActionRows(
@@ -294,7 +295,8 @@ export const InventoryButtons = (cmd: string, inv: Inventory<Item>, param: strin
 			customId: cmd,
 			label: it.name
 		}, {
-			[param]: it.id
+			[param]: it.id,
+			...props
 		}))
 	);
 
