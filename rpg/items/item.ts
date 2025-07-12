@@ -3,7 +3,7 @@ import { Char } from 'rpg/char/char';
 import { ItemData, ItemType } from 'rpg/items/types';
 
 export type TStacker = Item & {
-	stack: true,
+	stack: boolean,
 	count: number
 }
 

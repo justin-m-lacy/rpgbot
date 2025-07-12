@@ -54,7 +54,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 				const it = reviver(arr[i]);
 				if (it) into.push(it);
-				else console.warn('Inventory PARSING: ' + arr[i]);
+				else console.warn('Inv err: ' + arr[i]);
 
 			}
 		}

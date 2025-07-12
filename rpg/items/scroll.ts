@@ -8,11 +8,12 @@ export class Scroll extends Item {
 
 	static Decode(json: any) {
 
-		const scroll = new Scroll(json.id, json.spell);
+		const s = new Scroll(json.id, json.spell);
 
 		Item.InitData(json);
+		s.count = typeof (json.n === 'number') ? json.n : 1;
 
-		return scroll;
+		return s;
 
 	}
 
@@ -20,12 +21,14 @@ export class Scroll extends Item {
 
 		const data = super.toJSON();
 		data.spell = this.spell;
+		if (this.count != 1) data.n = this.count;
 
 		return data;
 
 	}
 
 	get stack() { return true }
+	count: number = 1;
 
 	private spell: string;
 

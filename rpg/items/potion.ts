@@ -3,9 +3,9 @@ import { ItemType } from 'rpg/items/types';
 import { GetDot, ProtoDot } from 'rpg/magic/dots';
 import { Char } from '../char/char';
 import { Game } from '../game';
-import { Item } from './item';
+import { Item, TStacker } from './item';
 
-export class Potion extends Item {
+export class Potion extends Item implements TStacker {
 
 	static Decode(json: any) {
 
@@ -13,6 +13,9 @@ export class Potion extends Item {
 
 		if (json.effect) p.effect = json.effect;
 		if (json.form) p.form = json.form;
+
+		p.count = typeof (json.n === 'number') ? json.n : 1;
+
 
 		Item.InitData(json, p);
 
@@ -23,6 +26,8 @@ export class Potion extends Item {
 	toJSON() {
 
 		const s = super.toJSON() as any;
+
+		if (this.count != 1) s.n = this.count;
 
 		//if (this._spell) s.spell = this._spell;
 		if (this.dot) s.effect = this.dot;
@@ -39,6 +44,8 @@ export class Potion extends Item {
 	set effect(v) { this.dot = v; }
 
 	get stack() { return true; }
+
+	count: number = 1;
 
 	_form?: Formula | string;
 
