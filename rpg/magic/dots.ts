@@ -184,7 +184,7 @@ export class Dot {
 			if (!char.isAlive()) {
 
 				if (this.maker) {
-					game.fetchChar(this.maker).then((slayer) => {
+					game.loadChar(this.maker).then((slayer) => {
 						game.events.emit('charDie', char, slayer ?? this.name);
 					})
 				} else {

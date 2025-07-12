@@ -1,6 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
+import { PickCharButtons } from "rpg/components";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -15,20 +16,36 @@ export default NewCommand<Rpg>({
 
 		const who = m.options.getString('who');
 
-		if (!who && !char.isAlive()) {
+		if (!who) {
 
-			// get char list at location.
 			const loc = await rpg.world.getLoc(char.at);
-			const shrine = loc?.getFeature('shrine');
-			if (shrine) {
-				await rpg.game.action('useloc', char, 'shrine');
-				return SendPrivate(m, char.flushLog());
+			if (!char.isAlive()) {
+				// get char list at location.
+
+				const shrine = loc?.getFeature('shrine');
+				if (shrine) {
+					await rpg.game.action('useloc', char, 'shrine');
+					return SendPrivate(m, char.flushLog());
+				} else {
+					return SendPrivate(m, `You may only revive yourself at a shrine.`);
+				}
 			} else {
-				return SendPrivate(m, `You may only revive yourself at a shrine.`);
+
+				const deadChars = await rpg.game.getDeadChars(char.at, char.id);
+				if (deadChars?.length) {
+					// res options?
+					return SendPrivate(m, `Revive which character?`, {
+
+						components: PickCharButtons('revive', deadChars, "who")
+					});
+				} else {
+					return SendPrivate(m, `You do not see any dead characters here.`);
+				}
+
 			}
 
 		}
-		const t = who ? await rpg.loadChar(who) : char;
+		const t = await rpg.loadChar(who);
 		if (!t) {
 			return SendPrivate(m, `${who} not found`);
 		}

@@ -447,6 +447,33 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	/**
+	 * Get dead Chars at a location.
+	 * @param at 
+	 * @param skipId - optional char id to skip. (usually self)
+	 */
+	async getDeadChars(at: TCoord, skipId?: string) {
+
+		const loc = await this.world.getLoc(at);
+		if (!loc?.chars.length) return undefined;
+
+		const res: Char[] = [];
+		const chars = loc.chars;
+		for (let i = 0; i < chars.length; i++) {
+
+			if (chars[i] == skipId) continue;
+
+			const char = await this.loadChar(chars[i]);
+			if (char && !char.isAlive()) {
+				res.push(char);
+			}
+
+		}
+
+		return res;
+
+	}
+
+	/**
 	 * Get all targets at location that are affected by target flags.
 	 * @param char 
 	 * @param flags 
@@ -642,7 +669,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	getParty(char: Char) { return this._charParties[char.id]; }
 
-	fetchChar(charId: string) {
+	loadChar(charId: string) {
 		return this.charCache.fetch(charId);
 	}
 	getChar(id: string) { return this.charCache.get(id) }
