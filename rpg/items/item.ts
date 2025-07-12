@@ -19,8 +19,7 @@ export class Item {
 	get price() { return this._price; }
 	set price(v) { this._price = v; }
 
-	get embed() { return this._embed; }
-	set embed(v) { this._embed = v; }
+	get stack() { return false }
 
 	toJSON(): Record<string, any> {
 
@@ -31,7 +30,7 @@ export class Item {
 			type: this.type,
 			price: this._price,
 			level: this._level || undefined,
-			embed: this._embed,
+			embed: this.embed,
 			maker: this.maker,
 			inscrip: this.inscrip
 		}
@@ -70,7 +69,7 @@ export class Item {
 	maker?: string;
 
 	/// image attachment
-	private _embed?: string;
+	private embed?: string;
 	private _price: number = 0;
 
 	/**
@@ -98,7 +97,7 @@ export class Item {
 	onTake(char: Char): Item | null | undefined { return this }
 
 	getView(char?: Char): [string, string | undefined] {
-		return [this.getDetails(char, false), this._embed];
+		return [this.getDetails(char, false), this.embed];
 	}
 
 	/**
@@ -109,7 +108,7 @@ export class Item {
 		let s = this.name;
 		if (this.desc) s += ': ' + this.desc;
 		if (this.inscrip) s += ' { ' + this.inscrip + ' }';
-		if (this._embed && imgTag) s += ' [img]';
+		if (this.embed && imgTag) s += ' [img]';
 		if (this.maker) s += '\ncreated by ' + this.maker;
 
 		return s;

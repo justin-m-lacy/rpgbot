@@ -545,13 +545,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		if (end) {
 
-			const items = char.takeRange(first, end);
+			const items = char.removeRange(first, end);
 			if (!items) return char.output('Invalid item range.');
 			return char.output(items.length + ' items were destroyed.');
 
 		} else {
 
-			const item = char.takeItem(first);
+			const item = char.removeItem(first);
 			if (!item) return char.output(`'${first}' not in inventory.`);
 			return char.output(item.name + ' is gone forever.');
 
@@ -1003,19 +1003,12 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	quaff(this: Game<A, K>, char: Char, wot: ItemIndex) {
 
 		const p = char.getItem(wot) as Item | undefined;
-		if (!p) return char.output('Item not found.');
-		if (p.type !== ItemType.Potion) return char.output(`${p.name} cannot be quaffed.`);
+		if (!p) return char.output(`Item ${wot} not found.`);
+		if (!(p instanceof Potion)) return char.output(`${p.name} cannot be quaffed.`);
 
 		// remove the potion.
-		char.takeItem(p);
-		if (p instanceof Potion) {
-			char.addHistory('quaff');
-			p.quaff(char);
-
-			return char.output(`${char.name} quaffs ${p.name}.`);
-		} else {
-			return char.output(`${p} cannot be quaffed.`);
-		}
+		char.removeItem(p);
+		p.use(this, char);
 
 	}
 

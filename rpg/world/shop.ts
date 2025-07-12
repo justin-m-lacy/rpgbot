@@ -94,7 +94,7 @@ export class Shop<T extends Item = Item> extends Feature {
 
 	sellRange(char: Char, ind: ItemIndex, end: ItemIndex) {
 
-		const items = char.takeRange(ind, end);
+		const items = char.removeRange(ind, end);
 		if (!items || !items.length) {
 			return char.log(`No items to sell.`);
 		}
@@ -113,7 +113,7 @@ export class Shop<T extends Item = Item> extends Feature {
 
 	sell(char: Char, ind: ItemIndex) {
 
-		const it = char.takeItem(ind);
+		const it = char.removeItem(ind);
 		if (!it) {
 			return char.log(`Item ${ind} not found.`);
 		}

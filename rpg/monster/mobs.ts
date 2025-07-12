@@ -158,11 +158,11 @@ export class Mob {
 
 	randItem() {
 		if (this._held?.length) {
-			return this.takeItem(Math.floor(Math.random() * this._held.length));
+			return this.removeItem(Math.floor(Math.random() * this._held.length));
 		}
 		return null;
 	}
-	takeItem(which: number | string | Item): Item | null {
+	removeItem(which: number | string | Item): Item | null {
 
 		if (!this._held) return null;
 

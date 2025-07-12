@@ -286,7 +286,7 @@ export class Actor {
 	/// TODO
 	addItem(it: Item | Item[]): number { return 0 }
 	randItem(): Item | null { return null; }
-	takeItem(which: number | string | Item, sub?: number | string): Item | null { return null; }
+	removeItem(which: number | string | Item, sub?: number | string): Item | null { return null; }
 
 	/**
 	 * Computes current, as opposed to base hp.

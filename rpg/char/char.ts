@@ -298,11 +298,11 @@ export class Char extends Actor {
 	 * @param which
 	 * @returns Item removed or null.
 	 */
-	takeItem(which: number | string | Item) {
+	removeItem(which: number | string | Item) {
 		return this.inv.take(which);
 	}
 
-	takeRange(start: ItemIndex, end: ItemIndex) { return this.inv.takeRange(start, end); }
+	removeRange(start: ItemIndex, end: ItemIndex) { return this.inv.takeRange(start, end); }
 
 	/**
 	 * reroll hp.

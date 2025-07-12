@@ -1,6 +1,7 @@
 import { Item } from "rpg/items/item";
 import { TActor } from "rpg/monster/mobs";
 import { GetSpell } from "rpg/parsers/spells";
+import { Game } from '../game';
 import { ItemType } from './types';
 
 export class Scroll extends Item {
@@ -24,6 +25,8 @@ export class Scroll extends Item {
 
 	}
 
+	get stack() { return true }
+
 	private spell: string;
 
 
@@ -36,7 +39,7 @@ export class Scroll extends Item {
 
 	}
 
-	use(char: TActor, targ?: TActor) {
+	use(game: Game, char: TActor, targ?: TActor) {
 
 		const spell = GetSpell(this.spell);
 

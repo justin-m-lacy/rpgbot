@@ -210,7 +210,7 @@ export class Combat {
 		let it: Item | null | undefined;
 		if (wot) {
 
-			it = targ.takeItem(wot);
+			it = targ.removeItem(wot);
 			if (!it) {
 				src.log(`You try to rob ${targ.name}, but could not find the item you wanted.`);
 				return;

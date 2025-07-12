@@ -2,6 +2,7 @@ import { Formula } from 'formulic';
 import { ItemType } from 'rpg/items/types';
 import { GetDot, ProtoDot } from 'rpg/magic/dots';
 import { Char } from '../char/char';
+import { Game } from '../game';
 import { Item } from './item';
 
 export class Potion extends Item {
@@ -37,9 +38,7 @@ export class Potion extends Item {
 	get effect() { return this.dot; }
 	set effect(v) { this.dot = v; }
 
-	/*get spell() { return this._spell; }
-	set spell(v) { this._spell = v; }
-	_spell?: Spell;*/
+	get stack() { return true; }
 
 	_form?: Formula | string;
 
@@ -49,7 +48,10 @@ export class Potion extends Item {
 		super(id, { name: '', desc: '', type: ItemType.Potion });
 	}
 
-	quaff(char: Char) {
+	use(game: Game, char: Char) {
+
+		char.output(`${char.name} quaffs ${this.name}.`);
+		char.addHistory('quaff');
 
 		if (this._form) {
 

@@ -253,7 +253,7 @@ export class World {
 	 */
 	async drop(char: Char, what: ItemPicker, end?: ItemIndex | null) {
 
-		const it = end ? char.takeRange(what as ItemIndex, end) : char.takeItem(what);
+		const it = end ? char.removeRange(what as ItemIndex, end) : char.removeItem(what);
 		if (!it) return 'Invalid item.';
 
 		const loc = await this.getOrGen(char.at, char);

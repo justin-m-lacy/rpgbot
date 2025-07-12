@@ -52,7 +52,7 @@ export const transfer = (src: Char, dest: Char, what: string) => {
 
 	} else {
 
-		const it = src.takeItem(what);
+		const it = src.removeItem(what);
 		if (it) {
 
 			const ind = dest.addItem(it);
@@ -149,7 +149,7 @@ const rollArmor = (char: Char, slot?: string | null) => {
 
 const sellRange = (src: Char, start: ItemIndex, end: ItemIndex) => {
 
-	const arr = src.takeRange(start, end);
+	const arr = src.removeRange(start, end);
 	if (arr === null) return 'Invalid item range.';
 	if (arr.length === 0) return 'No items in range.';
 
@@ -174,7 +174,7 @@ const sell = (src: Char, wot: ItemPicker, end?: ItemIndex | null) => {
 		return sellRange(src, wot as ItemIndex, end);
 	}
 
-	const it = src.takeItem(wot);
+	const it = src.removeItem(wot);
 	if (!it) return 'Item not found.';
 
 	const mod = Math.max(src.level.valueOf() + src.getModifier('cha'), 0);
