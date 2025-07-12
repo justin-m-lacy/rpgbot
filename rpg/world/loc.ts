@@ -6,6 +6,7 @@ import { quickSplice } from "rpg/util/array";
 import { FindIndex } from "rpg/util/items";
 import { IsInt } from "rpg/util/parse";
 import { Coord } from "rpg/world/coord";
+import { Capitalize } from '../../src/utils/display';
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Item } from "../items/item";
@@ -345,8 +346,7 @@ export class Loc {
 	 */
 	look(char?: Char, imgTag: boolean = true, showPaths: boolean = false) {
 
-		let r = in_prefix[this.biome as Biome] + this.biome;
-		if (char) r += ` [${char.state}]`;
+		let r = (char ? char.name + ' is' : '') + in_prefix[this.biome as Biome] + Capitalize(this.biome) + (char ? ` [${char.state}]` : '');
 
 		if (this.embed && imgTag) r += ' [img]';
 		r += '\n' + this.desc;

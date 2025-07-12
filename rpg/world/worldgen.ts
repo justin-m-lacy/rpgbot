@@ -51,13 +51,13 @@ export const genExits = (x: number, y: number) => {
 
 }
 
-export const makeBiomeLoc = (coord: Coord, biomeName: keyof typeof Biomes = Biome.PLAINS) => {
+export const makeBiomeLoc = (coord: Coord, biome: keyof typeof Biomes = Biome.PLAINS) => {
 
-	const tmpl = Biomes[biomeName];
+	const tmpl = Biomes[biome];
 	if (tmpl == null) {
-		console.warn('BAD BIOME: ' + biomeName);
+		console.warn('bad biome: ' + biome);
 	}
-	const loc = new Loc(coord, biomeName);
+	const loc = new Loc(coord, biome);
 
 	const descs = tmpl.descs;
 	loc.desc = descs[Math.floor(Math.random() * descs.length)];

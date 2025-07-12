@@ -216,8 +216,6 @@ export class Actor {
 
 		this.stats.level.add(1);
 
-		console.log(`new level: ${this.level}`);
-
 		const hpBonus = this.HD + this.stats.getModifier('con');
 		this.stats.addMaxHp(hpBonus);
 

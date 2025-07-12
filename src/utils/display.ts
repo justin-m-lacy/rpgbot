@@ -29,17 +29,17 @@ const MsgMAx = 1700;
 /**
  * Regular expression for capitalizing the start of words.
  */
-const CapsRegEx = /(?:\b(\w+)\b)*/g;
+const CapsRegEx = /\b(\w+)\b/g;
 
 /**
  *
- * @param str
+ * @param s
  * @returns
  */
-export const Capitalize = (str: string) => {
+export const Capitalize = (s: string) => {
 
-	return str.replace(CapsRegEx, (sub) => {
-		return sub[0].toUpperCase() + sub.slice(1);
+	return CapsRegEx[Symbol.replace](s, (s) => {
+		return s[0].toUpperCase() + s.slice(1);
 	});
 
 }

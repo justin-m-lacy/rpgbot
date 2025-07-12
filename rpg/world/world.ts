@@ -193,8 +193,8 @@ export class World {
 			return it.getView(char);
 
 		}
-		if (loc.embed) return [char.name + ' is' + loc.look(), loc.embed];
-		else return char.name + ' is ' + loc.look();
+		if (loc.embed) return [loc.look(), loc.embed];
+		else return loc.look();
 
 	}
 

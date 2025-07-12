@@ -571,7 +571,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		const to = await this.world.move(char, from, toCoord);
 
-		char.log(char.name + ' is ' + to.look(char));
+		char.log(to.look(char));
 
 		const p = this.getParty(char);
 		if (p && p.leader === char.id) {
