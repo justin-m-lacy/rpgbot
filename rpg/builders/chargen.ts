@@ -111,6 +111,7 @@ const rollStat = (destObj: Record<string, number>, stat: string,
 
 	} else {
 		destObj[stat] = Dice.roll(info.rolls, info.die, info.mod);
+		console.log(`stat: ${destObj[stat]}`);
 	}
 
 }

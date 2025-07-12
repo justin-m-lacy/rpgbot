@@ -134,7 +134,7 @@
         "name": "Whirling Step",
         "level": 1,
         "school": "air",
-        "desc": "Increases the casters's ability to dodge attacks.",
+        "desc": "Slightly improves the casters's ability to dodge attacks.",
         "target": "self",
         "cost": {
             "mp": 1
@@ -143,6 +143,141 @@
             "duration": 45,
             "mod": {
                 "dodge": 1
+            }
+        }
+    },
+    {
+        "id": "whirlstep2",
+        "name": "Whirling Step II",
+        "level": 4,
+        "school": "air",
+        "desc": "Improves the casters's ability to dodge attacks.",
+        "target": "self",
+        "cost": {
+            "mp": 4
+        },
+        "dot": {
+            "duration": 60,
+            "mod": {
+                "dodge": 2,
+                "speed": 0.3
+            }
+        }
+    },
+    {
+        "id": "whirlstep3",
+        "name": "Whirling Step III",
+        "level": 7,
+        "school": "air",
+        "desc": "Greatly improves the casters's ability to dodge attacks.",
+        "target": "self",
+        "cost": {
+            "mp": 8
+        },
+        "dot": {
+            "duration": 80,
+            "mod": {
+                "dodge": 5,
+                "speed": 0.55
+            }
+        }
+    },
+    {
+        "id": "mana1",
+        "name": "Minor Mana",
+        "school": "arcane",
+        "level": 1,
+        "target": "self",
+        "cost": {
+            "mp": 0.4
+        },
+        "dot": {
+            "id": "dotmana",
+            "duration": 30,
+            "add": {
+                "mana": 0.25
+            }
+        }
+    },
+    {
+        "id": "mana2",
+        "name": "Lesser Mana",
+        "school": "arcane",
+        "level": 3,
+        "target": "self",
+        "cost": {
+            "mp": 0.7
+        },
+        "dot": {
+            "id": "dotmana",
+            "duration": 60,
+            "add": {
+                "mana": 0.45
+            }
+        }
+    },
+    {
+        "id": "mana3",
+        "name": "Mana",
+        "school": "arcane",
+        "level": 6,
+        "target": "self",
+        "cost": {
+            "mp": 1
+        },
+        "dot": {
+            "id": "dotmana",
+            "duration": 120,
+            "add": {
+                "mana": 0.458
+            }
+        }
+    },
+    {
+        "id": "regen1",
+        "name": "Mending Light",
+        "school": "light",
+        "desc": "A pulse of light zips around the target, healing injuries.",
+        "level": 1,
+        "cost": {
+            "mp": 1
+        },
+        "dot": {
+            "duration": 45,
+            "add": {
+                "hp": 1.1
+            }
+        }
+    },
+    {
+        "id": "regen2",
+        "name": "Mending Light  II",
+        "school": "light",
+        "desc": "A pulse of light zips around the target, healing injuries.",
+        "level": 4,
+        "cost": {
+            "mp": 5
+        },
+        "dot": {
+            "duration": 60,
+            "add": {
+                "hp": 2
+            }
+        }
+    },
+    {
+        "id": "regen3",
+        "name": "Mending Light  III",
+        "school": "light",
+        "desc": "A pulse of light zips around the target, healing injuries.",
+        "level": 8,
+        "cost": {
+            "mp": 8
+        },
+        "dot": {
+            "duration": 60,
+            "add": {
+                "hp": 2
             }
         }
     },
@@ -220,8 +355,20 @@
         "name": "Magic Missile",
         "alias": "mm",
         "target": "any",
-        "dmg": "1d4",
+        "dmg": "1~4",
         "level": 1,
+        "at": {
+            "10": {
+                "dmg.max": 1
+            },
+            "50": {
+                "dmg.min": 1
+            },
+            "200": {
+                "dmg.max": 1,
+                "dmg.min": 1
+            }
+        },
         "cost": {
             "mp": 1
         }

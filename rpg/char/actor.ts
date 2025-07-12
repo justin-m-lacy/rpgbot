@@ -160,6 +160,7 @@ export class Actor {
 
 			const targ = this.stats[k as keyof StatBlock];
 			if (IsSimple(targ)) {
+				console.log(`set stat:${stats[k].valueOf()}`)
 				if (targ instanceof Maxable) {
 					targ.decode(stats[k]);
 				} else {

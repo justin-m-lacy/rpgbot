@@ -46,8 +46,8 @@ export const roll = (count: number, sides: number, bonus: number = 0) => {
 		sides = -sides;
 	}
 
-	while (count++ < 0) tot += Math.floor(sides * Math.random()) + 1;
-	return -tot;
+	while (count-- > 0) tot += Math.floor(sides * Math.random()) + 1;
+	return tot;
 
 }
 
