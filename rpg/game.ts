@@ -14,6 +14,7 @@ import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
+import { Scroll } from 'rpg/items/scroll';
 import { ItemType } from 'rpg/items/types';
 import { HumanSlot, toSlot } from 'rpg/items/wearable';
 import { Spell } from 'rpg/magic/spell';
@@ -971,6 +972,32 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		const y = Math.round(char.at.y + err * (Math.random() - 0.5));
 
 		return char.output(`You believe you are near (${x},${y}).`);
+
+	}
+
+	scribe(this: Game<A, K>, char: Char, spell: Spell) {
+
+		if (!char.hasTalent('brscribeew')) {
+			char.log(`${char.name} does not know how to scribe scrolls.`);
+		}
+
+		if (spell.cost) {
+			const missing = MissingProp(char, spell.cost);
+			if (missing) {
+				char.log(`Not enough ${missing} to scribe ${spell.name}`);
+				return;
+			} else {
+				AddValues(char, spell.cost);
+			}
+
+		}
+
+		if (spell.level) char.addExp(2 * spell.level);
+		char.addHistory('scribe');
+		const scroll = new Scroll(undefined, spell);
+		const ind = char.addItem(scroll);
+
+		return char.log(`${char.name} scribes ${scroll.name}. (${ind})`);
 
 	}
 

@@ -54,7 +54,7 @@ export class Scroll extends Item implements TCombatAction {
 	async use(game: Game, char: TActor, targ?: TActor) {
 
 		if (!this.spell) {
-			char.log(`The scroll is empty.`);
+			char.log(`This scroll is blank.`);
 			return;
 		}
 
