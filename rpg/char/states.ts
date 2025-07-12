@@ -2,14 +2,14 @@ import { TargetFlags } from "rpg/combat/targets";
 import { Dot } from "rpg/magic/dots";
 import { quickSplice } from "rpg/util/array";
 
-type StatusKeys = keyof typeof StatusFlags;
+type StatusKeys = keyof typeof StatusFlag;
 
 export enum CharState {
 	Dead = 'dead',
 	Alive = 'alive',
 }
 
-export enum StatusFlags {
+export enum StatusFlag {
 	none = 0,
 	alive = 1,
 	noattack = 2,
@@ -20,13 +20,13 @@ export enum StatusFlags {
 	hidden = 64,
 }
 
-export const ParseStateFlags = (list: (keyof typeof StatusFlags)[] | string) => {
+export const ParseStateFlags = (list: (keyof typeof StatusFlag)[] | string) => {
 
-	if (typeof list === 'string') list = list.split(',') as (keyof typeof StatusFlags)[];
+	if (typeof list === 'string') list = list.split(',') as (keyof typeof StatusFlag)[];
 
-	let f: StatusFlags = 0;
+	let f: StatusFlag = 0;
 	for (let i = list.length - 1; i >= 0; i--) {
-		f |= StatusFlags[list[i]] ?? 0;
+		f |= StatusFlag[list[i]] ?? 0;
 	}
 
 	return f;
@@ -65,6 +65,10 @@ export class CharFlags {
 
 	toJSON() { return undefined; }
 
+	setTo(flags: StatusFlag) {
+		this.flags = flags;
+	}
+
 	/**
 	 * @property causes - causes of each state flag.
 	 */
@@ -72,15 +76,21 @@ export class CharFlags {
 
 	get causes() { return this._causes; }
 
-	flags: number = 0;
+	private flags: StatusFlag = 0;
 
-	canCast() { return (this.flags & StatusFlags.nospells) === 0 }
-	canAttack() { return (this.flags & StatusFlags.noattack) === 0 }
-	canDefend() { return (this.flags & StatusFlags.nodefend) === 0 }
+	canCast() { return (this.flags & StatusFlag.nospells) === 0 }
+	canAttack() { return (this.flags & StatusFlag.noattack) === 0 }
+	canDefend() { return (this.flags & StatusFlag.nodefend) === 0 }
 
 	/// flag - state flag
-	has(flag: number) {
+	has(flag: StatusFlag) {
 		return (this._causes[flag]?.length ?? 0) > 0;
+	}
+	unset(flag: StatusFlag) {
+		this.flags &= (~flag);
+	}
+	set(flag: StatusFlag) {
+		this.flags |= flag;
 	}
 
 	constructor() {
@@ -93,11 +103,11 @@ export class CharFlags {
 	 */
 	retarget(targFlags: TargetFlags) {
 
-		if ((this.flags & StatusFlags.confused) > 0) {
+		if ((this.flags & StatusFlag.confused) > 0) {
 
 			return targFlags ? ConfuseTargets[targFlags] ?? 0 : TargetFlags.random;
 
-		} else if ((this.flags & StatusFlags.charmed) > 0) {
+		} else if ((this.flags & StatusFlag.charmed) > 0) {
 
 			return targFlags ? CharmTargets[targFlags] ?? 0 : TargetFlags.ally;
 		}

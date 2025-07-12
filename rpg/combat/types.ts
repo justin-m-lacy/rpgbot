@@ -1,4 +1,4 @@
-import { StatusFlags } from "rpg/char/states";
+import { StatusFlag } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
 import { ProtoDot } from "rpg/magic/dots";
 import { TActor } from "rpg/monster/mobs";
@@ -47,9 +47,9 @@ export type TCombatAction = {
 	level?: number;
 
 	/// Status flags to set on target.
-	setFlags?: StatusFlags;
+	setFlags?: StatusFlag;
 	/// Status flags to remove from target.	
-	cure?: StatusFlags;
+	cure?: StatusFlag;
 
 	/**
 	 * Values to add from action.

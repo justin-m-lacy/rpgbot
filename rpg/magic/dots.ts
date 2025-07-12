@@ -1,4 +1,4 @@
-import { StatusFlags } from 'rpg/char/states';
+import { StatusFlag } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { TActor } from 'rpg/monster/mobs';
 import { ParseValues } from 'rpg/parsers/values';
@@ -49,7 +49,7 @@ export class ProtoDot {
 	/**
 	 * status to apply with effect.
 	 */
-	readonly flags: StatusFlags;
+	readonly flags: StatusFlag;
 
 	constructor(data: {
 		id: string,
@@ -57,7 +57,7 @@ export class ProtoDot {
 		mods?: Path<IMod> | null,
 		add?: Path<TValue> | null,
 		duration?: number,
-		flags?: StatusFlags;
+		flags?: StatusFlag;
 		stack?: number,
 		kind?: string
 	}) {
@@ -70,7 +70,7 @@ export class ProtoDot {
 		this.kind = data.kind ?? 'unknown';
 
 		this.stack = data.stack ?? 0;
-		this.flags = data.flags ?? StatusFlags.none;
+		this.flags = data.flags ?? StatusFlag.none;
 
 		this.duration = data.duration ?? 0;
 

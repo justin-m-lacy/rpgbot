@@ -1,4 +1,4 @@
-import { StatusFlags } from "rpg/char/states";
+import { StatusFlag } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
 import { ActionFlags, TCombatAction } from "rpg/combat/types";
 import { ProtoDot } from "rpg/magic/dots";
@@ -48,7 +48,7 @@ export class Attack implements TCombatAction {
 	public hits?: Attack[];
 
 	/// flags to set on target on hit.
-	public setFlags?: StatusFlags;
+	public setFlags?: StatusFlag;
 
 	/**
 	 * optional targets
@@ -58,7 +58,7 @@ export class Attack implements TCombatAction {
 	/**
 	 * @property cure - statuses to cure/remove from target.
 	 */
-	cure?: StatusFlags;
+	cure?: StatusFlag;
 
 	target: TargetFlags;
 

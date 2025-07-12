@@ -1,6 +1,6 @@
 import { EventEmitter } from 'eventemitter3';
 import { Faction } from 'rpg/char/factions';
-import { CharState, StatusFlags } from 'rpg/char/states';
+import { CharFlags, CharState, StatusFlag } from 'rpg/char/states';
 import { TCombatAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
@@ -21,21 +21,19 @@ export class Actor {
 
 	getStatus() { return `${this.hp.value}/${this.hp.max} [${this.state}]` }
 
-	isAlive() { return this._state === CharState.Alive }
+	isAlive() { return this.flags.has(StatusFlag.alive) }
 	/**
 	 * messy text-based state. flags makes it harder to test for blockers.
 	 * in theory could have states that set multiple flags, as well as
 	 * other mods.
 	 * also: action uses set-state=alive to revive.
 	 */
-	_state: CharState = CharState.Alive;
-	get state() { return this._state; }
+	get state() { return this.flags.has(StatusFlag.alive) ? CharState.Alive : CharState.Dead; }
 	set state(v) {
-		this._state = v;
 		if (v === CharState.Dead) {
-			this.flags &= (~StatusFlags.alive);
+			this.flags.unset(StatusFlag.alive);
 		} else {
-			this.flags |= StatusFlags.alive;
+			this.flags.set(StatusFlag.alive);
 		}
 	}
 
@@ -127,7 +125,7 @@ export class Actor {
 
 	readonly attacks: TCombatAction[] = [];
 
-	flags: StatusFlags = StatusFlags.alive;
+	flags: CharFlags = new CharFlags();
 
 	team: number = Faction.Chars;
 
@@ -154,13 +152,12 @@ export class Actor {
 		for (k in stats) {
 
 			if (!(k in this.stats)) {
-				console.warn(`unknown stat: ${k}`)
+				console.warn(`bad stat: ${k}`)
 				continue;
 			};
 
 			const targ = this.stats[k as keyof StatBlock];
 			if (IsSimple(targ)) {
-				console.log(`set stat:${stats[k].valueOf()}`)
 				if (targ instanceof Maxable) {
 					targ.decode(stats[k]);
 				} else {
@@ -275,12 +272,12 @@ export class Actor {
 		}
 	}
 
-	hit(amt: number) {
+	/*hit(amt: number) {
 		this.hp.value -= amt;
 		if (this.hp.value <= 0) {
 			this.flags &= (~StatusFlags.alive);
 		}
-	}
+	}*/
 
 	hasTalent(s: string) {
 		return this.talents?.includes(s);

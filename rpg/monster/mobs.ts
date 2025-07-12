@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Faction } from 'rpg/char/factions';
-import { StatusFlags } from 'rpg/char/states';
+import { CharFlags, StatusFlag } from 'rpg/char/states';
 import { TCombatAction } from 'rpg/combat/types';
 import { Dot, ProtoDot } from 'rpg/magic/dots';
 import { type MobData } from 'rpg/parsers/mobs';
@@ -57,9 +57,9 @@ export class Mob {
 	get biome() { return this.proto?.biome }
 	get desc() { return this.proto?.desc ?? '' }
 
-	isAlive() { return (this.flags & StatusFlags.alive) > 0 }
+	isAlive() { return this.flags.has(StatusFlag.alive) }
 
-	flags: StatusFlags;
+	readonly flags: CharFlags = new CharFlags();
 
 	private _toHit: number;
 
@@ -91,7 +91,7 @@ export class Mob {
 		this._toHit = 0;
 		this.proto = proto;
 
-		this.flags = (proto?.flags ?? StatusFlags.none) | StatusFlags.alive;
+		this.flags.setTo((proto?.flags || StatusFlag.alive));
 		this.size = proto?.size ?? 'medium';
 		this.team = proto?.team ?? Faction.All;
 
@@ -197,20 +197,20 @@ export class Mob {
 	addExp(exp: number) { }
 	updateState() {
 		if (this._hp.value <= 0) {
-			this.flags &= (~StatusFlags.alive);
+			this.flags.unset(StatusFlag.alive);
 		}
 	}
 	// used in combat
 
-	hit(dmg: number, type?: string) {
+	/*hit(dmg: number, type?: string) {
 
 		this._hp.add(-dmg);
 		if (this._hp.value <= 0) {
-			this.flags &= (~StatusFlags.alive);
+			this.flags.unset(~StatusFlag.alive);
 			return true;
 		}
 		return false;
 
-	}
+	}*/
 
 }

@@ -5,7 +5,7 @@ import { ActParams, Blockers, TGameAction } from 'rpg/actions';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
 import { CookItem, TryEat } from 'rpg/char/cooking';
-import { StatusFlags } from 'rpg/char/states';
+import { StatusFlag } from 'rpg/char/states';
 import { Combat } from 'rpg/combat/combat';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
@@ -603,7 +603,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		}
 
-		char.flags |= StatusFlags.hidden;
+		char.flags.set(StatusFlag.hidden);
 		char.log(`${char.name} is moving steathily.`);
 
 
@@ -878,7 +878,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async revive(this: Game<A, K>, char: Char, targ: Char) {
 
-		if (targ.flags & StatusFlags.alive) {
+		if (targ.isAlive()) {
 			char.log(`${targ.name} is not dead.`);
 		}
 
