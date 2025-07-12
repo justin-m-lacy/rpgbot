@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { PickItemButtons } from "rpg/components";
+import { InventoryButtons } from "rpg/components";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -16,7 +16,7 @@ export default NewCommand<Rpg>({
 		const what = m.options.getString('what', true);
 		if (!what) {
 			return SendPrivate(m, 'Eat which item?', {
-				components: PickItemButtons('eat', char.inv, 'what')
+				components: InventoryButtons('eat', char.inv, 'what')
 			})
 		}
 

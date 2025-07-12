@@ -2,6 +2,7 @@ import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
 import { TargetFlags } from "rpg/combat/targets";
+import { OptionButtons, PickTargButtons } from "rpg/components";
 import { GetSpell } from "rpg/parsers/spells";
 import { Rpg } from "rpg/rpg";
 import { SendBlock } from '../rpg/display/display';
@@ -18,8 +19,14 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const spellName = m.options.getString('spell');
+		const at = m.options.getString('at');
+
 		if (!spellName) {
-			return SendPrivate(m, 'Cast what spell?');
+			return SendPrivate(m, 'Cast what spell?', {
+				components: OptionButtons('cast', char.spelllist.items, "spell", {
+					at
+				})
+			});
 		}
 
 		const spell = GetSpell(spellName);
@@ -29,10 +36,16 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `You do not know the spell ${spellName}`);
 		}
 
-		const at = m.options.getString('at');
+
 		if (!at) {
-			if ((spell.target & (TargetFlags.all | TargetFlags.none | TargetFlags.self)) === 0) {
-				return SendPrivate(m, `Cast ${spell.name} at what?`,)
+			if ((spell.target & (TargetFlags.self | TargetFlags.mult | TargetFlags.loc)) === 0) {
+
+				const loc = await rpg.world.getLoc(char.at);
+				return SendPrivate(m, `Cast ${spell.name} at what?`,
+					{
+						components: loc ? PickTargButtons('cast', loc, 'at') : undefined
+					}
+				)
 			}
 		}
 		const targ = spell.target === TargetFlags.self ? char :

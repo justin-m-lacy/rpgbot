@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendPrivate } from "@/utils/display";
-import { PickNpcButtons } from "rpg/components";
+import { PickTargButtons } from "rpg/components";
 import { SendBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
@@ -25,7 +25,7 @@ export default NewCommand<Rpg>({
 			} else if (loc.npcs.length > 1) {
 
 				return SendPrivate(m, 'Attack who?', {
-					components: PickNpcButtons('attack', loc.npcs)
+					components: PickTargButtons('attack', loc)
 				});
 			}
 			who = 1;

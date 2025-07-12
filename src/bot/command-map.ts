@@ -26,7 +26,9 @@ export const CustomButton = (
 
 	if (props) {
 		for (const k in props) {
-			opts.customId += CmdSplitChar + k + '=' + props[k];
+			if (props[k]) {
+				opts.customId += CmdSplitChar + k + '=' + props[k];
+			}
 		}
 	}
 

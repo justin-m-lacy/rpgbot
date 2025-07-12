@@ -6,6 +6,7 @@ import type { Inventory } from "rpg/inventory";
 import type { Item } from "rpg/items/item";
 import { Wearable } from "rpg/items/wearable";
 import type { Mob } from "rpg/monster/mobs";
+import { Loc } from "rpg/world/loc";
 
 export const IllegalIdChars = ['/', '\\', ':', '*', '?', '"', '|', '<', '>', '#', '='];
 
@@ -232,6 +233,39 @@ export const PickCharButtons = (cmd: string, chars: string[] | Char[], param: st
 	);
 }
 
+export const PickTargButtons = (cmd: string, loc: Loc, param: string = 'who') => {
+
+	const chars = loc.chars;
+	const npcs = loc.npcs;
+
+	if (chars.length + npcs.length == 0) return [];
+
+	const btns: ReturnType<typeof CustomButton>[] = []
+
+	for (let i = 0; i < chars.length; i++) {
+		btns.push(CustomButton({
+			customId: cmd,
+			label: chars[i] ?? 'unknown'
+		}, {
+			[param]: chars[i]
+		}));
+	}
+
+	for (let i = 0; i < npcs.length; i++) {
+		btns.push(CustomButton({
+			customId: cmd,
+			label: npcs[i].name ?? 'unknown'
+		}, {
+			[param]: npcs[i].id
+		}));
+	}
+
+
+	return ToActionRows(btns);
+
+}
+
+
 export const PickNpcButtons = (cmd: string, chars: Array<Char | Mob>, param: string = 'who') => {
 	if (chars.length === 0) return [];
 	return ToActionRows(
@@ -251,7 +285,7 @@ export const PickNpcButtons = (cmd: string, chars: Array<Char | Mob>, param: str
  * @param inv - selectable items. max 25.
  * @param param - id of param to set to item id.
  */
-export const PickItemButtons = (cmd: string, inv: Inventory<Item>, param: string = 'item') => {
+export const InventoryButtons = (cmd: string, inv: Inventory<Item>, param: string = 'item') => {
 
 	if (inv.items.length == 0) return [];
 	return ToActionRows(
@@ -270,11 +304,11 @@ export const PickItemButtons = (cmd: string, inv: Inventory<Item>, param: string
  * Make buttons for a command with Array options.
  * @param cmd - command name.
  * @param opts 
- * @param param - name of command parameter to set to picked id. (e.g. 'item' or 'char')
+ * @param param - name of command parameter for picked item. (e.g. 'item' or 'char')
  * @param params - additional paramaters to send to command.
  */
 export const OptionButtons = <T extends { id: string, name: string }>(
-	cmd: string, opts: T[], param: string, params?: Record<string, string | number>) => {
+	cmd: string, opts: T[], param: string, params?: Record<string, string | number | undefined | null>) => {
 
 	if (opts.length == 0) return [];
 	return ToActionRows(
