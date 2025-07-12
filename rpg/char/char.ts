@@ -302,6 +302,15 @@ export class Char extends Actor {
 		return this.inv.take(which);
 	}
 
+	/**
+	 * Remove count of stackable item.
+	 * @param which 
+	 * @param n 
+	 */
+	removeN(which: number | string | Item, n: number) {
+		return this.inv.removeN(which, n);
+	}
+
 	removeRange(start: ItemIndex, end: ItemIndex) { return this.inv.takeRange(start, end); }
 
 	/**

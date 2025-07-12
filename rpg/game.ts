@@ -209,7 +209,14 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async action<T extends K>(
+	/**
+	 * Execute char command.
+	 * @param act 
+	 * @param char 
+	 * @param params 
+	 * @returns 
+	 */
+	async exec<T extends K>(
 		act: T, char: Char,
 		...params: ActParams<A[T]>) {
 
@@ -232,7 +239,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async attack(this: Game<A, K>, src: Char, targ: TActor, atk?: TCombatAction) {
+	async attack(this: Game<A, K>, src: TActor, targ: TActor, atk?: TCombatAction) {
 
 		let p2: TActor | Party | undefined = targ instanceof Char ? this.getParty(targ) : undefined;
 		if (!p2 || !p2.at.equals(targ.at)) {
@@ -253,14 +260,14 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async cast(this: Game<A, K>, char: Char, spell: Spell, targ?: Char | Mob) {
+	async cast(this: Game<A, K>, char: TActor, spell: Spell, targ?: TActor) {
 
 		// pay cast.
 		if (spell.cost) {
 
 			const missing = MissingProp(char, spell.cost);
 			if (missing) {
-				char.output(`Not enough ${missing} to cast ${spell.name}`);
+				char.log(`Not enough ${missing} to cast ${spell.name}`);
 				return;
 			} else {
 				AddValues(char, spell.cost);
@@ -297,6 +304,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		} else if (spell.target === TargetFlags.none) {
 			// generalized spell.
 			console.log(`no spell targ.`);
+
 		}
 
 	}
@@ -873,7 +881,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	async useLoc(char: Char, wot: ItemIndex) {
-		await this.world.useLoc(char, wot);
+		await this.world.useLoc(this, char, wot);
 	}
 
 
@@ -1006,8 +1014,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (!p) return char.output(`Item ${wot} not found.`);
 		if (!(p instanceof Potion)) return char.output(`${p.name} cannot be quaffed.`);
 
-		// remove the potion.
-		char.removeItem(p);
 		p.use(this, char);
 
 	}

@@ -30,7 +30,7 @@ export default NewCommand<Rpg>({
 		}
 
 		const end = m.options.getString('end');
-		await SendPrivate(m, await rpg.game.action('take', char, start, end));
+		await SendPrivate(m, await rpg.game.exec('take', char, start, end));
 
 
 	}

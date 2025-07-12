@@ -1,7 +1,7 @@
 import { IsInt } from 'rpg/util/parse';
 import { Simple } from 'rpg/values/simple';
 import { type ItemIndex } from './items/container';
-import { IsStack, Item } from './items/item';
+import { IsStack, Item, TStacker } from './items/item';
 
 export type ItemPicker<T = Item> = ItemIndex | T;
 
@@ -107,10 +107,9 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 
 	/**
-	 * Find 
 	 * @param a 
 	 */
-	private addStack(a: T & { stack: true, count: number }) {
+	private addStack(a: T & TStacker) {
 
 		for (let i = this.items.length - 1; i >= 0; i--) {
 
@@ -316,6 +315,10 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		if (end > this.items.length) { end = this.items.length; }
 
 		return this.items.splice(start, end - start);
+
+	}
+
+	removeN(it: ItemIndex | Item, n: number) {
 
 	}
 

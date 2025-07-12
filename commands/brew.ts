@@ -19,7 +19,7 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		//const a = m.attachments.first();
-		const res = await rpg.game.action('brew', char, potion);
+		const res = await rpg.game.exec('brew', char, potion);
 
 		return SendBlock(m, res);
 

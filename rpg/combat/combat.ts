@@ -94,13 +94,15 @@ export class Combat {
 			return false;
 		}
 
-		//if (act.cure) { targ.cure(act.cure); }
-
 		if (act.dot) {
 			targ.addDot(act.dot, char.id);
 		}
 		if (act.add) {
 			AddValues(targ, act.add, 1);
+		}
+
+		if (act.cure) {
+			targ.flags.unset(act.cure);
 		}
 
 		if (act.dmg) this.applyDmg(targ, act, char);

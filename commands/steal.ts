@@ -32,7 +32,7 @@ export default NewCommand<Rpg>({
 
 		const what = m.options.getString('what');
 
-		const result = await rpg.game.action('steal', src, dest, what);
+		const result = await rpg.game.exec('steal', src, dest, what);
 		await ReplyBlock(m, result);
 
 	}

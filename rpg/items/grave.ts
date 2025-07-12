@@ -2,9 +2,9 @@ import { ItemData, ItemType } from 'rpg/items/types';
 import { TActor } from 'rpg/monster/mobs';
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
-import { Item } from "./item";
+import { Item, TStacker } from "./item";
 
-export class Grave extends Item {
+export class Grave extends Item implements TStacker {
 
 	static _Epitaphs?: string[];
 
@@ -20,9 +20,11 @@ export class Grave extends Item {
 
 	}
 
-	static Decode(json: ItemData & { char: string, slayer?: string, epitaph?: string }) {
+	static Decode(json: ItemData & { n?: number, char: string, slayer?: string, epitaph?: string }) {
 
 		const p = new Grave(json.id, json.char, json.slayer, json.epitaph);
+
+		p.count = json.n ?? 1;
 
 		Item.InitData(json, p);
 
@@ -54,10 +56,19 @@ export class Grave extends Item {
 		s.epitaph = this.epitaph;
 		s.slayer = this.slayer;
 
+		if (this.count !== 1) {
+			s.n = this.count;
+		}
+
 		return s;
 
 	}
 
+	count: number = 1;
+	get stack() { return true; }
+	canStack(it: Grave) {
+		return it.char == this.char && it.slayer == this.slayer && it.epitaph == this.epitaph && it.inscrip == this.inscrip;
+	}
 
 	private readonly char: string;
 	private readonly slayer: string;

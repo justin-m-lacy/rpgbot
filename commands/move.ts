@@ -30,7 +30,7 @@ async function exec(this: ReturnType<typeof NewCommand> & DirParam, m: ChatComma
 
 	}
 
-	await rpg.game.action('move', char, dir);
+	await rpg.game.exec('move', char, dir);
 	const loc = await rpg.world.getOrGen(char.at);
 	return ReplyBlock(m, char.flushLog(), {
 		components: WorldLocActions(loc)

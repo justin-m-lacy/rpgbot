@@ -18,7 +18,7 @@ export default NewCommand<Rpg>({
 
 		if (!start) return SendPrivate(m, 'Destroy which inventory item?');
 
-		return SendPrivate(m, await rpg.game.action('destroy', char, start, end));
+		return SendPrivate(m, await rpg.game.exec('destroy', char, start, end));
 
 	}
 })

@@ -1,4 +1,5 @@
 import { ItemList } from "rpg/display/items";
+import { type Game } from "rpg/game";
 import type { ItemIndex } from "rpg/items/container";
 import { DecodeFeature, DecodeItem } from "rpg/parsers/items";
 import { DecodeMob } from "rpg/parsers/mobs";
@@ -384,7 +385,7 @@ export class Loc {
 	 * @param char
 	 * @param wot
 	 */
-	use(char: Char, wot: string | number | Feature) {
+	use(game: Game, char: Char, wot: string | number | Feature) {
 
 		let f: Feature | null;
 		if (typeof wot !== 'object') {
@@ -394,7 +395,7 @@ export class Loc {
 			f = wot;
 		}
 
-		return f.use(char);
+		f.use(game, char);
 
 	}
 

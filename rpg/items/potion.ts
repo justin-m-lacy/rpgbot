@@ -2,7 +2,7 @@ import { Formula } from 'formulic';
 import { ItemType } from 'rpg/items/types';
 import { GetDot, ProtoDot } from 'rpg/magic/dots';
 import { Char } from '../char/char';
-import { Game } from '../game';
+import { type Game } from '../game';
 import { Item, TStacker } from './item';
 
 export class Potion extends Item implements TStacker {
@@ -59,6 +59,10 @@ export class Potion extends Item implements TStacker {
 
 		char.output(`${char.name} quaffs ${this.name}.`);
 		char.addHistory('quaff');
+
+		if (--this.count <= 0) {
+			char.removeItem(this);
+		}
 
 		if (this._form) {
 

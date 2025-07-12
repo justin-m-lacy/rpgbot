@@ -1,3 +1,4 @@
+import { type Game } from 'rpg/game';
 import { ItemType } from 'rpg/items/types';
 import { Action } from 'rpg/magic/action';
 import { type Loc } from 'rpg/world/loc';
@@ -35,17 +36,17 @@ export class Feature extends Item {
 	 */
 	onEnter?: (f: typeof this, char: Char, loc: Loc) => void;
 
-	use(char: Char) {
+	use(game: Game, char: Char) {
 
 		if (this.fb) {
 			char.log(this.fb.replace('%c', char.name) + ' ');
 		}
 
 		if (this.action) {
-			return this.action.apply(char);
+			this.action.apply(char);
+		} else {
+			char.log('Nothing seems to happen.');
 		}
-		char.send("Nothing happens.");
-		return false;
 
 	}
 

@@ -13,7 +13,7 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const what = m.options.getString('what', true);
-		await rpg.game.action('useloc', char, what);
+		await rpg.game.exec('useloc', char, what);
 
 		return SendBlock(m, char.flushLog());
 

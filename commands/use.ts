@@ -22,7 +22,7 @@ export default NewCommand<Rpg>({
 				})
 			}
 
-			return m.reply(await rpg.game.action('quaff', char, what));
+			return m.reply(await rpg.game.exec('quaff', char, what));
 		}
 
 	}

@@ -1,3 +1,4 @@
+import { StatusFlag } from 'rpg/char/states';
 import { TargetFlags } from 'rpg/combat/targets';
 import { Item } from 'rpg/items/item';
 import type { IMod } from 'rpg/values/imod';
@@ -20,6 +21,7 @@ export class Spell extends Item {
 	mods?: Path<IMod>;
 
 	cost?: Path<Numeric>;
+	cure?: StatusFlag;
 
 	constructor(data: {
 		id: string;
@@ -28,6 +30,7 @@ export class Spell extends Item {
 		mods?: Path<IMod> | null,
 		dot?: ProtoDot | null,
 		cost?: Path<Numeric>,
+		cure?: StatusFlag,
 		time?: number,
 		kind?: string,
 		target?: TargetFlags
@@ -37,6 +40,7 @@ export class Spell extends Item {
 
 		this.kind = data.kind ?? 'arcane';
 
+		this.cure = data.cure;
 		this.cost = data.cost;
 		this.dot = data.dot ?? undefined;
 		this.mods = data.mods ?? undefined;

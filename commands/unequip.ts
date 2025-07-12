@@ -18,7 +18,7 @@ export default NewCommand<Rpg>({
 
 		const slot = m.options.getString('slot', true);
 
-		return SendPrivate(m, await rpg.game.action('unequip', char, slot));
+		return SendPrivate(m, await rpg.game.exec('unequip', char, slot));
 
 	}
 })

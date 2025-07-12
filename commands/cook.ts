@@ -11,7 +11,7 @@ export default NewCommand<Rpg>({
 		const char = await rpg.myCharOrErr(m, m.user);
 		if (char) {
 			const what = m.options.getString('what', true);
-			return m.reply(await rpg.game.action('cook', char, what));
+			return m.reply(await rpg.game.exec('cook', char, what));
 		}
 
 	}

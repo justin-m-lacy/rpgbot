@@ -11,7 +11,7 @@ export default NewCommand<Rpg>({
 		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
-		return SendPrivate(m, await rpg.game.action('home', char));
+		return SendPrivate(m, await rpg.game.exec('home', char));
 
 
 	}

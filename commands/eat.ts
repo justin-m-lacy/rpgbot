@@ -20,7 +20,7 @@ export default NewCommand<Rpg>({
 			})
 		}
 
-		return SendPrivate(m, await rpg.game.action('eat', char, what));
+		return SendPrivate(m, await rpg.game.exec('eat', char, what));
 
 	}
 

@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Char } from 'rpg/char/char';
+import { Game } from 'rpg/game';
 import { ItemData, ItemType } from 'rpg/items/types';
 
 export type TStacker = Item & {
@@ -13,7 +14,13 @@ export const IsStack = (it: Item): it is TStacker => {
 
 export class Item {
 
-	name: string = '';
+	/**
+	 * accessors for descendent overrides
+	 */
+	get name() { return this._name }
+	set name(v) { this._name = v }
+
+	_name: string = '';
 
 	desc: string;
 
@@ -97,6 +104,10 @@ export class Item {
 		this.type = info?.type ?? ItemType.Unknown;
 		this.desc = info?.desc ?? '';
 
+	}
+
+	use(game: Game, char: Char): Promise<void> | void {
+		char.log(`${char.name} tries to use ${this.name}. Nothing happens.`);
 	}
 
 	/**

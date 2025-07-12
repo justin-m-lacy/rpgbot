@@ -25,7 +25,7 @@ export default NewCommand<Rpg>({
 			});
 		}
 
-		return SendPrivate(m, await rpg.game.action('inscribe', char, what, text || ''));
+		return SendPrivate(m, await rpg.game.exec('inscribe', char, what, text || ''));
 
 
 	}

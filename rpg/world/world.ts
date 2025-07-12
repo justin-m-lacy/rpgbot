@@ -6,6 +6,7 @@ import { RandMonster } from 'rpg/parsers/mobs';
 import { Coord, TCoord } from 'rpg/world/coord';
 import { GenLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
+import { Game } from '../game';
 import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
 import { Mob } from '../monster/mobs';
@@ -100,15 +101,15 @@ export class World {
 	 * @param char
 	 * @param wot
 	 */
-	async useLoc(char: Char, wot: string | number | Feature) {
+	async useLoc(game: Game, char: Char, wot: string | number | Feature) {
 
 		const loc = await this.getOrGen(char.at, char);
 
 		const f = typeof wot !== 'object' ? loc.getFeature(wot) : wot;
 		if (!f) {
 			char.log('You do not see any such thing here.');
-		} else if (!f.use(char)) {
-			char.log('Nothing seems to happen.');
+		} else {
+			f.use(game, char);
 		}
 
 	}
@@ -299,7 +300,7 @@ export class World {
 	}
 
 	/**
-	 * Return the new location after moving from the given coordinate.
+	 * Return new location after moving from prev loc.
 	 * @param dir - move direction.
 	 * @returns new Loc or error string.
 	 */

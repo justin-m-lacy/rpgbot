@@ -82,6 +82,7 @@ export class CharFlags {
 	canAttack() { return (this.flags & StatusFlag.noattack) === 0 }
 	canDefend() { return (this.flags & StatusFlag.nodefend) === 0 }
 
+
 	/// flag - state flag
 	has(flag: StatusFlag) {
 		return (this._causes[flag]?.length ?? 0) > 0;

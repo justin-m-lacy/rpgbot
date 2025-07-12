@@ -25,7 +25,7 @@ export default NewCommand<Rpg>({
 
 		const end = m.options.getString('end');
 
-		return SendPrivate(m, await rpg.game.action('drop', char, start, end));
+		return SendPrivate(m, await rpg.game.exec('drop', char, start, end));
 
 
 
