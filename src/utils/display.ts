@@ -1,7 +1,6 @@
 import type { ChatCommand } from '@/bot/cmd-wrapper';
 import type { ChatAction } from '@/bot/command';
-import { EmbedBuilder, Message, MessageFlags, type InteractionReplyOptions, type SendableChannels } from 'discord.js';
-
+import { EmbedBuilder, Message, MessageFlags, type SendableChannels } from 'discord.js';
 
 /**
  * Send a no-permission message.
@@ -25,14 +24,7 @@ const SendNoPerm = (m: ChatAction, cmd?: string) => {
 
 }
 
-export const SendPrivate = (m: ChatCommand, str: string, opts?: InteractionReplyOptions) => {
-	return str ? m.reply({
-		content: str, flags: MessageFlags.Ephemeral,
-		...opts
-	}) : undefined;
-}
-
-const ContentMax = 1600;
+const MsgMAx = 1700;
 
 /**
  * Regular expression for capitalizing the start of words.
@@ -60,7 +52,7 @@ export const Capitalize = (str: string) => {
  * @returns - a single page of text out of the total.
  */
 const GetPageText = (text: string, page: number = 0) => {
-	return text.slice(ContentMax * page, ContentMax * (page + 1));
+	return text.slice(MsgMAx * page, MsgMAx * (page + 1));
 }
 
 
@@ -71,7 +63,7 @@ const GetPageText = (text: string, page: number = 0) => {
  * @returns one-based page count.
  */
 const PageCount = (text: string) => {
-	return Math.floor(text.length / ContentMax) + 1;
+	return Math.floor(text.length / MsgMAx) + 1;
 }
 
 /**
@@ -96,6 +88,8 @@ export const Display = {
 	BlockText: (s: string) => '```' + s + '```',
 
 	SendEmbed: async (m: Message, s: string, url: string) => {
+
+		if (s.length > MsgMAx) s = s.slice(0, MsgMAx);
 
 		return m.reply({
 			content: '```' + s + '```',
@@ -143,7 +137,7 @@ export const Display = {
 			charCount += it.length;
 
 			// adding this item's text crossed a page boundary.
-			if (charCount >= ContentMax) {
+			if (charCount >= MsgMAx) {
 
 				if (totalPages === page) pageStr = items.slice(pageStart, i).join('\n');
 

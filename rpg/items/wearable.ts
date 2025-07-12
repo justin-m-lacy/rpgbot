@@ -21,6 +21,8 @@ const Slots: { [s: string]: boolean } = {
 	'right': true,
 }
 
+export const GetSlots = () => Object.keys(Slots);
+
 export type HumanSlot = 'head' | 'hands' | 'back' | 'waist' | 'neck'
 	| 'fingers' | 'chest' | 'legs' | 'shins' | 'feet' | 'left' | 'right';
 

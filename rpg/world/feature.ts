@@ -24,8 +24,8 @@ export class Feature extends Item {
 
 	action?: Action;
 
-	constructor(name: string, desc: string) {
-		super(undefined, { name: name, desc: desc, type: ItemType.Feature });
+	constructor(name: string, desc: string, type: ItemType = ItemType.Feature) {
+		super(undefined, { name: name, desc: desc, type });
 	}
 
 	/**

@@ -48,6 +48,7 @@ export class Item {
 		it ??= new Item(json.id);
 		it.name = json.name;
 
+		if (json.desc) it.desc = json.desc;
 		if (json.price) it.price = json.price;
 		if (json.embed) it.embed = json.embed;
 		if (json.maker) it.maker = json.maker;

@@ -1,8 +1,8 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
+import { SendPrivate } from "rpg/display/display";
 import { PotsList } from "rpg/parsers/potions";
 import { Rpg } from "rpg/rpg";
-import { SendPrivate } from '../src/utils/display';
 
 export default NewCommand<Rpg>({
 	cls: Rpg,

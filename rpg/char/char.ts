@@ -183,7 +183,7 @@ export class Char extends Actor {
 
 	}
 
-	unequip(slot?: string) {
+	unequip(slot: HumanSlot) {
 
 		const removed = this._equip.removeSlot(slot);
 		if (!removed) return;

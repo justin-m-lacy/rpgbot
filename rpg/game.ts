@@ -15,7 +15,7 @@ import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
 import { ItemType } from 'rpg/items/types';
-import { HumanSlot } from 'rpg/items/wearable';
+import { HumanSlot, toSlot } from 'rpg/items/wearable';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
 import { quickSplice } from 'rpg/util/array';
@@ -571,7 +571,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		const to = await this.world.move(char, from, toCoord);
 
-		char.log(char.name + ' is' + to.look(char));
+		char.log(char.name + ' is ' + to.look(char));
 
 		const p = this.getParty(char);
 		if (p && p.leader === char.id) {
@@ -883,8 +883,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			return char.output('Specify an equip slot to remove.');
 		}
 
-		if (char.unequip(slot)) return char.output('Removed.');
-		return char.output('Cannot unequip from ' + slot);
+		const s = toSlot(slot);
+		if (!s) {
+			return char.log(`Invalid slot: ${slot}`);
+		}
+
+		if (char.unequip(s)) return char.output('Removed.');
+		return char.output('Cannot remove ' + s);
 
 	}
 

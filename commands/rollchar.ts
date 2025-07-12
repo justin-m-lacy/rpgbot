@@ -1,10 +1,9 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrChoices, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
 import { GenChar } from "rpg/builders/chargen";
 import type { GClass, Race } from "rpg/char/race";
 import { IsLegalName } from "rpg/components";
-import { EchoChar } from "rpg/display/display";
+import { EchoChar, SendPrivate } from "rpg/display/display";
 import { GetClass, GetClasses, GetRace, GetRaces, RandClass, RandRace } from "rpg/parsers/parse-class";
 import { Rpg } from "rpg/rpg";
 import { GetUserLevels } from "rpg/users/users";

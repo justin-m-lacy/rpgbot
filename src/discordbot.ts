@@ -19,11 +19,6 @@ export type TBotConfig = {
 
 }
 
-/**
- * maximum message size.
- */
-export const CONTENT_MAX = 1905;
-
 export type TCmdFunc<S extends string = string> = (m: Message<true>, ...rest: S[]) => any;
 
 export class DiscordBot {

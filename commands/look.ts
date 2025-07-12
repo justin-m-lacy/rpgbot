@@ -1,10 +1,9 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { CustomButton } from "@/bot/command-map";
-import { SendPrivate } from "@/utils/display";
 import { ActionRowBuilder, type ButtonBuilder, ButtonStyle } from "discord.js";
 import { ToActionRows, WorldItemActions } from "rpg/components";
-import { ReplyBlock } from "rpg/display/display";
+import { ReplyBlock, SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { type DirVal, type Loc, ToDirStr } from "rpg/world/loc";
 
@@ -83,7 +82,7 @@ export default NewCommand<Rpg>({
 		const what = m.options.getString('what');
 
 		const loc = await rpg.world.getOrGen(char.at);
-		loc.embed
+		//loc.embed
 		if (!what) {
 			return SendPrivate(m, char.name + ' is' + loc.look(char), {
 				components: WorldLocActions(loc)

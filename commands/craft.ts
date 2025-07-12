@@ -1,8 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
 import { IsLegalName } from "rpg/components";
-import { SendBlock } from "rpg/display/display";
+import { SendBlock, SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({

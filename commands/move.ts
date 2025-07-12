@@ -1,8 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt, type Command } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
 import { WorldLocActions } from "commands/look";
-import { ReplyBlock } from "rpg/display/display";
+import { ReplyBlock, SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { DirVal } from "rpg/world/loc";
 

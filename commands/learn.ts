@@ -1,6 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
+import { SendPrivate } from "rpg/display/display";
 import { GetSpell } from "rpg/parsers/spells";
 import { Rpg } from "rpg/rpg";
 

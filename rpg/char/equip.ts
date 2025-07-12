@@ -2,7 +2,7 @@ import { ItemList } from 'rpg/display/items';
 import { ItemType } from 'rpg/items/types';
 import { Item } from '../items/item';
 import { Weapon } from '../items/weapon';
-import { HumanSlot, toSlot, Wearable } from "../items/wearable";
+import { HumanSlot, Wearable } from "../items/wearable";
 
 const MaxSlots: { [key: string]: number | undefined } = {
 	neck: 3,
@@ -104,13 +104,9 @@ export class Equip {
 	 * Remove item from slot and return it.
 	 * @param slot
 	 */
-	removeSlot(slot: string | HumanSlot | null | undefined) {
+	removeSlot(slot: HumanSlot) {
 
-		const my = toSlot(slot);
-		if (!my) return;
-
-
-		let it = this.slots[my];
+		let it = this.slots[slot];
 		if (!it) return;
 
 		if (Array.isArray(it)) {
@@ -120,7 +116,7 @@ export class Equip {
 				return;
 			}
 		} else {
-			this.slots[my] = null;
+			this.slots[slot] = null;
 		}
 
 		return it;

@@ -1,8 +1,7 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
 import type { InteractionReplyOptions } from "discord.js";
 import { OtherCharActions, OwnCharActions } from "rpg/components";
-import { EchoChar } from "rpg/display/display";
+import { EchoChar, SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { ChatCommand } from '../src/bot/cmd-wrapper';
 

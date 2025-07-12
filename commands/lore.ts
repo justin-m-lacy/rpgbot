@@ -1,7 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
-import { ReplyBlock } from "rpg/display/display";
+import { ReplyBlock, SendPrivate } from "rpg/display/display";
 import { GetClass, GetRace } from "rpg/parsers/parse-class";
 
 

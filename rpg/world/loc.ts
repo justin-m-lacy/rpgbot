@@ -338,14 +338,16 @@ export class Loc {
 
 	/**
 	 * Returns text seen by character looking at location.
-	 * @param looker 
+	 * @param char - char looking
 	 * @param imgTag 
 	 * @param showPaths 
 	 * @returns 
 	 */
-	look(looker?: Char, imgTag: boolean = true, showPaths: boolean = false) {
+	look(char?: Char, imgTag: boolean = true, showPaths: boolean = false) {
 
-		let r = in_prefix[this.biome as Biome] + this.biome;//+ ' (' + this._coord.toString() + ')';
+		let r = in_prefix[this.biome as Biome] + this.biome;
+		if (char) r += ` [${char.state}]`;
+
 		if (this.embed && imgTag) r += ' [img]';
 		r += '\n' + this.desc;
 
@@ -355,7 +357,7 @@ export class Loc {
 
 		if (this.chars.length > 0) {
 
-			const text = this.charList(looker?.name);
+			const text = this.charList(char?.name);
 			if (text) {
 				r += '\nChars: ' + text;
 			}

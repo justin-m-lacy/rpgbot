@@ -5,6 +5,8 @@ import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
 import { smallNum } from "rpg/util/format";
 import { Char } from '../char/char';
 
+const MsgMax = 1950;
+
 export const BlockText = (s: string) => '```' + s + '```';
 
 export const SendEmbed = async (m: ChatCommand, s: string, e?: string) => m.reply(
@@ -24,7 +26,17 @@ export const ReplyEmbed = async (m: ChatCommand, s: string, e?: string) => m.rep
 		] : undefined
 	});
 
+export const SendPrivate = (m: ChatCommand, str: string, opts?: InteractionReplyOptions) => {
+	return str ? m.reply({
+		content: str.length < MsgMax ? str : str.slice(0, MsgMax),
+		flags: MessageFlags.Ephemeral,
+		...opts
+	}) : undefined;
+}
+
 export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) => {
+	if (s.length > MsgMax) s = s.slice(0, MsgMax);
+
 	return s ? m.reply('```' + s + '```') : undefined;
 }
 

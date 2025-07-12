@@ -38,7 +38,7 @@ export class World {
 		if (!st.getFeature('shrine')) {
 			st.addFeature(GenFeature('shrine'));
 		}
-		if (!st.features.find(f => f.type === ItemType.Shop)) {
+		if (!st.features.some(f => f.type === ItemType.Shop)) {
 			st.addFeature(GenShop(st.biome, 1));
 		}
 	}

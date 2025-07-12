@@ -1,10 +1,9 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
 import { type InteractionReplyOptions } from "discord.js";
 import { getHistory } from "rpg/char/events";
 import { OtherCharActions, OwnCharActions } from "rpg/components";
-import { ReplyBlock } from "rpg/display/display";
+import { ReplyBlock, SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({

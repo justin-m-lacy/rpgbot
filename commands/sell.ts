@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
 import { OptionButtons } from "rpg/components";
+import { SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { Feature } from "rpg/world/feature";
 import { IsShop, Shop } from "rpg/world/shop";
@@ -9,7 +9,7 @@ import { IsShop, Shop } from "rpg/world/shop";
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('sell', 'Sell items to a shop')
-		.addStringOption(StrOpt('item', 'Item from inventory to sell').setRequired(true))
+		.addStringOption(StrOpt('item', 'Inventory item to sell').setRequired(true))
 		.addStringOption(StrOpt('shop', 'Shop to sell to'))
 		.addStringOption(StrOpt('end', 'End of range of items to sell. (Optional)')),
 	async exec(m: ChatCommand, rpg: Rpg) {
@@ -39,7 +39,7 @@ export default NewCommand<Rpg>({
 					});
 
 			} else {
-				shop = shops[0];
+				shop = shops[0] as Shop;
 			}
 
 		} else {
@@ -51,7 +51,7 @@ export default NewCommand<Rpg>({
 			}
 		}
 
-		await rpg.game.action('sell', char, shop, item, end);
+		await rpg.game.action('sell', char, shop as Shop, item, end);
 
 		return SendPrivate(m, char.flushLog());
 

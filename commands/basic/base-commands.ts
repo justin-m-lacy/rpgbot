@@ -2,8 +2,8 @@ import { DiscordBot } from '../../src/discordbot';
 
 import { ChatCommand } from '@/bot/cmd-wrapper';
 import { CommandData, NewCommand, NumOpt, StrOpt, type Command } from '@/bot/command';
-import { SendPrivate } from '@/utils/display';
 import { PermissionFlagsBits } from 'discord.js';
+import { SendPrivate } from 'rpg/display/display';
 import { ExecRoll } from '../../rpg/values/dice';
 
 export function GetCommands(): Command[] {

@@ -30,12 +30,11 @@ export class Shop<T extends Item = Item> extends Feature {
 		}
 	) {
 
-		super(name, opts.desc ?? `${opts.kind} Shop`);
+		super(name, opts.desc ?? `${opts.kind} Shop`, ItemType.Shop);
 
 		this.genItem = opts.genItem;
 
 		this.level = opts.level ?? 0;
-		this.type = ItemType.Shop;
 
 		this.inv = new Inventory(undefined);
 

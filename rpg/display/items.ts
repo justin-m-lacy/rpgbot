@@ -34,6 +34,6 @@ export const ItemList = (a: Inventory | Viewable[]) => {
 
 	if (!Array.isArray(a)) a = a.items;
 	if (a.length === 0) return 'nothing';
-	return a.map(it => it.name + (it.embed ? '\t[img]' : '')).join(',');
+	return a.map(it => it.name + (it.embed ? '\t[img]' : '')).join(', ');
 
 }

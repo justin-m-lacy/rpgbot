@@ -1,14 +1,14 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { SendPrivate } from "@/utils/display";
 import { PermissionFlagsBits } from "discord.js";
+import { SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { nerfItems } from "rpg/trade";
 
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('nerf', 'Nerf character.')
-		.addStringOption(StrOpt('who', 'Character to make leader.').setRequired(true))
+		.addStringOption(StrOpt('who', 'Character to nerf.').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
