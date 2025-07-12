@@ -114,6 +114,7 @@ export class Item {
 	getDetails(viewer?: Char, imgTag = true) {
 
 		let s = this.name;
+		if (IsStack(this)) s += ` (x${this.count})`
 		if (this.desc) s += ': ' + this.desc;
 		if (this.inscrip) s += ' { ' + this.inscrip + ' }';
 		if (this.embed && imgTag) s += ' [img]';
@@ -122,7 +123,7 @@ export class Item {
 		return s;
 	}
 
-	toString() { return this.name }
+	toString() { return this.name + (IsStack(this) ? ` (${this.count})` : '') }
 
 	/**
 	 * @param a

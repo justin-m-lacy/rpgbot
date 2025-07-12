@@ -1,5 +1,5 @@
 import { Inventory } from "rpg/inventory";
-import { Viewable } from "rpg/values/types";
+import { Item } from "rpg/items/item";
 
 /**
  * @returns list of all items in inventory.
@@ -9,8 +9,7 @@ export const ItemMenu = (inv: Inventory) => {
 	if (inv.items.length === 0) return '';
 
 	return inv.items.map((v, i) =>
-		(i + 1) + ') ' + v.toString() + (v.embed ? '\t[img]' : '')
-	).join('\n');
+		(i + 1) + ') ' + v.toString()).join('\n');
 
 }
 
@@ -30,10 +29,10 @@ export const MenuList = (items: string[]) => {
 /**
  * @param a - get text for list of items.
  */
-export const ItemList = (a: Inventory | Viewable[]) => {
+export const ItemList = (a: Inventory | Item[]) => {
 
 	if (!Array.isArray(a)) a = a.items;
 	if (a.length === 0) return 'nothing';
-	return a.map(it => it.name + (it.embed ? '\t[img]' : '')).join(', ');
+	return a.map(it => it.toString()).join(', ');
 
 }
