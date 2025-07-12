@@ -1,6 +1,5 @@
 import { IsInt } from 'rpg/util/parse';
 import { Simple } from 'rpg/values/simple';
-import { SymEncode } from 'rpg/values/types';
 import { type ItemIndex } from './items/container';
 import { IsStack, Item } from './items/item';
 
@@ -28,21 +27,6 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 	readonly items: T[] = [];
 
 	max: Simple = new Simple('max', 10);
-
-	/**
-	 * 
-	 * @param encoder - data encoder.
-	 */
-	[SymEncode](encoder?: (it: T) => any) {
-
-		const data = super.toJSON();
-		if (this.items.length > 0) {
-			data.items = encoder ? this.items.map(encoder) : this.items;
-		}
-
-		return data;
-
-	}
 
 	toJSON(): Record<string, any> & { items?: any[] } {
 		const data = super.toJSON();
@@ -98,17 +82,26 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		if (Array.isArray(it)) {
 			const ind = this.items.length + 1;
 
-			it = it.filter((v): v is T => v != null);
-			this.items.push(...it as T[]);
+			for (let i = 0; i < it.length; i++) {
+				const sub = it[i];
+				if (!sub) continue;
+				if (IsStack(sub) && this.addStack(sub)) {
+					continue;
+				}
+				this.items.push(sub);
+			}
 
 			return ind;
 		}
+		if (it == null) return -1;
 
-		if (it != null) {
-			this.items.push(it);
-			return this.items.length;
+		if (IsStack(it)) {
+			const st = this.addStack(it);
+			if (st >= 0) return st;
 		}
-		return -1;
+
+		this.items.push(it);
+		return this.items.length;
 
 	}
 
@@ -125,11 +118,11 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 			if (IsStack(it) && it.type == a.type && it.name == a.name && it.inscrip == a.inscrip) {
 				it.count += a.count;
 				a.count = 0;
-				return it;
+				return i;
 			}
 
 		}
-		return null;
+		return -1;
 
 	}
 
