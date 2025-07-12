@@ -66,7 +66,7 @@ export class PctMod implements IMod {
 
       if ('value' in vars) {
 
-        this.value = vars._val;
+        this.value = vars.value;
         this.pct = 0;
 
       } else {

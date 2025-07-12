@@ -55,7 +55,7 @@ export class Potion extends Item implements TStacker {
 		super(id, { name: '', desc: '', type: ItemType.Potion });
 	}
 
-	use(game: Game, char: Char) {
+	use(_: Game, char: Char) {
 
 		char.output(`${char.name} quaffs ${this.name}.`);
 		char.addHistory('quaff');

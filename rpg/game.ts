@@ -260,10 +260,19 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async cast(this: Game<A, K>, char: TActor, spell: Spell, targ?: TActor) {
+	/**
+	 * 
+	 * @param this 
+	 * @param char 
+	 * @param spell 
+	 * @param targ 
+	 * @param free - cast spell for free. (cast from item.)
+	 * @returns 
+	 */
+	async cast(this: Game<A, K>, char: TActor, spell: Spell, targ?: TActor, free: boolean = false) {
 
 		// pay cast.
-		if (spell.cost) {
+		if (spell.cost && !free) {
 
 			const missing = MissingProp(char, spell.cost);
 			if (missing) {
