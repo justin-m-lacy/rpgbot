@@ -198,36 +198,23 @@ export class World {
 
 	}
 
-	async view(char: Char, what?: string | number | null) {
+	async view(char: Char, what: string | number) {
 
 		const loc = await this.getOrGen(char.at);
-		if (what) {
 
-			const it = loc.get(what);
-			if (!it) return 'Item not found.';
-			return it.getView();
-
-		}
-		if (loc.embed) return [char.name + ' is' + loc.look(), loc.embed];
-		else return char.name + ' is ' + loc.look();
-
+		const it = loc.getNpc(what);
+		return it ? it.getDetails() : null;
 	}
 
 	/**
-	 * Examine world at character location.
+	 * Examine item at character location.
 	 * @param char
 	 * @param what
 	 */
 	async examine(char: Char, what: string | number) {
 
 		const loc = await this.getOrGen(char.at);
-
-		if (!what) return 'Examine what?';
-
-		const it = loc.getNpc(what);
-		if (!it) return 'Creature not found.';
-		return it.getDetails();
-
+		return loc.get(what)?.getView() ?? null;
 	}
 
 	/**

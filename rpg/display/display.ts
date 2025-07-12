@@ -15,6 +15,15 @@ export const SendEmbed = async (m: ChatCommand, s: string, e?: string) => m.repl
 		] : undefined
 	});
 
+export const ReplyEmbed = async (m: ChatCommand, s: string, e?: string) => m.reply(
+	{
+		content: '```' + s + '```',
+		flags: MessageFlags.Ephemeral,
+		embeds: e ? [
+			new EmbedBuilder({ image: { url: e } })
+		] : undefined
+	});
+
 export const SendBlock = async (m: { reply(s: string): Promise<any> }, s: string) => {
 	return s ? m.reply('```' + s + '```') : undefined;
 }

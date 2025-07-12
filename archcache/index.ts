@@ -198,7 +198,7 @@ export default class Cache<T = any> extends Emitter {
 		}
 
 		if (!this.loader) {
-			console.warn(`no loader for cache: ${this.cacheKey}`);
+			console.warn(`no loader for: ${this.cacheKey}`);
 			return undefined;
 		}
 
@@ -355,11 +355,8 @@ export default class Cache<T = any> extends Emitter {
 		const saves = [];
 
 		for (const cache of this._subs.values()) {
-
-			console.log(`cleanup subcache: ${cache.cacheKey}`);
 			saves.push(cache.cleanup(time));
 		}
-
 
 		for (const k in dict) {
 
@@ -379,11 +376,10 @@ export default class Cache<T = any> extends Emitter {
 
 		} // for
 
-		console.log(`run cleanup`);
 		return Promise.allSettled(saves).then(vals => {
 			this.emit('cleanup', this, vals); return vals
 		}).catch(err => {
-			console.log(`cleanup failed: ${err}`);
+			console.log(`cleanup err: ${err}`);
 		})
 
 	}

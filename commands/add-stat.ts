@@ -47,9 +47,9 @@ export default NewCommand<Rpg>(
 
 			const res = char.addStat(stat);
 			if (res) {
-				SendPrivate(m, `${stat} increased.`);
+				return SendPrivate(m, `${stat} increased.`);
 			} else {
-				SendPrivate(m, char.flushLog());
+				return SendPrivate(m, char.flushLog());
 			}
 
 		}

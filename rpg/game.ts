@@ -999,7 +999,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		const p = char.getItem(wot) as Item | undefined;
 		if (!p) return char.output('Item not found.');
-		if (p.type !== 'potion') return char.output(`${p.name} cannot be quaffed.`);
+		if (p.type !== ItemType.Potion) return char.output(`${p.name} cannot be quaffed.`);
 
 		// remove the potion.
 		char.takeItem(p);

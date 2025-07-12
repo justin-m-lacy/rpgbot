@@ -12,7 +12,7 @@ export default NewCommand<Rpg>({
 
 		const potion = m.options.getString('potion', true);
 
-		if (!potion) return SendPrivate(m, 'Brew what potion?');
+		if (!potion) return SendPrivate(m, 'Brew which potion?');
 
 		const char = await rpg.myCharOrErr(m, m.user)
 		if (!char) return;

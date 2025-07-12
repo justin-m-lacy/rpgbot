@@ -1,6 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand } from "@/bot/command";
-import { SendBlock } from "rpg/display/display";
+import { SendBlock as ReplyBlock } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -11,7 +11,7 @@ export default NewCommand<Rpg>({
 		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
-		await SendBlock(m, await rpg.game.action('scout', char));
+		await ReplyBlock(m, await rpg.game.action('scout', char));
 
 	}
 })

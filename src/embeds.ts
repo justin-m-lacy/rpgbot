@@ -25,14 +25,14 @@ const ImageEmbed = (imageUrl: string) => {
     return new EmbedBuilder({ image: { url: imageUrl, proxy_url: imageUrl } });
 }
 
-export const ReplyEmbed = (m: ChatCommand, embedUrl: string, text?: string | null,) => {
+export const ReplyEmbed = (m: ChatCommand, text?: string, embedUrl?: string,) => {
     return m.reply(
         {
 
-            content: (text && text.length > 0) ? text : ' ',
-            embeds: [
+            content: (text && text.length) ? text : ' ',
+            embeds: embedUrl ? [
                 ImageEmbed(embedUrl)
-            ],
+            ] : [],
             flags: MessageFlags.Ephemeral
         }
     );

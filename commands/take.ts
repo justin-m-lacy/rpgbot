@@ -7,8 +7,8 @@ import { Rpg } from "rpg/rpg";
 export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('take', 'Take single item or range of items from ground.')
-		.addStringOption(StrOpt('start', 'Starting item to take'))
-		.addStringOption(StrOpt('end', 'End item to take')),
+		.addStringOption(StrOpt('start', 'First item to take'))
+		.addStringOption(StrOpt('end', 'Optional end item to take.')),
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.myCharOrErr(m, m.user);
@@ -23,7 +23,7 @@ export default NewCommand<Rpg>({
 			} else if (loc.items.length === 1) {
 				start = 1;
 			} else {
-				return SendPrivate(m, 'Take what item?', {
+				return SendPrivate(m, 'Take which item?', {
 					components: InventoryButtons('take', loc.inv, 'start')
 				});
 			}

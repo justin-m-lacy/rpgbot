@@ -92,7 +92,7 @@ export default NewCommand<Rpg>({
 
 		const item = loc.get(what);
 		if (!item) {
-			return SendPrivate(m, 'Item not found');
+			return SendPrivate(m, `Item ${what} not found`);
 		}
 
 		return ReplyBlock(m, item.getDetails(char), {
