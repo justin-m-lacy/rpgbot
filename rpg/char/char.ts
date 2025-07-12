@@ -8,7 +8,7 @@ import { smallNum } from 'rpg/util/format';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import { Log } from '../display/log';
 import { Inventory } from '../inventory';
-import { Item } from '../items/item';
+import { Item, TStacker } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
 import { roll } from '../values/dice';
 import { Coord } from '../world/coord';
@@ -307,7 +307,7 @@ export class Char extends Actor {
 	 * @param which 
 	 * @param n 
 	 */
-	removeN(which: number | string | Item, n: number) {
+	removeN(which: Item & TStacker, n: number = 1) {
 		return this.inv.removeN(which, n);
 	}
 

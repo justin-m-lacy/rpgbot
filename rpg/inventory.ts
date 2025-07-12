@@ -318,7 +318,14 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	}
 
-	removeN(it: ItemIndex | Item, n: number) {
+	removeN(it: Item & TStacker, n: number) {
+
+		if (n < it.count) return false;
+		it.count -= n;
+		if (it.count == 0) {
+			return this.removeId(it.id) ?? false;
+		}
+		return it;
 
 	}
 

@@ -39,6 +39,7 @@ export class Scroll extends Item implements TCombatAction {
 	get dmg() { return this.spell?.dmg }
 	get cure() { return this.spell?.cure }
 	get kind() { return this.spell?.kind ?? 'blank' }
+	get desc() { return this.spell?.desc ?? 'A blank scroll' }
 
 	constructor(id: string | undefined, spell: Spell | undefined, opts?: { desc?: string, name?: string }) {
 
@@ -58,7 +59,7 @@ export class Scroll extends Item implements TCombatAction {
 		}
 
 		char.send(`${char.name} reads ${this.name}`);
-		char.removeItem(this.id);
+		char.removeN(this);
 		await game.cast(char, this.spell, targ, true);
 
 	}

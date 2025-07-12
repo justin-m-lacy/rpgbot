@@ -60,9 +60,7 @@ export class Potion extends Item implements TStacker {
 		char.output(`${char.name} quaffs ${this.name}.`);
 		char.addHistory('quaff');
 
-		if (--this.count <= 0) {
-			char.removeItem(this);
-		}
+		char.removeN(this);
 
 		if (this._form) {
 

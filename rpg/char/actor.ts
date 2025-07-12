@@ -10,7 +10,7 @@ import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { Maxable } from 'rpg/values/maxable';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
-import { Item } from '../items/item';
+import { Item, TStacker } from '../items/item';
 import { Dot, ProtoDot } from '../magic/dots';
 import { roll } from '../values/dice';
 import { Coord } from '../world/coord';
@@ -144,6 +144,15 @@ export class Actor {
 
 		this._at = new Coord(0, 0);
 
+	}
+
+	/**
+	 * Remove count of stackable item.
+	 * @param which 
+	 * @param n 
+	 */
+	removeN(which: Item & TStacker, n: number = 1): boolean | Item {
+		return false;
 	}
 
 	public setBaseStats(stats: Record<keyof Extract<StatBlock, TValue>, Numeric>) {

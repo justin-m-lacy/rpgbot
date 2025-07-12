@@ -15,14 +15,17 @@ export const IsStack = (it: Item): it is TStacker => {
 export class Item {
 
 	/**
-	 * accessors for descendent overrides
+	 * accessors for subclass overrides
 	 */
 	get name() { return this._name }
 	set name(v) { this._name = v }
 
 	_name: string = '';
 
-	desc: string;
+	// accessor for subclass override
+	get desc() { return this._desc }
+	set desc(v) { this._desc = v; }
+	private _desc: string = '';
 
 	inscrip?: string;
 

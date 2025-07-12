@@ -9,7 +9,7 @@ import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
 import { Actor } from '../char/actor';
 import * as stats from '../char/stats';
-import { Item } from '../items/item';
+import { Item, TStacker } from '../items/item';
 import { roll } from '../values/dice';
 import { Coord } from '../world/coord';
 
@@ -186,9 +186,18 @@ export class Mob {
 
 	}
 
+	/**
+ * Remove count of stackable item.
+ * @param which 
+ * @param n 
+ */
+	removeN(which: Item & TStacker, n: number = 1) {
+		return false;
+	}
+
 	getDetails() {
 
-		return `level ${this.level} ${this.name} [${stats.getEvil(this._evil)}${this.kind ?? ''}] \nhp:${this._hp}/${this._hp.max} armor:${this._armor}\n${this.desc}`;
+		return `level ${this.level.valueOf()} ${this.name} [${stats.getEvil(this._evil)}${this.kind ?? ''}] \nhp:${Math.ceil(this._hp.valueOf())}/${Math.ceil(this._hp.max.valueOf())} armor:${Math.ceil(this._armor)}\n${this.desc}`;
 
 	}
 
