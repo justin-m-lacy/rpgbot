@@ -1,7 +1,8 @@
 import { IsInt } from 'rpg/util/parse';
+import { Simple } from 'rpg/values/simple';
 import { SymEncode } from 'rpg/values/types';
 import { type ItemIndex } from './items/container';
-import { Item } from './items/item';
+import { IsStack, Item } from './items/item';
 
 export type ItemPicker<T = Item> = ItemIndex | T;
 
@@ -22,9 +23,11 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	readonly [SymInventory] = true;
 
-	get count() { return this.items.length; }
+	get size() { return this.items.length; }
 
 	readonly items: T[] = [];
+
+	max: Simple = new Simple('max', 10);
 
 	/**
 	 * 
@@ -77,8 +80,12 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	}
 
-	constructor(id?: string, info?: { name?: string, desc?: string }) {
+	constructor(id?: string, info?: { max?: number, name?: string, desc?: string }) {
+
 		super(id, info);
+
+		this.max.base = info?.max ?? 10;
+
 	}
 
 	/**
@@ -104,6 +111,46 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		return -1;
 
 	}
+
+
+	/**
+	 * Find 
+	 * @param a 
+	 */
+	private addStack(a: T & { stack: true, count: number }) {
+
+		for (let i = this.items.length - 1; i >= 0; i--) {
+
+			const it = this.items[i];
+			if (IsStack(it) && it.type == a.type && it.name == a.name && it.inscrip == a.inscrip) {
+				it.count += a.count;
+				a.count = 0;
+				return it;
+			}
+
+		}
+		return null;
+
+	}
+
+	/**
+	 * Find 
+	 * @param a 
+	 */
+	private findStack(a: T) {
+
+		for (let i = this.items.length - 1; i >= 0; i--) {
+
+			const it = this.items[i];
+			if (it.stack && it.type == a.type && it.name == a.name && it.inscrip == a.inscrip) {
+				return it;
+			}
+
+		}
+		return null;
+
+	}
+
 
 	/**
 	 * Return item without removing it.
@@ -162,7 +209,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 	 * @param  sub
 	 * @returns
 	 */
-	takeSub(base: ItemPicker<T>, sub: ItemPicker<T> | ItemIndex): T | T[] | null {
+	private takeSub(base: ItemPicker<T>, sub: ItemPicker<T> | ItemIndex): T | T[] | null {
 
 		const it = this.take(base) as Inventory<T> | null;
 		if (!it) return null;
@@ -190,6 +237,11 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		return false;
 	}
 
+	/**
+	 * Find item in inventory by name or id.
+	 * @param id - name or id.
+	 * @returns 
+	 */
 	find(id: string) {
 
 		const lower = id.toLowerCase();

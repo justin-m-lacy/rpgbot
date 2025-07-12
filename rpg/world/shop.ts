@@ -143,7 +143,7 @@ export class Shop<T extends Item = Item> extends Feature {
 		}
 
 		console.log(`restocking...`);
-		while (this.inv.count < 10) {
+		while (this.inv.size < 10) {
 
 			const item = this.genItem(this.level);
 			if (item) {
@@ -161,7 +161,7 @@ export class Shop<T extends Item = Item> extends Feature {
 
 		const mod = char ? GetTradeMod(char) : 1;
 
-		if (this.inv.count === 0) {
+		if (this.inv.size === 0) {
 			return super.getDetails(char) + '\nThe shop is empty.'
 		}
 		return this.inv.items.map((v, ind) => {

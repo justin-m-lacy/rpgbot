@@ -2,6 +2,14 @@ import { randomUUID } from 'crypto';
 import { Char } from 'rpg/char/char';
 import { ItemData, ItemType } from 'rpg/items/types';
 
+export type TStacker = Item & {
+	stack: true,
+	count: number
+}
+
+export const IsStack = (it: Item): it is TStacker => {
+	return it.stack && typeof (it as any).count === 'number';
+}
 
 export class Item {
 
@@ -69,7 +77,7 @@ export class Item {
 	maker?: string;
 
 	/// image attachment
-	private embed?: string;
+	embed?: string;
 	private _price: number = 0;
 
 	/**

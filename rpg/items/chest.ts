@@ -42,7 +42,7 @@ export class Chest extends Item implements IInventory {
 	get lock() { return this._lock; }
 	set lock(v) { this._lock = v; }
 
-	get count() { return this._inv.count; }
+	get count() { return this._inv.size; }
 
 	private _size: number = 0;
 	private _lock: number = 0;

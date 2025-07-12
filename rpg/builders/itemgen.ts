@@ -141,8 +141,7 @@ const getDrops = (mons: Mob) => {
 }
 
 /**
- * Create new item from base item id.
- * Gives the item a new unique id.
+ * Create new item w/ unique Id from proto item id.
  * @param protoId
  * @returns 
  */
