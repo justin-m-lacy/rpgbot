@@ -137,7 +137,7 @@ export class Item {
 		return s;
 	}
 
-	toString() { return this.name + (IsStack(this) ? ` (${this.count})` : '') }
+	toString() { return this.name + (IsStack(this) && this.count > 1 ? ` (${this.count})` : '') }
 
 	/**
 	 * @param a

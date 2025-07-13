@@ -85,7 +85,7 @@ export class CharFlags {
 
 	/// flag - state flag
 	has(flag: StatusFlag) {
-		return (this._causes[flag]?.length ?? 0) > 0;
+		return (this.flags & flag) > 0;
 	}
 	unset(flag: StatusFlag) {
 		this.flags &= (~flag);

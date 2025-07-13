@@ -85,6 +85,11 @@ export class Mob {
 	readonly at: Coord = new Coord(0, 0);
 	readonly dots: Dot[] = [];
 
+	/**
+	 * ids of actors that have interacted with mob.
+	 */
+	actors?: Record<string, number>;
+
 	constructor(id?: string, proto?: MobData) {
 
 		this.id = id ?? randomUUID();
@@ -93,7 +98,8 @@ export class Mob {
 
 		this.flags.setTo((proto?.flags || StatusFlag.alive));
 		this.size = proto?.size ?? 'medium';
-		this.team = proto?.team ?? Faction.All;
+
+		this.team = proto?.team ?? Faction.neutral;
 
 	}
 

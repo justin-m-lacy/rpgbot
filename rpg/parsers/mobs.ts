@@ -1,5 +1,5 @@
 import { Formula } from 'formulic';
-import { Faction } from 'rpg/char/factions';
+import { Faction, ParseFaction } from 'rpg/char/factions';
 import { StatusFlag } from 'rpg/char/states';
 import { ItemData } from 'rpg/items/types';
 import { Weapon } from 'rpg/items/weapon';
@@ -11,6 +11,7 @@ import { Biome } from 'rpg/world/loc';
 import { Numeric } from '../values/types';
 
 type RawMobData = ItemData & any & {
+	team: typeof Faction[number],
 	weap?: any;
 };
 
@@ -113,13 +114,20 @@ const parseTemplate = (data: RawMobData) => {
 		data.name ??= data.id;
 	}
 
-	if (data.dmg) { console.log(`deprecated dmg prop: ${data.id}`) }
+	(data as MobData).team = ParseFaction(data);
+
+	if (data.dmg) { console.log(`old dmg prop: ${data.id}`) }
 
 	return data as MobData;
 
 }
 
-const create = (tpl: MobData) => {
+/**
+ * Create mob from template
+ * @param tpl 
+ * @returns 
+ */
+const CreateMob = (tpl: MobData) => {
 
 	const m = new Mob(undefined, tpl);
 
@@ -175,7 +183,7 @@ export const RandMonster = (lvl: number, biome?: string) => {
 				const mons = a[ind];
 				if (!mons.biome || mons.biome === biome ||
 					(Array.isArray(mons.biome) && mons.biome.includes(biome)))
-					return create(mons);
+					return CreateMob(mons);
 				ind = (ind + 1) % a.length;
 
 			} while (ind !== start);
@@ -186,7 +194,7 @@ export const RandMonster = (lvl: number, biome?: string) => {
 
 	do {
 		const a = byLevel[lvl];
-		if (a?.length) return create(
+		if (a?.length) return CreateMob(
 			a[Math.floor(a.length * Math.random())]);
 
 	} while (--lvl >= 0);
@@ -199,7 +207,7 @@ export const RandMonster = (lvl: number, biome?: string) => {
  * @param json 
  * @returns 
  */
-export const DecodeMob = (json: any) => {
+export const ReviveMob = (json: any) => {
 
 	const proto = GetMob(json.proto ?? json.name);
 	const m = new Mob(json.id, proto);

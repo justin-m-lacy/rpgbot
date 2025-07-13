@@ -2,7 +2,7 @@ import { ItemList } from "rpg/display/items";
 import { type Game } from "rpg/game";
 import type { ItemIndex } from "rpg/items/container";
 import { DecodeFeature, DecodeItem } from "rpg/parsers/items";
-import { DecodeMob } from "rpg/parsers/mobs";
+import { ReviveMob } from "rpg/parsers/mobs";
 import { quickSplice } from "rpg/util/array";
 import { FindIndex } from "rpg/util/items";
 import { IsInt } from "rpg/util/parse";
@@ -266,7 +266,7 @@ export class Loc {
 		const len = a.length;
 		for (let i = 0; i < len; i++) {
 
-			const m = DecodeMob(a[i]);
+			const m = ReviveMob(a[i]);
 			if (m) loc.addNpc(m);
 
 		}

@@ -10,7 +10,7 @@ import { LoadActions } from 'rpg/magic/action';
 import { LoadDotTypes } from 'rpg/magic/dots';
 import { GenName } from 'rpg/namegen';
 import { InitArmors } from 'rpg/parsers/armor';
-import { DecodeChar } from 'rpg/parsers/char';
+import { ReviveChar } from 'rpg/parsers/char';
 import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
 import { InitPotions } from 'rpg/parsers/potions';
 import { LoadSpells } from 'rpg/parsers/spells';
@@ -54,7 +54,7 @@ export class Rpg {
 
 		this.charCache = this.cache.subcache<Char>('chars', (data) => {
 
-			const char = DecodeChar(this.game, data);
+			const char = ReviveChar(this.game, data);
 			char?.events.on('levelUp', this.updateCharInfo, this);
 			return char;
 

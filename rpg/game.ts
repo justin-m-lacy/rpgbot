@@ -36,7 +36,7 @@ import * as Trade from './trade';
 import { DirVal, Loc, toDirection, ToDirStr } from './world/loc';
 import { World } from "./world/world";
 
-const LOC_UPDATE_MS = 10000;
+const LOC_UPDATE_MS = 1000 * 20;
 
 export class Game<A extends Record<string, TGameAction> = Record<string, TGameAction>,
 	K extends string & keyof A = string & keyof A> {
@@ -136,17 +136,24 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	private async doLocCombat(loc: Loc) {
 
-		const chars = loc.chars.map(c => this.getChar(c)).filter(c => c?.isAlive());
-		if (chars.length == 0) return 0;
+		const targs: TActor[] = loc.chars.map(
+			c => this.getChar(c)
+		).filter((c): c is Char => c != null && c?.isAlive());
+
+		if (targs.length == 0) return 0;
+
+		targs.push(...loc.npcs);
 
 		for (let i = loc.npcs.length - 1; i >= 0; i--) {
 
 			const npc = loc.npcs[i];
 			if (!npc.isAlive() || !npc.attacks.length) continue;
 
-			const targ = randElm(chars);
+			const targ = randElm(targs);
 
-			if (targ) {
+			if (targ.isAlive() &&
+				(npc.evil > 0 || (npc.evil < 0 && targ.evil.valueOf() > 5))
+			) {
 				await this.combat.tryAttack(npc, npc.getAttack(), targ);
 
 				if (targ.isAlive() && targ.attacks.length) {
@@ -992,7 +999,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		}
 
-		if (spell.level) char.addExp(2 * spell.level);
+		if (spell.level) char.addExp(2 * spell.level.valueOf());
 		char.addHistory('scribe');
 		const scroll = new Scroll(undefined, spell);
 		const ind = char.addItem(scroll);

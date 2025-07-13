@@ -127,7 +127,11 @@ export class Actor {
 
 	flags: CharFlags = new CharFlags();
 
-	team: number = Faction.Chars;
+	/**
+	 * Faction standings.
+	 */
+	readonly teams: Partial<Record<Faction, number>> = {}
+	team: number = Faction.chars;
 
 	constructor(name: string, opts: {
 		game: Game,

@@ -1,7 +1,7 @@
 import { randElm } from "@/utils/jsutils";
 import { GetTypeGenerator } from "rpg/builders/itemgen";
 import { ItemType } from "rpg/items/types";
-import { uppercase } from "rpg/util/string";
+import { Uppercase } from "rpg/util/string";
 import { Shop } from "rpg/world/shop";
 
 
@@ -12,7 +12,7 @@ export const GenShop = (biome: string, level: number) => {
 
 	const kind = randElm(kinds);
 
-	return new Shop(`${uppercase(kind)} Shop`, {
+	return new Shop(`${Uppercase(kind)} Shop`, {
 		kind,
 		level, genItem: GetTypeGenerator(kind)
 	}).restock();

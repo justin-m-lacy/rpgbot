@@ -22,6 +22,18 @@ export class Shop<T extends Item = Item> extends Feature {
 	 */
 	genItem?: (lvl: number) => T | null;
 
+	toJSON() {
+		const json = super.toJSON();
+		console.log(`shoptype: ${this.type} json: ${json.type}`);
+		json.kind = this.kind;
+		json.inv = this.inv;
+
+		return json;
+	}
+
+	// used to save shop kind in json.
+	private kind: string;
+
 	constructor(name: string,
 		opts: {
 			level?: number, kind: string,
@@ -33,6 +45,8 @@ export class Shop<T extends Item = Item> extends Feature {
 		super(name, opts.desc ?? `${opts.kind} Shop`, ItemType.Shop);
 
 		this.genItem = opts.genItem;
+
+		this.kind = opts.kind;
 
 		this.level = opts.level ?? 0;
 
@@ -138,11 +152,10 @@ export class Shop<T extends Item = Item> extends Feature {
 	restock() {
 
 		if (!this.genItem) {
-			console.log(`cant restock no gen`);
+			console.warn(`restock failed`);
 			return this;
 		}
 
-		console.log(`restocking...`);
 		while (this.inv.size < 10) {
 
 			const item = this.genItem(this.level);
@@ -157,7 +170,7 @@ export class Shop<T extends Item = Item> extends Feature {
 		return this;
 	}
 
-	getDetails(char?: Char, imgTag?: boolean): string {
+	getDetails(char?: Char): string {
 
 		const mod = char ? GetTradeMod(char) : 1;
 
