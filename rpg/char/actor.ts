@@ -37,8 +37,7 @@ export class Actor {
 		}
 	}
 
-	get evil() { return this.stats.evil; }
-	set evil(v: Numeric) { this.stats.evil.setTo(+v); }
+	get evil() { return (this.teams[Faction.evil] ?? 0) + (this.teams[Faction.good] ?? 0); }
 
 	// convenience for shorter formulas.
 	get hp() { return this.stats.hp; }
@@ -250,7 +249,7 @@ export class Actor {
 	 * @param team 
 	 * @param amt 
 	 */
-	updateTeam(team: Faction, amt: number) {
+	addStanding(team: Faction, amt: number) {
 
 		/// force to unsigned javascript.
 		team = team >>> 0;
@@ -265,6 +264,23 @@ export class Actor {
 		}
 
 	}
+
+	/**
+	 * Update standings with all teams in record.
+	 * @param teams 
+	 * @param scale 
+	 */
+	addStandings(teams: Partial<Record<Faction, number>>, scale: number) {
+
+		for (let k in teams) {
+
+			this.teams[k as any as Faction] = (this.teams[k as any as Faction] ?? 0) +
+				scale * (teams[k as any as Faction] ?? 0);
+
+		}
+
+	}
+
 
 	levelUp() {
 

@@ -381,7 +381,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			const exp = this.combat.pvpExp(targ.level.valueOf());
 			party ? await party.addExp(exp) : slayer.addExp(exp);
 
-			slayer.evil = +slayer.evil + (-targ.evil) / 2 + 1 + targ.getModifier('cha');
+			slayer.addStandings(targ.teams, -(targ.level.valueOf() + targ.getModifier('cha')) / 8);
+
 			slayer.addHistory('pk');
 
 		} else {
@@ -389,10 +390,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			const exp = this.combat.npcExp(targ.level.valueOf());
 			party ? await party.addExp(exp) : slayer.addExp(exp);
 
-			slayer.updateTeam(targ.team, (targ.level.valueOf() + 1) / 8);
+			slayer.addStanding(targ.team, -(targ.level.valueOf() + 1) / 8);
 
-
-			if (targ.evil) slayer.evil += (-targ.evil / 4);
 			slayer.addHistory('slay');
 
 		}

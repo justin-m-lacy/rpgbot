@@ -37,9 +37,6 @@ export class Char extends Actor {
 	get skillPts() { return this._skillPts; }
 	set skillPts(v) { this._skillPts = v; }
 
-	get evil() { return +this.stats.evil.value; }
-	set evil(v) { this.stats.evil.setTo(v); }
-
 	toJSON() {
 
 		const json: any = {
@@ -348,7 +345,7 @@ export class Char extends Actor {
 
 	getDetails() {
 
-		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.stats.evil}]\nhp:${smallNum(this.hp)}/${smallNum(this.hp.max)} armor:${this.armor}`;
+		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.evil}]\nhp:${smallNum(this.hp)}/${smallNum(this.hp.max)} armor:${this.armor}`;
 
 	}
 

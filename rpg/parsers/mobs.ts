@@ -1,5 +1,5 @@
 import { Formula } from 'formulic';
-import { Faction, ParseFaction } from 'rpg/char/factions';
+import { CalcFaction, Faction } from 'rpg/char/factions';
 import { StatusFlag } from 'rpg/char/states';
 import { ItemData } from 'rpg/items/types';
 import { Weapon } from 'rpg/items/weapon';
@@ -114,7 +114,7 @@ const parseTemplate = (data: RawMobData) => {
 		data.name ??= data.id;
 	}
 
-	(data as MobData).team = ParseFaction(data);
+	(data as MobData).team = CalcFaction(data);
 
 	if (data.dmg) { console.log(`old dmg prop: ${data.id}`) }
 

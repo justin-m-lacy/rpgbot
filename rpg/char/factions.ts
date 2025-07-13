@@ -7,19 +7,27 @@ export enum Faction {
 	good = 2,
 	evil = 4,
 	neutral = 8,
+	law = 16,
+	chaos = 32,
 	/// wild animals
-	beast = 16,
-	undead = 32,
-	human = 64,
-	orc = 128,
-	goblin = 256
+	beast = 64,
+	undead = 128,
+	human = 256,
+	orc = 512,
+	goblin = 1024
 }
 
 type TeamName = keyof typeof Faction;
 
-export const ParseFaction = (data: { team?: string, kind?: string, evil?: number }) => {
+/**
+ * Calculate an npc's default faction.
+ * @param data 
+ * @returns 
+ */
+export const CalcFaction = (data: { team?: string, kind?: string, evil?: number }) => {
 
-	let f = Faction.neutral;
+	let f = 0;
+
 	if (data.team) {
 		if (typeof data.team === 'number') {
 			f |= data.team;
@@ -42,6 +50,6 @@ export const ParseFaction = (data: { team?: string, kind?: string, evil?: number
 		}
 	}
 
-	return f;
+	return f || Faction.neutral;
 
 }

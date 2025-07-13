@@ -84,8 +84,6 @@ export class StatBlock {
 	readonly age: Simple = new Simple('age');
 	gold: number = 0;
 
-	readonly evil: Simple = new Simple('evil', 0);
-
 	constructor() { }
 
 	static Decode(json: any) {

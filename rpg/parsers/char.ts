@@ -1,5 +1,6 @@
 import { Char } from 'rpg/char/char';
 import { Equip, type HumanSlots } from 'rpg/char/equip';
+import { Faction } from 'rpg/char/factions';
 import { CharState, StatusFlag } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
@@ -11,7 +12,9 @@ import { Coord, IsCoord } from 'rpg/world/coord';
 import { GetClass, GetRace } from './parse-class';
 
 
-export const ReviveChar = (game: Game, json: any) => {
+export const ReviveChar = (game: Game, json: {
+	teams?: Partial<Record<string, number>>
+} & any) => {
 
 	if (!json) throw new NullDataError();
 
@@ -25,8 +28,6 @@ export const ReviveChar = (game: Game, json: any) => {
 		});
 
 	char.exp = Math.floor(json.exp) || 0;
-	char.evil = json.evil || 0
-
 	char.guild = json.guild;
 
 	if (json.talents && Array.isArray(json.talents)) {
@@ -35,6 +36,16 @@ export const ReviveChar = (game: Game, json: any) => {
 				char.talents.push(json.talents[i]);
 			}
 		}
+	}
+
+	if (json.teams) {
+
+		for (const k in json.teams) {
+			if (k in Faction) {
+				char.teams[Faction[k as keyof typeof Faction]] = json.teams[k];
+			}
+		}
+
 	}
 
 	if (json.history) Object.assign(char.history, json.history);
