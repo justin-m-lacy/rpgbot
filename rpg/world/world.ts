@@ -12,7 +12,7 @@ import { Item } from '../items/item';
 import { Mob } from '../monster/mobs';
 import Block from './block';
 import { Feature } from './feature';
-import { DirString, DirVal, Exit, Loc } from './loc';
+import { DirVal, Exit, Loc } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching of existing world data.
@@ -131,36 +131,6 @@ export class World {
 
 		return Array.isArray(it) ? `${char.name} took ${it.length} items.` :
 			`${char.name} took ${it.name}. (${ind})`;
-	}
-
-	async hike(char: Char, dir: DirString) {
-
-		const coord = char.at;
-		let loc: Loc;
-
-		switch (dir) {
-			case 'n':
-			case 'north':
-				loc = await this.getOrGen(new Coord(coord.x, coord.y + 1), char);
-				break;
-			case 's':
-			case 'south':
-				loc = await this.getOrGen(new Coord(coord.x, coord.y - 1), char);
-				break;
-			case 'e':
-			case 'east':
-				loc = await this.getOrGen(new Coord(coord.x + 1, coord.y), char);
-				break;
-			case 'w':
-			case 'west':
-				loc = await this.getOrGen(new Coord(coord.x - 1, coord.y), char);
-				break;
-			default:
-				return;
-		}
-
-		return this.move(char, await this.getOrGen(char.at, char), loc);
-
 	}
 
 	/**
@@ -300,9 +270,9 @@ export class World {
 	}
 
 	/**
-	 * Return new location after moving from prev loc.
+	 * Move char without fail to new coordinate.
 	 * @param dir - move direction.
-	 * @returns new Loc or error string.
+	 * @returns New character location.
 	 */
 	async move(char: Char, from: Loc, to: TCoord): Promise<Loc> {
 
@@ -311,7 +281,7 @@ export class World {
 
 			const exits = await this.getRandExits(to);
 			// must use NEW coord so avoid references.
-			dest = GenLoc(new Coord(to.x, to.y), from, exits);
+			dest = GenLoc(to, from, exits);
 			dest.setMaker(char.name);
 
 			char.addHistory('explore');
@@ -357,7 +327,7 @@ export class World {
 
 	}
 
-	async getOrGen(coord: Coord, char?: Char) {
+	async getOrGen(coord: TCoord, char?: Char) {
 
 		let loc = await this.getLoc(coord);
 
@@ -401,6 +371,26 @@ export class World {
 
 	}
 
+	async quickSave(loc: Loc) {
+
+		const block = await this.getBlock(loc, true);
+		if (!block) return;
+
+		block.setLoc(this.locKey(loc.coord), loc);
+
+		this.cache.cache(block.key, block);
+	}
+
+	async forceSave(loc: Loc) {
+
+		const block = await this.getBlock(loc, true);
+		if (!block) return;
+
+		block.setLoc(this.locKey(loc.coord), loc);
+		return this.cache.store(block.key, block)
+
+	}
+
 	/**
 	 * Get block containing a coordinate.
 	 * @param loc 
@@ -423,38 +413,14 @@ export class World {
 
 	}
 
-	async quickSave(loc: Loc) {
-
-		const block = await this.getBlock(loc, true);
-		if (!block) return;
-
-		block.setLoc(this.coordKey(loc.coord), loc);
-
-		this.cache.cache(block.key, block);
-	}
-
-	async forceSave(loc: Loc) {
-
-		const block = await this.getBlock(loc, true);
-		if (!block) return;
-
-		block.setLoc(this.coordKey(loc.coord), loc);
-		return this.cache.store(block.key, block)
-
-	}
-
 	private locKey(loc: TCoord) {
 		return loc.x + ',' + loc.y;
-	}
-
-	coordKey(coord: Coord) {
-		return coord.x + ',' + coord.y;
 	}
 
 	/**
 	 */
 	private getBlockKey(loc: { x: number, y: number }) {
-		return 'rpg/blocks/' +
+		return 'block_' +
 			Math.floor(loc.x / BLOCK_SIZE) + ',' +
 			Math.floor(loc.y / BLOCK_SIZE);
 	}

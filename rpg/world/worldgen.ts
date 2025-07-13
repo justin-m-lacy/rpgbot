@@ -1,6 +1,6 @@
 import Biomes from 'data/world/biomes.json';
 import { RandFeature } from 'rpg/builders/features';
-import { Coord } from 'rpg/world/coord';
+import { Coord, TCoord } from 'rpg/world/coord';
 import { Biome, Exit, Loc } from './loc';
 
 type BiomeName = keyof typeof Biomes;
@@ -11,10 +11,10 @@ type BiomeName = keyof typeof Biomes;
  * @param  from - location arriving from.
  * @param  adj - all allowed exits.
  */
-export const GenLoc = (coord: Coord, from?: Loc, exits?: Exit[]): Loc => {
+export const GenLoc = (coord: TCoord, from?: Loc, exits?: Exit[]): Loc => {
 
 	const biomeName = from ? randBiome(from.biome as BiomeName) : Biome.TOWN;
-	const loc = makeBiomeLoc(coord, biomeName as BiomeName);
+	const loc = makeBiomeLoc(new Coord(coord.x, coord.y), biomeName as BiomeName);
 
 	if (exits) {
 		for (let i = exits.length - 1; i >= 0; i--) {

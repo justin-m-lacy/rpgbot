@@ -148,7 +148,7 @@ export class Mob {
 	 * @param team 
 	 */
 	standing(team: Faction) {
-		return (this.team & team) > 0 ? 1 : -1;
+		return (this.team & team) > 0 ? this.level : 0;
 	}
 
 	getAttack() {

@@ -1,3 +1,4 @@
+import { randElm } from "@/utils/jsutils";
 import { Actor } from "rpg/char/actor";
 import { Char } from "rpg/char/char";
 import { ActionFlags, TCombatAction } from "rpg/combat/types";
@@ -11,13 +12,12 @@ import { PossPronoun } from "rpg/social/gender";
 import { Party } from "rpg/social/party";
 import { AddValues } from "rpg/values/apply";
 import { Numeric, TValue } from "rpg/values/types";
-
-
-
+import { Loc } from "rpg/world/loc";
 
 
 /**
  * Handle combat for a single game context.
+ * Mostly organizational make Game class smaller.
  */
 export class Combat {
 
@@ -246,6 +246,43 @@ export class Combat {
 		} else {
 
 		}
+
+	}
+
+	/**
+	 * Run npc actions at a location.
+	 * @param loc 
+	 * @returns 
+	 */
+	async runNpcsAt(loc: Loc) {
+
+		const targs: TActor[] = loc.chars.map(
+			c => this.game.getChar(c)
+		).filter((c): c is Char => c != null && c?.isAlive());
+
+		if (targs.length == 0) return 0;
+
+		targs.push(...loc.npcs);
+
+		for (let i = loc.npcs.length - 1; i >= 0; i--) {
+
+			const npc = loc.npcs[i];
+			if (!npc.isAlive() || !npc.attacks.length) continue;
+
+			const targ = randElm(targs);
+
+			if (targ.isAlive() &&
+				(npc.evil > 0 || (npc.evil < 0 && targ.evil.valueOf() > 5))
+			) {
+				await this.tryAttack(npc, npc.getAttack(), targ);
+
+				if (targ.isAlive() && targ.attacks.length) {
+					this.tryAttack(targ, targ.getAttack(), npc);
+				}
+			}
+
+		}
+		return 1;
 
 	}
 

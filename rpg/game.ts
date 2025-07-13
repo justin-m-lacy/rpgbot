@@ -1,11 +1,9 @@
-import { randElm } from '@/utils/jsutils';
 import Cache from 'archcache';
 import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
 import { Actor } from 'rpg/char/actor';
-import { CookItem, TryEat } from 'rpg/char/cooking';
 import { StatusFlag } from 'rpg/char/states';
 import { Combat } from 'rpg/combat/combat';
 import { Loot } from 'rpg/combat/loot';
@@ -20,6 +18,8 @@ import { ItemType } from 'rpg/items/types';
 import { HumanSlot, toSlot } from 'rpg/items/wearable';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
+import { CookItem, TryEat } from 'rpg/talents/cooking';
+import { Hike } from 'rpg/talents/hike';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';
 import { AddValues, MissingProp } from 'rpg/values/apply';
@@ -124,9 +124,9 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 			}
 			if (loc.chars.length) {
-				liveNpcs += await this.doLocCombat(loc);
+				liveNpcs += await this.combat.runNpcsAt(loc);
 			}
-			if (liveNpcs === 0) {
+			if (liveNpcs <= 0) {
 				// no npcs active here.
 				delete this.liveLocs[k];
 			}
@@ -135,44 +135,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	private async doLocCombat(loc: Loc) {
-
-		const targs: TActor[] = loc.chars.map(
-			c => this.getChar(c)
-		).filter((c): c is Char => c != null && c?.isAlive());
-
-		if (targs.length == 0) return 0;
-
-		targs.push(...loc.npcs);
-
-		for (let i = loc.npcs.length - 1; i >= 0; i--) {
-
-			const npc = loc.npcs[i];
-			if (!npc.isAlive() || !npc.attacks.length) continue;
-
-			const targ = randElm(targs);
-
-			if (targ.isAlive() &&
-				(npc.evil > 0 || (npc.evil < 0 && targ.evil.valueOf() > 5))
-			) {
-				await this.combat.tryAttack(npc, npc.getAttack(), targ);
-
-				if (targ.isAlive() && targ.attacks.length) {
-					this.combat.tryAttack(targ, targ.getAttack(), npc);
-				}
-			}
-
-		}
-		return 1;
-
-	}
 
 	/**
- * move mob to new location.
- * @param mob 
- * @param from 
- * @param to 
- */
+	 * move mob to new location.
+	 * @param mob 
+	 * @param from 
+	 * @param to 
+	 */
 	private moveMob(mob: Mob, from: Loc, to: Loc) {
 
 		from.removeNpc(mob);
@@ -296,10 +265,10 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		char.log(`${char.name} casts ${spell.name}`);
 
 		// single target.
-		if (targ && targ.isAlive()) {
+		if (targ?.isAlive()) {
 
 			this.combat.doAttack(char, spell, targ);
-			if (targ.isAlive() && targ instanceof Mob) {
+			if (targ instanceof Mob) {
 				this.setLiveLoc(char.at);
 			}
 
@@ -676,7 +645,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		}
 		else if (r < 10) return char.output('You failed to find your way.');
 
-		const loc = await this.world.hike(char, toDirection(dir));
+		const loc = await Hike(this.world, char, toDirection(dir));
 		if (!loc) return char.output('You failed to find your way.');
 
 		if (p && p.leader === char.name) {
