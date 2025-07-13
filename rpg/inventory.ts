@@ -42,11 +42,12 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		reviver: (data: any) => I | null | undefined,
 		inv?: Inventory<I>) {
 
+		inv ??= new Inventory<I>();
+
 		const arr = json.items;
 		if (arr && Array.isArray(arr)) {
 			const len = arr.length;
 
-			if (!inv) inv = new Inventory<I>();
 			const into = inv.items;
 			into.length = 0;
 
@@ -67,6 +68,8 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 	constructor(id?: string, info?: { max?: number, name?: string, desc?: string }) {
 
 		super(id, info);
+
+		this.type ??= 'inv';
 
 		this.max.base = info?.max ?? 10;
 
