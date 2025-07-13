@@ -142,6 +142,15 @@ export class Mob {
 
 	}
 
+	/**
+	 * Get this mob's standing with a team.
+	 * todo: doesn't allow for neutral standings.
+	 * @param team 
+	 */
+	standing(team: Faction) {
+		return (this.team & team) > 0 ? 1 : -1;
+	}
+
 	getAttack() {
 		return this.attacks[Math.floor(this.attacks.length * Math.random())];
 	}

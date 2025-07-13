@@ -4,6 +4,7 @@ import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
+import { Actor } from 'rpg/char/actor';
 import { CookItem, TryEat } from 'rpg/char/cooking';
 import { StatusFlag } from 'rpg/char/states';
 import { Combat } from 'rpg/combat/combat';
@@ -406,8 +407,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	async onSlay(slayer: Char, targ: TActor, party?: Party) {
 
-
-		if (targ instanceof Char) {
+		if (targ instanceof Actor) {
 
 			const exp = this.combat.pvpExp(targ.level.valueOf());
 			party ? await party.addExp(exp) : slayer.addExp(exp);
@@ -419,6 +419,9 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 			const exp = this.combat.npcExp(targ.level.valueOf());
 			party ? await party.addExp(exp) : slayer.addExp(exp);
+
+			slayer.updateTeam(targ.team, (targ.level.valueOf() + 1) / 4);
+
 
 			if (targ.evil) slayer.evil += (-targ.evil / 4);
 			slayer.addHistory('slay');
@@ -494,7 +497,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	/**
-	 * Get all targets at location that are affected by target flags.
+	 * Get all targets at location that are affected by an action.
 	 * @param char 
 	 * @param flags 
 	 * @param loc 
@@ -508,7 +511,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (flags & TargetFlags.enemies) {
 			for (const m of loc.npcs) {
 
-				if (!(char.team & m.team)) {
+				if (char.standing(m.team) < 0) {
 					res[m.id] = m;;
 				}
 
@@ -524,7 +527,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (flags & TargetFlags.allies) {
 			for (const m of loc.npcs) {
 
-				if ((char.team & m.team)) {
+				if (char.standing(m.team) > 0) {
 					res[m.id] = m;
 				}
 

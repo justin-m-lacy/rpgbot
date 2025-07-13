@@ -131,7 +131,6 @@ export class Actor {
 	 * Faction standings.
 	 */
 	readonly teams: Partial<Record<Faction, number>> = {}
-	team: number = Faction.chars;
 
 	constructor(name: string, opts: {
 		game: Game,
@@ -222,6 +221,48 @@ export class Actor {
 			v += this.getModifier(s);
 		}
 		return v;
+
+	}
+
+	/**
+	 * Get this actor's standing with npc.
+	 * @param team bitwise OR of npc factions.
+	 */
+	standing(team: Faction) {
+
+		/// force to unsigned javascript.
+		team = team >>> 0;
+		let f: Faction = 1;
+
+		let total = 0;
+
+		while (f <= team) {
+
+			total += (team & f) ? (this.teams[f] ?? 0) : 0;
+			f = (f << 1) >>> 0;	//unsigned.
+		}
+		return total;
+
+	}
+
+	/**
+	 * Update char's standing with team.
+	 * @param team 
+	 * @param amt 
+	 */
+	updateTeam(team: Faction, amt: number) {
+
+		/// force to unsigned javascript.
+		team = team >>> 0;
+		let f: Faction = 1;
+
+		while (f <= team) {
+
+			if (team & f) {
+				this.teams[f] = (this.teams[f] ?? 0) + amt;
+			}
+			f = (f << 1) >>> 0;
+		}
 
 	}
 
