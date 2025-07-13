@@ -10,7 +10,7 @@ import { Game } from '../game';
 import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
 import { Mob } from '../monster/mobs';
-import Block from './block';
+import { Block } from './block';
 import { Feature } from './feature';
 import { DirVal, Exit, Loc } from './loc';
 
@@ -319,20 +319,10 @@ export class World {
 		return block?.getLoc(this.locKey(coord));
 	}
 
-	async getLoc(coord: TCoord) {
+	async getLoc(at: TCoord) {
 
-		const bkey = this.getBlockKey(coord);
-		let block = await this.cache.fetch(bkey) as Block;
-
-		if (block) {
-
-			if (!(block instanceof Block)) {
-				block = new Block(block);
-				this.cache.cache(bkey, block);
-			}
-
-			return block.getLoc(this.locKey(coord));
-		}
+		const bkey = this.getBlockKey(at);
+		return (await this.cache.fetch(bkey))?.getLoc(this.locKey(at))
 
 	}
 

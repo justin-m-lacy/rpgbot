@@ -23,7 +23,7 @@ import { Hike } from 'rpg/talents/hike';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';
 import { AddValues, MissingProp } from 'rpg/values/apply';
-import type Block from 'rpg/world/block';
+import { Block } from 'rpg/world/block';
 import { TCoord } from 'rpg/world/coord';
 import { Shop } from 'rpg/world/shop';
 import { Char } from './char/char';
@@ -74,7 +74,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.actions = actions;
 
-		this.world = new World(cache.subcache<Block>('world'));
+		this.world = new World(cache.subcache<Block>('world', (data) => new Block(data)));
 
 		this.charCache = charCache;
 

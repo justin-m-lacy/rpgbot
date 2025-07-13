@@ -3,7 +3,7 @@ import { Loc } from './loc';
 /**
  * Block of locations stored together.
  */
-export default class Block {
+export class Block {
 
 	toJSON() {
 
@@ -28,7 +28,7 @@ export default class Block {
 
 				for (const p in locs) {
 					this.locs[p] = Loc.Decode(locs[p]);
-				} //for
+				}
 
 			}
 

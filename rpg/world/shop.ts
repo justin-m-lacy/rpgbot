@@ -48,7 +48,7 @@ export class Shop<T extends Item = Item> extends Feature {
 
 		this.kind = opts.kind;
 
-		this.level = opts.level ?? 0;
+		this.level = Math.floor(opts.level ?? 0);
 
 		this.inv = new Inventory(undefined);
 

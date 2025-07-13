@@ -50,9 +50,9 @@ export const DecodeWeapon = (tmp: any) => {
 	return Item.InitData(tmp, w);
 }
 
-export const GenArmor = (lvl?: number, slot?: HumanSlot | null) => {
+export const GenArmor = (lvl: number = 0, slot?: HumanSlot | null) => {
 
-	lvl ??= 0;
+	lvl = Math.floor(lvl);
 	const mat = RandMaterial(lvl);
 
 	let tmp;

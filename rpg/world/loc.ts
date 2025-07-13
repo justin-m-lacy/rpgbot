@@ -1,7 +1,7 @@
 import { ItemList } from "rpg/display/items";
 import { type Game } from "rpg/game";
 import type { ItemIndex } from "rpg/items/container";
-import { DecodeFeature, DecodeItem } from "rpg/parsers/items";
+import { DecodeItem } from "rpg/parsers/items";
 import { ReviveMob } from "rpg/parsers/mobs";
 import { quickSplice } from "rpg/util/array";
 import { FindIndex } from "rpg/util/items";
@@ -237,7 +237,7 @@ export class Loc {
 		if (json.features && Array.isArray(json.features)) {
 
 			for (let i = 0; i < json.features.length; i++) {
-				const f = DecodeFeature(json.features[i]);
+				const f = DecodeItem(json.features[i]);
 				if (f) loc.features.push(f);
 			}
 

@@ -25,13 +25,14 @@ export const PotsList = (level: number) => {
 
 /**
  * Generate a potion up to level.
- * @param level 
+ * @param lvl 
  * @returns 
  */
-export const LvlPotion = (level: number = 0) => {
+export const LvlPotion = (lvl: number = 0) => {
 
-	while (level >= 0) {
-		const list = PotsByLevel[level];
+	lvl = Math.floor(lvl);
+	while (lvl >= 0) {
+		const list = PotsByLevel[lvl];
 		if (list?.length && Math.random() < 0.4) {
 			return Potion.Decode(randElm(list));
 		}
