@@ -22,11 +22,6 @@ export class World {
 
 	readonly cache: Cache<Block>;
 
-	/**
-	 * Note that the World is using the Context cache, not a special rpg cache.
-	 * Why?
-	 * @param fcache
-	 */
 	constructor(fcache: Cache<Block>) {
 
 		this.cache = fcache;
@@ -39,7 +34,11 @@ export class World {
 		if (!st.getFeature('shrine')) {
 			st.addFeature(GenFeature('shrine'));
 		}
-		if (!st.features.some(f => f.type === ItemType.Shop)) {
+		if (!st.features.some(f => {
+			if (f.type !== ItemType.Shop) console.log(`not a shop: ${f.name}`);
+			return f.type === ItemType.Shop
+		})) {
+			console.log(`auto-gen shop...`);
 			st.addFeature(GenShop(st.biome, 1));
 		}
 	}
@@ -52,12 +51,12 @@ export class World {
 	async setDesc(char: Char, desc?: string, attach?: string) {
 
 		const loc = await this.getOrGen(char.at, char);
-		if (attach) loc.embed = attach;
 
 		const owner = loc.owner;
-		if (owner && owner !== char.name) return 'You do not control this location.';
+		if (owner && owner !== char.id) return 'You do not control this location.';
 
 		if (desc) loc.desc = desc;
+		if (attach) loc.embed = attach;
 
 		await this.quickSave(loc);
 
@@ -79,9 +78,7 @@ export class World {
 	 * @param who
 	 */
 	async removeNpcBy(char: Char, who: Mob) {
-		const loc = await this.getOrGen(char.at, char);
-		return loc.removeNpc(who);
-
+		return (await this.getLoc(char.at))?.removeNpc(who);
 	}
 
 	/**
@@ -90,10 +87,7 @@ export class World {
 	 * @param who
 	 */
 	async removeNpcAt(at: TCoord, who: Mob) {
-
-		const loc = await this.getLoc(at);
-		return loc?.removeNpc(who);
-
+		return (await this.getLoc(at))?.removeNpc(who);
 	}
 
 	/**
@@ -172,9 +166,7 @@ export class World {
 	async view(char: Char, what: string | number) {
 
 		const loc = await this.getOrGen(char.at);
-
-		const it = loc.getNpc(what);
-		return it ? it.getDetails() : null;
+		return loc.getNpc(what)?.getDetails();
 	}
 
 	/**
@@ -194,12 +186,8 @@ export class World {
 	 * @param what 
 	 * @returns 
 	 */
-	async itemAt(at: Coord, what?: ItemIndex | null) {
-
-		if (!what) return null;
-		const loc = await this.getLoc(at);
-		return loc?.get(what);
-
+	async itemAt(at: Coord, what: ItemIndex) {
+		return (await this.getLoc(at))?.get(what);
 	}
 
 	/**
@@ -237,40 +225,19 @@ export class World {
 	}
 
 	/**
-	 *
-	 * @param char
-	 */
-	setHome(char: Char) {
-
-		if (char.home) {
-			char.home.setTo(char.at);
-		} else char.home = new Coord(char.at.x, char.at.y);
-
-		return `${char.name} Home set.`;
-
-	}
-
-	/**
 	 * @param char
 	 */
 	async goHome(char: Char) {
 
-		let cur = await this.getLoc(char.at);
-		cur?.rmChar(char);
-
-		char.at.setTo(char.home ?? new Coord(0, 0));
-		cur = await this.getLoc(char.at);
-		cur?.addChar(char);
-
+		await this.move(char, await this.getOrGen(char.at, char), char.home ?? { x: 0, y: 0 });
 		/// todo: move party? unparty.
-
 		/// public vs private log?
 		return char.name + ' has travelled home.';
 
 	}
 
 	/**
-	 * Move char without fail to new coordinate.
+	 * Force char without fail to new coordinate.
 	 * @param dir - move direction.
 	 * @returns New character location.
 	 */
@@ -313,7 +280,7 @@ export class World {
 	 */
 	trySpawn(loc: Loc) {
 
-		if (Math.random() > 0.5 || loc.npcs.length > 4) return;
+		if (Math.random() > 0.4 || loc.npcs.length > 4) return;
 
 		const dev = Math.random() - 0.5;
 		const lvl = Math.max(Math.floor(loc.norm / 20 + 10 * dev), 0);
@@ -334,9 +301,7 @@ export class World {
 		if (loc == null) {
 
 			loc = GenLoc(coord);
-
 			if (char) loc.setMaker(char.name);
-
 			await this.quickSave(loc);
 
 		}
@@ -350,7 +315,7 @@ export class World {
 	 * @param coord 
 	 */
 	tryGetLoc(coord: TCoord) {
-		const block = this.cache.get(this.getBlockKey(coord)) as Block;
+		const block = this.cache.get(this.getBlockKey(coord));
 		return block?.getLoc(this.locKey(coord));
 	}
 
