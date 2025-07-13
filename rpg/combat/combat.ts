@@ -1,4 +1,3 @@
-import { randElm } from "@/utils/jsutils";
 import { Actor } from "rpg/char/actor";
 import { Char } from "rpg/char/char";
 import { ActionFlags, TCombatAction } from "rpg/combat/types";
@@ -256,9 +255,15 @@ export class Combat {
 	 */
 	async runNpcsAt(loc: Loc) {
 
-		const targs: TActor[] = loc.chars.map(
-			c => this.game.getChar(c)
-		).filter((c): c is Char => c != null && c?.isAlive());
+		const targs: TActor[] = [];
+
+		for (let i = loc.chars.length - 1; i >= 0; i--) {
+
+			const c = this.game.getChar(loc.chars[i]);
+			if (!c?.isAlive()) continue;
+			targs.push(c);
+
+		}
 
 		if (targs.length == 0) return 0;
 
@@ -268,21 +273,51 @@ export class Combat {
 
 			const npc = loc.npcs[i];
 			if (!npc.isAlive() || !npc.attacks.length) continue;
-
-			const targ = randElm(targs);
-
-			if (targ.isAlive() &&
-				(npc.evil > 0 || (npc.evil < 0 && targ.evil.valueOf() > 5))
-			) {
-				await this.tryAttack(npc, npc.getAttack(), targ);
-
-				if (targ.isAlive() && targ.attacks.length) {
-					this.tryAttack(targ, targ.getAttack(), npc);
-				}
+			const targ = this.findNpcTarg(npc, targs);
+			if (targ) {
+				this.doNpc(npc, targ);
 			}
 
 		}
 		return 1;
+
+	}
+
+	/**
+	 * Pick a target for npc to act on.
+	 * @param npc 
+	 * @param targs 
+	 */
+	private findNpcTarg(npc: Mob, targs: TActor[]) {
+
+		const len = targs.length;
+		const start = Math.floor(Math.random() * targs.length);
+		let ind = start;
+		do {
+
+			if (targs[ind].isAlive() && targs[ind].standing(npc.team) < 0) {
+				return targs[ind];
+			}
+			ind = (ind + 1) % len;
+
+		} while (ind != start);
+		return null;
+
+	}
+
+	/**
+	 * Run npc actions.
+	 * @param npc 
+	 * @param targs - all potential targets at location.
+	 */
+	private async doNpc(npc: TActor, targ: TActor) {
+
+		await this.tryAttack(npc, npc.getAttack(), targ);
+
+		// reverse attack.
+		if (targ.isAlive() && targ.attacks.length) {
+			await this.tryAttack(targ, targ.getAttack(), npc);
+		}
 
 	}
 

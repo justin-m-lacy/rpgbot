@@ -389,7 +389,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			const exp = this.combat.npcExp(targ.level.valueOf());
 			party ? await party.addExp(exp) : slayer.addExp(exp);
 
-			slayer.updateTeam(targ.team, (targ.level.valueOf() + 1) / 4);
+			slayer.updateTeam(targ.team, (targ.level.valueOf() + 1) / 8);
 
 
 			if (targ.evil) slayer.evil += (-targ.evil / 4);
