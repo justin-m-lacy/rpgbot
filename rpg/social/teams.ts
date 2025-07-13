@@ -1,5 +1,5 @@
 
-export enum Faction {
+export enum Team {
 
 	none = 0,
 	// player chars
@@ -17,7 +17,21 @@ export enum Faction {
 	goblin = 1024
 }
 
-type TeamName = keyof typeof Faction;
+type TeamName = keyof typeof Team;
+
+/**
+ * Starting Char team ranks.
+ */
+export const CharTeam = () => {
+	return {
+		[Team.chars]: 100,
+		[Team.good]: 25,
+		[Team.law]: 5,
+		[Team.neutral]: 50,
+		[Team.evil]: -30,
+	}
+
+}
 
 /**
  * Calculate an npc's default faction.
@@ -34,22 +48,22 @@ export const CalcFaction = (data: { team?: string, kind?: string, evil?: number 
 		} else {
 			const parts = data.team.split(',');
 			for (let i = 0; i < parts.length; i++) {
-				f |= (Faction[parts[i] as TeamName] ?? 0);
+				f |= (Team[parts[i] as TeamName] ?? 0);
 			}
 		}
 	}
 	if (data.kind) {
-		f |= (Faction[data.kind as TeamName] ?? 0);
+		f |= (Team[data.kind as TeamName] ?? 0);
 	}
 	// todo: remove evil keyword.
 	if (data.evil) {
 		if (data.evil >= 5) {
-			f |= Faction.evil;
+			f |= Team.evil;
 		} else if (data.evil <= -5) {
-			f |= Faction.good;
+			f |= Team.good;
 		}
 	}
 
-	return f || Faction.neutral;
+	return f || Team.neutral;
 
 }

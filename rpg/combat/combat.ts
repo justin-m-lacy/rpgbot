@@ -296,7 +296,7 @@ export class Combat {
 		do {
 
 			if (targs[ind].isAlive() &&
-				(npc.actors?.[targs[ind].id] || (targs[ind].standing(npc.team) < 0))) {
+				(npc.actors?.[targs[ind].id] || (targs[ind].team & npc.team) < 0)) {
 				return targs[ind];
 			}
 			ind = (ind + 1) % len;

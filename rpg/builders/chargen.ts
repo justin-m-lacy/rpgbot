@@ -1,10 +1,10 @@
 import { randElm } from '@/utils/jsutils';
-import { Faction } from 'rpg/char/factions';
 import type { StatKey } from 'rpg/char/stats';
 import { Game } from 'rpg/game';
 import { GenArmor } from 'rpg/parsers/armor';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import type { SexType } from 'rpg/social/gender';
+import { CharTeam } from 'rpg/social/teams';
 import { IsSimple, IsValue, Numeric } from 'rpg/values/types';
 import { Char } from '../char/char';
 import { GClass, Race } from '../char/race';
@@ -36,12 +36,7 @@ export const GenChar = (
 	}) => {
 
 	const char = new Char(opts.name, opts);
-
-	char.teams[Faction.good] = 10;
-	char.teams[Faction.neutral] = 10;
-	char.teams[Faction.law] = 10;
-	char.teams[Faction.evil] = -10;
-	char.teams[Faction.chars] = 500;
+	char.teams.setRanks(CharTeam());
 
 	const statVals = rollStats(statRolls);
 

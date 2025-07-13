@@ -4,7 +4,6 @@ import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { Weapon } from 'rpg/items/weapon';
 import { SpellList } from 'rpg/magic/spelllist';
-import { ReverseMap } from 'rpg/util/enums';
 import { smallNum } from 'rpg/util/format';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import { Log } from '../display/log';
@@ -16,7 +15,6 @@ import { Coord } from '../world/coord';
 import { Actor } from './actor';
 import { Equip } from './equip';
 import { History } from './events';
-import { Faction } from './factions';
 import { tryLevel } from './level';
 import { StatIds, StatKey } from './stats';
 
@@ -44,7 +42,7 @@ export class Char extends Actor {
 			race: this.race.id,
 			cls: this.cls?.id,
 			home: this.home,
-			teams: ReverseMap(Faction, this.teams)
+			teams: this.teams,
 		};
 		for (let i = SaveProps.length - 1; i >= 0; i--) {
 			json[SaveProps[i]] = this[SaveProps[i] as keyof Char];

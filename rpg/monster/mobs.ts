@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
-import { Faction } from 'rpg/char/factions';
 import { CharFlags, StatusFlag } from 'rpg/char/states';
 import { TCombatAction } from 'rpg/combat/types';
 import { Dot, ProtoDot } from 'rpg/magic/dots';
 import { type MobData } from 'rpg/parsers/mobs';
+import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
@@ -99,7 +99,7 @@ export class Mob {
 		this.flags.setTo((proto?.flags || StatusFlag.alive));
 		this.size = proto?.size ?? 'medium';
 
-		this.team = proto?.team ?? Faction.neutral;
+		this.team = proto?.team ?? Team.neutral;
 
 	}
 
@@ -147,7 +147,7 @@ export class Mob {
 	 * todo: doesn't allow for neutral standings.
 	 * @param team 
 	 */
-	standing(team: Faction) {
+	standing(team: Team) {
 		return (this.team & team) > 0 ? this.level : 0;
 	}
 

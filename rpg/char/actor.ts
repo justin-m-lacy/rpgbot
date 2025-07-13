@@ -1,11 +1,12 @@
 import { EventEmitter } from 'eventemitter3';
-import { Faction } from 'rpg/char/factions';
 import { CharFlags, CharState, StatusFlag } from 'rpg/char/states';
 import { TCombatAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
 import { Fists } from 'rpg/items/weapon';
+import { Faction } from 'rpg/social/faction';
 import type { SexType } from 'rpg/social/gender';
+import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
@@ -36,7 +37,7 @@ export class Actor {
 		}
 	}
 
-	get evil() { return (this.teams[Faction.evil] ?? 0) + (this.teams[Faction.good] ?? 0); }
+	get evil() { return (this.teams.ranks[Team.evil] ?? 0) + (this.teams.ranks[Team.good] ?? 0); }
 
 	// convenience for shorter formulas.
 	get hp() { return this.stats.hp; }
@@ -125,10 +126,8 @@ export class Actor {
 
 	flags: CharFlags = new CharFlags();
 
-	/**
-	 * Faction standings.
-	 */
-	readonly teams: Partial<Record<Faction, number>> = {}
+	readonly teams: Faction = new Faction(Team.chars);
+	get team() { return this.teams.team }
 
 	constructor(name: string, opts: {
 		game: Game,
@@ -222,64 +221,6 @@ export class Actor {
 			v += this.stats.getModifier(s);
 		}
 		return v;
-
-	}
-
-	/**
-	 * Get this actor's standing with npc.
-	 * @param team bitwise OR of npc factions.
-	 */
-	standing(team: Faction) {
-
-		/// force to unsigned javascript.
-		team = team >>> 0;
-		let f: Faction = 1;
-
-		let total = 0;
-
-		while (f <= team) {
-
-			total += (team & f) ? (this.teams[f] ?? 0) : 0;
-			f = (f << 1) >>> 0;	//unsigned.
-		}
-		return total;
-
-	}
-
-	/**
-	 * Update char's standing with team.
-	 * @param team 
-	 * @param amt 
-	 */
-	addStanding(team: Faction, amt: number) {
-
-		/// force to unsigned javascript.
-		team = team >>> 0;
-		let f: Faction = 1;
-
-		while (f <= team) {
-
-			if (team & f) {
-				this.teams[f] = (this.teams[f] ?? 0) + amt;
-			}
-			f = (f << 1) >>> 0;
-		}
-
-	}
-
-	/**
-	 * Update standings with all teams in record.
-	 * @param teams 
-	 * @param scale 
-	 */
-	addStandings(teams: Partial<Record<Faction, number>>, scale: number) {
-
-		for (let k in teams) {
-
-			this.teams[k as any as Faction] = (this.teams[k as any as Faction] ?? 0) +
-				scale * (teams[k as any as Faction] ?? 0);
-
-		}
 
 	}
 

@@ -1,12 +1,12 @@
 import { Char } from 'rpg/char/char';
 import { Equip, type HumanSlots } from 'rpg/char/equip';
-import { Faction } from 'rpg/char/factions';
 import { CharState, StatusFlag } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
 import type { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { Dot } from 'rpg/magic/dots';
 import { DecodeItem } from 'rpg/parsers/items';
+import { CharTeam } from 'rpg/social/teams';
 import { BadTypeError, NullDataError } from 'rpg/util/errors';
 import { Coord, IsCoord } from 'rpg/world/coord';
 import { GetClass, GetRace } from './parse-class';
@@ -38,16 +38,10 @@ export const ReviveChar = (game: Game, json: {
 		}
 	}
 
-	if (!json.teams || Object.keys(json.teams).length == 0) {
-		char.teams[Faction.good] = char.teams[Faction.neutral] = char.teams[Faction.law] = 10;
-		char.teams[Faction.evil] = -10;
-		char.teams[Faction.chars] = 999999;
+	if (json.teams) {
+		char.teams.decode(json.teams);
 	} else {
-		for (const k in json.teams) {
-			if (k in Faction) {
-				char.teams[Faction[k as keyof typeof Faction]] = json.teams[k];
-			}
-		}
+		char.teams.setRanks(CharTeam());
 	}
 
 	if (json.history) Object.assign(char.history, json.history);

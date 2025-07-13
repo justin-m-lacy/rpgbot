@@ -1,17 +1,17 @@
 import { Formula } from 'formulic';
-import { CalcFaction, Faction } from 'rpg/char/factions';
 import { StatusFlag } from 'rpg/char/states';
 import { ItemData } from 'rpg/items/types';
 import { Weapon } from 'rpg/items/weapon';
 import { Mob } from 'rpg/monster/mobs';
 import { ParseValue } from 'rpg/parsers/values';
+import { CalcFaction, Team } from 'rpg/social/teams';
 import { TWritable } from 'rpg/util/type-utils';
 import { IsCoord } from 'rpg/world/coord';
 import { Biome } from 'rpg/world/loc';
 import { Numeric } from '../values/types';
 
 type RawMobData = ItemData & any & {
-	team: typeof Faction[number],
+	team: typeof Team[number],
 	weap?: any;
 };
 
@@ -31,7 +31,7 @@ export type MobData = {
 	size?: string;
 	drops?: any;
 	flags?: StatusFlag;
-	team?: Faction;
+	team?: Team;
 	weap?: any;
 	//attacks: TCombatAction[]
 
