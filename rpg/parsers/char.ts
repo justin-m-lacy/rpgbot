@@ -46,6 +46,10 @@ export const ReviveChar = (game: Game, json: {
 			}
 		}
 
+	} else {
+		char.teams[Faction.good] = char.teams[Faction.neutral] = char.teams[Faction.law] = 10;
+		char.teams[Faction.evil] = -10;
+		char.teams[Faction.chars] = 999999;
 	}
 
 	if (json.history) Object.assign(char.history, json.history);

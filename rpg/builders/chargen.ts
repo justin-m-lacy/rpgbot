@@ -1,4 +1,5 @@
 import { randElm } from '@/utils/jsutils';
+import { Faction } from 'rpg/char/factions';
 import type { StatKey } from 'rpg/char/stats';
 import { Game } from 'rpg/game';
 import { GenArmor } from 'rpg/parsers/armor';
@@ -35,6 +36,12 @@ export const GenChar = (
 	}) => {
 
 	const char = new Char(opts.name, opts);
+
+	char.teams[Faction.good] = 10;
+	char.teams[Faction.neutral] = 10;
+	char.teams[Faction.law] = 10;
+	char.teams[Faction.evil] = -10;
+	char.teams[Faction.chars] = 500;
 
 	const statVals = rollStats(statRolls);
 
