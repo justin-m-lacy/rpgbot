@@ -90,7 +90,7 @@ export const CharLongDesc = (char: Char): string => {
 
 	let desc = `level ${char.level.value} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
 	desc += `\nage: ${smallNum(char.age)} sex: ${char.sex} gold: ${Math.floor(char.gold)} exp: ${Math.floor(char.exp)}/ ${getNextExp(char)}`;
-	desc += `\nhp: ${Math.ceil(char.hp.valueOf())}/${smallNum(char.hp.max)} armor: ${Math.floor(char.armor.valueOf())}\n`;
+	desc += `\nhp: ${smallNum(char.hp)}/${Math.ceil(char.hp.max.valueOf())} armor: ${Math.floor(char.armor.valueOf())}\n`;
 	desc += statString(char);
 
 	if (char.spentPoints < char.statPoints) desc += '\n' + (char.statPoints - char.spentPoints) + ' stat points available.';

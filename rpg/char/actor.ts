@@ -8,7 +8,6 @@ import { Fists } from 'rpg/items/weapon';
 import type { SexType } from 'rpg/social/gender';
 import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
-import { Maxable } from 'rpg/values/maxable';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { Item, TStacker } from '../items/item';
 import { Dot, ProtoDot } from '../magic/dots';
@@ -169,11 +168,8 @@ export class Actor {
 
 			const targ = this.stats[k as keyof StatBlock];
 			if (IsSimple(targ)) {
-				if (targ instanceof Maxable) {
-					targ.decode(stats[k]);
-				} else {
-					targ.setTo(stats[k].valueOf());
-				}
+
+				targ.setTo(stats[k]);
 
 			} else if (IsValue(targ)) {
 				targ.value = stats[k].valueOf();
@@ -214,10 +210,16 @@ export class Actor {
 
 	}
 
+	/**
+	 * @param stat
+	 */
+	getModifier(stat: string) { return this.stats.getModifier(stat); }
+
+
 	statRoll(...stats: string[]) {
 		let v = roll(1, 5 * (this.stats.level.value + 4));
 		for (let s of stats) {
-			v += this.getModifier(s);
+			v += this.stats.getModifier(s);
 		}
 		return v;
 
@@ -322,11 +324,6 @@ export class Actor {
 
 	addGold(amt: number) { this.stats.gold += amt; }
 
-	/**
-	 * @param stat
-	 */
-	getModifier(stat: string) { return this.stats.getModifier(stat); }
-
 	revive() {
 
 		if (this.hp.value <= 0) this.hp.value = 1;
@@ -375,21 +372,15 @@ export class Actor {
 	}
 
 	// recover hp without rest.
-	recover(scale: number = 1) {
+	rest(scale: number = 1) {
 
 		if (!this.isAlive()) return 0;
 
 		const amt = Math.max(1, Math.ceil(
-			this.getModifier('con') +
-			this.getModifier('wis') +
+			Math.random() * this.getModifier('con') +
+			Math.random() * this.getModifier('wis') +
 			this.level.valueOf()) / 2)
 		return this.heal(scale * amt);
-	}
-
-	rest() {
-		const amt = Math.max(1,
-			this.getModifier('con') + this.getModifier('wis') + this.level.valueOf());
-		return this.heal(amt);
 	}
 
 	applyBaseMods(mods?: StatMod) {

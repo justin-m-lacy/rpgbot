@@ -61,14 +61,10 @@ export class Combat {
 			return;
 		}
 
-		(targ instanceof Char ? targ : char).send(
-			`${char.name} attacks ${who.name} with ${atk.name}`
-		);
-
 		const hitroll = + char.toHit + (atk.tohit?.valueOf() ?? 0);
 		if (hitroll < targ.armor.valueOf()) {
 
-			(targ instanceof Char ? targ : char).send(`\n${char.name} misses!`);
+			(targ instanceof Char ? targ : char).send(`${char.name} attacks ${who.name} with ${atk.name} and misses!`);
 
 		} else {
 
@@ -93,6 +89,11 @@ export class Combat {
 			return false;
 		}
 
+		if (targ instanceof Mob) {
+			targ.actors ??= {};
+			targ.actors[char.id] = 1;
+		}
+
 		if (act.dot) {
 			targ.addDot(act.dot, char.id);
 		}
@@ -104,10 +105,9 @@ export class Combat {
 			targ.flags.unset(act.cure);
 		}
 
+		/// todo: need to log if non-damage event from combat.
 		if (act.dmg) this.applyDmg(targ, act, char);
 		if (act.heal) this.applyHealing(targ, act as TCombatAction & { heal: TValue }, char);
-
-		(char instanceof Char ? char : targ).send(`${char.name} hits ${targ.name} with ${act.name}`);
 
 		return true;
 	}
@@ -295,7 +295,8 @@ export class Combat {
 		let ind = start;
 		do {
 
-			if (targs[ind].isAlive() && targs[ind].standing(npc.team) < 0) {
+			if (targs[ind].isAlive() &&
+				(npc.actors?.[targs[ind].id] || (targs[ind].standing(npc.team) < 0))) {
 				return targs[ind];
 			}
 			ind = (ind + 1) % len;
@@ -315,7 +316,7 @@ export class Combat {
 		await this.tryAttack(npc, npc.getAttack(), targ);
 
 		// reverse attack.
-		if (targ.isAlive() && targ.attacks.length) {
+		if (targ.isAlive()) {
 			await this.tryAttack(targ, targ.getAttack(), npc);
 		}
 

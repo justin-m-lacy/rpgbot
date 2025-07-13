@@ -1,5 +1,5 @@
 import { Simple } from "rpg/values/simple";
-import { SymSimple, type ISimple, type Numeric } from "rpg/values/types";
+import { IsValue, SymSimple, type ISimple, type Numeric } from "rpg/values/types";
 
 export class Maxable implements ISimple {
 
@@ -16,7 +16,7 @@ export class Maxable implements ISimple {
 	 * Decode stored value.
 	 * @param data 
 	 */
-	decode(data: any) {
+	/*decode(data: any) {
 		if (typeof data === 'number') this.setTo(data);
 		else if (typeof data === 'object') {
 			this.value = data.v;
@@ -24,7 +24,7 @@ export class Maxable implements ISimple {
 		} else {
 			this.setTo(0);
 		}
-	}
+	}*/
 
 	valueOf() { return this._value }
 
@@ -51,9 +51,17 @@ export class Maxable implements ISimple {
 	 * Sets both current and max to same value.
 	 * @param v 
 	 */
-	setTo(v: Numeric) {
-		this.max.value = v.valueOf();
-		this.value = v.valueOf();
+	setTo(v: Numeric | { v: number, m: number }) {
+
+		if (typeof v === 'number') {
+			this.value = this.max.value = v;
+		} else if (IsValue(v)) {
+			this.value = this.max.value = v.valueOf();
+		} else {
+			this.value = v.v;
+			this.max.value = v.m;
+		}
+
 	}
 
 	constructor(id: string) {

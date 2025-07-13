@@ -24,7 +24,6 @@ export class Shop<T extends Item = Item> extends Feature {
 
 	toJSON() {
 		const json = super.toJSON();
-		console.log(`shoptype: ${this.type} json: ${json.type}`);
 		json.kind = this.kind;
 		json.inv = this.inv;
 

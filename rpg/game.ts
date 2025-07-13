@@ -206,8 +206,16 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			if (this.actions[act].tick) {
 				this.tickDots(char);
 			}
+			///todo: party recover instead.
 			if (this.actions[act].rest) {
-				char.recover(this.actions[act].rest);
+
+				const p = this.getParty(char);
+				if (p && p.isLeader(char)) {
+					const pct = Math.round(await p.rest(this.actions[act].rest));
+					if (pct == 1) return char.output(`${p.name} fully rested.`);
+					else return char.output(`${p.name} ${pct}% rested.`);
+
+				} else char.rest(this.actions[act].rest);
 			}
 		}
 
@@ -339,7 +347,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			this.onSlay(slayer, char);
 		}
 
-		char.send(`${char.name} slain by ${typeof slayer === 'string' ? slayer : slayer.name}.`);
+		(char instanceof Char ? char : (typeof slayer === 'object' ? slayer : char)).send(`${char.name} slain by ${typeof slayer === 'string' ? slayer : slayer.name}.`);
 
 		if (char instanceof Char) {
 
@@ -640,7 +648,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		if (r < 0) {
 			char.hp.add(-Math.floor(Math.random() * d));
-			return char.output(`${char.name} was hurt trying to hike. hp: (${char.hp}/${char.hp.max})`);
+			return char.output(`${char.name} was hurt trying to hike. hp: (${smallNum(char.hp)}/${Math.ceil(char.hp.max.valueOf())})`);
 		}
 		else if (r < 10) return char.output('You failed to find your way.');
 
@@ -927,15 +935,9 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	async rest(this: Game<A, K>, char: Char) {
 
 		const p = this.getParty(char);
-		if (p && p.isLeader(char)) {
-
-			const pct = Math.round(100 * await p.rest());
-			if (pct === 100) return char.output(`${p.name} fully rested.`);
-			else return char.output(`${p.name} ${pct}% rested.`);
-
-		} else char.rest();
-
-		return char.output(`${char.name} rested. hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
+		if (!p || !p.isLeader(char)) {
+			return char.output(`${char.name} rested. hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
+		}
 
 	}
 

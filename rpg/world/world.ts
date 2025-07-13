@@ -35,10 +35,8 @@ export class World {
 			st.addFeature(GenFeature('shrine'));
 		}
 		if (!st.features.some(f => {
-			if (f.type !== ItemType.Shop) console.log(`not a shop: ${f.name}`);
 			return f.type === ItemType.Shop
 		})) {
-			console.log(`auto-gen shop...`);
 			st.addFeature(GenShop(st.biome, 1));
 		}
 	}
