@@ -29,7 +29,7 @@ export default NewCommand<Rpg>({
 		}
 
 		return ReplyBlock(m,
-			char.name + 'Inventory:\n' + ItemMenu(char.inv));
+			char.name + ' Inventory:\n' + ItemMenu(char.inv));
 
 	}
 })

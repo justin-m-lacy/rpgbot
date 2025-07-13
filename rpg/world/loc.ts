@@ -447,6 +447,9 @@ export class Loc {
 
 	addNpc(m: Mob) {
 		m.at.setTo(this);
+		if (this.npcs.some(v => v.id == m.id)) {
+			console.log(`dupe mob: ${m.id}: ${m.name}`)
+		}
 		this.npcs.push(m);
 	}
 
@@ -457,7 +460,6 @@ export class Loc {
 	removeNpc(m: Mob) {
 
 		const ind = this.npcs.indexOf(m);
-		console.log('remove npc at: ' + ind);
 		if (ind >= 0) quickSplice(this.npcs, ind);
 
 	}

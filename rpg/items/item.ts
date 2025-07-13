@@ -62,8 +62,8 @@ export class Item {
 	 */
 	static InitData<D extends ItemData = ItemData>(json: D, it?: Item) {
 
-		it ??= new Item(json.id);
-		it.name ||= json.name;
+		it ??= new Item(json.id, json);
+		if (it.name == '') it.name = json.name;
 
 		if (json.desc) it.desc = json.desc;
 		if (json.price) it.price = json.price;

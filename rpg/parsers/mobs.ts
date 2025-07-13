@@ -210,7 +210,7 @@ export const RandMonster = (lvl: number, biome?: string) => {
 export const ReviveMob = (json: any) => {
 
 	const proto = GetMob(json.proto ?? json.name);
-	const m = new Mob(json.id, proto);
+	const m = new Mob(json.id ?? undefined, proto);
 
 	if (json.name) m.name = json.name;
 
