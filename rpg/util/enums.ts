@@ -20,10 +20,7 @@ export const ReverseMap = <Enum extends Record<string | number, string | number>
 	for (k in vals) {
 
 		// reverse enum map;
-		const s = E[vals[k] as keyof Enum];
-		console.log(`rev enum: ${k}->${s}`);
-
-		rev[s] = vals[k]!;
+		rev[E[k]] = vals[k]!;
 	}
 
 	return rev;

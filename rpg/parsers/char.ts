@@ -38,18 +38,16 @@ export const ReviveChar = (game: Game, json: {
 		}
 	}
 
-	if (json.teams) {
-
+	if (!json.teams || Object.keys(json.teams).length == 0) {
+		char.teams[Faction.good] = char.teams[Faction.neutral] = char.teams[Faction.law] = 10;
+		char.teams[Faction.evil] = -10;
+		char.teams[Faction.chars] = 999999;
+	} else {
 		for (const k in json.teams) {
 			if (k in Faction) {
 				char.teams[Faction[k as keyof typeof Faction]] = json.teams[k];
 			}
 		}
-
-	} else {
-		char.teams[Faction.good] = char.teams[Faction.neutral] = char.teams[Faction.law] = 10;
-		char.teams[Faction.evil] = -10;
-		char.teams[Faction.chars] = 999999;
 	}
 
 	if (json.history) Object.assign(char.history, json.history);
