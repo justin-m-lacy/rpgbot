@@ -7,6 +7,7 @@ import { ItemData, ItemType } from 'rpg/items/types';
 import { GenArmor } from 'rpg/parsers/armor';
 import { DecodeItem } from 'rpg/parsers/items';
 import { LvlPotion } from 'rpg/parsers/potions';
+import { LvlScroll } from 'rpg/parsers/scrolls';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Loot } from '../combat/loot';
 import { LoadMaterials } from '../items/material';
@@ -28,7 +29,8 @@ const ItemTypeGen: Partial<Record<string, (lvl?: number) => Item | null>> = {
 
 	[ItemType.Weapon]: GenWeapon,
 	[ItemType.Armor]: GenArmor,
-	[ItemType.Potion]: LvlPotion
+	[ItemType.Potion]: LvlPotion,
+	[ItemType.Scroll]: LvlScroll
 }
 
 export const InitItems = async () => {

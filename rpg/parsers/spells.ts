@@ -3,6 +3,7 @@ import { ParseDotType, RawEffect } from 'rpg/magic/dots';
 import { Spell } from 'rpg/magic/spell';
 import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
+import { randElm } from '../util/array';
 
 type RawSpell = {
 	id: string;
@@ -17,7 +18,9 @@ type RawSpell = {
 	typeof import('data/magic/spells.json', { assert: { type: 'json' } })[number];
 
 // effect types. loading at bottom.
-export const Spells: Partial<{ [id: string]: Spell }> = {};
+const Spells: Record<string, Spell> = {};
+
+const byLevel: Record<number, Spell[]> = {};
 
 /**
  * Decode spell from stored data.
@@ -55,11 +58,17 @@ export const LoadSpells = async () => {
 		'data/magic/spells.json', { assert: { type: 'json' } }
 	)).default;
 	for (let i = spellDatas.length - 1; i >= 0; i--) {
+
 		const sp = Spells[spellDatas[i].id] = ParseSpell(spellDatas[i] as any);
 		Spells[sp.name.toLowerCase()] = sp;
+		(byLevel[sp.level] ??= []).push(sp);
+
 	}
 
 }
 
 
 export const GetSpell = (s: string) => Spells[s.toLowerCase()];
+export const RandSpell = (lvl: number) => {
+	return randElm(byLevel[lvl]);
+}
