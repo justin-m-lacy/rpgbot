@@ -6,7 +6,6 @@ import { Mob } from 'rpg/monster/mobs';
 import { ParseValue } from 'rpg/parsers/values';
 import { CalcFaction, Team } from 'rpg/social/teams';
 import { TWritable } from 'rpg/util/type-utils';
-import { IsCoord } from 'rpg/world/coord';
 import { Biome } from 'rpg/world/loc';
 import { Numeric } from '../values/types';
 
@@ -47,7 +46,9 @@ const writable: Partial<Record<keyof Mob | keyof MobData, boolean>> = {};
 
 ((): void => {
 
-	const descs = Object.getOwnPropertyDescriptors<Mob>(new Mob());
+	const descs = Object.getOwnPropertyDescriptors<Mob>(
+		new Mob(undefined, undefined)
+	);
 	for (let k in descs) {
 		if (descs[k].writable) {
 			writable[k as keyof Mob] = true;
@@ -165,7 +166,7 @@ const CreateMob = (tpl: MobData) => {
 
 }
 
-export const RandMonster = (lvl: number, biome?: string) => {
+export const RandMonster = (lvl: number, biome: string) => {
 
 	lvl = Math.floor(lvl);
 
@@ -216,9 +217,6 @@ export const ReviveMob = (json: any) => {
 
 	if (json.hp) {
 		m.hp.setTo(json.hp);
-	}
-	if (IsCoord(json.at)) {
-		m.at.setTo(json.at);
 	}
 
 	const desc = Object.getOwnPropertyDescriptors(m);

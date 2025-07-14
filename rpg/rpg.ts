@@ -4,6 +4,7 @@ import Cache from 'archcache';
 import { MessageFlags, SendableChannels, User } from "discord.js";
 import { InitFeatures } from 'rpg/builders/features';
 import { InitItems } from 'rpg/builders/itemgen';
+import { ChannelStore } from 'rpg/channel-store';
 import { GameActions } from 'rpg/game-actions';
 import { ItemIndex } from 'rpg/items/container';
 import { LoadActions } from 'rpg/magic/action';
@@ -105,7 +106,9 @@ export class Rpg {
 			return null;
 		}
 
-		char.channel = m.channel as SendableChannels | null;
+		if (m.channel) {
+			ChannelStore.set(char, m.channel as SendableChannels);
+		}
 		return char;
 
 	}

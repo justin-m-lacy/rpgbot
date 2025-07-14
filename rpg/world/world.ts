@@ -21,10 +21,13 @@ const BLOCK_SIZE = 16;
 export class World {
 
 	readonly cache: Cache<Block>;
+	readonly chars: Cache<Char>
 
-	constructor(fcache: Cache<Block>) {
+	constructor(chars: Cache<Char>, fcache: Cache<Block>) {
 
 		this.cache = fcache;
+		this.chars = chars;
+
 		this.initWorld();
 
 	}
@@ -76,7 +79,7 @@ export class World {
 	 * @param who
 	 */
 	async removeNpcBy(char: Char, who: Mob) {
-		return (await this.getLoc(char.at))?.removeNpc(who);
+		return (await this.fetchLoc(char.at))?.removeNpc(who);
 	}
 
 	/**
@@ -85,7 +88,7 @@ export class World {
 	 * @param who
 	 */
 	async removeNpcAt(at: TCoord, who: Mob) {
-		return (await this.getLoc(at))?.removeNpc(who);
+		return (await this.fetchLoc(at))?.removeNpc(who);
 	}
 
 	/**
@@ -185,7 +188,7 @@ export class World {
 	 * @returns 
 	 */
 	async itemAt(at: Coord, what: ItemIndex) {
-		return (await this.getLoc(at))?.get(what);
+		return (await this.fetchLoc(at))?.get(what);
 	}
 
 	/**
@@ -241,7 +244,7 @@ export class World {
 	 */
 	async move(char: Char, from: Loc, to: TCoord): Promise<Loc> {
 
-		let dest = await this.getLoc(to);
+		let dest = await this.fetchLoc(to);
 		if (dest == null) {
 
 			const exits = await this.getRandExits(to);
@@ -294,7 +297,7 @@ export class World {
 
 	async getOrGen(coord: TCoord, char?: Char) {
 
-		let loc = await this.getLoc(coord);
+		let loc = await this.fetchLoc(coord);
 
 		if (loc == null) {
 
@@ -312,12 +315,12 @@ export class World {
 	 * Attempts to get location without fetching from cache.
 	 * @param coord 
 	 */
-	tryGetLoc(coord: TCoord) {
+	getLoc(coord: TCoord) {
 		const block = this.cache.get(this.getBlockKey(coord));
 		return block?.getLoc(this.locKey(coord));
 	}
 
-	async getLoc(at: TCoord) {
+	async fetchLoc(at: TCoord) {
 
 		const bkey = this.getBlockKey(at);
 		return (await this.cache.fetch(bkey))?.getLoc(this.locKey(at))
@@ -403,7 +406,7 @@ export class World {
 	 * @returns
 	 */
 	async getExitTo(dest: Coord, fromDir: DirVal) {
-		const loc = await this.getLoc(dest);
+		const loc = await this.fetchLoc(dest);
 		if (loc) {
 			const e = loc.reverseExit(fromDir);
 			if (e) return new Exit(fromDir, dest);

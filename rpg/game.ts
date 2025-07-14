@@ -1,8 +1,10 @@
 import Cache from 'archcache';
+import { SendableChannels } from 'discord.js';
 import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
+import { ChannelStore } from 'rpg/channel-store';
 import { Actor } from 'rpg/char/actor';
 import { StatusFlag } from 'rpg/char/states';
 import { Combat } from 'rpg/combat/combat';
@@ -74,7 +76,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.actions = actions;
 
-		this.world = new World(cache.subcache<Block>('world', (data) => new Block(data)));
+		this.world = new World(
+			charCache, cache.subcache<Block>('world', (data) => new Block(data)));
 
 		this.charCache = charCache;
 
@@ -94,9 +97,39 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if ('id' in loc) {
 			this.liveLocs[loc.id] = loc;
 		} else {
-			const v = this.world.tryGetLoc(loc);
+			const v = this.world.getLoc(loc);
 			if (v) this.liveLocs[v.id] = v;
 		}
+	}
+
+	/**
+	 * Send message to all chars at location.
+	 * @param loc 
+	 * @param msg 
+	 */
+	async sendLoc(loc: Loc, msg: string) {
+
+		const arr: SendableChannels[] = [];
+
+		for (let i = loc.chars.length - 1; i >= 0; i--) {
+			const chan = ChannelStore.get(this.getChar(loc.chars[i]));
+			if (chan && !arr.some(v => v.id === chan.id)) {
+				arr.push(chan);
+			}
+		}
+		return Promise.allSettled(arr.map(v => v.send(msg)));
+
+	}
+
+	async send(char: TActor, msg: string) {
+		const chan = ChannelStore.get(char);
+		if (chan) {
+			chan.send(msg);
+		} else {
+			const loc = this.world.getLoc(char.at);
+			if (loc) return this.sendLoc(loc, msg)
+		}
+
 	}
 
 	private async updateLocs() {
@@ -240,7 +273,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 				await this.combat.tryAttack(targ, targ.getAttack(), src);
 			}
 			if (targ instanceof Mob) {
-				this.setLiveLoc(src.at);
+				this.setLiveLoc(targ.at);
 			}
 		}
 
@@ -329,11 +362,9 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		const logger = (attacker instanceof Char ? attacker : char);
 
 		// log hit with first 'human' user.
-		logger.send(
-			`${typeof attacker === 'string' ? attacker : attacker.name} hits ${char.name} with ${info.name} for ${info.dmg.toFixed(1)} damage.`
+		this.send(char,
+			`${typeof attacker === 'string' ? attacker : attacker.name} hits ${char.name} with ${info.name} for ${info.dmg.toFixed(1)} damage.  (${smallNum(char.hp)}/${smallNum(char.hp.max)})`
 		);
-		char.log(`hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
-
 	}
 
 	/**
@@ -347,19 +378,19 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			this.onSlay(slayer, char);
 		}
 
-		(char instanceof Char ? char : (typeof slayer === 'object' ? slayer : char)).send(`${char.name} slain by ${typeof slayer === 'string' ? slayer : slayer.name}.`);
+		this.send(char, `${char.name} slain by ${typeof slayer === 'string' ? slayer : slayer.name}.`);
 
 		if (char instanceof Char) {
 
 			/// should be world log.
-			char.send(
+			this.send(char,
 				await this.world.put(char, Grave.MakeGrave(char,
 					slayer
 				))
 			);
 
 		} else if (char instanceof Mob) {
-			const loc = await this.world.getLoc(char.at);
+			const loc = await this.world.fetchLoc(char.at);
 			if (loc) {
 				loc.removeNpc(char);
 				await this.getLoot(itemgen.GenLoot(char), loc,
@@ -452,7 +483,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	async getDeadChars(at: TCoord, skipId?: string) {
 
-		const loc = await this.world.getLoc(at);
+		const loc = await this.world.fetchLoc(at);
 		if (!loc?.chars.length) return undefined;
 
 		const res: Char[] = [];
@@ -599,7 +630,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async hide(this: Game<A, K>, char: Char) {
 
-		const loc = await this.world.getLoc(char.at);
+		const loc = await this.world.fetchLoc(char.at);
 
 		if (loc) {
 
@@ -623,7 +654,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 				}
 			}
 			if (spotter) {
-				char.send(`${char.name} was spotted by ${spotter.name}.`);
+				this.send(char, `${char.name} was spotted by ${spotter.name}.`);
 				return;
 			}
 
@@ -656,8 +687,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (!loc) return char.output('You failed to find your way.');
 
 		if (p && p.leader === char.name) {
-
-			//console.log('Moving party to: ' + char.loc.toString() );
 			await p.move(this.world, loc);
 
 		}

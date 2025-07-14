@@ -697,18 +697,18 @@ export class DiscordBot {
 	 * or replies with an error message.
 	 * Function is intentionally not async since there is no reason
 	 * to wait for the channel reply to go through.
-	 * @param channel
+	 * @param chan
 	 * @param name
 	 * @returns 
 	 */
-	userOrSendErr(channel: SendableChannels, name?: string) {
+	userOrSendErr(chan: SendableChannels, name?: string) {
 
 		if (!name) {
-			channel.send('User name expected.');
+			chan.send('User name expected.');
 
 		} else {
-			const member = this.findUser(channel, name);
-			if (!member) channel.send('User \'' + name + '\' not found.');
+			const member = this.findUser(chan, name);
+			if (!member) chan.send('User \'' + name + '\' not found.');
 			return member;
 		}
 
@@ -785,7 +785,7 @@ export class DiscordBot {
 	 * @param chan
 	 * @returns
 	 */
-	async printCommands(chan: ChatCommand, page: number = 0) {
+	async printCmds(chan: ChatCommand, page: number = 0) {
 
 		const parts: string[] = [
 			`Use ${this.cmdPrefix}help [command] for more information.\nAvailable commands:\n`

@@ -124,6 +124,9 @@ const OppositeDirs: Partial<Record<DirString, DirVal>> = {
 
 export class Loc {
 
+	/// unassigned location.
+	static Lost = new Loc(new Coord(Number.MAX_SAFE_INTEGER / 2, Number.MAX_SAFE_INTEGER / 2), 'nowhere');
+
 	toJSON() {
 
 		return {
@@ -446,10 +449,7 @@ export class Loc {
 	}
 
 	addNpc(m: Mob) {
-		m.at.setTo(this);
-		if (this.npcs.some(v => v.id == m.id)) {
-			console.log(`dupe mob: ${m.id}: ${m.name}`)
-		}
+		m.at = this.coord;
 		this.npcs.push(m);
 	}
 

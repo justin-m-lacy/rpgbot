@@ -19,7 +19,7 @@ export default NewCommand<Rpg>({
 		const char = await rpg.myCharOrErr(m, m.user);
 		if (!char) return;
 
-		const loc = await rpg.world.getLoc(char.at);
+		const loc = await rpg.world.fetchLoc(char.at);
 		let shop: Shop | Feature | null;
 
 		if (!shopName || !loc) {

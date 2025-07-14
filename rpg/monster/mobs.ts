@@ -7,11 +7,11 @@ import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
+import { Coord, TCoord } from 'rpg/world/coord';
 import { Actor } from '../char/actor';
 import * as stats from '../char/stats';
 import { Item, TStacker } from '../items/item';
 import { roll } from '../values/dice';
-import { Coord } from '../world/coord';
 
 export type TActor = Actor | Mob;
 
@@ -82,7 +82,8 @@ export class Mob {
 	private _held?: Item[];
 
 	// location of coordinate.
-	readonly at: Coord = new Coord(0, 0);
+	at: TCoord = new Coord(0, 0);
+
 	readonly dots: Dot[] = [];
 
 	/**
@@ -90,7 +91,7 @@ export class Mob {
 	 */
 	actors?: Record<string, number>;
 
-	constructor(id?: string, proto?: MobData) {
+	constructor(id?: string, proto?: MobData | undefined) {
 
 		this.id = id ?? randomUUID();
 		this._toHit = 0;
@@ -109,20 +110,9 @@ export class Mob {
 		return 0;
 	}
 
-	setLoc(at: Coord) {
-		this.at.setTo(at);
-	}
-
-	send(s: string) {
-		console.log(`mob send: ${s}`);
-	}
-
-	/**
-	 * Compatibility for logging.
-	 * @param s 
-	 */
+	/// TActor interface
 	log(s: string) {
-		console.log(`MOB: ${s}`)
+		console.log(`MOb Private: ${s}`);
 	}
 
 	statRoll(...stats: string[]) {

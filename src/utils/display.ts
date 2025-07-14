@@ -85,8 +85,6 @@ export const Display = {
 		}
 	},
 
-	BlockText: (s: string) => '```' + s + '```',
-
 	SendEmbed: async (m: Message, s: string, url: string) => {
 
 		if (s.length > MsgMAx) s = s.slice(0, MsgMAx);

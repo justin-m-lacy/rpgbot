@@ -40,7 +40,7 @@ export default NewCommand<Rpg>({
 		if (!at) {
 			if ((spell.target & (TargetFlags.self | TargetFlags.mult | TargetFlags.loc)) === 0) {
 
-				const loc = await rpg.world.getLoc(char.at);
+				const loc = await rpg.world.fetchLoc(char.at);
 				return SendPrivate(m, `Cast ${spell.name} at what?`,
 					{
 						components: loc ? PickTargButtons('cast', loc, 'at') : undefined

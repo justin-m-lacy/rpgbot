@@ -97,13 +97,13 @@ export abstract class BotContext<T extends ContextSource = ContextSource> {
 
 	/**
 	 * Send message to text channel.
-	 * @param channelId 
+	 * @param chanId 
 	 * @param message 
 	 * @returns 
 	 */
-	async send(channelId: string, message: string) {
+	async send(chanId: string, message: string) {
 		try {
-			const channel = await this.getChannel(channelId);
+			const channel = await this.getChannel(chanId);
 			if (channel?.isSendable()) {
 				return channel.send(message);
 			}

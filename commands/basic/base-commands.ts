@@ -117,7 +117,7 @@ const CmdHelp: Command = NewCommand({
             return bot.printCommand(msg, cmd, page);
 
         } else {
-            bot.printCommands(msg, cmdPage);
+            bot.printCmds(msg, cmdPage);
         }
 
     }

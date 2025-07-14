@@ -64,7 +64,7 @@ export class Combat {
 		const hitroll = + char.toHit + (atk.tohit?.valueOf() ?? 0);
 		if (hitroll < targ.armor.valueOf()) {
 
-			(targ instanceof Char ? targ : char).send(`${char.name} attacks ${who.name} with ${atk.name} and misses!`);
+			this.game.send(char, `${char.name} attacks ${who.name} with ${atk.name} and misses!`);
 
 		} else {
 
@@ -188,7 +188,7 @@ export class Combat {
 
 		} else if (delta < 5 && targ.isAlive()) {
 
-			char.send(`${targ.name} catches ${char.name} attempting to steal.\n`);
+			this.game.send(char, `${targ.name} catches ${char.name} attempting to steal.\n`);
 			await this.tryAttack(targ, targ.getAttack(), char);
 
 

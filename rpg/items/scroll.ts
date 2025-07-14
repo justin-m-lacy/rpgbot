@@ -58,7 +58,7 @@ export class Scroll extends Item implements TCombatAction {
 			return;
 		}
 
-		char.send(`${char.name} reads ${this.name}`);
+		game.send(char, `${char.name} reads ${this.name}`);
 		char.removeN(this);
 		await game.cast(char, this.spell, targ, true);
 

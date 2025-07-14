@@ -31,9 +31,9 @@ export class Coord implements TCoord {
 	 * @param c - second coordinate
 	 * @returns
 	 */
-	dist(c: Coord) { return Math.abs(c.x - this.x) + Math.abs(c.y - this.y); }
+	dist(c: TCoord) { return Math.abs(c.x - this.x) + Math.abs(c.y - this.y); }
 
-	equals(c: Coord) {
+	equals(c: TCoord) {
 		return c.x === this.x && c.y === this.y;
 	}
 

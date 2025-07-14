@@ -62,7 +62,7 @@ export class Party extends SocialGroup {
 
 	async move(world: World, to: Loc) {
 
-		const prev = await world.getLoc(this.at);
+		const prev = await world.fetchLoc(this.at);
 
 		this.at.setTo(to.coord);
 

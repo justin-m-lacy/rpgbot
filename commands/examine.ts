@@ -16,7 +16,7 @@ export default NewCommand<Rpg>({
 		const item = m.options.getString('item');
 		if (!item) {
 
-			const loc = await rpg.world.getLoc(char.at);
+			const loc = await rpg.world.fetchLoc(char.at);
 			return SendPrivate(m, `Examine what item?`, {
 				components: loc?.inv ? InventoryButtons('ex', loc.inv, 'item') : undefined
 			});
@@ -28,7 +28,7 @@ export default NewCommand<Rpg>({
 			return ReplyEmbed(m, info[0], info[1]);
 		}
 
-		const loc = await rpg.world.getLoc(char.at);
+		const loc = await rpg.world.fetchLoc(char.at);
 		return SendPrivate(m, `Item ${item} not found. Examine what?`, {
 			components: loc?.inv ? InventoryButtons('ex', loc.inv, 'item') : undefined
 		});
