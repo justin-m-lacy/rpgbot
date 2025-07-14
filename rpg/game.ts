@@ -124,7 +124,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	async send(char: TActor, msg: string) {
 		const chan = ChannelStore.get(char);
 		if (chan) {
-			chan.send(msg);
+			return chan.send(msg);
 		} else {
 			const loc = this.world.getLoc(char.at);
 			if (loc) return this.sendLoc(loc, msg)
@@ -359,10 +359,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async onCharHit(char: TActor, attacker: TActor | string, info: AttackInfo) {
 
-		const logger = (attacker instanceof Char ? attacker : char);
-
 		// log hit with first 'human' user.
-		this.send(char,
+		return this.send(char,
 			`${typeof attacker === 'string' ? attacker : attacker.name} hits ${char.name} with ${info.name} for ${info.dmg.toFixed(1)} damage.  (${smallNum(char.hp)}/${smallNum(char.hp.max)})`
 		);
 	}
@@ -670,11 +668,11 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		const d = char.at.abs();
 
-		let r = char.statRoll() + char.getModifier('dex') + char.getModifier('wis');
+		let r = char.statRoll('dex', 'wis');
 		const p = this.getParty(char);
 
 		r -= d / 10;
-		if (p && p.isLeader(char)) r -= 5;
+		if (p && p.isLeader(char)) r -= 20;
 		if (!char.hasTalent('hike')) r -= 20;
 
 		if (r < 0) {
@@ -986,7 +984,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	scribe(this: Game<A, K>, char: Char, spell: Spell) {
 
-		if (!char.hasTalent('brscribeew')) {
+		if (!char.hasTalent('scribe')) {
 			char.log(`${char.name} does not know how to scribe scrolls.`);
 		}
 
@@ -1077,4 +1075,4 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-} //Game
+}

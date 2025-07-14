@@ -16,7 +16,7 @@ export type RawEffect = {
 
 	/// damage type.
 	type?: string;
-	dot?: Record<string, any>,
+	dot?: Record<string, RawEffect>,
 	time?: number
 } &
 	typeof import('data/magic/dots.json',
@@ -141,9 +141,9 @@ export class Dot {
 	readonly maker?: string;
 
 
-	constructor(effect: ProtoDot, maker?: string, time?: number) {
+	constructor(proto: ProtoDot, maker?: string, time?: number) {
 
-		this.proto = effect;
+		this.proto = proto;
 		this.maker = maker;
 		this._time = time || this.proto.duration;
 
@@ -203,11 +203,11 @@ export class Dot {
 
 }
 
-export const ParseDotType = (raw: RawEffect) => {
+export const ParseDotType = (raw: RawEffect, parent?: { id: string, name?: string }) => {
 
 	return new ProtoDot({
-		id: raw.id,
-		name: raw.name,
+		id: raw.id ?? parent?.id,
+		name: raw.name ?? parent?.name,
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
 		add: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
 		duration: raw.time,

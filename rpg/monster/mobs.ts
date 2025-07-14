@@ -112,7 +112,7 @@ export class Mob {
 
 	/// TActor interface
 	log(s: string) {
-		console.log(`MOb Private: ${s}`);
+		console.log(`Mob PM: ${s}`);
 	}
 
 	statRoll(...stats: string[]) {

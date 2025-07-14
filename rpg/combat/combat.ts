@@ -41,7 +41,7 @@ export class Combat {
 	 */
 	spotTest(hider: Char, looker: TActor, mod: number = 0) {
 
-		const def = hider.statRoll('dex', 'wis') + (hider.hasTalent('stealth') ? 10 : 0) + mod;
+		const def = hider.statRoll('dex', 'wis') + (hider.hasTalent('sneak') ? 10 : 0) + mod;
 		const atk = looker.statRoll('wis') + (looker.hasTalent('track') ? 10 : 0);
 		return Math.random() * atk > Math.random() * def;
 
@@ -51,7 +51,7 @@ export class Combat {
 
 		if (!atk) return;
 
-		console.log(`${char.name} attacks ${who.name} with ${atk.name}`);
+		//console.log(`${char.name} attacks ${who.name} with ${atk.name}`);
 
 		const targ = who instanceof Party ? await who.randTarget() : who;
 		if (!targ) return;
@@ -64,7 +64,7 @@ export class Combat {
 		const hitroll = + char.toHit + (atk.tohit?.valueOf() ?? 0);
 		if (hitroll < targ.armor.valueOf()) {
 
-			this.game.send(char, `${char.name} attacks ${who.name} with ${atk.name} and misses!`);
+			await this.game.send(char, `${char.name} attacks ${who.name} with ${atk.name} and misses!`);
 
 		} else {
 

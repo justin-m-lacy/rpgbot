@@ -28,6 +28,6 @@ export const Hike = async (world: World, char: Char, dir: DirString) => {
 			return;
 	}
 
-	return world.move(char, await world.getOrGen(char.at, char), nxt);
+	return await world.move(char, await world.getOrGen(char.at, char), nxt);
 
 }
