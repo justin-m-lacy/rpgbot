@@ -48,9 +48,7 @@ export default NewCommand<Rpg>({
 			}
 		}
 
-		await rpg.game.exec('buy', char, shop as Shop, item)
-
-		return SendPrivate(m, char.flushLog());
+		return SendPrivate(m, await rpg.game.exec('buy', char, shop as Shop, item));
 
 	}
 });

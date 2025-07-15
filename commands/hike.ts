@@ -1,6 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrChoices } from "@/bot/command";
-import { ReplyBlock } from "rpg/display/display";
+import { SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 import { toDirection } from "rpg/world/loc";
 
@@ -19,7 +19,7 @@ export default NewCommand<Rpg>({
 
 		const dir = m.options.getString('dir', true);
 
-		await ReplyBlock(m, await rpg.game.exec('hike', char, toDirection(dir)));
+		return SendPrivate(m, await rpg.game.exec('hike', char, toDirection(dir)));
 
 	}
 })

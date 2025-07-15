@@ -23,8 +23,7 @@ export default NewCommand<Rpg>({
 
 				const shrine = loc?.getFeature('shrine');
 				if (shrine) {
-					await rpg.game.exec('useloc', char, 'shrine');
-					return SendPrivate(m, char.flushLog());
+					return SendPrivate(m, await rpg.game.exec('useloc', char, 'shrine'));
 				} else {
 					return SendPrivate(m, `You may only revive yourself at a shrine.`);
 				}
@@ -49,9 +48,7 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `${who} not found`);
 		}
 
-		await rpg.game.exec('revive', char, t)
-
-		await SendBlock(m, char.flushLog());
+		return SendBlock(m, await rpg.game.exec('revive', char, t));
 
 	}
 })

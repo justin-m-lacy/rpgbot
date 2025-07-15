@@ -18,14 +18,14 @@ export const Brew = {
 
 		const s = char.statRoll(...this.stats);
 		if (s < 10 * pot.level) {
-			char.output(`${char.name} failed to brew ${itemName}.`);
+			char.log(`${char.name} failed to brew ${itemName}.`);
 			return false;
 		}
 
 		if (pot.level) char.addExp(2 * pot.level);
 		const ind = char.addItem(pot);
 
-		char.output(`${char.name} brewed ${itemName}. (${ind})`);
+		char.log(`${char.name} brewed ${itemName}. (${ind})`);
 		return true;
 
 	}

@@ -18,9 +18,7 @@ export default NewCommand<Rpg>({
 		const char = await rpg.myCharOrErr(m, m.user)
 		if (!char) return;
 
-		const res = await rpg.game.exec('brew', char, potion);
-
-		return SendBlock(m, res);
+		return SendBlock(m, await rpg.game.exec('brew', char, potion));
 
 	}
 })

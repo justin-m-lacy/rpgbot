@@ -224,11 +224,11 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	async exec<S extends K>(
 		act: S, char: Char,
-		...args: ActParams<A[S]>) {
+		...args: ActParams<A[S]>): Promise<string> {
 
 		char.clearLog();
 
-		if (!this.canAct(char, act)) return char.output();
+		if (!this.canAct(char, act)) return char.flushLog();
 
 		if (char.isAlive()) {
 			if (this.actions[act].tick) {
@@ -236,20 +236,14 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			}
 			///todo: party recover instead.
 			if (this.actions[act].rest) {
-
-				const p = this.getParty(char);
-				if (p && p.isLeader(char)) {
-					const pct = Math.round(await p.rest(this.actions[act].rest));
-					if (pct == 1) return char.output(`${p.name} fully rested.`);
-					else return char.output(`${p.name} ${pct}% rested.`);
-
-				} else char.rest(this.actions[act].rest);
+				char.rest(this.actions[act].rest);
 			}
 		}
 		if ('exec' in this.actions[act]) {
-			return await this.actions[act].exec.apply(
+			await this.actions[act].exec.apply(
 				this, [char, ...args]
 			);
+
 		} else {
 
 			const talent = this.actions[act].talent;
@@ -264,6 +258,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			}
 
 		}
+		return char.flushLog();
 
 	}
 
@@ -575,7 +570,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	craft(this: Game<A, K>, char: Char, itemName: string, desc?: string, imgURL?: string) {
 
 		const ind = Craft(char, itemName, desc, imgURL);
-		return char.output(`${char.name} crafted ${itemName}. (${ind})`);
+		char.log(`${char.name} crafted ${itemName}. (${ind})`);
 
 	}
 
@@ -584,14 +579,17 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (end) {
 
 			const items = char.removeRange(first, end);
-			if (!items) return char.output('Invalid item range.');
-			return char.output(items.length + ' items were destroyed.');
+			if (!items) return char.log('Invalid item range.');
+			return char.log(items.length + ' items were destroyed.');
 
 		} else {
 
 			const item = char.removeItem(first);
-			if (!item) return char.output(`'${first}' not in inventory.`);
-			return char.output(item.name + ' is gone forever.');
+			if (!item) {
+				char.log(`'${first}' not in inventory.`);
+				return;
+			}
+			char.log(item.name + ' is gone forever.');
 
 		} //
 
@@ -626,8 +624,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			}
 
 		}
-
-		return to;
 
 	}
 
@@ -773,7 +769,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	async goHome(this: Game<A, K>, char: Char) {
-		return char.output(await this.world.goHome(char));
+		char.log(await this.world.goHome(char));
 	}
 
 	compare(char: Char, wot: ItemIndex): string {
@@ -811,12 +807,12 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	inscribe(this: Game<A, K>, char: Char, wot: ItemIndex, inscrip: string) {
 
 		const item = char.getItem(wot) as Item | undefined;
-		if (!item) return char.output('Item not found.');
+		if (!item) return char.log('Item not found.');
 
 		item.inscrip = inscrip;
 		char.addHistory('inscribe');
 
-		return char.output(`${item.name} inscribed.`);
+		char.log(`${item.name} inscribed.`);
 
 	}
 
@@ -836,20 +832,19 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	give(this: Game<A, K>, char: Char, dest: Char, what: string) {
-
-		return char.output(Trade.transfer(char, dest, what));
+		char.log(Trade.transfer(char, dest, what));
 
 	}
 
-	async useLoc(char: Char, wot: ItemIndex) {
-		await this.world.useLoc(this, char, wot);
+	useLoc(char: Char, wot: ItemIndex) {
+		return this.world.useLoc(this, char, wot);
 	}
 
 
 	unequip(this: Game<A, K>, char: Char, slot?: string) {
 
 		if (!slot) {
-			return char.output('Specify an equip slot to remove.');
+			return char.log('Specify an equip slot to remove.');
 		}
 
 		const s = toSlot(slot);
@@ -857,28 +852,32 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			return char.log(`Invalid slot: ${slot}`);
 		}
 
-		if (char.unequip(s)) return char.output('Removed.');
-		return char.output('Cannot remove ' + s);
+		if (char.unequip(s)) return char.log('Removed.');
+		char.log('Cannot remove ' + s);
 
 	}
 
 	async drop(this: Game<A, K>, char: Char, what: ItemPicker, end?: ItemIndex | null) {
-
-		return char.output(await this.world.drop(char, what, end));
+		char.log(await this.world.drop(char, what, end));
 
 	}
 
 	async take(this: Game<A, K>, char: Char, first: ItemIndex, end?: ItemIndex | null) {
-		return char.output(await this.world.take(char, first, end));
+		char.log(await this.world.take(char, first, end));
 	}
 
 
 
-	async rest(this: Game<A, K>, char: Char) {
+	async rest(this: Game<A, K>, char: Char, factor: number = 1) {
 
 		const p = this.getParty(char);
-		if (!p || !p.isLeader(char)) {
-			return char.output(`${char.name} rested. hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
+		if (p && p.isLeader(char)) {
+			const pct = Math.round(await p.rest(factor));
+			if (pct == 1) char.log(`${p.name} fully rested.`);
+			else char.log(`${p.name} ${pct}% rested.`);
+
+		} else {
+			char.log(`${char.name} rested. hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
 		}
 
 	}
@@ -886,10 +885,14 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	quaff(this: Game<A, K>, char: Char, wot: ItemIndex) {
 
 		const p = char.getItem(wot) as Item | undefined;
-		if (!p) return char.output(`Item ${wot} not found.`);
-		if (!(p instanceof Potion)) return char.output(`${p.name} cannot be quaffed.`);
-
-		p.use(this, char);
+		if (!p) {
+			char.log(`Item ${wot} not found.`);
+		}
+		else if (!(p instanceof Potion)) {
+			char.log(`${p.name} cannot be quaffed.`);
+		} else {
+			p.use(this, char);
+		}
 
 	}
 
@@ -902,8 +905,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			// return to inventory.
 			char.inv.take(item);
 		}
-
-		return char.output();
 
 	}
 

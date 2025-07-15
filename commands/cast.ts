@@ -54,9 +54,7 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `'${at}' not found.`);
 		}
 
-		await rpg.game.exec('cast', char, spell, targ);
-
-		SendBlock(m, char.flushLog());
+		SendBlock(m, await rpg.game.exec('cast', char, spell, targ));
 
 	}
 })

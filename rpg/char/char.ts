@@ -350,7 +350,6 @@ export class Char extends Actor {
 		this._log.log(s.replace('%c', this.name));
 	}
 	flushLog() { return this._log.flushLog(); }
-	output(str?: string) { return this._log.output(str); }
 
 	clearLog() { this._log.clear(); }
 

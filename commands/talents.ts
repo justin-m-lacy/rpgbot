@@ -21,7 +21,7 @@ export default NewCommand<Rpg>({
 			if (!char) return SendPrivate(m, who + ' not found on server. D:');
 		}
 
-		await SendBlock(m, char.getTalents());
+		return SendBlock(m, char.getTalents());
 
 	}
 })

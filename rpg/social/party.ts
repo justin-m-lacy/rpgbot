@@ -91,6 +91,8 @@ export class Party extends SocialGroup {
 
 		for (let i = roster.length - 1; i >= 0; i--) {
 
+			if (roster[i] == this.leader) continue;
+
 			const char = await this.cache.fetch(roster[i]);
 			if (!char) continue;
 			if (char.isAlive()) char.rest(scale);

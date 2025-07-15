@@ -1,6 +1,6 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand } from "@/bot/command";
-import { ReplyBlock } from "rpg/display/display";
+import { SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -9,9 +9,9 @@ export default NewCommand<Rpg>({
 	async exec(m: ChatCommand, rpg: Rpg) {
 
 		const char = await rpg.myCharOrErr(m, m.user);
-		if (!char) return;
-
-		await ReplyBlock(m, await rpg.game.exec('hide', char));
+		if (char) {
+			return SendPrivate(m, await rpg.game.exec('hide', char));
+		}
 
 	}
 })

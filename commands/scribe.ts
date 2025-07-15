@@ -26,11 +26,7 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `${char.name} does not know the spell ${spell.name}`);
 		}
 
-
-		//const a = m.attachments.first();
-		//const res = await rpg.game.exec('brew', char, spell);
-
-		return SendBlock(m, char.flushLog());
+		return SendBlock(m, await rpg.game.exec('scribe', char, spell));
 
 	}
 })

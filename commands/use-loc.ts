@@ -13,9 +13,7 @@ export default NewCommand<Rpg>({
 		if (!char) return;
 
 		const what = m.options.getString('what', true);
-		await rpg.game.exec('useloc', char, what);
-
-		return SendBlock(m, char.flushLog());
+		return SendBlock(m, await rpg.game.exec('useloc', char, what));
 
 	}
 })

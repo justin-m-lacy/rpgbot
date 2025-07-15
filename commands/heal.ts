@@ -1,7 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { PickCharButtons } from "rpg/components";
-import { SendBlock, SendPrivate } from "rpg/display/display";
+import { SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
 
 export default NewCommand<Rpg>({
@@ -38,9 +38,7 @@ export default NewCommand<Rpg>({
 			return SendPrivate(m, `${who} not found`);
 		}
 
-		await rpg.game.exec('heal', char, t)
-
-		await SendBlock(m, char.flushLog());
+		return m.reply(await rpg.game.exec('heal', char, t));
 
 	}
 })

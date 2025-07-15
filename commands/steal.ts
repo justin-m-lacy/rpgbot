@@ -31,9 +31,7 @@ export default NewCommand<Rpg>({
 		}
 
 		const what = m.options.getString('what');
-
-		const result = await rpg.game.exec('steal', src, dest, what);
-		await ReplyBlock(m, result);
+		return ReplyBlock(m, await rpg.game.exec('steal', src, dest, what));
 
 	}
 })

@@ -28,14 +28,13 @@ export default NewCommand<Rpg>(
 
 						ToActionRows(
 
-							StatIds.map(stat =>
+							StatIds.map(s =>
 								CustomButton({
 									customId: 'addstat',
-									label: stat,
+									label: s,
 									style: ButtonStyle.Primary
-
 								}, {
-									stat: stat
+									stat: s
 								})
 							)
 
@@ -45,8 +44,7 @@ export default NewCommand<Rpg>(
 
 			}
 
-			const res = char.addStat(stat);
-			if (res) {
+			if (char.addStat(stat)) {
 				return SendPrivate(m, `${stat} increased.`);
 			} else {
 				return SendPrivate(m, char.flushLog());
