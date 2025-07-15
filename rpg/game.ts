@@ -489,6 +489,33 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	/**
+	 * Get dead Chars at a location.
+	 * @param at 
+	 * @param skipId - optional char id to skip. (usually self)
+	 */
+	async getAliveChars(at: TCoord, skipId?: string) {
+
+		const loc = await this.world.fetchLoc(at);
+		if (!loc?.chars.length) return undefined;
+
+		const res: Char[] = [];
+		const chars = loc.chars;
+		for (let i = 0; i < chars.length; i++) {
+
+			if (chars[i] == skipId) continue;
+
+			const char = await this.loadChar(chars[i]);
+			if (char?.isAlive()) {
+				res.push(char);
+			}
+
+		}
+
+		return res;
+
+	}
+
+	/**
 	 * Get all targets at location that are affected by an action.
 	 * @param char 
 	 * @param flags 

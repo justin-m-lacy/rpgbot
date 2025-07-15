@@ -10,13 +10,17 @@ export const Scout = {
 
 		const r = char.statRoll(...this.stats)
 
-		if (r < 5) return char.log('You are lost.');
+		if (r < 5) {
+			char.log('You are lost.');
+			return false;
+		}
 
 		const err = Math.floor(400 / r);
 		const x = Math.round(char.at.x + err * (Math.random() - 0.5));
 		const y = Math.round(char.at.y + err * (Math.random() - 0.5));
 
-		return char.log(`You think you are near (${x},${y}).`);
+		char.log(`You think you are near (${x},${y}).`);
+		return true;
 
 	}
 

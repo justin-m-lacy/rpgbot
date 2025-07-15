@@ -15,16 +15,22 @@ export const Cook = {
 	id: 'cook',
 	name: 'cooking',
 	stats: [],
-	exec(_: Game, char: Char, what: string | number | Item) {
+	exec(_: Game, char: Char, what: string | number | Item): boolean {
 
 		let item = what instanceof Item ? what : char.inv.get(what);
-		if (!item) return 'Item not found.';
+		if (!item) {
+			char.log('Item not found.');
+			return false;
+		}
 
-		if (item.type === ItemType.Food) return item.name + ' is already food.';
+		if (item.type === ItemType.Food) {
+			char.log(item.name + ' is already food.');
+			return false;
+		}
 
-		char.addHistory('cook');
 		CookItem(item);
-		return `${char.name} cooks '${item.name}'`;
+		char.log(`${char.name} cooks '${item.name}'`);
+		return true;
 
 	}
 
@@ -36,8 +42,6 @@ export const TryEat = (char: Char, it: Item) => {
 		char.log(it.name + ' isn\'t food!');
 		return false;
 	}
-
-	char.addHistory('eat');
 
 	let resp = FoodInfo.response[Math.floor(
 		FoodInfo.response.length * Math.random())

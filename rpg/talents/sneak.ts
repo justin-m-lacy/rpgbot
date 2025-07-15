@@ -8,7 +8,7 @@ export const Sneak = {
 	id: 'sneak',
 	name: 'sneak',
 	stats: ['dex', 'cha'],
-	async exec(game: Game, char: Char) {
+	async exec(game: Game, char: Char): Promise<boolean> {
 
 		const loc = await game.world.fetchLoc(char.at);
 
@@ -34,13 +34,15 @@ export const Sneak = {
 				}
 			}
 			if (spotter) {
-				return game.send(char, `${char.name} was spotted by ${spotter.name}.`);
+				await game.send(char, `${char.name} was spotted by ${spotter.name}.`);
+				return false;
 			}
 
 		}
 
 		char.flags.set(StatusFlag.hidden);
 		char.log(`${char.name} is moving steathily.`);
+		return true;
 
 
 	}

@@ -162,16 +162,16 @@ export class Combat {
 		 *
 		 * @param wot - optional item to try to take.
 		 */
-	async trySteal(char: Char, who: TActor | Party, wot?: ItemPicker | null) {
+	async trySteal(char: Char, who: TActor | Party, wot?: ItemPicker | null): Promise<boolean> {
 
 		const targ = who instanceof Party ? await who.randChar() : who;
-		if (!targ) return;
+		if (!targ) return false;
 
 		/// Mobs always have to be at same location to be targetted.
 		if (!(char.at.equals(targ.at))) {
 
 			char.log(`You not see ${targ.name} at your location.`);
-			return;
+			return false;
 
 		}
 
@@ -185,16 +185,17 @@ export class Combat {
 		if (delta > 15) {
 
 			this.doSteal(char, targ, wot, delta);
+			return true;
 
 		} else if (delta < 5 && targ.isAlive()) {
 
-			this.game.send(char, `${targ.name} catches ${char.name} attempting to steal.\n`);
+			await this.game.send(char, `${targ.name} catches ${char.name} attempting to steal.\n`);
 			await this.tryAttack(targ, targ.getAttack(), char);
-
 
 		} else {
 			char.log(`You failed to steal from ${targ.name}`);
 		}
+		return false;
 
 	}
 
@@ -225,7 +226,7 @@ export class Combat {
 			src.log(`${src.name} stole ${it.name} from ${targ.name}. (${ind})`);
 
 			if (src instanceof Char) {
-				src.addHistory('stolen');
+				src.addHistory('stole');
 				src.addExp(2 * +targ.level);
 			}
 

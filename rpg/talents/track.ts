@@ -6,7 +6,7 @@ export const Track = {
 	id: 'track',
 	name: 'track',
 	stats: ['cha', 'wis'],
-	exec(game: Game, char: Char, targ: Char) {
+	exec(game: Game, char: Char, targ: Char): boolean {
 
 		let r = char.statRoll(...this.stats);
 		if (char.hasTalent('track')) r *= 2;
@@ -16,9 +16,18 @@ export const Track = {
 		const dest = targ.at;
 		const d = src.dist(dest);
 
-		if (d === 0) return char.log(`${targ.name} is here.`);
-		else if (d <= 2) return char.log(`You believe ${targ.name} is nearby.`);
-		else if (d > r) return char.log(`You find no sign of ${targ.name}`);
+		if (d === 0) {
+			char.log(`${targ.name} is here.`);
+			return false;
+		}
+		else if (d <= 2) {
+			char.log(`You believe ${targ.name} is nearby.`);
+			return true;
+		}
+		else if (d > r) {
+			char.log(`You find no sign of ${targ.name}`);
+			return false;
+		}
 
 		const a = Math.atan2(dest.y - src.y, dest.x - src.x) * 180 / Math.PI;
 		const abs = Math.abs(a);
@@ -38,7 +47,8 @@ export const Track = {
 		else if (d < 300) dist = 'unbelievably far';
 		else dist = 'imponderably far';
 
-		return char.log(`You believe ${targ.name} is ${dist ? dist + ' ' : ''}to the ${dir}.`);
+		char.log(`You believe ${targ.name} is ${dist ? dist + ' ' : ''}to the ${dir}.`);
+		return true;
 
 	}
 

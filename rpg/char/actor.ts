@@ -12,7 +12,6 @@ import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
 import { Item, TStacker } from '../items/item';
 import { Dot, ProtoDot } from '../magic/dots';
-import { roll } from '../values/dice';
 import { Coord } from '../world/coord';
 import { Race, type GClass } from './race';
 import { StatBlock, type StatMod } from './stats';
@@ -216,7 +215,7 @@ export class Actor {
 
 
 	statRoll(...stats: string[]) {
-		let v = roll(1, 5 * (this.stats.level.value + 4));
+		let v = 1 + 4 * Math.random() * (this.stats.level.value);
 		for (let s of stats) {
 			v += this.stats.getModifier(s);
 		}

@@ -10,13 +10,13 @@ export const Scribe = {
 	name: 'scribe',
 	trained: true,
 	stats: ['int'],
-	exec(game: Game, char: Char, spell: Spell) {
+	exec(game: Game, char: Char, spell: Spell): boolean {
 
 		if (spell.cost) {
 			const missing = MissingProp(char, spell.cost);
 			if (missing) {
 				char.log(`Not enough ${missing} to scribe ${spell.name}`);
-				return;
+				return false;
 			} else {
 				AddValues(char, spell.cost);
 			}
@@ -24,11 +24,11 @@ export const Scribe = {
 		}
 
 		if (spell.level) char.addExp(2 * spell.level.valueOf());
-		char.addHistory('scribe');
 		const scroll = new Scroll(undefined, spell);
 		const ind = char.addItem(scroll);
 
-		return char.log(`${char.name} scribes ${scroll.name}. (${ind})`);
+		char.log(`${char.name} scribes ${scroll.name}. (${ind})`);
+		return true;
 
 	}
 

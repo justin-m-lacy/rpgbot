@@ -4,14 +4,13 @@ import { smallNum } from 'rpg/util/format';
 import { TCoord } from 'rpg/world/coord';
 import { DirString, toDirection } from 'rpg/world/loc';
 import { DirVal } from '../world/loc';
-import { World } from '../world/world';
 
 
 export const Hike = {
 
 	id: 'hike',
 	stats: ['dex', 'wis'],
-	async exec(game: Game, char: Char, dir: DirVal): Promise<any> {
+	async exec(game: Game, char: Char, dir: DirVal): Promise<boolean> {
 		const d = char.at.abs();
 
 		let r = char.statRoll(...this.stats);
@@ -23,49 +22,53 @@ export const Hike = {
 
 		if (r < 0) {
 			char.hp.add(-Math.floor(Math.random() * d));
-			return char.output(`${char.name} was hurt trying to hike. hp: (${smallNum(char.hp)}/${Math.ceil(char.hp.max.valueOf())})`);
+			char.log(`${char.name} was injured trying to hike. hp: (${smallNum(char.hp)}/${smallNum(char.hp.max)})`);
+			return false;
 		}
-		else if (r < 10) return char.output('You failed to find your way.');
+		else if (r < 10) {
+			char.log('You failed to find your way.');
+			return false;
+		}
 
-		const loc = await HikeFn(game.world, char, toDirection(dir));
-		if (!loc) return char.output('You failed to find your way.');
+		const to = nextCoord(char.at, toDirection(dir));
+		if (!to) {
+			char.log('Invalid direction.');
+			return false;
+		}
+
+		const loc = await game.world.move(char, await game.world.getOrGen(char.at, char), to);
+		if (!loc) {
+			char.log('You failed to find your way.');
+			return false;
+		}
 
 		if (p && p.leader === char.name) {
 			await p.move(game.world, loc);
-
 		}
 
-		return char.output(`${char.name}: ${loc.look(char)}`);
+		char.log(loc.look(char));
+		return true;
 	}
-
 
 }
 
-export const HikeFn = async (world: World, char: Char, dir: DirString) => {
-
-	let nxt: TCoord;
+const nextCoord = (at: TCoord, dir: DirString) => {
 
 	switch (dir) {
 		case 'n':
 		case 'north':
-			nxt = { x: char.at.x, y: char.at.y + 1 };
-			break;
+			return { x: at.x, y: at.y + 1 };
 		case 's':
 		case 'south':
-			nxt = { x: char.at.x, y: char.at.y - 1 };
-			break;
+			return { x: at.x, y: at.y - 1 };
 		case 'e':
 		case 'east':
-			nxt = { x: char.at.x + 1, y: char.at.y };
-			break;
+			return { x: at.x + 1, y: at.y };
 		case 'w':
 		case 'west':
-			nxt = { x: char.at.x - 1, y: char.at.y };
-			break;
+			return { x: at.x - 1, y: at.y };
 		default:
-			return;
+			return null;
 	}
-
-	return await world.move(char, await world.getOrGen(char.at, char), nxt);
 
 }

@@ -47,7 +47,7 @@ export const Blockers: Partial<{ [P in CharState]: Record<string, number> }> = {
 	}
 };
 
-type TalentParams<A extends TalentAction> = A['talent']['exec'] extends ((game: Game, char: Char, ...args: infer P) => any) ? P : never;
+type TalentParams<A extends TalentAction> = A['talent']['exec'] extends ((game: Game, char: Char, ...args: infer P) => boolean | Promise<boolean>) ? P : never;
 
 type FuncParams<A extends FuncAction> = A['exec'] extends (char: Char, ...args: infer P) => any ? P : never;
 

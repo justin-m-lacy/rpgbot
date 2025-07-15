@@ -9,8 +9,7 @@ export const Steal = {
 	stats: ['dex', 'cha'],
 	async exec(game: Game, src: Char, dest: Char, wot?: ItemPicker | null) {
 
-		await game.combat.trySteal(src, dest, wot);
-		return src.output();
+		return await game.combat.trySteal(src, dest, wot);
 
 	}
 
