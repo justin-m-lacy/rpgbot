@@ -142,7 +142,7 @@ export const GameActions = {
 	},
 	track: {
 		tick: true,
-		exec: Track,
+		talent: Track,
 		rest: 0,
 	},
 	unequip: {

@@ -35,6 +35,7 @@ export const Blockers: Partial<{ [P in CharState]: Record<string, number> }> = {
 		cook: 1,
 		craft: 1,
 		give: 1,
+		heal: 1,
 		hike: 1,
 		map: 1,
 		quaff: 1,
