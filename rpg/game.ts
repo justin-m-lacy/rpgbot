@@ -6,7 +6,6 @@ import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
 import { ChannelStore } from 'rpg/channel-store';
 import { Actor } from 'rpg/char/actor';
-import { StatusFlag } from 'rpg/char/states';
 import { Combat } from 'rpg/combat/combat';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
@@ -15,12 +14,9 @@ import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
-import { Scroll } from 'rpg/items/scroll';
-import { ItemType } from 'rpg/items/types';
 import { HumanSlot, toSlot } from 'rpg/items/wearable';
 import { Spell } from 'rpg/magic/spell';
-import { GenPotion } from 'rpg/parsers/potions';
-import { CookItem, TryEat } from 'rpg/talents/cooking';
+import { TryEat } from 'rpg/talents/cook';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';
 import { AddValues, MissingProp } from 'rpg/values/apply';
@@ -346,25 +342,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	brew(this: Game<A, K>, char: Char, itemName: string, imgURL?: string) {
 
-		if (!char.hasTalent('brew')) return `${char.name} does not know how to brew potions.`;
-
-		const pot = GenPotion(itemName);
-		if (!pot) return `${char.name} does not know how to brew ${itemName}.`;
-
-		const s = char.statRoll('wis');
-		if (s < 10 * pot.level) {
-			return char.output(`${char.name} failed to brew ${itemName}.`);
-		}
-
-		if (pot.level) char.addExp(2 * pot.level);
-		char.addHistory('brew');
-		const ind = char.addItem(pot);
-
-		return char.output(`${char.name} brewed ${itemName}. (${ind})`);
-
-	}
 
 	async onCharHit(char: TActor, attacker: TActor | string, info: AttackInfo) {
 
@@ -563,19 +541,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	cook(this: Game<A, K>, char: Char, what: string | number | Item) {
-
-		let item = what instanceof Item ? what : char.inv.get(what);
-		if (!item) return 'Item not found.';
-
-		if (item.type === ItemType.Food) return item.name + ' is already food.';
-
-		char.addHistory('cook');
-		CookItem(item);
-		return `${char.name} cooks '${item.name}'`;
-
-	}
-
 	craft(this: Game<A, K>, char: Char, itemName: string, desc?: string, imgURL?: string) {
 
 		const ind = Craft(char, itemName, desc, imgURL);
@@ -632,44 +597,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		}
 
 		return to;
-
-	}
-
-	async hide(this: Game<A, K>, char: Char) {
-
-		const loc = await this.world.fetchLoc(char.at);
-
-		if (loc) {
-
-			let spotter: TActor | null = null;
-			for (let i = loc.npcs.length - 1; i >= 0; i--) {
-				// -10 for hiding in view.
-				if (this.combat.spotTest(char, loc.npcs[i], -10)) {
-					spotter = loc.npcs[i];
-					break;
-				}
-			}
-			if (!spotter) {
-				for (let i = loc.chars.length - 1; i >= 0; i--) {
-
-					const other = this.getChar(loc.chars[i])
-					if (other && this.combat.spotTest(char, other), -10) {
-						spotter = other ?? null;
-						break;
-					}
-
-				}
-			}
-			if (spotter) {
-				this.send(char, `${char.name} was spotted by ${spotter.name}.`);
-				return;
-			}
-
-		}
-
-		char.flags.set(StatusFlag.hidden);
-		char.log(`${char.name} is moving steathily.`);
-
 
 	}
 
@@ -914,30 +841,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		return char.output(await this.world.take(char, first, end));
 	}
 
-	async revive(this: Game<A, K>, char: Char, targ: Char) {
 
-		if (targ.isAlive()) {
-			char.log(`${targ.name} is not dead.`);
-		}
-
-		const p = this.getParty(char);
-		if (!p || !p.includes(targ)) {
-			char.log(`${targ.name} is not in your party.`);
-		}
-
-		let roll = char.statRoll('wis') + (2 * targ.hp.value) - 5 * +targ.level;
-		if (!char.hasTalent('revive')) roll -= 20;
-		if (roll < 10) {
-			char.log(`You failed to revive ${targ.name}.`);
-			return;
-		}
-
-		char.addHistory('revived');
-
-		targ.revive();
-		char.log(`You have revived ${targ.name}.`);
-
-	}
 
 	async rest(this: Game<A, K>, char: Char) {
 
@@ -945,89 +849,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		if (!p || !p.isLeader(char)) {
 			return char.output(`${char.name} rested. hp: ${smallNum(char.hp)}/${smallNum(char.hp.max)}`);
 		}
-
-	}
-
-	scout(this: Game<A, K>, char: Char) {
-
-		const r = char.statRoll('int');
-
-		if (r < 5) return char.output('You are lost.');
-
-		const err = Math.floor(400 / r);
-		const x = Math.round(char.at.x + err * (Math.random() - 0.5));
-		const y = Math.round(char.at.y + err * (Math.random() - 0.5));
-
-		return char.output(`You believe you are near (${x},${y}).`);
-
-	}
-
-	scribe(this: Game<A, K>, char: Char, spell: Spell) {
-
-		if (!char.hasTalent('scribe')) {
-			char.log(`${char.name} does not know how to scribe scrolls.`);
-		}
-
-		if (spell.cost) {
-			const missing = MissingProp(char, spell.cost);
-			if (missing) {
-				char.log(`Not enough ${missing} to scribe ${spell.name}`);
-				return;
-			} else {
-				AddValues(char, spell.cost);
-			}
-
-		}
-
-		if (spell.level) char.addExp(2 * spell.level.valueOf());
-		char.addHistory('scribe');
-		const scroll = new Scroll(undefined, spell);
-		const ind = char.addItem(scroll);
-
-		return char.log(`${char.name} scribes ${scroll.name}. (${ind})`);
-
-	}
-
-	track(this: Game<A, K>, char: Char, targ: Char) {
-
-		let r = (char.statRoll('int')); // - (targ.statRoll('wis')
-		if (char.hasTalent('track')) r *= 2;
-		else r -= 10;
-
-		const src = char.at;
-		const dest = targ.at;
-		const d = src.dist(dest);
-
-		if (d === 0) return char.output(`${targ.name} is here.`);
-		else if (d <= 2) return char.output(`You believe ${targ.name} is nearby.`);
-		else if (d > r) return char.output(`You find no sign of ${targ.name}`);
-
-		const a = Math.atan2(dest.y - src.y, dest.x - src.x) * 180 / Math.PI;
-		const abs = Math.abs(a);
-
-		let dir;
-		if (abs < (90 - 45 / 2)) dir = 'east';
-		else if (abs > (180 - (45 / 2))) dir = 'west';
-
-		if (a > 0 && Math.abs(90 - a) < (3 * 45) / 2) dir = dir ? 'north ' + dir : 'north';
-		else if (a < 0 && Math.abs(-90 - a) < (3 * 45) / 2) dir = dir ? 'south ' + dir : 'south';
-
-		let dist;
-		if (d < 20) dist = '';
-		else if (d < 50) dist = 'somewhere';
-		else if (d < 125) dist = 'far';
-		else if (d < 225) dist = 'incredibly far';
-		else if (d < 300) dist = 'unbelievably far';
-		else dist = 'imponderably far';
-
-		return char.output(`You believe ${targ.name} is ${dist ? dist + ' ' : ''}to the ${dir}.`);
-
-	}
-
-	async steal(this: Game<A, K>, src: Char, dest: Char, wot?: ItemPicker | null) {
-
-		await this.combat.trySteal(src, dest, wot);
-		return src.output();
 
 	}
 

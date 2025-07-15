@@ -1,11 +1,33 @@
 import { randElm } from '@/utils/jsutils';
 import FoodInfo from 'data/cooking.json';
 import type { Char } from 'rpg/char/char';
+import { type Game } from 'rpg/game';
 import { Item } from 'rpg/items/item';
 import { ItemType } from 'rpg/items/types';
 
-export const GetAdjective = () => {
+const GetAdjective = () => {
 	return randElm(FoodInfo.adjectives);
+}
+
+
+export const Cook = {
+
+	id: 'cook',
+	name: 'cooking',
+	stats: [],
+	exec(_: Game, char: Char, what: string | number | Item) {
+
+		let item = what instanceof Item ? what : char.inv.get(what);
+		if (!item) return 'Item not found.';
+
+		if (item.type === ItemType.Food) return item.name + ' is already food.';
+
+		char.addHistory('cook');
+		CookItem(item);
+		return `${char.name} cooks '${item.name}'`;
+
+	}
+
 }
 
 export const TryEat = (char: Char, it: Item) => {
@@ -33,7 +55,7 @@ export const TryEat = (char: Char, it: Item) => {
 
 }
 
-export const CookItem = (it: Item) => {
+const CookItem = (it: Item) => {
 
 	const cooking = require('data/cooking.json');
 	const adjs = cooking.adjectives;

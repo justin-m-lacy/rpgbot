@@ -1,6 +1,3 @@
-// talents so far..
-/// brew,hike,revive,track,scribe,sneak,steal,scout
-
 import { Char } from "rpg/char/char";
 import { Game } from "rpg/game";
 
@@ -9,11 +6,11 @@ type ExecFunc = (game: Game, char: Char, ...params: any[]) => Promise<any>;
 
 export interface Talent {
 	id: string,
+	stats: string[],
+	exec: Function,
 	name?: string,
 	desc?: string,
 	trained?: boolean,
-	stats: string[],
-	exec: Function
 }
 
 

@@ -1,5 +1,12 @@
 import { Game } from "rpg/game";
+import { Brew } from "rpg/talents/brew";
+import { Cook } from "rpg/talents/cook";
 import { Hike } from "rpg/talents/hike";
+import { Revive } from "rpg/talents/revive";
+import { Scout } from "rpg/talents/scout";
+import { Sneak } from "rpg/talents/sneak";
+import { Steal } from "rpg/talents/steal";
+import { Track } from "rpg/talents/track";
 
 /// TODO: make these dynamically added to game act list.
 export const GameActions = {
@@ -13,7 +20,7 @@ export const GameActions = {
 	},
 	brew: {
 		tick: true,
-		exec: Game.prototype.brew,
+		talent: Brew,
 		rest: 0.8,
 	},
 	buy: {
@@ -29,7 +36,7 @@ export const GameActions = {
 	},
 	cook: {
 		tick: true,
-		exec: Game.prototype.cook,
+		talent: Cook,
 		rest: 0.9,
 	},
 	craft: {
@@ -69,7 +76,7 @@ export const GameActions = {
 	},
 	hide: {
 		tick: true,
-		exec: Game.prototype.hide,
+		talent: Sneak,
 		rest: 0.1
 	},
 	home: {
@@ -104,12 +111,12 @@ export const GameActions = {
 	},
 	revive: {
 		tick: true,
-		exec: Game.prototype.revive,
+		talent: Revive,
 		rest: 1,
 	},
 	scout: {
 		tick: true,
-		exec: Game.prototype.scout,
+		talent: Scout,
 		rest: 0
 	},
 	sell: {
@@ -119,7 +126,7 @@ export const GameActions = {
 	},
 	steal: {
 		tick: true,
-		exec: Game.prototype.steal,
+		talent: Steal,
 		rest: 0.2
 	},
 	take: {
@@ -129,7 +136,7 @@ export const GameActions = {
 	},
 	track: {
 		tick: true,
-		exec: Game.prototype.track,
+		exec: Track,
 		rest: 0,
 	},
 	unequip: {
