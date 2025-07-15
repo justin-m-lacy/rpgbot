@@ -1,6 +1,7 @@
 import { Game } from "rpg/game";
 import { Brew } from "rpg/talents/brew";
 import { Cook } from "rpg/talents/cook";
+import { Heal } from "rpg/talents/heal";
 import { Hike } from "rpg/talents/hike";
 import { Revive } from "rpg/talents/revive";
 import { Scout } from "rpg/talents/scout";
@@ -68,6 +69,11 @@ export const GameActions = {
 		tick: true,
 		exec: Game.prototype.give,
 		rest: 0.5,
+	},
+	heal: {
+		tick: true,
+		talent: Heal,
+		rest: 0.1,
 	},
 	hike: {
 		tick: true,

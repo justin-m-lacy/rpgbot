@@ -256,7 +256,11 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			if (talent.trained && !char.hasTalent(talent.id)) {
 				char.log(`${char.name} does not know how to ${talent.name}`);
 			} else {
-				return await talent.exec(this, char, ...args);
+
+				if (await talent.exec(this, char, ...args)) {
+					char.addHistory(talent.id);
+				}
+
 			}
 
 		}
