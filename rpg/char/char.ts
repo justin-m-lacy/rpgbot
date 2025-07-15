@@ -111,6 +111,8 @@ export class Char extends Actor {
 
 		if (stat in this.stats) {
 			this.stats[stat as StatKey].add(1);
+		} else {
+			this.log(`Stat not found.`);
 		}
 
 		this._spentPoints++;

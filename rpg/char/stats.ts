@@ -67,12 +67,12 @@ export class StatBlock {
 
 	readonly hp = new Maxable('hp');
 	readonly mp = new Maxable('mp');
-	readonly str = new Maxable('str');
-	readonly con = new Maxable('con');
-	readonly dex = new Maxable('dex');
-	readonly int = new Maxable('int');
-	readonly wis = new Maxable('wis');
-	readonly cha = new Maxable('cha');
+	readonly str = new Simple('str');
+	readonly con = new Simple('con');
+	readonly dex = new Simple('dex');
+	readonly int = new Simple('int');
+	readonly wis = new Simple('wis');
+	readonly cha = new Simple('cha');
 
 	readonly level: Simple = new Simple('level');
 
