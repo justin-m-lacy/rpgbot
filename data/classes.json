@@ -1,26 +1,20 @@
 [
 	{
-		"id": "wizard",
-		"hitdie": 6,
-		"desc": "",
-		"talents": [
-			"scribe"
-		],
-		"create": {
-			"gold": "2d4",
-			"age": "3d25"
-		},
-		"exp": 1.5
-	},
-	{
 		"id": "sorcerer",
 		"hitdie": 6,
-		"desc": "Sorcerers and wizards both use magic, but while Wizards study for endless years, poring over ancient tomes, sorcerers cram the night before, and squeeze through with a passing grade. They use magic intuitively, without understanding much of the theoretical implications, allowing them to cast their spells must more easily, but limiting the range of what they can learn.",
+		"desc": "Sorcerers and wizards both use magic, but while Wizards study for endless years for their mastery, sorcerers are natural adepts of magic. They use magic intuitively, without understanding much of the theoretical implications, allowing them to cast their spells must more easily, but limiting the range of what they can learn.",
 		"create": {
 			"gold": "3d4"
 		},
+		"spells": [
+			"arcane",
+			"demon"
+		],
+		"talents": [
+			"scribe"
+		],
 		"mod": {
-			"maxMp": 4
+			"mp": "20%"
 		},
 		"exp": 1.2
 	},
@@ -30,7 +24,12 @@
 		"desc": "",
 		"talents": [
 			"brew",
-			"cook"
+			"cook",
+			"heal"
+		],
+		"spells": [
+			"wild",
+			"demon"
 		],
 		"items": [
 			"witch_tome_1"
@@ -44,7 +43,8 @@
 		"hitdie": 10,
 		"desc": "",
 		"talents": [
-			"cook"
+			"cook",
+			"scout"
 		],
 		"create": {
 			"gold": "2d4"
@@ -58,8 +58,9 @@
 			"track",
 			"scout",
 			"hike",
-			"cook",
-			"map"
+			"heal",
+			"revive",
+			"cook"
 		],
 		"create": {
 			"gold": "2d3"
@@ -68,13 +69,14 @@
 	},
 	{
 		"id": "rogue",
-		"hitdie": 6,
+		"hitdie": 7,
 		"talents": [
+			"brew",
 			"track",
 			"scout",
-			"map",
 			"steal",
-			"appraise"
+			"hide",
+			"barter"
 		],
 		"desc": "Rogues run around dungeons stealing things. Other classes do the same thing, but it's not called stealing for some reason. Maybe it's the lockpicking involved.",
 		"create": {
@@ -89,7 +91,11 @@
 			"brew",
 			"track",
 			"hike",
+			"heal",
 			"revive"
+		],
+		"spells": [
+			"wild"
 		],
 		"create": {
 			"gold": "1d4"
@@ -100,7 +106,11 @@
 		"hitdie": 8,
 		"desc": "",
 		"talents": [
-			"revive"
+			"revive",
+			"hike"
+		],
+		"spells": [
+			"holy"
 		],
 		"create": {
 			"gold": "2d4"
@@ -126,7 +136,12 @@
 		"hitdie": 6,
 		"desc": "Priests channel divine powers to heal the sick and destroy evil.",
 		"talents": [
-			"revive"
+			"scribe",
+			"revive",
+			"heal"
+		],
+		"spells": [
+			"holy"
 		],
 		"create": {
 			"gold": "1d4+1"
@@ -134,12 +149,16 @@
 	},
 	{
 		"id": "bard",
-		"hitdie": 6,
+		"hitdie": 7,
 		"desc": "",
 		"talents": [
+			"scribe",
 			"cook",
-			"map",
-			"steal"
+			"steal",
+			"hide"
+		],
+		"spells": [
+			"arcane"
 		],
 		"create": {
 			"gold": "3d3"
@@ -150,11 +169,27 @@
 		"hitdie": 8,
 		"talents": [
 			"hike",
-			"cook"
+			"cook",
+			"heal",
+			"hide"
 		],
 		"desc": "Hands. Feet. Fist. Face. Anything can be a weapon to the mighty monk. After a youth of training in a secluded monastery, or under a demanding master, a monk needs no other weapon than their own fists in order to be a formidable opponent. Strict vows of poverty and celibacy leaves a monk intimately acquainted with the powers lying latent in his own hands.",
 		"create": {
 			"gold": "1d4"
 		}
+	},
+	{
+		"id": "wizard",
+		"hitdie": 6,
+		"desc": "",
+		"talents": [
+			"scribe",
+			"brew"
+		],
+		"create": {
+			"gold": "2d4",
+			"age": "3d25"
+		},
+		"exp": 1.5
 	}
 ]

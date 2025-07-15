@@ -3,10 +3,28 @@
 		"id": "witch_tome_1",
 		"name": "Practical Witchcraft",
 		"desc": "A small, crumpled grimoire.",
-		"kind": "pagan",
+		"kind": "wild",
 		"spells": [
-			"barkskin_1",
-			"venom_1"
+			"barkskin1",
+			"venom1",
+			"flyswarm",
+			"whirlstep1",
+			"resistpoison1",
+			"antidote1"
+		]
+	},
+	{
+		"id": "wiz_tome_1",
+		"name": "Cantrips",
+		"desc": "A verbose manual of magic.",
+		"kind": "arcane",
+		"spells": [
+			"mana1",
+			"marmor",
+			"mmissile",
+			"phase",
+			"resistfire1",
+			"firebolt1"
 		]
 	}
 ]

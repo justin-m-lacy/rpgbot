@@ -1,16 +1,5 @@
 [
     {
-        "id": "clarity",
-        "level": 7,
-        "school": "enchant",
-        "desc": "Cure yourself or an ally of a charm.",
-        "target": "any",
-        "cost": {
-            "mp": 10
-        },
-        "cure": "charmed"
-    },
-    {
         "id": "darkbolt",
         "name": "dark bolt",
         "level": 2,
@@ -43,32 +32,20 @@
         }
     },
     {
-        "id": "deathbolt",
-        "name": "death bolt",
-        "level": 7,
-        "require": "darkbolt",
+        "id": "gloom",
+        "level": 2,
         "school": "shadow",
+        "desc": "Decrease the target's resistance to shadow magic.",
         "cost": {
-            "mp": 5
+            "mp": 2
         },
-        "kind": "drain",
-        "at": {
-            "25": {
-                "attack.dmg.max": 4
-            },
-            "75": {
-                "attack.dmg.min": 5
-            },
-            "300": {
-                "attack.dmg.max": 4,
-                "attack.dmg.min": 4,
-                "attack.tohit": 4
-            }
-        },
-        "dmg": "15~20",
+        "target": "enemies",
         "dot": {
-            "duration": 30,
-            "dmg": 3
+            "kind": "shadow",
+            "duration": 100,
+            "mod": {
+                "resist.shadow": -10
+            }
         }
     },
     {
@@ -99,27 +76,21 @@
         }
     },
     {
-        "id": "gloom",
-        "level": 2,
-        "school": "shadow",
-        "desc": "Decrease the target's resistance to shadow magic.",
+        "id": "clarity",
+        "level": 7,
+        "school": "enchant",
+        "desc": "Cure yourself or an ally of a charm.",
+        "target": "any",
         "cost": {
-            "mp": 2
+            "mp": 10
         },
-        "target": "enemies",
-        "dot": {
-            "kind": "shadow",
-            "duration": 100,
-            "mod": {
-                "resist.shadow": -10
-            }
-        }
+        "cure": "charmed"
     },
     {
         "id": "poisonnettle",
         "name": "Poison Nettle",
         "level": 1,
-        "school": "pagan",
+        "school": "wild",
         "cost": {
             "mp": 1
         },
@@ -127,6 +98,54 @@
             "kind": "poison",
             "duration": 10,
             "dmg": "0.5~1"
+        }
+    },
+    {
+        "id": "flyswarm",
+        "name": "Swarm of flies",
+        "level": 1,
+        "school": "wild",
+        "target": "enemies",
+        "desc": "A swarm of flies decreases the ability of enemies to fight.",
+        "cost": {
+            "mp": 1
+        },
+        "dot": {
+            "kind": "poison",
+            "duration": 10,
+            "mod": {
+                "tohit": -1,
+                "dodge": -1
+            }
+        }
+    },
+    {
+        "id": "deathbolt",
+        "name": "death bolt",
+        "level": 7,
+        "require": "darkbolt",
+        "school": "shadow",
+        "cost": {
+            "mp": 5
+        },
+        "kind": "drain",
+        "at": {
+            "25": {
+                "attack.dmg.max": 4
+            },
+            "75": {
+                "attack.dmg.min": 5
+            },
+            "300": {
+                "attack.dmg.max": 4,
+                "attack.dmg.min": 4,
+                "attack.tohit": 4
+            }
+        },
+        "dmg": "15~20",
+        "dot": {
+            "duration": 30,
+            "dmg": 3
         }
     },
     {
@@ -374,17 +393,17 @@
         }
     },
     {
-        "id": "firebolt_1",
+        "id": "firebolt1",
         "name": "Fire Bolt I",
         "target": "any",
         "dmg": "1d6",
-        "level": 1,
+        "level": 2,
         "cost": {
-            "mp": 1
+            "mp": 2
         }
     },
     {
-        "id": "frostbolt 1",
+        "id": "frostbolt1",
         "name": "Frost Bolt I",
         "target": "any",
         "dmg": "1d5",
@@ -394,17 +413,7 @@
         }
     },
     {
-        "id": "firebolt_1",
-        "name": "Fire bolt I",
-        "target": "any",
-        "dmg": "1d6",
-        "level": 1,
-        "cost": {
-            "mp": 1
-        }
-    },
-    {
-        "id": "resistfire_1",
+        "id": "resistfire1",
         "name": "Dampen",
         "target": "any",
         "desc": "Provides a small resistence to fire.",
@@ -420,7 +429,7 @@
         }
     },
     {
-        "id": "venom_1",
+        "id": "venom1",
         "name": "Venom I",
         "desc": "Poisons an enemy.",
         "level": 1,
@@ -434,7 +443,7 @@
         }
     },
     {
-        "id": "barkskin_1",
+        "id": "barkskin1",
         "name": "Barkskin I",
         "desc": "Turns your skin to wood.",
         "target": "self",
@@ -443,21 +452,22 @@
             "mp": 3
         },
         "dot": {
-            "duration": 30,
-            "dmg": "1~3",
-            "kind": "venom"
+            "duration": 100,
+            "mod": {
+                "armor": 1
+            }
         }
     },
     {
-        "id": "resistpoison_1",
+        "id": "resistpoison1",
         "name": "Dampen",
         "target": "any",
         "desc": "Provides a small resistence to poisons.",
         "dot": {
             "mod": {
-                "resist.fire": 5
+                "resist.poison": 10
             },
-            "duration": 50
+            "duration": 200
         },
         "level": 1,
         "cost": {
@@ -465,16 +475,49 @@
         }
     },
     {
-        "id": "antidote_1",
+        "id": "resistpoison2",
+        "name": "Dampen",
+        "target": "any",
+        "desc": "Provides moderate resistence to poisons.",
+        "dot": {
+            "mod": {
+                "resist.poison": 20
+            },
+            "duration": 200
+        },
+        "level": 4,
+        "cost": {
+            "mp": 3
+        }
+    },
+    {
+        "id": "resistpoison3",
+        "name": "Dampen",
+        "target": "any",
+        "desc": "Provides strong resistence to poisons.",
+        "dot": {
+            "mod": {
+                "resist.poison": 60
+            },
+            "duration": 200
+        },
+        "level": 7,
+        "cost": {
+            "mp": 5
+        }
+    },
+    {
+        "id": "antidote1",
         "name": "Antidote",
         "desc": "Cures a subject of minor poisons.",
+        "level": 3,
         "cure": {
             "type": "poison",
             "levels": 5
         }
     },
     {
-        "id": "magebolt_1",
+        "id": "magebolt1",
         "name": "Mage Bolt I",
         "target": "any",
         "dmg": "3~8",
@@ -484,7 +527,7 @@
         }
     },
     {
-        "id": "fireball_1",
+        "id": "fireball1",
         "name": "Fireball I",
         "target": "enemies",
         "desc": "A large ball of fire damages all enemies",
@@ -495,7 +538,7 @@
         }
     },
     {
-        "id": "mage_armor",
+        "id": "marmor",
         "name": "Mage Armor",
         "target": "self",
         "dot": {
