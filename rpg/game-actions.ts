@@ -1,4 +1,5 @@
 import { Game } from "rpg/game";
+import { Hike } from "rpg/talents/hike";
 
 /// TODO: make these dynamically added to game act list.
 export const GameActions = {
@@ -63,7 +64,7 @@ export const GameActions = {
 	},
 	hike: {
 		tick: true,
-		exec: Game.prototype.hike,
+		talent: Hike,
 		rest: 0
 	},
 	hide: {

@@ -21,7 +21,6 @@ import { HumanSlot, toSlot } from 'rpg/items/wearable';
 import { Spell } from 'rpg/magic/spell';
 import { GenPotion } from 'rpg/parsers/potions';
 import { CookItem, TryEat } from 'rpg/talents/cooking';
-import { Hike } from 'rpg/talents/hike';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';
 import { AddValues, MissingProp } from 'rpg/values/apply';
@@ -36,13 +35,13 @@ import { Mob, TActor } from './monster/mobs';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
-import { DirVal, Loc, toDirection, ToDirStr } from './world/loc';
+import { DirVal, Loc, ToDirStr } from './world/loc';
 import { World } from "./world/world";
 
 const LOC_UPDATE_MS = 1000 * 20;
 
 export class Game<A extends Record<string, TGameAction> = Record<string, TGameAction>,
-	K extends string & keyof A = string & keyof A> {
+	K extends (string & keyof A) = string & keyof A> {
 
 	private readonly charCache: Cache<Char>;
 	readonly world: World
@@ -224,12 +223,12 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 * Execute char command.
 	 * @param act 
 	 * @param char 
-	 * @param params 
+	 * @param args 
 	 * @returns 
 	 */
-	async exec<T extends K>(
-		act: T, char: Char,
-		...params: ActParams<A[T]>) {
+	async exec<S extends K>(
+		act: S, char: Char,
+		...args: ActParams<A[S]>) {
 
 		char.clearLog();
 
@@ -251,10 +250,20 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 				} else char.rest(this.actions[act].rest);
 			}
 		}
+		if ('exec' in this.actions[act]) {
+			return await this.actions[act].exec.apply(
+				this, [char, ...args]
+			);
+		} else {
 
-		return await (this.actions[act].exec as Function).apply(
-			this, [char, ...params]
-		);
+			const talent = this.actions[act].talent;
+			if (talent.trained && !char.hasTalent(talent.id)) {
+				char.log(`${char.name} does not know how to ${talent.name}`);
+			} else {
+				return await talent.exec(this, char, ...args);
+			}
+
+		}
 
 	}
 
@@ -661,35 +670,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		char.flags.set(StatusFlag.hidden);
 		char.log(`${char.name} is moving steathily.`);
 
-
-	}
-
-	async hike(this: Game<A, K>, char: Char, dir: DirVal) {
-
-		const d = char.at.abs();
-
-		let r = char.statRoll('dex', 'wis');
-		const p = this.getParty(char);
-
-		r -= d / 10;
-		if (p && p.isLeader(char)) r -= 20;
-		if (!char.hasTalent('hike')) r -= 20;
-
-		if (r < 0) {
-			char.hp.add(-Math.floor(Math.random() * d));
-			return char.output(`${char.name} was hurt trying to hike. hp: (${smallNum(char.hp)}/${Math.ceil(char.hp.max.valueOf())})`);
-		}
-		else if (r < 10) return char.output('You failed to find your way.');
-
-		const loc = await Hike(this.world, char, toDirection(dir));
-		if (!loc) return char.output('You failed to find your way.');
-
-		if (p && p.leader === char.name) {
-			await p.move(this.world, loc);
-
-		}
-
-		return char.output(`${char.name}: ${loc.look(char)}`);
 
 	}
 

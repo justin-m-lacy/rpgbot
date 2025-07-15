@@ -124,6 +124,9 @@ export class DiscordBot {
 		process.on('exit', () => this.onShutdown());
 		process.on('SIGINT', () => this.onShutdown());
 
+		process.on('unhandledRejection', error => {
+			console.error('Unhandled error:', error);
+		});
 		setInterval(
 			() => {
 				this.cache.cleanup(60 * 1000 * 30);
@@ -174,6 +177,14 @@ export class DiscordBot {
 	}
 
 	initClient() {
+
+		this.client.ws.client.on('error', (err: Error) => {
+			console.log(`websocket client error:`, err);
+		})
+
+		this.client.on(Events.ShardError, error => {
+			console.error('Websocket connection error: ', error);
+		});
 
 		// NOTE: 'this' for events is always client.
 		this.client.on(Events.ClientReady, () => this.initContexts());

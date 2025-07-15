@@ -1,21 +1,24 @@
 import { type Char } from 'rpg/char/char';
 import { type CharState } from 'rpg/char/states';
+import { type Game } from 'rpg/game';
+import { Talent } from 'rpg/talents/talent';
 
-
-export type TGameAction = {
+type BaseAction = {
 
 	// whether the action advances the character dots/ticks.
 	tick: boolean;
-
-	exec: Function;
 
 	// whether action is copied by entire party.
 	party?: boolean;
 
 	// rest recovery factor.
 	rest?: number;
-
 }
+
+type FuncAction = BaseAction & { exec: Function }
+type TalentAction = BaseAction & { talent: Talent }
+
+export type TGameAction = TalentAction | FuncAction;
 
 /**
  * Actions blocked by each character state.
@@ -44,7 +47,10 @@ export const Blockers: Partial<{ [P in CharState]: Record<string, number> }> = {
 	}
 };
 
-export type ActionSet = Record<string, TGameAction>;
+type TalentParams<A extends TalentAction> = A['talent']['exec'] extends ((game: Game, char: Char, ...args: infer P) => any) ? P : never;
 
-export type ActParams<S extends TGameAction> =
-	S['exec'] extends (char: Char, ...args: infer P) => any ? P : never;
+type FuncParams<A extends FuncAction> = A['exec'] extends (char: Char, ...args: infer P) => any ? P : never;
+
+export type ActParams<A> =
+	A extends FuncAction ? FuncParams<A> :
+	(A extends TalentAction ? TalentParams<A> : never);

@@ -57,7 +57,7 @@ export class Combat {
 		if (!targ) return;
 
 		if (!targ?.isAlive()) {
-			(char instanceof Char ? char : targ).log(`${targ.name} is already dead.`);
+			if ((char instanceof Char)) char.log(`${targ.name} is already dead.`);
 			return;
 		}
 

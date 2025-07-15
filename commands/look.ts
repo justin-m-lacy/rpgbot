@@ -64,7 +64,7 @@ export const WorldLocActions = (loc: Loc) => {
 	}
 
 	if (rows.length == 0) {
-		console.log(`no button rows...`);
+		console.log(`no buttons`);
 	}
 	return rows;
 
