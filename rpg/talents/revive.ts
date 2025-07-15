@@ -6,7 +6,7 @@ export const Revive = {
 	id: 'revive',
 	name: 'revive',
 	stats: ['int', 'wis', 'cha'],
-	async revive(game: Game, char: Char, targ: Char): Promise<boolean> {
+	async exec(game: Game, char: Char, targ: Char): Promise<boolean> {
 
 		if (targ.isAlive()) {
 			char.log(`${targ.name} is not dead.`);

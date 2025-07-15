@@ -7,7 +7,7 @@ type ExecFunc = (game: Game, char: Char, ...params: any[]) => Promise<any>;
 export interface Talent {
 	id: string,
 	stats: string[],
-	exec: (game: Game, char: Char, ...params: unknown[]) => boolean | Promise<boolean>,
+	exec: (game: Game, char: Char, ...params: any[]) => boolean | Promise<boolean>,
 	name?: string,
 	desc?: string,
 	trained?: boolean,
