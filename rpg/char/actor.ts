@@ -133,10 +133,13 @@ export class Actor {
 
 	constructor(name: string, opts: {
 		game: Game,
-		race: Race, cls?: GClass
+		race: Race, cls?: GClass,
+		sex?: SexType
 	}) {
 
 		this.name = name;
+
+		this.sex = opts.sex ?? (Math.random() < 0.5 ? 'm' : 'f');
 
 		this.game = opts.game;
 

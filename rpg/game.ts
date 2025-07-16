@@ -839,7 +839,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		return this.world.useLoc(this, char, wot);
 	}
 
-
 	unequip(this: Game<A, K>, char: Char, slot?: string) {
 
 		if (!slot) {

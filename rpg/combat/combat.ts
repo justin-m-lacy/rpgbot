@@ -249,7 +249,7 @@ export class Combat {
 	}
 
 	/**
-	 * Run npc actions at a location.
+	 * Run npc actions at location.
 	 * @param loc 
 	 * @returns 
 	 */

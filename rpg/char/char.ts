@@ -4,6 +4,7 @@ import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { Weapon } from 'rpg/items/weapon';
 import { SpellList } from 'rpg/magic/spelllist';
+import { SexType } from 'rpg/social/gender';
 import { smallNum } from 'rpg/util/format';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import { Log } from '../display/log';
@@ -43,6 +44,7 @@ export class Char extends Actor {
 			cls: this.cls?.id,
 			home: this.home,
 			teams: this.teams,
+			sex: this.sex,
 		};
 		for (let i = SaveProps.length - 1; i >= 0; i--) {
 			json[SaveProps[i]] = this[SaveProps[i] as keyof Char];
@@ -68,7 +70,7 @@ export class Char extends Actor {
 	constructor(name: string,
 		opts: {
 			game: Game<Record<string, TGameAction>>,
-			race: Race, cls: GClass, owner: string
+			race: Race, cls: GClass, owner: string, sex?: SexType
 		}) {
 
 		super(name, opts);
