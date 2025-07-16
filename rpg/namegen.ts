@@ -94,18 +94,18 @@ const nameParts: { [race: string]: GenderNamer } = {
 	human: {
 
 		'm': {
-			roots: ['ad', 'ben', 'bra', 'deo', 'dor', 'ed', 'garn', 'fra', 'fre', 'han', 'hen', 'hu', 'im',
+			roots: ['ad', 'ben', 'bra', 'deo', 'dim', 'ced', 'ed', 'far', 'fra', 'fre', 'garn', 'han', 'hen', 'hu', 'im', 'ist',
 				'jas', 'jus', 'joh', 'ke', 'lan', 'lar', 'leo', 'luk', 'mat', 'mic', 'nat',
-				'nath', 'pet', 'phi', 'ron', 'sam', 'ti', 'vin', 'wil', 'wal', 'war'],
-			parts: ['ada', 'bern', 'char', 'dor', 'e', 'of', 'or', 'jor', 'li', 'mard', 'mir', 'ath', 'per', 'tal'],
-			ends: ['ad', 'an', 'ar', 'ard', 'd', 'do', 'el', 'ew', 'iam', 'ian', 'ick', 'id', 'in', 'ip', 'on', 'osh', 'ry']
+				'nath', 'olf', 'pet', 'phi', 'ron', 'quam', 'quer', 'sam', 'ti', 'vin', 'wil', 'wal', 'war'],
+			parts: ['a', 'ada', 'bern', 'char', 'dor', 'e', 'of', 'or', 'jor', 'li', 'mard', 'mir', 'ath', 'per', 'tal'],
+			ends: ['ad', 'an', 'ar', 'ard', 'd', 'do', 'el', 'ew', 'iam', 'ian', 'ick', 'id', 'in', 'ip', 'o', 'on', 'osh', 'ry']
 		},
 		'f': {
-			roots: ['ana', 'be', 'cam', 'cas', 'cel', 'cind', 'cla', 'cle', 'da', 'di', 'des', 'em', 'es', 'han',
-				'hel', 'jen', 'kel', 'kim', 'li', 'lis',
-				'may', 'pam', 'pri', 're', 'san', 'shan', 'ter', 'ti', 'vi', 'wan', 'winn', 'ze'],
-			parts: ['a', 'an', 'el', 'en', 'es', 'la', 'li', 'nal', 'th', 'tri', 'zel'],
-			ends: ['a', 'ana', 'anne', 'bell', 'beth', 'ca', 'da', 'dy', 'ea', 'este', 'ette',
+			roots: ['ab', 'al', 'am', 'ana', 'ath', 'be', 'bec', 'bo', 'cam', 'car', 'cas', 'cel', 'cind', 'cla', 'cle', 'da', 'di', 'des', 'em', 'er', 'es', 'fae', 'fe', 'han',
+				'hel', 'im', 'is', 'jen', 'ka', 'kel', 'kim', 'li', 'lis',
+				'may', 'mel', 'meg', 'oph', 'pam', 'pri', 'qui', 'ra', 're', 'reb', 'san', 'sar', 'shan', 'sue', 'ter', 'ti', 've', 'vi', 'viv', 'wan', 'wen', 'winn', 'za', 'ze', 'zi',],
+			parts: ['a', 'an', 'el', 'en', 'es', 'la', 'li', 'n', 'nal', 's', 't', 'th', 'tri', 'zel'],
+			ends: ['a', 'ana', 'anne', 'astra', 'bell', 'beth', 'bex', 'ca', 'da', 'dy', 'ea', 'ee', 'este', 'ette',
 				'ia', 'ie', 'ina', 'ine', 'ippy', 'ith', 'ix',
 				'le', 'lein', 'len', 'ly', 'lyn', 'ma', 'my', 'ny', 'onna', 'oppy', 're', 's', 'sa', 'sy', 'stra', 'y', 'wyn']
 		}
