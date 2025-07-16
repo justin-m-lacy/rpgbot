@@ -20,7 +20,7 @@ export const Revive = {
 			return false;
 		}
 
-		let roll = char.statRoll(...this.stats) + (2 * targ.hp.value) - 5 * +targ.level;
+		let roll = char.statRoll(...this.stats) + (2 * targ.hp.value) - 4 * +targ.level;
 		if (!char.hasTalent('revive')) roll -= 20;
 		if (roll < 10) {
 			char.log(`You failed to revive ${targ.name}.`);

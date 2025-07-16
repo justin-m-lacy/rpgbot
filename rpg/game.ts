@@ -7,6 +7,7 @@ import { Craft } from 'rpg/builders/itemgen';
 import { ChannelStore } from 'rpg/channel-store';
 import { Actor } from 'rpg/char/actor';
 import { Combat } from 'rpg/combat/combat';
+import { useLikeStore } from 'rpg/combat/like-store';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
 import { TCombatAction } from 'rpg/combat/types';
@@ -58,15 +59,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	private updateTimer: NodeJS.Timeout | null = null;
 
+	readonly likeStore = useLikeStore(this);
+
 	/**
 	 * Combat control for game.
 	 */
 	readonly combat = new Combat(this);
 
-	/**
-	 *
-	 * @param rpg
-	 */
 	constructor(cache: Cache<any>, charCache: Cache<Char>, actions: A) {
 
 		this.actions = actions;

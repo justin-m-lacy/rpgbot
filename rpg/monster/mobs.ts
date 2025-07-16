@@ -86,11 +86,6 @@ export class Mob {
 
 	readonly dots: Dot[] = [];
 
-	/**
-	 * ids of actors that have interacted with mob.
-	 */
-	actors?: Record<string, number>;
-
 	constructor(id?: string, proto?: MobData | undefined) {
 
 		this.id = id ?? randomUUID();
@@ -117,7 +112,7 @@ export class Mob {
 
 	statRoll(...stats: string[]) {
 		/// TODO
-		return roll(1, 5 * (this.level + 4));
+		return roll(1, 4 * (this.level + 5));
 	}
 
 	hasTalent(s: string) {

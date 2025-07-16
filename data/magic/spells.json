@@ -445,16 +445,96 @@
     {
         "id": "barkskin1",
         "name": "Barkskin I",
-        "desc": "Turns your skin to wood.",
+        "desc": "Your skin becomes pine wood.",
         "target": "self",
         "level": 1,
+        "cost": {
+            "mp": 2
+        },
+        "dot": {
+            "duration": 100,
+            "mod": {
+                "armor": 1
+            }
+        }
+    },
+    {
+        "id": "barkskin2",
+        "name": "Barkskin II",
+        "desc": "Your skin becomes cedar wood.",
+        "target": "self",
+        "level": 3,
         "cost": {
             "mp": 3
         },
         "dot": {
             "duration": 100,
             "mod": {
-                "armor": 1
+                "armor": 2
+            }
+        }
+    },
+    {
+        "id": "barkskin3",
+        "name": "Barkskin III",
+        "desc": "Your skin becomes birch wood.",
+        "target": "self",
+        "level": 5,
+        "cost": {
+            "mp": 4
+        },
+        "dot": {
+            "duration": 150,
+            "mod": {
+                "armor": 3
+            }
+        }
+    },
+    {
+        "id": "barkskin4",
+        "name": "Barkskin IV",
+        "desc": "Your skin becomes oak.",
+        "target": "self",
+        "level": 7,
+        "cost": {
+            "mp": 5
+        },
+        "dot": {
+            "duration": 150,
+            "mod": {
+                "armor": 5
+            }
+        }
+    },
+    {
+        "id": "barkskin5",
+        "name": "Barkskin V",
+        "desc": "Your skin becomes mahogany.",
+        "target": "self",
+        "level": 9,
+        "cost": {
+            "mp": 7
+        },
+        "dot": {
+            "duration": 150,
+            "mod": {
+                "armor": 7
+            }
+        }
+    },
+    {
+        "id": "barkskin6",
+        "name": "Barkskin VI",
+        "desc": "Your skin becomes ash wood.",
+        "target": "self",
+        "level": 11,
+        "cost": {
+            "mp": 10
+        },
+        "dot": {
+            "duration": 200,
+            "mod": {
+                "armor": 10
             }
         }
     },
@@ -524,6 +604,59 @@
         "level": 2,
         "cost": {
             "mp": 3
+        }
+    },
+    {
+        "id": "ironskin",
+        "name": "iron skin",
+        "desc": "hardens the skin of the self.",
+        "school": "earth",
+        "require": {
+            "earthlore": 5
+        },
+        "level": 2,
+        "cost": {
+            "mp": 5
+        },
+        "dot": {
+            "duration": 60,
+            "mod": {
+                "defense": 10
+            }
+        }
+    },
+    {
+        "id": "steelskin",
+        "name": "steel skin",
+        "desc": "hardens the skin of the self.",
+        "school": "earth",
+        "require": "stoneskin",
+        "level": 5,
+        "cost": {
+            "mp": 7
+        },
+        "dot": {
+            "duration": 120,
+            "mod": {
+                "defense": 25
+            }
+        }
+    },
+    {
+        "id": "adamantshell",
+        "name": "adamant shell",
+        "desc": "your skin becomes adamant.",
+        "school": "earth",
+        "require": "steelskin",
+        "level": 10,
+        "cost": {
+            "mp": 10
+        },
+        "dot": {
+            "duration": 180,
+            "mod": {
+                "self.defense": 50
+            }
         }
     },
     {

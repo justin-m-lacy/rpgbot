@@ -6,7 +6,7 @@
 		"create": {
 			"gold": "3d4"
 		},
-		"spells": [
+		"schools": [
 			"arcane",
 			"demon"
 		],
@@ -27,7 +27,7 @@
 			"cook",
 			"heal"
 		],
-		"spells": [
+		"schools": [
 			"wild",
 			"demon"
 		],
@@ -94,7 +94,7 @@
 			"heal",
 			"revive"
 		],
-		"spells": [
+		"schools": [
 			"wild"
 		],
 		"create": {
@@ -109,7 +109,7 @@
 			"revive",
 			"hike"
 		],
-		"spells": [
+		"schools": [
 			"holy"
 		],
 		"create": {
@@ -140,7 +140,7 @@
 			"revive",
 			"heal"
 		],
-		"spells": [
+		"schools": [
 			"holy"
 		],
 		"create": {
@@ -157,7 +157,7 @@
 			"steal",
 			"hide"
 		],
-		"spells": [
+		"schools": [
 			"arcane"
 		],
 		"create": {
@@ -172,6 +172,9 @@
 			"cook",
 			"heal",
 			"hide"
+		],
+		"spells": [
+			"ironskin"
 		],
 		"desc": "Hands. Feet. Fist. Face. Anything can be a weapon to the mighty monk. After a youth of training in a secluded monastery, or under a demanding master, a monk needs no other weapon than their own fists in order to be a formidable opponent. Strict vows of poverty and celibacy leaves a monk intimately acquainted with the powers lying latent in his own hands.",
 		"create": {

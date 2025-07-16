@@ -9,12 +9,15 @@ import { Id, Numeric, TValue } from "rpg/values/types";
 export type CombatActor = TActor | Party;
 
 export enum ActionFlags {
+
 	none = 0,
 
-	// action is harmless
-	harmless = 1,
+	/// action is beneficial.
+	benefit = 1,
+
 	// attack cant be blocked.
-	nodefense = 2
+	nodefense = 2,
+
 }
 
 export type TCombatAction = {

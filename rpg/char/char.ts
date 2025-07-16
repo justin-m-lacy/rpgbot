@@ -26,11 +26,11 @@ export class Char extends Actor {
 	get exp() { return this._exp; }
 	set exp(v) { this._exp = v; }
 
-	get statPoints() { return this._statPoints; }
-	set statPoints(v) { this._statPoints = v; }
+	get statPoints() { return this._statPts; }
+	set statPoints(v) { this._statPts = v; }
 
-	get spentPoints() { return this._spentPoints; }
-	set spentPoints(v) { this._spentPoints = v; }
+	get spentPoints() { return this._spentPts; }
+	set spentPoints(v) { this._spentPts = v; }
 
 	get skillPts() { return this._skillPts; }
 	set skillPts(v) { this._skillPts = v; }
@@ -54,8 +54,8 @@ export class Char extends Actor {
 	private readonly _log: Log = new Log();
 	readonly inv: Inventory;
 	private _equip: Equip;
-	private _statPoints: number;
-	private _spentPoints: number;
+	private _statPts: number;
+	private _spentPts: number;
 	private _skillPts: number = 0;
 	owner: string;
 	private _exp: number = 0;
@@ -73,8 +73,8 @@ export class Char extends Actor {
 
 		super(name, opts);
 
-		this._statPoints = 0;
-		this._spentPoints = 0;
+		this._statPts = 0;
+		this._spentPts = 0;
 
 		this.inv = new Inventory();
 		this._equip = new Equip();
@@ -104,7 +104,7 @@ export class Char extends Actor {
 			this.log('Stat not found');
 			return false;
 		}
-		if (this._spentPoints >= this._statPoints) {
+		if (this._spentPts >= this._statPts) {
 			this.log('No stat points available.');
 			return false;
 		}
@@ -115,7 +115,7 @@ export class Char extends Actor {
 			this.log(`Stat not found.`);
 		}
 
-		this._spentPoints++;
+		this._spentPts++;
 
 		return true;
 
@@ -134,7 +134,7 @@ export class Char extends Actor {
 		super.levelUp();
 
 		this.log(this.name + ' has leveled up.');
-		this._statPoints++;
+		this._statPts++;
 		this.events.emit('levelUp', this);
 
 	}

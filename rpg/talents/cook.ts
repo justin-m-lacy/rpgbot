@@ -48,7 +48,7 @@ export const TryEat = (char: Char, it: Item) => {
 	];
 
 	const amt = char.heal(
-		Math.floor(5 * Math.random()) + char.level.valueOf());
+		Math.floor(4 * Math.random()) + char.level.valueOf());
 
 	resp = `You eat the ${it.name}. ${resp}.`;
 	if (amt > 0) resp += ` ${amt} hp healed. ${char.hp.valueOf()}/${char.hp.max.valueOf()} total.`;

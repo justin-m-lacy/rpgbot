@@ -4,6 +4,7 @@ import { TCombatAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
 import { Fists } from 'rpg/items/weapon';
+import { TActor } from 'rpg/monster/mobs';
 import { Faction } from 'rpg/social/faction';
 import type { SexType } from 'rpg/social/gender';
 import { Team } from 'rpg/social/teams';
@@ -127,6 +128,8 @@ export class Actor {
 
 	readonly teams: Faction = new Faction(Team.chars);
 	get team() { return this.teams.team }
+
+	readonly minions: Record<string, TActor> = {}
 
 	constructor(name: string, opts: {
 		game: Game,

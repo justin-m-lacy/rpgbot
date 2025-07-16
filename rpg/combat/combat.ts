@@ -90,8 +90,7 @@ export class Combat {
 		}
 
 		if (targ instanceof Mob) {
-			targ.actors ??= {};
-			targ.actors[char.id] = 1;
+			this.game.likeStore.action(targ, char, 10, act.target);
 		}
 
 		if (act.dot) {
@@ -296,8 +295,7 @@ export class Combat {
 		let ind = start;
 		do {
 
-			if (targs[ind].isAlive() &&
-				(npc.actors?.[targs[ind].id] || (targs[ind].team & npc.team) == 0)) {
+			if (targs[ind].isAlive() && this.game.likeStore.getOpinion(npc, targs[ind])) {
 				return targs[ind];
 			}
 			ind = (ind + 1) % len;

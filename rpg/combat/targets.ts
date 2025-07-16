@@ -11,11 +11,10 @@ export enum TargetFlags {
 	enemy = 2,
 	ally = 4,
 
-
 	enemies = 8,
-	allies = 16 + self,
+	allies = 16,
 
-	all = 32 + enemy | ally,
+	all = 32,
 
 	/// any single not caster.
 	other = 64,
@@ -24,6 +23,8 @@ export enum TargetFlags {
 
 	/// used to mark any target that affects multiple chars.
 	mult = enemies | allies | others | all,
+
+	benefit = self | ally | allies,
 
 	any = self | enemy | ally,
 
