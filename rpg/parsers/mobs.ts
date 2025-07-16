@@ -1,5 +1,6 @@
 import { Formula } from 'formulic';
 import { StatusFlag } from 'rpg/char/states';
+import { StatName } from 'rpg/char/stats';
 import { ItemData } from 'rpg/items/types';
 import { Weapon } from 'rpg/items/weapon';
 import { Mob } from 'rpg/monster/mobs';
@@ -31,6 +32,7 @@ export type MobData = {
 	drops?: any;
 	flags?: StatusFlag;
 	team?: Team;
+	stats?: Record<string, StatName>,
 	weap?: any;
 	//attacks: TCombatAction[]
 

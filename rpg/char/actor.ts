@@ -21,19 +21,19 @@ export class Actor {
 
 	getStatus() { return `${this.hp.value}/${this.hp.max} [${this.state}]` }
 
-	isAlive() { return this.flags.has(StatusFlag.alive) }
+	isAlive() { return !this.flags.has(StatusFlag.dead) }
 	/**
 	 * messy text-based state. flags makes it harder to test for blockers.
 	 * in theory could have states that set multiple flags, as well as
 	 * other mods.
 	 * also: action uses set-state=alive to revive.
 	 */
-	get state() { return this.flags.has(StatusFlag.alive) ? CharState.Alive : CharState.Dead; }
+	get state() { return this.flags.has(StatusFlag.dead) ? CharState.Dead : CharState.Alive; }
 	set state(v) {
 		if (v === CharState.Dead) {
-			this.flags.unset(StatusFlag.alive);
+			this.flags.set(StatusFlag.dead);
 		} else {
-			this.flags.set(StatusFlag.alive);
+			this.flags.unset(StatusFlag.dead);
 		}
 	}
 

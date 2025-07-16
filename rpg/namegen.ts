@@ -161,12 +161,12 @@ const nameParts: { [race: string]: GenderNamer } = {
 
 		'm': {
 			roots: [],
-			parts: ['arb', 'bar', 'fzor', 'glrk', 'gok', 'mmrok', 'yarg', 'zaft', 'zor', 'zurb'],
+			parts: ['arb', 'bar', 'do', 'fzor', 'glrk', 'gok', 'ku', 'mmr\'', 'rok', 'rar', 'uk', 'urgh', 'yarg', 'zaft', 'zor', 'zurb'],
 			ends: []
 		},
 		'f': {
 			roots: [],
-			parts: ['abf', 'bir', 'doo', 'flrk', 'glk', 'yilg', 'zorb', 'zink'],
+			parts: ['abf', 'bir', 'cha', 'doo', 'eeg', 'flrk', 'glk', 'yilg', 'wab', 'za', 'zorb', 'zink'],
 			ends: []
 		}
 

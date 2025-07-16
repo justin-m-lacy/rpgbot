@@ -58,7 +58,6 @@ export const useLikeStore = (game: Game) => {
 			this.likes.delete(mob);
 		}
 
-
 	}
 
 }

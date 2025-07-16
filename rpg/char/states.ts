@@ -11,7 +11,7 @@ export enum CharState {
 
 export enum StatusFlag {
 	none = 0,
-	alive = 1,
+	dead = 1,
 	noattack = 2,
 	nodefend = 4,
 	nospells = 8,
@@ -63,6 +63,7 @@ type TCauses = Record<PropertyKey, Dot[] | undefined>;
 /// Character state information.
 export class CharFlags {
 
+	// compute from initial state?
 	toJSON() { return undefined; }
 
 	setTo(flags: StatusFlag) {

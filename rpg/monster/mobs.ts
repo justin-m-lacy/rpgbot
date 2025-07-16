@@ -57,7 +57,7 @@ export class Mob {
 	get biome() { return this.proto?.biome }
 	get desc() { return this.proto?.desc ?? '' }
 
-	isAlive() { return this.flags.has(StatusFlag.alive) }
+	isAlive() { return !this.flags.has(StatusFlag.dead) }
 
 	readonly flags: CharFlags = new CharFlags();
 
@@ -92,7 +92,7 @@ export class Mob {
 		this._toHit = 0;
 		this.proto = proto;
 
-		this.flags.setTo((proto?.flags || StatusFlag.alive));
+		this.flags.setTo((proto?.flags || 0));
 		this.size = proto?.size ?? 'medium';
 
 		this.team = proto?.team ?? Team.neutral;
@@ -187,10 +187,10 @@ export class Mob {
 	}
 
 	/**
- * Remove count of stackable item.
- * @param which 
- * @param n 
- */
+	 * Remove count of stackable item.
+	 * @param which 
+	 * @param n 
+	 */
 	removeN(which: Item & TStacker, n: number = 1) {
 		return false;
 	}
@@ -206,7 +206,7 @@ export class Mob {
 	addExp(exp: number) { }
 	updateState() {
 		if (this._hp.value <= 0) {
-			this.flags.unset(StatusFlag.alive);
+			this.flags.set(StatusFlag.dead);
 		}
 	}
 	// used in combat

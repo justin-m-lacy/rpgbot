@@ -90,7 +90,7 @@ export const CharLongDesc = (char: Char): string => {
 
 	let desc = `level ${char.level.value} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
 	desc += `\nage: ${smallNum(char.age)} sex: ${char.sex} gold: ${Math.floor(char.gold)} exp: ${Math.floor(char.exp)}/ ${getNextExp(char)}`;
-	desc += `\nhp: ${smallNum(char.hp)}/${Math.ceil(char.hp.max.valueOf())} armor: ${Math.floor(char.armor.valueOf())}\n`;
+	desc += `\nhp: ${smallNum(char.hp)}/${Math.ceil(char.hp.max.valueOf())} armor: ${Math.floor(char.armor.valueOf())}`;
 	desc += statString(char);
 
 	if (char.spentPoints < char.statPoints) desc += '\n' + (char.statPoints - char.spentPoints) + ' stat points available.';
@@ -101,18 +101,20 @@ export const CharLongDesc = (char: Char): string => {
 
 const statString = (char: Char) => {
 
-	let stat = StatIds[0];
-	let str = stat + ': ' + (char.stats[stat as StatKey] ?? 0);
+	let id = StatIds[0];
+	let res = '';
 
 	const len = StatIds.length;
 
-	for (let i = 1; i < len; i++) {
+	for (let i = 0; i < len; i++) {
 
-		stat = StatIds[i];
-		str += '\n' + stat + ': ' + (char.stats[stat as StatKey] ?? 0);
+		id = StatIds[i];
+		const stat = char.stats[id as StatKey];
+
+		res += `\n${id}: ` + (stat.value ?? 0) + (stat.base != stat.value ? ` (${stat.base} base)` : '');
 
 	}
-	return str;
+	return res;
 
 }
 

@@ -60,8 +60,8 @@ export const ReviveChar = (game: Game, json: {
 
 	if (typeof json.flags === 'number') {
 		char.flags.setTo(json.flags);
-		if (json.flags & StatusFlag.alive) char.state = CharState.Alive;
-		else { char.state = CharState.Dead }
+		if (json.flags & StatusFlag.dead) char.state = CharState.Dead;
+		else { char.state = CharState.Alive }
 	} else {
 		char.state = CharState.Alive;
 	}

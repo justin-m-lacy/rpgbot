@@ -5,20 +5,20 @@ import type { Numeric } from "rpg/values/types";
 
 export const getEvil = (evil: number) => {
 
-	if (evil >= 5) {
+	if (evil >= 25) {
 
-		if (evil > 40) return 'diabolical';
-		if (evil > 30) return 'malevolent';
-		if (evil > 20) return 'evil';
-		if (evil > 10) return 'wicked';
+		if (evil > 1500) return 'diabolical';
+		if (evil > 750) return 'malevolent';
+		if (evil > 300) return 'evil';
+		if (evil > 100) return 'wicked';
 		return 'mean';
 
-	} else if (evil <= -5) {
+	} else if (evil <= -25) {
 
-		if (evil < -40) return 'righteous';
-		if (evil < -30) return 'virtuous';
-		if (evil < -20) return 'good';
-		if (evil < -10) return 'nice';
+		if (evil < -1500) return 'righteous';
+		if (evil < -750) return 'virtuous';
+		if (evil < -300) return 'good';
+		if (evil < -100) return 'nice';
 
 		return 'polite';
 
@@ -32,9 +32,7 @@ export const getEvil = (evil: number) => {
 
 export const StatIds = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
-export const PointStats = ['str', 'con', 'dex', 'int', 'wis', 'char', 'armor'];
-
-export type StatName = 'evil' | 'str' | 'con' | 'dex' | 'int' | 'wis' | 'cha' | 'armor' | 'level' | 'dr' | 'age';
+export type StatName = typeof StatIds[number];
 
 export type StatMod = Partial<{
 	[K in keyof IStatValues]: IMod
