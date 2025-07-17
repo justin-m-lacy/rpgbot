@@ -1,7 +1,7 @@
 import type { Char } from 'rpg/char/char';
+import { TActor } from 'rpg/char/mobs';
 import { StatusFlag } from 'rpg/char/states';
 import { type Game } from 'rpg/game';
-import { TActor } from 'rpg/monster/mobs';
 
 export const Sneak = {
 

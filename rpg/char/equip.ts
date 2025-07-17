@@ -1,7 +1,6 @@
 import { ItemList } from 'rpg/display/items';
 import { ItemType } from 'rpg/items/types';
 import { Item } from '../items/item';
-import { Weapon } from '../items/weapon';
 import { HumanSlot, Wearable } from "../items/wearable";
 
 const MaxSlots: { [key: string]: number | undefined } = {
@@ -9,8 +8,10 @@ const MaxSlots: { [key: string]: number | undefined } = {
 	fingers: 4
 };
 
+type THanded = Wearable & { slot: 'hands', hands?: number };
+
 export type HumanSlots = {
-	[key in HumanSlot]: Wearable | Wearable[] | null;
+	[K in HumanSlot]: K extends 'hands' | 'left' | 'right' ? (THanded | null) : Wearable | Wearable[] | null;
 }
 
 export class Equip {
@@ -132,14 +133,13 @@ export class Equip {
 
 	}
 
-	equipWeap(it: Weapon) {
+	equipHand(it: THanded) {
 
-		const right = this.slots.right as Weapon;
-		const left = this.slots.left as Weapon;
+		const right = this.slots.right;
+		const left = this.slots.left;
 
 		if (it.hands === 2) {
 
-			console.log('set two handed weapon.');
 			this.slots.right = it;
 			this.slots.left = null;
 
@@ -154,7 +154,7 @@ export class Equip {
 				console.log('set right hand.');
 
 				this.slots.right = it;
-				if (left !== null && (left as Weapon).hands === 2) {
+				if (left !== null && (left as THanded).hands === 2) {
 					this.slots.left = null;
 					return left;
 				}
@@ -164,7 +164,7 @@ export class Equip {
 				console.log('set left hand.');
 
 				this.slots.left = it;
-				if (right !== null && (right as Weapon).hands === 2) {
+				if (right !== null && (right as THanded).hands === 2) {
 					this.slots.right = null;
 					return right;
 				}
@@ -195,7 +195,7 @@ export class Equip {
 	 */
 	equip(it: Wearable) {
 
-		if (it.type === ItemType.Weapon) return this.equipWeap(it as Weapon);
+		if (it.slot == 'hands' || it.slot == 'left' || it.slot == 'right') return this.equipHand(it as THanded);
 
 		let slot = it.slot;
 		if (slot === null || !this.slots.hasOwnProperty(slot)) return it.name + ' cannot be equipped.';

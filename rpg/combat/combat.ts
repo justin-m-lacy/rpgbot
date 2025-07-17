@@ -1,12 +1,13 @@
 import { Actor } from "rpg/char/actor";
 import { Char } from "rpg/char/char";
-import { ActionFlags, TCombatAction } from "rpg/combat/types";
+import { Mob, TActor } from "rpg/char/mobs";
+import { ActionFlags, TNpcAction } from "rpg/combat/types";
 import { AttackInfo } from "rpg/events";
 import { Game } from "rpg/game";
 import { ItemPicker } from "rpg/inventory";
 import { Item } from "rpg/items/item";
 import { Spell } from "rpg/magic/spell";
-import { Mob, TActor } from "rpg/monster/mobs";
+import { GenMob } from "rpg/parsers/mobs";
 import { PossPronoun } from "rpg/social/gender";
 import { Party } from "rpg/social/party";
 import { AddValues } from "rpg/values/apply";
@@ -47,7 +48,7 @@ export class Combat {
 
 	}
 
-	async tryAttack(char: TActor, atk: TCombatAction | null | undefined, who: TActor | Party,) {
+	async tryAttack(char: TActor, atk: TNpcAction | null | undefined, who: TActor | Party,) {
 
 		if (!atk) return;
 
@@ -76,13 +77,42 @@ export class Combat {
 
 	}
 
+	doAction(char: TActor, act: TNpcAction) {
+
+		if (act.summon) {
+
+			for (let i = act.summon.length - 1; i >= 0; i--) {
+				const mob = GenMob(act.summon[i]);
+				if (mob) {
+					mob.team = char.team;
+					(char as Char).minions[mob.id] = mob;
+				}
+			}
+
+		}
+
+		if (act.dot) {
+			char.addDot(act.dot, char.id);
+		}
+		if (act.add) {
+			AddValues(char, act.add, 1);
+		}
+
+		if (act.cure) {
+			char.flags.unset(act.cure);
+		}
+		if (act.heal) this.applyHealing(char, act as TNpcAction & { heal: TValue }, char);
+
+		return true;
+	}
+
 	/**
 	 * Apply combat action to target.
 	 * @param char 
 	 * @param act 
 	 * @param targ 
 	 */
-	doAttack(char: TActor, act: TCombatAction, targ: Actor | Mob) {
+	doAttack(char: TActor, act: TNpcAction, targ: Actor | Mob) {
 
 		if (targ.isImmune(act.kind)) {
 			char.log(`${targ.name} is immune to ${act.kind}`);
@@ -91,6 +121,9 @@ export class Combat {
 
 		if (targ instanceof Mob) {
 			this.game.likeStore.action(targ, char, 10, act.target);
+		}
+
+		if (act.summon) {
 		}
 
 		if (act.dot) {
@@ -106,14 +139,14 @@ export class Combat {
 
 		/// todo: need to log if non-damage event from combat.
 		if (act.dmg) this.applyDmg(targ, act, char);
-		if (act.heal) this.applyHealing(targ, act as TCombatAction & { heal: TValue }, char);
+		if (act.heal) this.applyHealing(targ, act as TNpcAction & { heal: TValue }, char);
 
 		return true;
 	}
 
 	applyDmg(
 		targ: TActor,
-		attack: TCombatAction,
+		attack: TNpcAction,
 		attacker?: TActor) {
 
 		const info: AttackInfo = {
@@ -333,7 +366,7 @@ export class Combat {
 
 	}
 
-	applyHealing(target: TActor, attack: TCombatAction & { heal: Numeric }, attacker?: TActor) {
+	applyHealing(target: TActor, attack: TNpcAction & { heal: Numeric }, attacker?: TActor) {
 
 		target.hp.value += this.calcDamage(attack.heal, attack, attacker, target);
 
@@ -347,7 +380,7 @@ export class Combat {
 	 * @param target 
 	 * @returns 
 	 */
-	calcDamage(dmg: Numeric, attack: TCombatAction, attacker?: TActor, target?: TActor) {
+	calcDamage(dmg: Numeric, attack: TNpcAction, attacker?: TActor, target?: TActor) {
 		return dmg.valueOf();
 	}
 

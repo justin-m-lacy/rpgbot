@@ -1,5 +1,5 @@
 import { Char } from "rpg/char/char";
-import { Mob } from "rpg/monster/mobs";
+import { Mob } from "rpg/char/mobs";
 
 export const ParseTarget = (s: keyof typeof TargetFlags) => {
 	return TargetFlags[s] ?? TargetFlags.none;
@@ -24,7 +24,7 @@ export enum TargetFlags {
 	/// used to mark any target that affects multiple chars.
 	mult = enemies | allies | others | all,
 
-	benefit = self | ally | allies,
+	harmless = self | ally | allies,
 
 	any = self | enemy | ally,
 

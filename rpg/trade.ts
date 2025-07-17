@@ -92,9 +92,9 @@ export const nerfItems = (char: Char) => {
 		if (!it || !(it instanceof Wearable)) return false;
 
 		if (it.level && it.level > maxLevel) return true;
-		if (it.material) {
+		if (it.mat) {
 
-			const m = GetMaterial(it.material);
+			const m = GetMaterial(it.mat);
 			if (m && m.level > maxLevel) return true;
 
 		}

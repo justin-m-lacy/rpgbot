@@ -1,13 +1,14 @@
 import { Char } from 'rpg/char/char';
-import { TCombatAction } from 'rpg/combat/types';
+import { TNpcAction } from 'rpg/combat/types';
 import { ItemData, ItemType } from 'rpg/items/types';
-import { ParseValue } from 'rpg/parsers/values';
+import { ParseMods } from 'rpg/parsers/mods';
+import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
 import { DamageSrc } from '../formulas';
 import { Item } from './item';
-import { Wearable } from './wearable';
+import { HumanSlot, Wearable } from './wearable';
 
-export class Weapon extends Wearable implements TCombatAction {
+export class Weapon extends Wearable implements TNpcAction {
 
 	toJSON() {
 
@@ -20,15 +21,21 @@ export class Weapon extends Wearable implements TCombatAction {
 
 	}
 
-	static Decode(json: ItemData & { hit?: number, kind?: string, material: string, mods: any, dmg: any }) {
+	static Revive(json: ItemData & { slot?: HumanSlot, hit?: number, kind?: string, mat?: string, mods: any, dmg: any }) {
 
-		const dmg = new DamageSrc(ParseValue('dmg', json.dmg || 0), json.kind || 'blunt');
+		const dmg = DamageSrc.Decode(json.dmg);
 
-		const w = new Weapon(json.id, json.name, dmg, json.desc);
+		const w = new Weapon(json.id, { name: json.name, desc: json.desc }, dmg);
 
-		if (json.material) w.material = json.material;
+		w.slot = json.slot ?? 'hands';
+
+		if (json.mat) w.material = json.mat;
 		if (json.mods) {
 			w.mods = json.mods;
+		}
+
+		if (json.mods) {
+			w.mods = ParseMods(json.mods, w.id);
 		}
 
 		if (json.kind) w.kind = json.kind;
@@ -46,9 +53,10 @@ export class Weapon extends Wearable implements TCombatAction {
 	get kind() { return this.dmg.type };
 	set kind(s: string) { this.dmg.type = s; }
 
-	constructor(id: string | undefined, name: string, dmg: DamageSrc, desc?: string) {
+	constructor(id: string | undefined,
+		opts: { name?: string, desc?: string }, dmg: DamageSrc, proto?: RawWeaponData) {
 
-		super(id, name, desc);
+		super(id, opts, proto);
 		this.dmg = dmg;
 
 		this.type = ItemType.Weapon;
@@ -66,6 +74,5 @@ export class Weapon extends Wearable implements TCombatAction {
 
 }
 
-export const Fists = new Weapon('fists', 'fists',
-	new DamageSrc(new Dice(1, 2, 0), 'blunt'),
-	'Just plain fists.');
+export const Fists = new Weapon('fists', { name: 'fists', desc: 'Just plain fists.' },
+	new DamageSrc(new Dice(1, 2, 0), 'blunt'));

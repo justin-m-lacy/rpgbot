@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { CharFlags, StatusFlag } from 'rpg/char/states';
-import { TCombatAction } from 'rpg/combat/types';
+import { TNpcAction } from 'rpg/combat/types';
 import { Dot, ProtoDot } from 'rpg/magic/dots';
 import { type MobData } from 'rpg/parsers/mobs';
 import { Team } from 'rpg/social/teams';
@@ -8,10 +8,10 @@ import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
 import { Coord, TCoord } from 'rpg/world/coord';
-import { Actor } from '../char/actor';
-import * as stats from '../char/stats';
 import { Item, TStacker } from '../items/item';
 import { roll } from '../values/dice';
+import { Actor } from './actor';
+import * as stats from './stats';
 
 export type TActor = Actor | Mob;
 
@@ -74,7 +74,7 @@ export class Mob {
 	private _evil: number = 0;
 	size: string;
 	readonly proto?: MobData;
-	readonly attacks: TCombatAction[] = [];
+	readonly attacks: TNpcAction[] = [];
 	private _talents?: string[];
 
 	team: number = 0;

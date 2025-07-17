@@ -1,12 +1,12 @@
-import { TCombatAction } from "rpg/combat/types";
+import { TActor } from "rpg/char/mobs";
+import { TNpcAction } from "rpg/combat/types";
 import { Item } from "rpg/items/item";
 import { Spell } from "rpg/magic/spell";
-import { TActor } from "rpg/monster/mobs";
 import { GetSpell } from "rpg/parsers/spells";
 import { type Game } from '../game';
 import { ItemType } from './types';
 
-export class Scroll extends Item implements TCombatAction {
+export class Scroll extends Item implements TNpcAction {
 
 	static Decode(json: any) {
 

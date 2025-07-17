@@ -10,7 +10,7 @@ import { Combat } from 'rpg/combat/combat';
 import { useLikeStore } from 'rpg/combat/like-store';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
-import { TCombatAction } from 'rpg/combat/types';
+import { TNpcAction } from 'rpg/combat/types';
 import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
@@ -25,10 +25,10 @@ import { Block } from 'rpg/world/block';
 import { TCoord } from 'rpg/world/coord';
 import { Shop } from 'rpg/world/shop';
 import { Char } from './char/char';
+import { Mob, TActor } from './char/mobs';
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
-import { Mob, TActor } from './monster/mobs';
 import { GuildManager } from './social/guild';
 import { Party } from './social/party';
 import * as Trade from './trade';
@@ -261,7 +261,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	async attack(this: Game<A, K>, src: TActor, targ: TActor, atk?: TCombatAction) {
+	async attack(this: Game<A, K>, src: TActor, targ: TActor, atk?: TNpcAction) {
 
 		let p2: TActor | Party | undefined = targ instanceof Char ? this.getParty(targ) : undefined;
 		if (!p2 || !p2.at.equals(targ.at)) {

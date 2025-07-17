@@ -6,13 +6,13 @@ export class DamageSrc implements TValue {
 	static Decode(json: string | { dmg: any, type?: string }) {
 
 		if (typeof (json) === 'string') {
-			return new DamageSrc(ParseValue(json));
+			return new DamageSrc(ParseValue(json), 'blunt');
 		} else {
 			return new DamageSrc(ParseValue(json.dmg), json.type);
 		}
 	}
 
-	toJSON() { return { dmg: this.value.toString(), type: this.type }; }
+	toJSON() { return { dmg: this.value, type: this.type }; }
 
 	valueOf() { return this._val.valueOf(); }
 

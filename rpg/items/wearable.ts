@@ -4,7 +4,7 @@ import { IMod } from 'rpg/values/imod';
 import { Path } from 'rpg/values/paths';
 import { Item, } from './item';
 import { Material } from './material';
-import { ItemType } from './types';
+import { ItemData } from './types';
 
 const Slots: { [s: string]: boolean } = {
 	'head': true,
@@ -47,17 +47,11 @@ export class Wearable extends Item {
 	set armor(v) { this._armor = v < 0 ? 0 : v }
 
 	/**
-	 * @property material - armor material.
-	 */
-	get material() { return this._material; }
-	set material(m) { this._material = m; }
-
-	/**
 	 * From template data.
 	 * @param base
 	 * @param mat
 	 */
-	static FromData(base: any, mat?: Material | null) {
+	static FromTemplate(base: any, mat?: Material | null) {
 
 		const name = mat ? (mat?.name + ' ' + base.name) : base.name;
 		const it = new Wearable(undefined, name);
@@ -79,11 +73,13 @@ export class Wearable extends Item {
 
 	toJSON() {
 
-		const json = super.toJSON() as any;
+		const json = super.toJSON();
+
+		json.proto = this.proto?.id;
 
 		json.armor = this._armor;
 		json.slot = this.slot;
-		json.material = this._material;
+		json.mat = this.material;
 		if (this.mods) json.mods = this.mods;
 
 		return json;
@@ -91,7 +87,8 @@ export class Wearable extends Item {
 	}
 
 	private _armor: number;
-	private _material?: string;
+
+	material?: string;
 
 	/**
 	 * @property slot - equip slot used.
@@ -99,10 +96,13 @@ export class Wearable extends Item {
 	slot: HumanSlot = 'hands';
 	mods: Path<IMod> | undefined;
 
-	constructor(id: string | undefined, name: string, desc?: string) {
+	proto?: ItemData;
 
-		super(id, { name, desc, type: ItemType.Armor });
+	constructor(id: string | undefined, opts: { name?: string, desc?: string }, proto?: ItemData) {
+
+		super(id, opts);
 		this._armor = 0;
+		this.proto = proto;
 
 	}
 

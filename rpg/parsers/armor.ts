@@ -1,21 +1,18 @@
 
 import BaseArmors from 'data/items/armors.json';
 import { AddProtoItem } from 'rpg/builders/itemgen';
-import { DamageSrc } from 'rpg/formulas';
 import { Item } from 'rpg/items/item';
 import { RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
-import { Weapon } from 'rpg/items/weapon';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
-import { ParseValue } from 'rpg/parsers/values';
 
 type RawArmorData = ItemData & (typeof BaseArmors)[number];
 
 const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawArmorData[] }> = {};
 
 
-export const DecodeWearable = (json: any) => {
+export const ReviveWearable = (json: any) => {
 
 	const a = new Wearable(json.id, json.name, json.desc);
 	a.material = json.material;
@@ -28,26 +25,6 @@ export const DecodeWearable = (json: any) => {
 	}
 
 	return Item.InitData(json, a);
-}
-
-export const DecodeWeapon = (tmp: any) => {
-
-	const dmg = new DamageSrc(
-		ParseValue('dmg', tmp.dmg), tmp.type
-	);
-	const w = new Weapon(tmp.id, tmp.name, dmg, tmp.desc);
-	if (tmp.mods) w.mods = ParseMods(tmp.mods, w.id);
-
-	w.toHit = tmp.hit || 0;
-	w.material = tmp.material;
-	w.slot = tmp.slot ?? 'hands';
-	w.armor = tmp.armor;
-
-	if (tmp.mods) {
-		w.mods = ParseMods(tmp.mods, w.id);
-	}
-
-	return Item.InitData(tmp, w);
 }
 
 export const GenArmor = (lvl: number = 0, slot?: HumanSlot | null) => {
@@ -65,7 +42,7 @@ export const GenArmor = (lvl: number = 0, slot?: HumanSlot | null) => {
 
 	if (!tmp) return null;
 
-	return Wearable.FromData(tmp, mat);
+	return Wearable.FromTemplate(tmp, mat);
 
 }
 

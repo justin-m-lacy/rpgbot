@@ -1,6 +1,6 @@
+import { TActor } from "rpg/char/mobs";
 import { TargetFlags } from "rpg/combat/targets";
 import { Game } from "rpg/game";
-import { TActor } from "rpg/monster/mobs";
 import { Numeric } from "rpg/values/types";
 
 type Hate = Record<string, number>;
@@ -22,7 +22,7 @@ export const useLikeStore = (game: Game) => {
 		},
 		action(mob: TActor, by: { id: string, level: Numeric }, amt: number, targ: TargetFlags = TargetFlags.any) {
 
-			if (targ & TargetFlags.benefit) {
+			if (targ & TargetFlags.harmless) {
 				amt = -amt;
 			}
 			this.addLike(mob, by, amt / (by.level.valueOf() || 1));

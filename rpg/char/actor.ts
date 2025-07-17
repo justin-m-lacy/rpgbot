@@ -1,10 +1,10 @@
 import { EventEmitter } from 'eventemitter3';
+import { TActor } from 'rpg/char/mobs';
 import { CharFlags, CharState, StatusFlag } from 'rpg/char/states';
-import { TCombatAction } from 'rpg/combat/types';
+import { TNpcAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
 import { Game } from 'rpg/game';
 import { Fists } from 'rpg/items/weapon';
-import { TActor } from 'rpg/monster/mobs';
 import { Faction } from 'rpg/social/faction';
 import type { SexType } from 'rpg/social/gender';
 import { Team } from 'rpg/social/teams';
@@ -122,7 +122,7 @@ export class Actor {
 	readonly events = new EventEmitter<CharEvents>();
 	readonly game: Game;
 
-	readonly attacks: TCombatAction[] = [];
+	readonly attacks: TNpcAction[] = [];
 
 	flags: CharFlags = new CharFlags();
 

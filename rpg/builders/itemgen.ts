@@ -9,9 +9,9 @@ import { DecodeItem } from 'rpg/parsers/items';
 import { LvlPotion } from 'rpg/parsers/potions';
 import { LvlScroll } from 'rpg/parsers/scrolls';
 import { GenWeapon } from 'rpg/parsers/weapon';
+import { Mob } from '../char/mobs';
 import { Loot } from '../combat/loot';
 import { LoadMaterials } from '../items/material';
-import { Mob } from '../monster/mobs';
 
 
 

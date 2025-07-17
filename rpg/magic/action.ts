@@ -1,6 +1,6 @@
+import { TActor } from 'rpg/char/mobs';
 import { TestRequire, type RawIf, type TRequire } from 'rpg/magic/requires';
 import { ParseResult, type RawResult, type Result } from 'rpg/magic/results';
-import { TActor } from 'rpg/monster/mobs';
 import { Char } from '../char/char';
 
 

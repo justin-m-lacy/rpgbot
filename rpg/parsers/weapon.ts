@@ -7,7 +7,7 @@ import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
 import { Weapon } from '../items/weapon';
 
-type RawWeaponData = { hit?: number, mods?: Record<string, any> } & ItemData
+export type RawWeaponData = { hit?: number, mods?: Record<string, any> } & ItemData
 	& (typeof BaseWeapons)[number];
 
 export const InitWeapons = () => {
@@ -42,7 +42,7 @@ export const GenWeapon = (lvl: number = 0) => {
  */
 const BuildWeapon = (tmp: RawWeaponData, mat?: Material) => {
 
-	const w = new Weapon(undefined, tmp.name, new DamageSrc(
+	const w = new Weapon(undefined, { name: tmp.name }, new DamageSrc(
 		ParseValue('dmg', tmp.dmg), tmp.type
 	));
 

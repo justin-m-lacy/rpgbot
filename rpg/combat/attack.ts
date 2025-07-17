@@ -1,11 +1,11 @@
 import { StatusFlag } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
-import { ActionFlags, TCombatAction } from "rpg/combat/types";
+import { ActionFlags, TNpcAction } from "rpg/combat/types";
 import { ProtoDot } from "rpg/magic/dots";
 import { HasJSON } from "rpg/parsers/encode";
 import { Id, Numeric, TValue } from "rpg/values/types";
 
-export class Attack implements TCombatAction {
+export class Attack implements TNpcAction {
 
 	toJSON() {
 
@@ -45,7 +45,7 @@ export class Attack implements TCombatAction {
 	/// dots to set on target
 	public dot?: ProtoDot;
 
-	public hits?: Attack[];
+	public hits?: TNpcAction[];
 
 	/// flags to set on target on hit.
 	public setFlags?: StatusFlag;
@@ -67,7 +67,7 @@ export class Attack implements TCombatAction {
 	/**
 	 * replace with result or spells?
 	 */
-	summon?: string;
+	summon?: string[];
 
 	/*setKind(k: string | undefined) {
 
@@ -82,7 +82,7 @@ export class Attack implements TCombatAction {
 
 	}*/
 
-	constructor(id: string, data: Partial<TCombatAction> &
+	constructor(id: string, data: Partial<TNpcAction> &
 	{
 		harmless?: boolean,
 		nodefend?: boolean,
@@ -109,7 +109,6 @@ export class Attack implements TCombatAction {
 
 		if (data.harmless ?? (
 			(this.target & (TargetFlags.self | TargetFlags.ally | TargetFlags.allies)))) {
-			this.actFlags |= ActionFlags.harmless;
 		}
 
 	}

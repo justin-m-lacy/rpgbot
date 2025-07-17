@@ -9,9 +9,9 @@ import { IsInt } from "rpg/util/parse";
 import { Coord } from "rpg/world/coord";
 import { Capitalize } from '../../src/utils/display';
 import { Char } from '../char/char';
+import { Mob } from '../char/mobs';
 import { Inventory } from '../inventory';
 import { Item } from "../items/item";
-import { Mob } from '../monster/mobs';
 import { Feature } from './feature';
 
 export type DirVal = 'n' | 's' | 'e' | 'w' | 'u' | 'd' | 'l' | 'r' | 'x' | 'enter';

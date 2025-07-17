@@ -1,9 +1,9 @@
 import { Formula } from 'formulic';
+import { Mob } from 'rpg/char/mobs';
 import { StatusFlag } from 'rpg/char/states';
 import { StatName } from 'rpg/char/stats';
 import { ItemData } from 'rpg/items/types';
 import { Weapon } from 'rpg/items/weapon';
-import { Mob } from 'rpg/monster/mobs';
 import { ParseValue } from 'rpg/parsers/values';
 import { CalcFaction, Team } from 'rpg/social/teams';
 import { TWritable } from 'rpg/util/type-utils';
@@ -125,6 +125,15 @@ const parseTemplate = (data: RawMobData) => {
 
 }
 
+export const GenMob = (id: string) => {
+
+	if (templates[id]) {
+		return CreateMob(templates[id]);
+	}
+	return null;
+
+}
+
 /**
  * Create mob from template
  * @param tpl 
@@ -155,7 +164,7 @@ const CreateMob = (tpl: MobData) => {
 
 	if (tpl.weap) {
 
-		const weap = Weapon.Decode(tpl.weap);
+		const weap = Weapon.Revive(tpl.weap);
 		if (weap) {
 			m.attacks.push(weap);
 		}
@@ -233,7 +242,7 @@ export const ReviveMob = (json: any) => {
 	}
 
 	if (proto?.weap) {
-		m.attacks.push(Weapon.Decode(proto.weap));
+		m.attacks.push(Weapon.Revive(proto.weap));
 	}
 
 	if (m.toHit) m.toHit = Number(m.toHit);

@@ -201,6 +201,8 @@ export class Char extends Actor {
 
 	private applyEquip(it: Wearable) {
 
+		console.log(`applyEquip: ${it.name}`);
+
 		if (it.mods) {
 			ApplyMods(this, it.mods);
 		}
@@ -209,6 +211,7 @@ export class Char extends Actor {
 			//console.log('adding armor: ' + it.armor);
 		}
 		if (it instanceof Weapon) {
+			console.log(`add weap: ${it.name}`);
 			this.attacks.push(it);
 		}
 
