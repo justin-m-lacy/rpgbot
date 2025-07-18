@@ -1,65 +1,65 @@
 [
     {
         "name": "short sword",
-        "type": "slash",
+        "kind": "slash",
         "dmg": "1d6",
         "price": 3
     },
     {
         "name": "club",
-        "type": "blunt",
+        "kind": "blunt",
         "dmg": "1d5",
         "price": 1
     },
     {
         "name": "staff",
-        "type": "blunt",
+        "kind": "blunt",
         "dmg": "1d6",
         "price": 2
     },
     {
         "name": "dagger",
-        "type": "pierce",
+        "kind": "pierce",
         "dmg": "1d4",
         "price": 2
     },
     {
         "name": "longsword",
-        "type": "slash",
+        "kind": "slash",
         "dmg": "1d8",
         "price": 5,
         "hands": 2
     },
     {
         "name": "axe",
-        "type": "slash",
+        "kind": "slash",
         "dmg": "1d5",
         "price": 4
     },
     {
         "name": "battleaxe",
-        "type": "slash",
+        "kind": "slash",
         "dmg": "1d8",
         "price": 5,
         "hands": 2
     },
     {
         "name": "mace",
-        "type": "blunt",
+        "kind": "blunt",
         "dmg": "1d6",
         "price": 3,
         "hands": 1
     },
     {
         "name": "warhammer",
-        "type": "blunt",
+        "kind": "blunt",
         "dmg": "1d8",
         "price": 5,
         "hands": 2
     },
     {
         "name": "spear",
-        "type": "pierce",
+        "kind": "pierce",
         "dmg": "1d8",
         "price": 3,
         "hands": 2

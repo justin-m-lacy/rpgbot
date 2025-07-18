@@ -7,11 +7,14 @@ import { ItemData } from 'rpg/items/types';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
 
-export type RawArmorData = ItemData & (typeof BaseArmors)[number] & {
-	mods?: Record<string, any>
+export type RawWearableData = ItemData & (typeof BaseArmors)[number] & {
+
+	mods?: Record<string, any>,
+	hit?: number,
+	dmg?: any
 };
 
-const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawArmorData[] }> = {};
+const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawWearableData[] }> = {};
 
 
 export const ReviveWearable = (json: any) => {
@@ -38,13 +41,13 @@ export const GenArmor = (lvl: number = 0, slot?: HumanSlot | null) => {
 	if (slot) {
 		tmp = getRandSlot(slot, lvl);
 	} else {
-		const list = (BaseArmors as RawArmorData[]).filter((t: RawArmorData) => !t.level || t.level <= lvl);
+		const list = (BaseArmors as RawWearableData[]).filter((t: RawWearableData) => !t.level || t.level <= lvl);
 		tmp = list[Math.floor(list.length * Math.random())];
 	}
 
 	if (!tmp) return null;
 
-	return Wearable.FromTemplate(tmp, mat);
+	return Wearable.FromProto(tmp, mat);
 
 }
 
@@ -52,7 +55,7 @@ export function InitArmors() {
 
 	for (let k = BaseArmors.length - 1; k >= 0; k--) {
 
-		const armor = BaseArmors[k] as any as RawArmorData;
+		const armor = BaseArmors[k] as any as RawWearableData;
 		armor.name ??= armor.id;
 
 		AddProtoItem(armor);

@@ -8,6 +8,8 @@ export class DamageSrc implements TValue {
 
 		if (!json) {
 			return new DamageSrc(new Simple('dmg', 0), 'blunt');
+		} else if (typeof json === 'number') {
+			return new DamageSrc(new Simple('dmg', json), 'blunt');
 		} else if (typeof (json) === 'string') {
 			return new DamageSrc(ParseValue(json), 'blunt');
 		} else {

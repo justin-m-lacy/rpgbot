@@ -1,11 +1,10 @@
 import { Char } from 'rpg/char/char';
-import { RawArmorData } from 'rpg/parsers/armor';
+import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
 import { Path } from 'rpg/values/paths';
 import { Item, } from './item';
 import { Material } from './material';
-import { ItemData } from './types';
 
 const Slots: { [s: string]: boolean } = {
 	'head': true,
@@ -49,27 +48,29 @@ export class Wearable extends Item {
 
 	/**
 	 * From template data.
-	 * @param base
+	 * @param proto
 	 * @param mat
 	 */
-	static FromTemplate(base: RawArmorData, mat?: Material | null) {
+	static FromProto(proto: RawWearableData, mat?: Material | null, item?: Wearable) {
 
-		const name = mat ? (mat?.name + ' ' + base.name) : base.name;
-		const it = new Wearable(undefined, { name });
+		const name = mat ? (mat?.name + ' ' + proto.name) : proto.name;
+
+		item ??= new Wearable(undefined, { name }, proto);
 
 		if (mat) {
-			it.material = mat?.id;
-			it.price = base.price * (mat.priceMod || 1);
-			it.armor = mat.bonus ? base.armor + mat.bonus : base.armor;
+			item.material = mat?.id;
+			item.price = proto.price * (mat.priceMod || 1);
+			item.armor = mat.bonus ? proto.armor + mat.bonus : proto.armor;
 		}
 
-		it.slot = base.slot as HumanSlot;
+		item.slot = proto.slot as HumanSlot;
 
-		if (base.mods) {
-			it.mods = ParseMods(base.mods, it.id,);
+		if (proto.mods) {
+			item.mods = ParseMods(proto.mods, item.id,);
 		}
 
-		return it;
+		return Item.InitData(proto, item);
+
 	}
 
 	toJSON() {
@@ -97,15 +98,16 @@ export class Wearable extends Item {
 	slot: HumanSlot = 'hands';
 	mods: Path<IMod> | undefined;
 
-	proto?: ItemData;
+	proto?: RawWearableData;
 
-	constructor(id: string | undefined, opts: { name?: string, desc?: string }, proto?: ItemData) {
+	constructor(id: string | undefined, opts: { name?: string, desc?: string }, proto?: RawWearableData) {
 
 		super(id, opts);
 		this._armor = 0;
 		this.proto = proto;
 
 	}
+
 
 	getDetails(char?: Char) {
 		return this.name + '\t armor: ' + this.armor + '\t price: ' + this.price + '\n' + super.getDetails(char);

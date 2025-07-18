@@ -3,11 +3,12 @@ import { AddProtoItem } from 'rpg/builders/itemgen';
 import { DamageSrc } from 'rpg/formulas';
 import { Material, RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
+import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
 import { Weapon } from '../items/weapon';
 
-export type RawWeaponData = { hit?: number, mods?: Record<string, any> } & ItemData
+export type RawWeaponData = RawWearableData & { hit?: number, mods?: Record<string, any> } & ItemData
 	& (typeof BaseWeapons)[number];
 
 export const InitWeapons = () => {

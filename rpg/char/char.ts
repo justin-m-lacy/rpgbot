@@ -201,8 +201,6 @@ export class Char extends Actor {
 
 	private applyEquip(it: Wearable) {
 
-		console.log(`applyEquip: ${it.name}`);
-
 		if (it.mods) {
 			ApplyMods(this, it.mods);
 		}

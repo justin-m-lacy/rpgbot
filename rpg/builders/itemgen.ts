@@ -21,7 +21,7 @@ type RawItemData = (typeof import('data/items/items.json', { assert: { type: 'js
 /**
  * Master item prototypes. ( raw data)
  */
-export const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData } = {};
+const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData } = {};
 
 const JunkItems: RawItemData[] = [];
 
@@ -199,6 +199,8 @@ export const AddProtoItems = <T extends ItemData>(arr: Record<string, T> | T[]) 
 export const AddProtoItem = <T extends ItemData>(it: T) => {
 	ProtoItems[it.id] = ProtoItems[it.name] = it;
 }
+
+export const GetProto = <T extends ItemData>(s: string) => ProtoItems[s] as T;
 
 export const Craft = (char: Char, name: string, desc?: string, embed?: string) => {
 
