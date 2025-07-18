@@ -1,12 +1,9 @@
 import BaseWeapons from 'data/items/weapons.json';
 import { AddProtoItem } from 'rpg/builders/itemgen';
-import { DamageSrc } from 'rpg/formulas';
-import { Material, RandMaterial } from 'rpg/items/material';
+import { RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
+import { Weapon } from 'rpg/items/weapon';
 import { RawWearableData } from 'rpg/parsers/armor';
-import { ParseMods } from 'rpg/parsers/mods';
-import { ParseValue } from 'rpg/parsers/values';
-import { Weapon } from '../items/weapon';
 
 export type RawWeaponData = RawWearableData & { hit?: number, mods?: Record<string, any> } & ItemData
 	& (typeof BaseWeapons)[number];
@@ -30,38 +27,8 @@ export const GenWeapon = (lvl: number = 0) => {
 	const mat = RandMaterial(lvl ?? 0);
 	if (mat === null) return null;
 
-	return BuildWeapon(
+	return Weapon.FromProto(
 		BaseWeapons[Math.floor(BaseWeapons.length * Math.random())] as RawWeaponData,
 		mat);
-
-}
-/**
- * Create a new weapon from a base weapon object
- * and a weapon material.
- * @param tmp 
- * @param mat 
- */
-const BuildWeapon = (tmp: RawWeaponData, mat?: Material) => {
-
-	const w = new Weapon(undefined, { name: tmp.name }, new DamageSrc(
-		ParseValue('dmg', tmp.dmg), tmp.type
-	));
-
-	if (tmp.hands) w.hands = tmp.hands;
-	if (tmp.mods) w.mods = ParseMods(tmp.mods, w.id);
-
-	w.toHit = tmp.hit || 0;
-
-	/// todo: apply as a mod.
-	if (mat) {
-
-		w.name = mat.name + ' ' + w.name;
-		w.material = mat.name;
-		w.price = tmp.price * (mat.priceMod || 1);
-
-		w.dmg.bonus += mat.dmg || mat.bonus || 0;
-	}
-
-	return w;
 
 }

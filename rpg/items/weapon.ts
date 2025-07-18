@@ -5,6 +5,7 @@ import { GetMaterial, Material } from 'rpg/items/material';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
+import { ParseValue } from 'rpg/parsers/values';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
 import { DamageSrc } from '../formulas';
@@ -17,9 +18,19 @@ export class Weapon extends Wearable implements TNpcAction {
 
 		const json = super.toJSON();
 
-		if (!this.proto) {
+		if (this.proto) {
+
+			json.name = undefined;
+			json.desc = undefined;
+			if (this.slot != this.proto.slot) {
+				this.slot = this.slot;
+			}
+			json.price = undefined;
+
+		} else {
+			json.name = this._name;
 			json.dmg = this.dmg;
-			json.hit = this.toHit;
+			json.hit = this.tohit;
 		}
 
 		return json;
@@ -33,8 +44,16 @@ export class Weapon extends Wearable implements TNpcAction {
 	 */
 	static FromProto(base: RawWeaponData, mat?: Material | null) {
 
-		const it = new Weapon(undefined, base, DamageSrc.Decode(base.dmg));
+		const it = new Weapon(undefined, base, new DamageSrc(
+			ParseValue('dmg', base.dmg), base.type
+		));
+
+		it.tohit = base.hit || 0;
 		super.FromProto(base, mat, it);
+
+		it.hands = base.hands ?? 1;
+		it.dmg.bonus += mat?.dmg || mat?.bonus || 0;
+
 		return it;
 
 	}
@@ -47,16 +66,14 @@ export class Weapon extends Wearable implements TNpcAction {
 		mods: any, dmg: any
 	}) {
 
-		let w: Weapon;
-
 		if (json.proto) {
 
 			const mat = json.mat ?? json.material ? GetMaterial(json.mat ?? json.material!) : null;
-			w = Weapon.FromProto(GetProto<RawWeaponData>(json.proto)!, mat);
+			return Weapon.FromProto(GetProto<RawWeaponData>(json.proto)!, mat);
 
 
 		} else {
-			w = new Weapon(json.id, { name: json.name, desc: json.desc },
+			const w = new Weapon(json.id, { name: json.name, desc: json.desc },
 				DamageSrc.Decode(json.dmg));
 			w.slot = json.slot ?? 'hands';
 
@@ -74,14 +91,14 @@ export class Weapon extends Wearable implements TNpcAction {
 
 			if (json.kind) w.kind = json.kind;
 
-			w.toHit = json.hit || 0;
+			w.tohit = json.hit || 0;
 			return Item.InitData(json, w);
 
 		}
 
 	}
 
-	toHit: number = 0;
+	tohit: number = 0;
 	hands: number = 1;
 	dmg: DamageSrc;
 
@@ -98,7 +115,7 @@ export class Weapon extends Wearable implements TNpcAction {
 	}
 
 	getDetails(char?: Char) {
-		return `${this.name} dmg: ${this.dmg} hitBonus: ${this.toHit} price: ${this.price}\n` + super.getDetails(char);
+		return `${this.name} dmg: ${this.dmg} hitBonus: ${this.tohit} price: ${this.price}\n` + super.getDetails(char);
 	}
 
 

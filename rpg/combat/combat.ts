@@ -62,7 +62,7 @@ export class Combat {
 			return;
 		}
 
-		const hitroll = + char.toHit + (atk.tohit?.valueOf() ?? 0);
+		const hitroll = + char.tohit + (atk.tohit?.valueOf() ?? 0);
 		if (hitroll < targ.armor.valueOf()) {
 
 			await this.game.send(char, `${char.name} attacks ${who.name} with ${atk.name} and misses!`);
@@ -357,7 +357,7 @@ export class Combat {
 	rollSpellHit(src: Char | Mob, targ: TActor) {
 
 		/// todo: some bs formula.
-		const roll = (src.statRoll('int') + src.toHit) * Math.random();
+		const roll = (src.statRoll('int') + src.tohit) * Math.random();
 		if (roll > (targ.level.valueOf() + targ.statRoll())) {
 			return true;
 		} else {

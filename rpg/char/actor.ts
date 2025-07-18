@@ -91,7 +91,7 @@ export class Actor {
 
 	get cls() { return this._myClass }
 
-	get toHit() { return this.getModifier('dex'); }
+	get tohit() { return this.getModifier('dex'); }
 	get at() { return this._at; }
 	set at(v) { this._at.setTo(v); }
 

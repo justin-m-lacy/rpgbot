@@ -59,7 +59,6 @@ export class Wearable extends Item {
 
 		if (mat) {
 			item.material = mat?.id;
-			item.price = proto.price * (mat.priceMod || 1);
 			item.armor = mat.bonus ? proto.armor + mat.bonus : proto.armor;
 		}
 
@@ -91,6 +90,9 @@ export class Wearable extends Item {
 	private _armor: number;
 
 	material?: string;
+
+	get name() { return this.material ? `${this.material} ${super.name}` : super.name }
+	set name(v) { super.name = v; }
 
 	/**
 	 * @property slot - equip slot used.

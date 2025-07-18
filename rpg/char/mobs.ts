@@ -27,7 +27,7 @@ export class Mob {
 			hp: this._hp,
 			dots: this.dots.length > 0 ? this.dots : undefined,
 			armor: this._armor,
-			toHit: this._toHit,
+			tohit: this._tohit,
 			flags: this.flags,
 			evil: this._evil ?? undefined,
 			proto: this.proto?.id
@@ -39,8 +39,8 @@ export class Mob {
 
 	get drops() { return this.proto?.drops; }
 
-	get toHit() { return this._toHit; }
-	set toHit(v) { this._toHit = v; }
+	get tohit() { return this._tohit; }
+	set tohit(v) { this._tohit = v; }
 
 	get evil() { return this._evil; }
 	set evil(v) { this._evil = v; }
@@ -61,7 +61,7 @@ export class Mob {
 
 	readonly flags: CharFlags = new CharFlags();
 
-	private _toHit: number;
+	private _tohit: number;
 
 	name: string = 'unknown';
 
@@ -89,7 +89,7 @@ export class Mob {
 	constructor(id?: string, proto?: MobData | undefined) {
 
 		this.id = id ?? randomUUID();
-		this._toHit = 0;
+		this._tohit = 0;
 		this.proto = proto;
 
 		this.flags.setTo((proto?.flags || 0));

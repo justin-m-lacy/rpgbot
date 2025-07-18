@@ -1,3 +1,5 @@
+import { IMod } from "rpg/values/imod";
+
 let materials: Material[];
 let byName: { [name: string]: Material };
 
@@ -14,7 +16,9 @@ export type Material = {
 	level: number;
 	bonus?: number;
 	dmg?: number;
-	priceMod?: number;
+	only?: string[],
+	exclude?: string[],
+	alter: Record<string, IMod>
 
 }
 
@@ -46,21 +50,24 @@ export const GetMaterial = (name: string) => {
 }
 
 
-export const LoadMaterials = () => {
+export const LoadMaterials = async () => {
 
 	if (materials != null) return;
 
 
-	const objs = require('data/items/materials.json');
+	const objs = (await import('data/items/materials.json', { assert: { type: 'json' } })).default;
 	materials = [];
 	byName = {};
 	byLevel = {};
 
 	for (let i = objs.length - 1; i >= 0; i--) {
 
-		const m = objs[i];
+		const m = objs[i] as any;
 
 		m.name ??= m.id;
+		m.only = m.only?.split(',');
+		m.exclude = m.exclude?.split(',');
+
 		byName[m.id] = byName[m.name] = m;
 		AddToLevel(m, m.level);
 
@@ -72,7 +79,7 @@ export const LoadMaterials = () => {
 
 const AddToLevel = (mat: Material, lvl: number = 0) => {
 
-	if (lvl === null) lvl = 0;
+	lvl = lvl || 0;
 
 	let list = byLevel[lvl];
 	if (!list) {

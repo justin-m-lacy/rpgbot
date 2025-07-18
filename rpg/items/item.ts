@@ -43,7 +43,7 @@ export class Item {
 
 		return {
 			id: this.id,
-			name: this.name,
+			name: this._name,
 			desc: this.desc,
 			type: this.type,
 			price: this._price,

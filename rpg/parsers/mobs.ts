@@ -25,7 +25,7 @@ export type MobData = {
 	kind?: string;
 	desc?: string;
 	hp: Numeric;
-	toHit: Numeric;
+	tohit: Numeric;
 	armor: Numeric;
 	evil: number;
 	size?: string;
@@ -39,7 +39,7 @@ export type MobData = {
 }
 
 /// TODO: old parsing methods.
-const parseVars = ['hp', 'armor', 'toHit', 'mp'];
+const parseVars = ['hp', 'armor', 'tohit', 'mp'];
 
 /**
  * writable properties of Mob
@@ -245,7 +245,7 @@ export const ReviveMob = (json: any) => {
 		m.attacks.push(Weapon.Revive(proto.weap));
 	}
 
-	if (m.toHit) m.toHit = Number(m.toHit);
+	if (m.tohit) m.tohit = Number(m.tohit);
 	return m;
 
 }
