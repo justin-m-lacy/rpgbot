@@ -1,4 +1,5 @@
 import { Char } from 'rpg/char/char';
+import { RawArmorData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
 import { Path } from 'rpg/values/paths';
@@ -51,10 +52,10 @@ export class Wearable extends Item {
 	 * @param base
 	 * @param mat
 	 */
-	static FromTemplate(base: any, mat?: Material | null) {
+	static FromTemplate(base: RawArmorData, mat?: Material | null) {
 
 		const name = mat ? (mat?.name + ' ' + base.name) : base.name;
-		const it = new Wearable(undefined, name);
+		const it = new Wearable(undefined, { name });
 
 		if (mat) {
 			it.material = mat?.id;
@@ -62,7 +63,7 @@ export class Wearable extends Item {
 			it.armor = mat.bonus ? base.armor + mat.bonus : base.armor;
 		}
 
-		it.slot = base.slot;
+		it.slot = base.slot as HumanSlot;
 
 		if (base.mods) {
 			it.mods = ParseMods(base.mods, it.id,);

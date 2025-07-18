@@ -1,11 +1,14 @@
 import { ParseValue } from 'rpg/parsers/values';
+import { Simple } from 'rpg/values/simple';
 import type { Numeric, TValue } from 'rpg/values/types';
 
 export class DamageSrc implements TValue {
 
-	static Decode(json: string | { dmg: any, type?: string }) {
+	static Decode(json: string | { dmg: any, type?: string } | undefined) {
 
-		if (typeof (json) === 'string') {
+		if (!json) {
+			return new DamageSrc(new Simple('dmg', 0), 'blunt');
+		} else if (typeof (json) === 'string') {
 			return new DamageSrc(ParseValue(json), 'blunt');
 		} else {
 			return new DamageSrc(ParseValue(json.dmg), json.type);

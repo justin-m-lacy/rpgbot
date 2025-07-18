@@ -55,8 +55,8 @@ export class Rpg {
 
 		this.charCache = this.cache.subcache<Char>('chars', (data) => {
 
-			const char = ReviveChar(this.game, data);
-			char?.events.on('levelUp', this.updateCharInfo, this);
+			const char = ReviveChar(this.game, data)!;
+			char.events.on('levelUp', this.updateCharInfo, this);
 			return char;
 
 		});

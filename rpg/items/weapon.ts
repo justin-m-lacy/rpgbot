@@ -21,7 +21,16 @@ export class Weapon extends Wearable implements TNpcAction {
 
 	}
 
-	static Revive(json: ItemData & { slot?: HumanSlot, hit?: number, kind?: string, mat?: string, mods: any, dmg: any }) {
+	static Revive(json: ItemData & {
+		slot?: HumanSlot, hit?: number, kind?: string,
+		proto?: string,
+		material?: string,
+		mat?: string,
+		mods: any, dmg: any
+	}) {
+
+		if (json.proto) {
+		}
 
 		const dmg = DamageSrc.Decode(json.dmg);
 
@@ -30,6 +39,9 @@ export class Weapon extends Wearable implements TNpcAction {
 		w.slot = json.slot ?? 'hands';
 
 		if (json.mat) w.material = json.mat;
+		//@deprecated
+		if (json.material) w.material = json.material;
+
 		if (json.mods) {
 			w.mods = json.mods;
 		}

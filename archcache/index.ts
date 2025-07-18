@@ -214,7 +214,7 @@ export default class Cache<T = any> extends Emitter {
 
 		} catch (e) {
 
-			this.emit('error', 'fetch', key);
+			console.log(`load error: ${e}`);
 
 		}
 

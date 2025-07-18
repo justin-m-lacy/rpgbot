@@ -7,7 +7,9 @@ import { ItemData } from 'rpg/items/types';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
 
-type RawArmorData = ItemData & (typeof BaseArmors)[number];
+export type RawArmorData = ItemData & (typeof BaseArmors)[number] & {
+	mods?: Record<string, any>
+};
 
 const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawArmorData[] }> = {};
 
