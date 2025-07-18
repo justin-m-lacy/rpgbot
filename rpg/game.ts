@@ -128,40 +128,52 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	private async updateLocs() {
 
-		let liveNpcs: number;
+		let hasChars = false;
 
 		for (let k in this.liveLocs) {
 
-			liveNpcs = 0;
+			hasChars = false;
 
 			const loc = this.liveLocs[k];
 
-			for (let i = loc.npcs.length - 1; i >= 0; i--) {
+			const npcs: TActor[] = (loc.npcs as TActor[]).slice(0);
 
-				const npc = loc.npcs[i];
-				// died between frames.
-				if (!npc.isAlive()) continue;
-
-				this.tickDots(npc);
-				if (!npc.isAlive()) continue;
-
-				if (npc.dots.length > 0) {
-					liveNpcs++;
+			const targs: TActor[] = [];
+			for (let i = loc.chars.length - 1; i >= 0; i--) {
+				const c = this.getChar(loc.chars[i]);
+				if (!c) continue;
+				hasChars = true;
+				for (let m of c.minions) {
+					if (m.isAlive()) npcs.push(m);
 				}
+				if (c.isAlive()) targs.push(c)
 
 			}
-			if (loc.chars.length) {
-				liveNpcs += await this.combat.runNpcsAt(loc);
+
+			for (let i = npcs.length - 1; i >= 0; i--) {
+
+				const npc = npcs[i];
+				// died between frames.
+				if (!npc.isAlive()) {
+					quickSplice(npcs, i);
+				}
+				this.tickDots(npc);
+				if (!npc.isAlive()) {
+					quickSplice(npcs, i)
+				}
+				targs.push(npc);
+
 			}
-			if (liveNpcs <= 0) {
-				// no npcs active here.
+
+			if (hasChars && npcs.length) {
+				await this.combat.doNpcActions(loc, npcs, targs);
+			} else {
 				delete this.liveLocs[k];
 			}
 
 		}
 
 	}
-
 
 	/**
 	 * move mob to new location.
@@ -632,6 +644,20 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		return this.charCache.fetch(charId);
 	}
 	getChar(id: string) { return this.charCache.get(id) }
+
+	/**
+	 * Get list of currently loaded chars by id. no fetch.
+	 * @param ids 
+	 * @returns 
+	 */
+	getChars(ids: string[]) {
+		const res: Char[] = [];
+		for (let i = ids.length - 1; i >= 0; i--) {
+			const c = this.charCache.get(ids[i]);
+			if (c) res.push(c);
+		}
+		return res;
+	}
 
 	makeParty(char: Char, ...invites: string[]) {
 

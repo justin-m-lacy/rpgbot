@@ -83,9 +83,8 @@ export class Combat {
 
 			for (let i = act.summon.length - 1; i >= 0; i--) {
 				const mob = GenMob(act.summon[i]);
-				if (mob) {
-					mob.team = char.team;
-					(char as Char).minions[mob.id] = mob;
+				if (mob && !(char as Char).minions.some(c => c.id == mob.id)) {
+					(char as Char).minions.push(mob);
 				}
 			}
 
@@ -286,14 +285,16 @@ export class Combat {
 	 * @param loc 
 	 * @returns 
 	 */
-	async runNpcsAt(loc: Loc) {
-
-		const targs: TActor[] = [];
+	async doNpcActions(loc: Loc, npcs: TActor[], targs: TActor[]) {
 
 		for (let i = loc.chars.length - 1; i >= 0; i--) {
 
 			const c = this.game.getChar(loc.chars[i]);
 			if (!c?.isAlive()) continue;
+			for (const k in c.minions) {
+				targs.push(c.minions[k]);
+			}
+
 			targs.push(c);
 
 		}
@@ -312,7 +313,6 @@ export class Combat {
 			}
 
 		}
-		return 1;
 
 	}
 

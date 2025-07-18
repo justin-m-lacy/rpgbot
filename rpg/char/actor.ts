@@ -129,7 +129,7 @@ export class Actor {
 	readonly teams: Faction = new Faction(Team.chars);
 	get team() { return this.teams.team }
 
-	readonly minions: Record<string, TActor> = {}
+	readonly minions: TActor[] = [];
 
 	constructor(name: string, opts: {
 		game: Game,
