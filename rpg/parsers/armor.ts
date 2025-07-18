@@ -1,8 +1,8 @@
 
 import BaseArmors from 'data/items/armors.json';
-import { AddProtoItem } from 'rpg/builders/itemgen';
+import { AddProtoItem, GetProto } from 'rpg/builders/itemgen';
 import { Item } from 'rpg/items/item';
-import { RandMaterial } from 'rpg/items/material';
+import { GetMaterial, RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
@@ -19,17 +19,34 @@ const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawWearableData[] }> = {};
 
 export const ReviveWearable = (json: any) => {
 
-	const a = new Wearable(json.id, json.name, json.desc);
-	a.material = json.material;
-	a.slot = json.slot;
-	a.armor = json.armor;
+	const proto = GetProto<RawWearableData>(json.proto);
+	const mat = GetMaterial(json.mat);
 
-	if (json.mods) {
-		console.log(`wear mods: ${json.mods}`);
-		a.mods = ParseMods(json.mods, a.id);
+	if (proto) {
+
+		const w = Wearable.FromProto(proto, mat);
+		w.slot = json.slot;
+		return w;
+
+
+	} else {
+
+		const w = new Wearable(json.id,
+			{ name: json.name, desc: json.desc, material: mat, }
+		);
+		w.slot = json.slot;
+		w.armor = json.armor;
+
+		if (json.mods) {
+			console.log(`wear mods: ${json.mods}`);
+			w.mods = ParseMods(json.mods, w.id);
+		}
+
+		Item.InitData(json, w);
+		return w;
+
 	}
 
-	return Item.InitData(json, a);
 }
 
 export const GenArmor = (lvl: number = 0, slot?: HumanSlot | null) => {

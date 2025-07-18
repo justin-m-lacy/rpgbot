@@ -29,10 +29,10 @@ const ItemDecoders: Record<string, (data: any) => Item> = {
 /**
  * revive item from JSON
 */
-export const DecodeItem = (json: any): Item | null | undefined => {
+export const DecodeItem = <T extends Item>(json: any): T | null => {
 
 	if (!json) return null;
-	return ItemDecoders[json.type]?.(json) ?? ItemDecoders[ItemType.Unknown](json);
+	return (ItemDecoders[json.type]?.(json) as T ?? ItemDecoders[ItemType.Unknown](json) as T) ?? null;
 
 }
 

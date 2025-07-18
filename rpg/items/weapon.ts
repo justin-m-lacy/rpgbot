@@ -42,11 +42,14 @@ export class Weapon extends Wearable implements TNpcAction {
 	 * @param base
 	 * @param mat
 	 */
-	static FromProto(base: RawWeaponData, mat?: Material | null) {
+	static FromProto(base: RawWeaponData, mat?: Material) {
 
-		const it = new Weapon(undefined, base, new DamageSrc(
-			ParseValue('dmg', base.dmg), base.type
-		));
+		const it = new Weapon(undefined, {
+			name: base.name,
+			proto: base, dmg: new DamageSrc(
+				ParseValue('dmg', base.dmg), base.kind
+			)
+		});
 
 		it.tohit = base.hit || 0;
 		super.FromProto(base, mat, it);
@@ -66,24 +69,22 @@ export class Weapon extends Wearable implements TNpcAction {
 		mods: any, dmg: any
 	}) {
 
+		const mat = json.mat ?? json.material ? GetMaterial(json.mat ?? json.material!) : undefined;
+
 		if (json.proto) {
 
-			const mat = json.mat ?? json.material ? GetMaterial(json.mat ?? json.material!) : null;
 			return Weapon.FromProto(GetProto<RawWeaponData>(json.proto)!, mat);
 
 
 		} else {
-			const w = new Weapon(json.id, { name: json.name, desc: json.desc },
-				DamageSrc.Decode(json.dmg));
+			const w = new Weapon(json.id,
+				{
+					name: json.name, desc: json.desc,
+					material: mat,
+					dmg: DamageSrc.Decode(json.dmg)
+				},
+			);
 			w.slot = json.slot ?? 'hands';
-
-			if (json.mat) w.material = json.mat;
-			//@deprecated
-			if (json.material) w.material = json.material;
-
-			if (json.mods) {
-				w.mods = json.mods;
-			}
 
 			if (json.mods) {
 				w.mods = ParseMods(json.mods, w.id);
@@ -106,10 +107,11 @@ export class Weapon extends Wearable implements TNpcAction {
 	set kind(s: string) { this.dmg.type = s; }
 
 	constructor(id: string | undefined,
-		opts: { name?: string, desc?: string }, dmg: DamageSrc, proto?: RawWearableData) {
+		opts: { name?: string, desc?: string, dmg: DamageSrc, proto?: RawWearableData, material?: Material }) {
 
-		super(id, opts, proto);
-		this.dmg = dmg;
+		super(id, opts,);
+		this.dmg = opts.dmg;
+		this.proto = opts.proto
 
 		this.type = ItemType.Weapon;
 	}
@@ -121,5 +123,9 @@ export class Weapon extends Wearable implements TNpcAction {
 
 }
 
-export const Fists = new Weapon('fists', { name: 'fists', desc: 'Just plain fists.' },
-	new DamageSrc(new Dice(1, 2, 0), 'blunt'));
+export const Fists = new Weapon('fists',
+	{
+		name: 'fists', desc: 'Just plain fists.',
+		dmg: new DamageSrc(new Dice(1, 2, 0), 'blunt')
+	},
+);

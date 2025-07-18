@@ -1,18 +1,12 @@
 import { ItemList } from 'rpg/display/items';
 import { ItemType } from 'rpg/items/types';
 import { Item } from '../items/item';
-import { HumanSlot, Wearable } from "../items/wearable";
+import { HumanSlot, HumanSlots, THanded, Wearable } from "../items/wearable";
 
 const MaxSlots: { [key: string]: number | undefined } = {
 	neck: 3,
 	fingers: 4
 };
-
-type THanded = Wearable & { slot: 'hands', hands?: number };
-
-export type HumanSlots = {
-	[K in HumanSlot]: K extends 'hands' | 'left' | 'right' ? (THanded | null) : Wearable | Wearable[] | null;
-}
 
 export class Equip {
 

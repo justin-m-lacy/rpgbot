@@ -1,5 +1,19 @@
 [
     {
+        "id": "skin",
+        "name": "flesh",
+        "kind": "skin",
+        "weight": 0,
+        "level": 1,
+        "exclude": "weapon",
+        "alter": {
+            "price": "200%",
+            "tohit": -4,
+            "dmg": -4,
+            "enchants.max": 5
+        }
+    },
+    {
         "id": "silk",
         "kind": "cloth",
         "weight": 0,

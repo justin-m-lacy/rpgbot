@@ -2,11 +2,12 @@ import { Char } from 'rpg/char/char';
 import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
+import { ApplyMods } from 'rpg/values/modding';
 import { Path } from 'rpg/values/paths';
 import { Item, } from './item';
 import { Material } from './material';
 
-const Slots: { [s: string]: boolean } = {
+const Slots: Record<string, boolean> = {
 	'head': true,
 	'hands': true,
 	'back': true,
@@ -26,12 +27,17 @@ export const GetSlots = () => Object.keys(Slots);
 export type HumanSlot = 'head' | 'hands' | 'back' | 'waist' | 'neck'
 	| 'fingers' | 'chest' | 'legs' | 'shins' | 'feet' | 'left' | 'right';
 
+export type THanded = Wearable & { slot: 'hands' | 'left' | 'right', hands?: number };
+
+export type HumanSlots = {
+	[K in HumanSlot]: K extends 'hands' | 'left' | 'right' ? (Wearable | Wearable[] | THanded | THanded[] | null) : (Wearable | Wearable[] | null);
+}
 
 export const toSlot = (slot?: string | null) => {
 
 	if (slot) {
 		const s = slot.toLowerCase();
-		if (Slots[s] === true) {
+		if (Slots[s as HumanSlot] === true) {
 			return s as HumanSlot;
 		}
 	}
@@ -49,18 +55,11 @@ export class Wearable extends Item {
 	/**
 	 * From template data.
 	 * @param proto
-	 * @param mat
+	 * @param material
 	 */
-	static FromProto(proto: RawWearableData, mat?: Material | null, item?: Wearable) {
+	static FromProto(proto: RawWearableData, material?: Material, item?: Wearable) {
 
-		const name = mat ? (mat?.name + ' ' + proto.name) : proto.name;
-
-		item ??= new Wearable(undefined, { name }, proto);
-
-		if (mat) {
-			item.material = mat?.id;
-			item.armor = mat.bonus ? proto.armor + mat.bonus : proto.armor;
-		}
+		item ??= new Wearable(undefined, { name: proto.name, proto, material: material });
 
 		item.slot = proto.slot as HumanSlot;
 
@@ -68,7 +67,7 @@ export class Wearable extends Item {
 			item.mods = ParseMods(proto.mods, item.id,);
 		}
 
-		return Item.InitData(proto, item);
+		return Item.InitData(proto, item) as Wearable;
 
 	}
 
@@ -89,7 +88,7 @@ export class Wearable extends Item {
 
 	private _armor: number;
 
-	material?: string;
+	material?: Material;
 
 	get name() { return this.material ? `${this.material} ${super.name}` : super.name }
 	set name(v) { super.name = v; }
@@ -102,11 +101,18 @@ export class Wearable extends Item {
 
 	proto?: RawWearableData;
 
-	constructor(id: string | undefined, opts: { name?: string, desc?: string }, proto?: RawWearableData) {
+	constructor(id: string | undefined,
+		opts: { name?: string, desc?: string, proto?: RawWearableData, material?: Material }) {
 
 		super(id, opts);
-		this._armor = 0;
-		this.proto = proto;
+
+		this.proto = opts.proto;
+		this._armor = opts.proto?.armor || 0;
+
+		this.material = opts.material;
+		if (this.material?.alter) {
+			ApplyMods(this, this.material.alter);
+		}
 
 	}
 

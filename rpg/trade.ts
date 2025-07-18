@@ -5,7 +5,6 @@ import { GenWeapon } from 'rpg/parsers/weapon';
 import { Char } from "./char/char";
 import { ItemPicker } from './inventory';
 import { Item } from './items/item';
-import { GetMaterial } from "./items/material";
 import { Wearable, toSlot } from './items/wearable';
 
 /**
@@ -92,12 +91,7 @@ export const nerfItems = (char: Char) => {
 		if (!it || !(it instanceof Wearable)) return false;
 
 		if (it.level && it.level > maxLevel) return true;
-		if (it.material) {
-
-			const m = GetMaterial(it.material);
-			if (m && m.level > maxLevel) return true;
-
-		}
+		if (it.material && it.material.level > maxLevel) return true;
 
 		return false;
 	};

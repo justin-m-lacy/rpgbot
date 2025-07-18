@@ -1,4 +1,6 @@
+import { ParseMods } from "rpg/parsers/mods";
 import { IMod } from "rpg/values/imod";
+import { Path } from "rpg/values/paths";
 
 let materials: Material[];
 let byName: { [name: string]: Material };
@@ -18,7 +20,7 @@ export type Material = {
 	dmg?: number;
 	only?: string[],
 	exclude?: string[],
-	alter: Record<string, IMod>
+	alter: Path<IMod>
 
 }
 
@@ -37,7 +39,7 @@ export const RandMaterial = (maxLevel?: number) => {
 
 		}
 
-		return null;
+		return undefined;
 
 	}
 
@@ -67,6 +69,10 @@ export const LoadMaterials = async () => {
 		m.name ??= m.id;
 		m.only = m.only?.split(',');
 		m.exclude = m.exclude?.split(',');
+
+		if (m.alter) {
+			m.alter = ParseMods(m.alter, 'alter');
+		}
 
 		byName[m.id] = byName[m.name] = m;
 		AddToLevel(m, m.level);

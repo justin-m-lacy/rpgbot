@@ -1,9 +1,9 @@
 import { Char } from 'rpg/char/char';
-import { Equip, type HumanSlots } from 'rpg/char/equip';
+import { Equip } from 'rpg/char/equip';
 import { CharState, StatusFlag } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
-import type { HumanSlot, Wearable } from 'rpg/items/wearable';
+import { HumanSlot, HumanSlots, Wearable } from 'rpg/items/wearable';
 import { Dot } from 'rpg/magic/dots';
 import { DecodeItem } from 'rpg/parsers/items';
 import { CharTeam } from 'rpg/social/teams';
@@ -111,9 +111,9 @@ export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
 		if (!wot) continue;
 		else if (Array.isArray(wot)) {
 
-			dest[k] = wot.map(v => DecodeItem(v) as Wearable);
+			dest[k] = wot.map(v => DecodeItem<Wearable>(v));
 
-		} else dest[k] = DecodeItem(wot) as Wearable;
+		} else dest[k] = DecodeItem<Wearable>(wot) ?? null;
 
 	}
 
