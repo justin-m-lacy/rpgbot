@@ -105,11 +105,10 @@ export class Equip {
 		if (!it) return;
 
 		if (Array.isArray(it)) {
-			if (it.length > 0) {
-				it = it.shift()!;
-			} else {
-				return;
-			}
+
+			if (!it.length) return;
+			it = it.shift()!;
+
 		} else {
 			this.slots[slot] = null;
 		}
@@ -186,8 +185,9 @@ export class Equip {
 	 * @param it
 	 * @returns error string if slot does not exist, null if equip
 	 * successful, old item if item replaces previous.
+	 * todo: remove return type string.
 	 */
-	equip(it: Wearable) {
+	equip(it: Wearable): null | string | Wearable | Wearable[] {
 
 		if (it.slot == 'hands' || it.slot == 'left' || it.slot == 'right') return this.equipHand(it as THanded);
 

@@ -1,5 +1,7 @@
-import { CanApplyMods, CanMod, IsMod, type IMod } from "rpg/values/imod";
+import { CanApplyMods, CanMod, IModdable, IsMod, type IMod } from "rpg/values/imod";
+import { Modded, ToModded } from "rpg/values/mods/modded";
 import { IsPath, NewPath, type Path } from "rpg/values/paths";
+import { Id, Idable, IsValue, Numeric } from "rpg/values/types";
 
 /// Path keys that are expected to end in Mod objects.
 const ModKeys = ["runmod", "mod"];
@@ -58,13 +60,11 @@ export const ApplyMods = (
 		} else {
 
 			console.log(`cannot mod: ${targ}/${key}`);
-			/*AsModded(
+			AsModded(
 				targ,
 				key,
-				subTarg,
-				newMods || ModKeys.includes(key),
-				lastTable
-			)?.addMod(modVal);*/
+				subTarg
+			)?.addMod(modVal);
 
 			/*if (newMods || ModKeys.includes(key)) {
 				ModChange.add(IsTable(subTarg) ? subTarg : lastTable);
@@ -110,4 +110,42 @@ export const RemoveMods = (targ: object & any, mods: Path<IMod> | IMod,) => {
 
 	} else console.warn(' invalid mod: [mods,targ]', mods, targ);
 
+}
+/**
+ * Ensure current value of obj[prop] is a moddable object.
+ * @param obj 
+ * @param prop - name of property mod will act on.
+ * @param cur - current value of obj[prop]
+ * @param isMod - whether the value is on a 'mod' path, and any newly created object
+ * should be interpreted as a mod. TODO: use a create func instead?
+ * @param source - source for the mod's "count" - number of times mod is applied.
+ * Only used when creating a new subMod.
+ * @returns 
+ */
+export function AsModded<
+	K extends Id,
+>(
+	obj: { [key in K]: IModdable | Numeric | undefined | null },
+	prop: K,
+	cur: any
+) {
+
+	if (CanMod(cur)) return cur;
+
+	if (!cur || typeof cur === 'number') {
+		return obj[prop] = new Modded(prop, cur || 0);
+	}
+	if (IsValue(cur)) {
+		return obj[prop] = ToModded(MakeIdable(cur, prop));
+	}
+
+	console.error(`Can't Mod: ${(obj as any).id}[${prop}] : ${cur}`);
+
+}
+
+const MakeIdable = <T extends object>(it: T, id: string) => {
+	if (!('id' in it)) {
+		(it as any).id = id;
+	}
+	return it as T & Idable;
 }

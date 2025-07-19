@@ -30,7 +30,7 @@ export type HumanSlot = 'head' | 'hands' | 'back' | 'waist' | 'neck'
 export type THanded = Wearable & { slot: 'hands' | 'left' | 'right', hands?: number };
 
 export type HumanSlots = {
-	[K in HumanSlot]: K extends 'hands' | 'left' | 'right' ? (Wearable | Wearable[] | THanded | THanded[] | null) : (Wearable | Wearable[] | null);
+	[K in HumanSlot]: K extends 'hands' | 'left' | 'right' ? (Wearable | THanded | null) : (Wearable | Wearable[] | null);
 }
 
 export const toSlot = (slot?: string | null) => {

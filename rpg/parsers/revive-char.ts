@@ -111,7 +111,8 @@ export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
 		if (!wot) continue;
 		else if (Array.isArray(wot)) {
 
-			dest[k] = wot.map(v => DecodeItem<Wearable>(v));
+			// @ts-ignore
+			dest[k] = wot.map(v => DecodeItem<Wearable>(v)).filter(v => v != null);
 
 		} else dest[k] = DecodeItem<Wearable>(wot) ?? null;
 

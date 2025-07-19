@@ -24,7 +24,6 @@ type StatGen = PickValues | ValueRoller;
 const statRolls = [
 
 	{ stat: ['str', 'dex', 'con', 'wis', 'int', 'cha'], rolls: 3, die: 6, mod: 0, min: 3 },
-	{ stat: 'sex', pick: ['f', 'm'] },
 	{ stat: 'gold', rolls: 3, die: 4, mod: 1 }
 
 ];
@@ -38,6 +37,7 @@ export const GenChar = (
 	const char = new Char(opts.name, opts);
 	char.teams.setRanks(CharTeam());
 
+	char.sex = Math.random() < 0.5 ? 'm' : 'f';
 	const statVals = rollStats(statRolls);
 
 	char.setBaseStats(statVals);
