@@ -12,7 +12,8 @@ const CmdSplitChar = '/';
 /**
  * Create a new button with command-id and properties
  * encoded in button customId
- * @param opts 
+ * @param opts
+ * @param opts.customId - button id, usually just command id.
  * @param props 
  * @returns 
  */

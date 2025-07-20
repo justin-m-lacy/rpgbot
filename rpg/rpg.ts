@@ -188,7 +188,7 @@ export class Rpg {
 
 		const targ = await this.world.getNpc(char, who);
 		if (targ) return targ;
-		else if (typeof who === 'string') {
+		if (typeof who === 'string') {
 			return await this.loadChar(who);
 		}
 
@@ -201,8 +201,8 @@ export class Rpg {
 
 	async saveChar(char: Char, forceSave = false) {
 
-		if (forceSave) return this.charCache.store(this.getCharKey(char.name), char);
-		this.charCache.cache(this.getCharKey(char.name), char);
+		if (forceSave) return this.charCache.store(this.getCharKey(char.id), char);
+		this.charCache.cache(this.getCharKey(char.id), char);
 
 	}
 

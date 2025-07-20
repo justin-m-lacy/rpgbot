@@ -52,7 +52,7 @@ export class Combat {
 
 		if (!atk) return;
 
-		//console.log(`${char.name} attacks ${who.name} with ${atk.name}`);
+		console.log(`${char.name} attacks ${who.name} with ${atk.name}`);
 
 		const targ = who instanceof Party ? await who.randTarget() : who;
 		if (!targ) return;

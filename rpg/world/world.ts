@@ -276,6 +276,17 @@ export class World {
 	}
 
 	/**
+	 * Add char to current world location.
+	 * @param char 
+	 */
+	async addChar(char: Char) {
+
+		const loc = await this.getOrGen(char.at);
+		loc.addChar(char);
+
+	}
+
+	/**
 	 * Attempt to spawn a monster at the given location.
 	 * @param loc
 	 */

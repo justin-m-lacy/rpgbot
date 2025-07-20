@@ -293,7 +293,7 @@ export const InventoryButtons = (cmd: string, inv: Inventory<Item>, param: strin
 
 		inv.items.map(it => CustomButton({
 			customId: cmd,
-			label: it.name
+			label: it.name || 'unknown'
 		}, {
 			[param]: it.id,
 			...props
@@ -317,7 +317,7 @@ export const OptionButtons = <T extends { id: string, name: string }>(
 
 		opts.map(it => CustomButton({
 			customId: cmd,
-			label: it.name
+			label: it.name || 'unknown'
 		}, {
 			[param]: it.id,
 			...params

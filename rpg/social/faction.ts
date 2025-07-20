@@ -76,7 +76,6 @@ export class Faction {
 
 		for (let k in teams) {
 
-			console.log(`add rank: ${k}`);
 			const t = this.ranks[k as any as Team] = (this.ranks[k as any as Team] ?? 0) +
 				scale * (teams[k as any as Team] ?? 0);
 

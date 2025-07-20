@@ -59,7 +59,6 @@ export const ApplyMods = (
 
 		} else {
 
-			console.log(`cannot mod: ${targ}/${key}`);
 			AsModded(
 				targ,
 				key,

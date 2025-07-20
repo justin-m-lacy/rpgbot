@@ -280,6 +280,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			p2 = targ;
 		}
 
+		console.log(`attack cmd.: ${src}`);
 		await this.combat.tryAttack(src, atk ?? src.getAttack(), p2);
 
 		// reprisal.
@@ -818,13 +819,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	equip(this: Game<A, K>, char: Char, wot: ItemIndex) {
 
-		let res = char.equip(wot);
-		// TODO,echo slot used.
-		if (res === true) char.log(`${char.name} equips ${wot}`);
-		else if (typeof res === 'string') {
-			char.log(res);
-		} else {
-			char.log(`${char.name} does not have ${wot}`);
+		if (char.equip(wot)) {
+			char.log(`${char.name} equips ${wot}`);
 		}
 
 	}

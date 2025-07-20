@@ -56,7 +56,10 @@ export const ReviveChar = (game: Game, json: {
 	} else if (IsCoord(json.loc)) {
 		/// @deprecated legacy. remove.
 		char.at.setTo(json.loc)
+	} else {
+		console.warn(`missing char loc.`)
 	}
+	game.world.addChar(char);
 
 	if (typeof json.flags === 'number') {
 		char.flags.setTo(json.flags);
@@ -84,9 +87,14 @@ export const ReviveChar = (game: Game, json: {
 		}
 	}
 
-	if (json.equip) char.setEquip(
-		ReviveEquip(json.equip)
-	);
+	try {
+		if (json.equip) char.setEquip(
+			ReviveEquip(char, json.equip)
+		);
+	} catch (e) {
+		console.log(`error loading equip: ${e}`);
+		char.log(`failed to load equipment.`)
+	}
 
 	char.init();
 
@@ -95,7 +103,7 @@ export const ReviveChar = (game: Game, json: {
 }
 
 
-export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
+export const ReviveEquip = (char: Char, json: { slots?: Partial<HumanSlots> }) => {
 
 	const e = new Equip();
 
@@ -107,14 +115,20 @@ export const ReviveEquip = (json: { slots?: Partial<HumanSlots> }) => {
 	let k: HumanSlot;
 	for (k in src) {
 
-		const wot = src[k];
-		if (!wot) continue;
-		else if (Array.isArray(wot)) {
+		try {
+			const wot = src[k];
+			if (!wot) continue;
+			else if (Array.isArray(wot)) {
 
-			// @ts-ignore
-			dest[k] = wot.map(v => DecodeItem<Wearable>(v)).filter(v => v != null);
+				// @ts-ignore
+				dest[k] = wot.map(v => DecodeItem<Wearable>(v)).filter(v => v != null);
 
-		} else dest[k] = DecodeItem<Wearable>(wot) ?? null;
+			} else dest[k] = DecodeItem<Wearable>(wot) ?? null;
+		} catch (e) {
+			console.log(`error: loading equip ${e}`);
+			char.log(`${char.name} failed to load ${k}`);
+
+		}
 
 	}
 

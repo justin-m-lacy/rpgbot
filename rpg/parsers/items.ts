@@ -36,20 +36,6 @@ export const DecodeItem = <T extends Item>(json: any): T | null => {
 
 }
 
-function DecodeShop(json: any): Shop {
-
-	const shop = new Shop(json.name, {
-		kind: json.kind,
-		level: json.level, desc: json.desc,
-		genItem: GetTypeGenerator(json.kind)
-	});
-
-	DecodeFeature(json, shop);
-
-	return shop;
-
-}
-
 export function DecodeFeature<T extends Feature>(
 	json: ItemData & { desc: string, action?: string, fb?: string }, f?: T | Feature) {
 
@@ -61,5 +47,19 @@ export function DecodeFeature<T extends Feature>(
 	if (json.fb) f.fb = json.fb;
 
 	return Item.InitData(json, f) as Feature;
+
+}
+
+function DecodeShop(json: any): Shop {
+
+	const shop = new Shop(json.name, {
+		kind: json.kind,
+		level: json.level, desc: json.desc,
+		genItem: GetTypeGenerator(json.kind)
+	});
+
+	DecodeFeature(json, shop);
+
+	return shop;
 
 }

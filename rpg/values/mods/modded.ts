@@ -8,9 +8,7 @@ export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 
 		[SModdable]: true as true,
 
-		[Symbol.toPrimitive]() {
-			return this._cached;
-		},
+		[Symbol.toPrimitive]() { return this._cached; },
 
 		toString() { return this._cached.toString() },
 
@@ -62,7 +60,7 @@ export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 			this._cached = (this.targ.value + state.bonus)
 				* (1 + state.pct * state.pctMult);
 
-		},
+		}
 
 	}
 
@@ -83,7 +81,10 @@ export class Modded implements TValue, IModdable {
 
 	private _base: number = 0;
 	get base() { return this._base }
-	set base(v) { this._base = v; }
+	set base(v) {
+		this._base = v;
+		this.recalc();
+	}
 
 	/// cached value.
 	private _cached: number = 0;

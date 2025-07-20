@@ -126,6 +126,10 @@ export class Equip {
 
 	}
 
+	canEquip(it: Item): it is Wearable {
+		return it instanceof Wearable && it.slot && Object.hasOwn(this.slots, it.slot);
+	}
+
 	equipHand(it: THanded) {
 
 		const right = this.slots.right;
@@ -144,8 +148,6 @@ export class Equip {
 
 			if (right === null) {
 
-				console.log('set right hand.');
-
 				this.slots.right = it;
 				if (left !== null && (left as THanded).hands === 2) {
 					this.slots.left = null;
@@ -154,8 +156,6 @@ export class Equip {
 
 			} else if (left === null) {
 
-				console.log('set left hand.');
-
 				this.slots.left = it;
 				if (right !== null && (right as THanded).hands === 2) {
 					this.slots.right = null;
@@ -163,8 +163,6 @@ export class Equip {
 				}
 
 			} else {
-
-				console.log('change hands.');
 
 				// can't both be two-handed.
 				this.slots.right = it;
@@ -187,12 +185,11 @@ export class Equip {
 	 * successful, old item if item replaces previous.
 	 * todo: remove return type string.
 	 */
-	equip(it: Wearable): null | string | Wearable | Wearable[] {
+	equip(it: Wearable): null | Wearable | Wearable[] {
 
 		if (it.slot == 'hands' || it.slot == 'left' || it.slot == 'right') return this.equipHand(it as THanded);
 
-		let slot = it.slot;
-		if (slot === null || !this.slots.hasOwnProperty(slot)) return it.name + ' cannot be equipped.';
+		const slot = it.slot;
 
 		let cur = this.slots[slot];
 		if (Array.isArray(cur)) {

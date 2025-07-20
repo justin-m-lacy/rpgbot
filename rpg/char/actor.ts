@@ -183,6 +183,7 @@ export class Actor {
 	}
 
 	getAttack() {
+		console.log(`num atks: ${this.attacks.length}`);
 		return this.attacks[Math.floor(this.attacks.length * Math.random())] ?? Fists;
 	}
 

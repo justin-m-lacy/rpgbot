@@ -149,27 +149,25 @@ export class Char extends Actor {
 	equip(what: ItemIndex) {
 
 		const item = this.inv.get(what);
-		if (!item) return 'No such item.';
-
-		if (item instanceof Wearable) {
-
-			const removed = this._equip.equip(item);
-			if (typeof (removed) !== 'string') {
-
-				this.applyEquip(item);
-				this.inv.take(item);
-				if (removed) {
-					this.removeEquip(removed);
-					this.inv.add(removed);
-				}
-
-				return true;
-
-			}
-			return removed;
-		} else {
-			return 'Item cannot be equipped.'
+		if (!item) {
+			this.log('Item not found');
+			return false;
 		}
+		if (!this._equip.canEquip(item)) {
+			console.log(`${(item as any).slot}`)
+			this.log(item.name + ' cannot be equipped.');
+			return false;
+		}
+
+		const removed = this._equip.equip(item);
+		this.applyEquip(item);
+		this.inv.take(item);
+		if (removed) {
+			this.removeEquip(removed);
+			this.inv.add(removed);
+		}
+
+		return true;
 
 	}
 
@@ -209,7 +207,7 @@ export class Char extends Actor {
 			//console.log('adding armor: ' + it.armor);
 		}
 		if (it instanceof Weapon) {
-			console.log(`add weap: ${it.name}`);
+			console.log(`${this.name} add attack: ${it.name}`);
 			this.attacks.push(it);
 		}
 
