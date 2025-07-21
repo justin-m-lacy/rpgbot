@@ -6,7 +6,7 @@ import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseValue } from 'rpg/parsers/values';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
-import { DamageSrc } from '../formulas';
+import { DamageSrc } from '../damage.js';
 import { Wearable } from './wearable';
 
 export class Weapon extends Wearable implements TNpcAction {
@@ -53,7 +53,7 @@ export class Weapon extends Wearable implements TNpcAction {
 		super.FromProto(base, mat, w);
 
 		w.hands = base.hands ?? 1;
-		w.dmg.bonus += mat?.dmg || mat?.bonus || 0;
+		w.dmg.base += mat?.dmg || mat?.bonus || 0;
 
 		return w;
 

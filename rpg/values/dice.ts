@@ -1,4 +1,4 @@
-import { TValue } from './types';
+import { ISimple, SymSimple, TValue } from './types';
 const rollex = /^([\+\-]?\d*)?d([\+\-]?\d*)([\+\-]?\d+)?/;
 
 const MaxRoll = 99999;
@@ -52,7 +52,7 @@ export const roll = (count: number, sides: number, bonus: number = 0) => {
 }
 
 
-export class Dice implements TValue {
+export class Dice implements TValue, ISimple {
 
 	static Parse(str: string) {
 
@@ -71,8 +71,8 @@ export class Dice implements TValue {
 	toJSON() {
 
 		return `${this.n}d${this.sides}` +
-			(this.bonus > 0 ? `+${this.bonus}` :
-				(this.bonus < 0 ? `-${this.bonus}` : '')
+			(this.base > 0 ? `+${this.base}` :
+				(this.base < 0 ? `-${this.base}` : '')
 			);
 
 	}
@@ -80,9 +80,13 @@ export class Dice implements TValue {
 	get value() { return this.valueOf() }
 	set value(v: number) { }
 
+	[SymSimple]: true = true;
+
+	id: string = 'dice';
+
 	readonly n: number;
 	readonly sides: number;
-	bonus: number;
+	base: number;
 
 	constructor(count: number = 1, sides: number = 0, bonus: number = 0) {
 
@@ -96,15 +100,23 @@ export class Dice implements TValue {
 		this.sides = sides;
 		this.n = count;
 
-		this.bonus = bonus;
+		this.base = bonus;
 
 	}
+
+	add(amt: number): void {
+		this.base += amt;
+	}
+	setTo(v: number): void {
+		this.base = v;
+	}
+
 
 	toString() { return this.toJSON(); }
 
 	valueOf() {
 
-		let tot = this.bonus;
+		let tot = this.base;
 		let i = this.n;
 
 		while (i-- > 0) tot += Math.floor(this.sides * Math.random() + 1);

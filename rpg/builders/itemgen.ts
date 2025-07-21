@@ -20,7 +20,7 @@ type RawItemData = (typeof import('data/items/items.json', { assert: { type: 'js
 /**
  * Master item prototypes. ( raw data)
  */
-const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData } = {};
+const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemData } = Object.create(null);
 
 const JunkItems: RawItemData[] = [];
 

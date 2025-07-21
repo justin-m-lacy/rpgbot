@@ -1,5 +1,6 @@
 [
     {
+        "id": "shortsword",
         "name": "short sword",
         "kind": "slash",
         "dmg": "1d6",

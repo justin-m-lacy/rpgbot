@@ -1,28 +1,110 @@
-
 {
-    "plains":{
-        "labels":["Plains", "Wastes", "Meadow", "Grasslands", "Fields", "Valley", "Prairie",
-            "Pastures", "Gardens", "Lowlands", "Steppes"]
+    "forests": {
+        "labels": [
+            "Dell",
+            "Forest",
+            "Woods"
+        ]
     },
-
-    "hills":{
-        "labels":["Ravine", "Hills", "Stomping Grounds", "Wilds", "Highlands", "Mound", "Uplands", "Ridge", "Plateau",
-        "Hillock", "Knoll", "Knob", "Foothills", "Hummock"]
+    "plains": {
+        "labels": [
+            "Plains",
+            "Wastes",
+            "Meadow",
+            "Grasslands",
+            "Fields",
+            "Leas",
+            "Moors",
+            "Valley",
+            "Prairie",
+            "Pastures",
+            "Gardens",
+            "Lowlands",
+            "Steppes"
+        ]
     },
-
-    
-    "mountains":{
-        "labels":["Heights", "Cliffs", "Mountains", "Peak", "Slopes", "Bluffs", "Dome", "Vista", "Range", "Pass"]
+    "hills": {
+        "labels": [
+            "Ravine",
+            "Highlands",
+            "Hills",
+            "Hillock",
+            "Knoll",
+            "Knob",
+            "Stomping Grounds",
+            "Mound",
+            "Uplands",
+            "Ridge",
+            "Plateau",
+            "Gulch",
+            "Foothills",
+            "Hummock",
+            "Wilds"
+        ]
     },
-    
-    "swamp":{
-        "labels":["Swamp", "Bog", "Fen", "Moor", "Marsh", "Quagmire"]
+    "mountains": {
+        "labels": [
+            "Heights",
+            "Cliffs",
+            "Mountains",
+            "Peak",
+            "Slopes",
+            "Bluffs",
+            "Dome",
+            "Vista",
+            "Range",
+            "Pass"
+        ]
     },
-
-    "adjectives":["High", "Low", "Hidden", "Arid", "Mystic", "Dismal", "Black", "White", "Red", "Blue",
-        "Green", "Murky", "Sheltered", "Wild", "Enchanted","Giant","Humble",
-   "Nebulous", "Sacred", "Forbidden", "Homely", "Endless", "Baffling", "Wonderful",
-	"Level", "Terrible", "Grand", "Great", "Feared", "Mournful", "Whistling", "Stormy",
-    "Lost", "Deep", "Undying", "Immortal", "Dead", "Whispering", "Furtive" ]
-    
+    "swamp": {
+        "labels": [
+            "Swamp",
+            "Bog",
+            "Fen",
+            "Moor",
+            "Marsh",
+            "Quagmire"
+        ]
+    },
+    "adjectives": [
+        "High",
+        "Low",
+        "Hidden",
+        "Arid",
+        "Mystic",
+        "Dismal",
+        "Black",
+        "White",
+        "Red",
+        "Blue",
+        "Green",
+        "Murky",
+        "Sheltered",
+        "Wild",
+        "Enchanted",
+        "Giant",
+        "Humble",
+        "Nebulous",
+        "Sacred",
+        "Forbidden",
+        "Homely",
+        "Endless",
+        "Baffling",
+        "Wonderful",
+        "Level",
+        "Terrible",
+        "Grand",
+        "Great",
+        "Feared",
+        "Mournful",
+        "Whistling",
+        "Stormy",
+        "Lost",
+        "Deep",
+        "Undying",
+        "Immortal",
+        "Dead",
+        "Whispering",
+        "Furtive"
+    ]
 }

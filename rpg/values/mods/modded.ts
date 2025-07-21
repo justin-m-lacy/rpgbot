@@ -1,12 +1,15 @@
 import { asProxy } from 'rpg/util/proxy';
-import { IMod, type IModdable, SModdable } from '../imod';
+import { IMod, type IModdable, SymModdable } from '../imod';
 import type { Id, Idable, TValue } from "../types";
 
 /// Create modded proxy for target.
-export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
+export const ToModded = <T extends TValue & Idable>(targ: T | number): IModdable => {
+
+	if (typeof targ == 'number') return new Modded('val', targ);
+
 	const modded = {
 
-		[SModdable]: true as true,
+		[SymModdable]: true as true,
 
 		[Symbol.toPrimitive]() { return this._cached; },
 
@@ -72,7 +75,7 @@ export class Modded implements TValue, IModdable {
 
 	toJSON() { return this._base; }
 
-	readonly [SModdable] = true;
+	readonly [SymModdable] = true;
 
 	valueOf() { return this._cached; }
 	toString() { return this.value.toString(); }

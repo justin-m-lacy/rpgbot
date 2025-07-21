@@ -24,7 +24,7 @@ async function findCommands() {
 	const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
 	// get all command files from the commands directory
-	const commandsDir = path.resolve(`${__dirname}/..`, 'commands');
+	const commandsDir = path.resolve(`${import.meta.dirname}/..`, 'commands');
 
 	const fileList = fs.readdirSync(commandsDir, { withFileTypes: true, recursive: true });
 

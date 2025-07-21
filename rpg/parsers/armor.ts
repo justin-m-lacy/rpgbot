@@ -1,7 +1,7 @@
 
 import BaseArmors from 'data/items/armors.json';
 import { AddProtoItem, GetProto } from 'rpg/builders/itemgen';
-import { DamageSrc } from 'rpg/formulas';
+import { DamageSrc } from 'rpg/damage.js';
 import { Item } from 'rpg/items/item';
 import { GetMaterial, RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';

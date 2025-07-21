@@ -1,12 +1,11 @@
 import { InitGame } from "rpg/init";
 import { GetMaterial } from "rpg/items/material";
 
+beforeAll(async () => {
+	await InitGame();
+});
+
 describe('Game Materials', async () => {
-
-	beforeAll(async () => {
-		await InitGame();
-	});
-
 
 	test('Base materials should exist', async () => {
 

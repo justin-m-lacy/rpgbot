@@ -10,7 +10,7 @@ import { pathToFileURL } from 'url';
 import { DiscordBot } from './src/discordbot';
 
 // Ensure current working directory is directory of the base script.
-process.chdir(__dirname);
+process.chdir(import.meta.dirname);
 
 // init bot
 const client: Client = new Client({
@@ -49,9 +49,9 @@ const initBot = async () => {
 	const auth = (await import('./auth.json', { assert: { type: 'json' } })).default as Auth;
 	const config = await loadConfig();
 
-	console.log(`base directory: ${__dirname}`);
+	console.log(`base dir: ${import.meta.dirname}`);
 	try {
-		const bot = new DiscordBot(client, auth, config, __dirname);
+		const bot = new DiscordBot(client, auth, config, import.meta.dirname);
 
 		await InitGame();
 
@@ -78,7 +78,7 @@ async function loadCommands() {
 	const commands: Command[] = [];
 
 	// get all command files from the commands directory
-	const commandsDir = path.resolve(__dirname, 'commands');
+	const commandsDir = path.resolve(import.meta.dirname, 'commands');
 
 	const fileList = fs.readdirSync(commandsDir, { withFileTypes: true, recursive: true });
 

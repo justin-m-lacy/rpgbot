@@ -52,8 +52,6 @@ export const GetMaterial = (id: string) => {
 
 export const LoadMaterials = async () => {
 
-	console.log(`Loading materials.`);
-
 	materials.length = 0;
 
 	const objs = (await import('data/items/materials.json', { assert: { type: 'json' } })).default;
@@ -76,8 +74,6 @@ export const LoadMaterials = async () => {
 		materials.push(raw);
 
 	}
-
-	console.log(`MATS LOADED: ${materials.length}`);
 
 }
 

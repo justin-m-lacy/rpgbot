@@ -1,5 +1,5 @@
 import { precise } from "rpg/util/format";
-import { CanMod, SModdable, type IModdable } from "rpg/values/imod";
+import { CanMod, SymModdable, type IModdable } from "rpg/values/imod";
 import { SymSimple, type Id, type ISimple, type Numeric, type TValue } from "rpg/values/types";
 import { IMod } from './imod';
 
@@ -15,7 +15,7 @@ export const IsRangeData =
 export class Range implements IModdable, ISimple {
 
 	readonly [SymSimple] = true;
-	readonly [SModdable] = true;
+	readonly [SymModdable] = true;
 
 	valueOf() {
 		return this.value;

@@ -35,10 +35,10 @@ export type ModBlock<D extends object> = {
 //Record<keyof D, IMod>;
 
 /// object handles addMod() and removeMod()
-export const SModdable = Symbol('Moddable');
+export const SymModdable = Symbol('Moddable');
 export interface IModdable extends TValue {
 
-	[SModdable]: true,
+	[SymModdable]: true,
 
 	id: string;
 	base: number;
@@ -49,7 +49,7 @@ export interface IModdable extends TValue {
 }
 
 export const CanMod = (it: any | null | undefined): it is IModdable => {
-	return it != null && typeof it === 'object' && it[SModdable] === true;
+	return it != null && typeof it === 'object' && it[SymModdable] === true;
 }
 
 /**

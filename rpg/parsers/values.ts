@@ -4,7 +4,7 @@ import { IsPercentData, ParsePercent } from "rpg/values/percent";
 import { IsRangeData, Range } from "rpg/values/range";
 import { Setter } from "rpg/values/setter";
 import { Simple } from "rpg/values/simple";
-import type { TValue } from "rpg/values/types";
+import type { ISimple, TValue } from "rpg/values/types";
 import { JoinPath } from '../values/paths';
 
 /// IdTest - Test for a simple id name.
@@ -34,7 +34,7 @@ export const ParseValues = (id: string, subId: string, obj: Record<string, any>)
  * @param v 
  * @returns 
  */
-export const ParseValue = (id: string, v?: string | number | object): TValue | undefined => {
+export const ParseValue = (id: string, v?: string | number | object): ISimple | undefined => {
 
 	if (typeof v === 'number') return new Simple(id, v);
 

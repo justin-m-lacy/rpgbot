@@ -1,8 +1,14 @@
 import { ParseValue } from 'rpg/parsers/values';
+import { CanMod, IMod, IModdable, SymModdable } from 'rpg/values/imod';
+import { ToModded } from 'rpg/values/mods/modded';
 import { Simple } from 'rpg/values/simple';
-import type { Numeric, TValue } from 'rpg/values/types';
+import type { TValue } from 'rpg/values/types';
+import { Idable } from './values/types';
 
-export class DamageSrc implements TValue {
+export class DamageSrc implements TValue, IModdable {
+
+	[SymModdable]: true = true;
+
 
 	static Decode(json: string | { dmg: any, type?: string } | undefined) {
 
@@ -24,15 +30,28 @@ export class DamageSrc implements TValue {
 	get value() { return this._val.valueOf() }
 	set value(v) { typeof this._val === 'number' ? this._val = v : this._val.value = v; }
 
-	bonus: number = 0;
-	private _val: Numeric;
+	id: string = 'dmg';
+
+	base: number = 0;
+	private _val: number | (TValue & Idable);
 	type: string;
 
-	constructor(value?: TValue | null, type?: string) {
+	constructor(value?: (Idable & TValue) | null, type?: string) {
 
 		this._val = value ?? 0;
 		this.type = type ?? '';
 
+	}
+
+	addMod(mod: IMod): void {
+		if (CanMod(this._val)) {
+			this._val.addMod(mod);
+		} else {
+			this._val = ToModded(this._val);
+		}
+	}
+	removeMod(mod: IMod): void {
+		throw new Error('Method not implemented.');
 	}
 
 	toString() { return this.value.toString() + ' ' + this.type; }

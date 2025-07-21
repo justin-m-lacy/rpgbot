@@ -56,8 +56,6 @@
     "config.json",
     "rpg/**/*.ts",
     "rpg/**/*.json",
-    "plugins/**/*.ts",
-    "plugins/**/*.json",
     "package.json",
     "commands"
   ]
