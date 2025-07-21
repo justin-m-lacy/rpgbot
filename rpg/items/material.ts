@@ -27,14 +27,12 @@ export type Material = {
 
 export const RandMaterial = (maxLevel?: number) => {
 
-	console.log(`mat length: ${materials.length}`);
 	if (typeof maxLevel === 'number' && !Number.isNaN(maxLevel)) {
 
 		while (maxLevel >= 0) {
 
 			const list = byLevel[maxLevel];
 			if (list?.length) return list[Math.floor(list.length * Math.random())];
-			console.log(maxLevel + ' material list null');
 			maxLevel--;
 
 		}
@@ -47,35 +45,39 @@ export const RandMaterial = (maxLevel?: number) => {
 
 }
 
-export const GetMaterial = (name: string) => {
-	return byName[name];
+export const GetMaterial = (id: string) => {
+	return byName[id];
 }
 
 
 export const LoadMaterials = async () => {
 
-	const objs = (await import('data/items/materials.json', { assert: { type: 'json' } })).default;
+	console.log(`Loading materials.`);
 
-	console.log(`materials count: ${objs.length}`);
+	materials.length = 0;
+
+	const objs = (await import('data/items/materials.json', { assert: { type: 'json' } })).default;
 
 	for (let i = objs.length - 1; i >= 0; i--) {
 
-		const m = objs[i] as any;
+		const raw = Object.assign({}, objs[i]) as any;
 
-		m.name ??= m.id;
-		m.only = m.only?.split(',');
-		m.exclude = m.exclude?.split(',');
+		raw.name ??= raw.id;
+		raw.only = raw.only?.split(',');
+		raw.exclude = raw.exclude?.split(',');
 
-		if (m.alter) {
-			m.alter = ParseMods(m.alter, 'alter');
+		if (raw.alter) {
+			raw.alter = ParseMods(raw.alter, 'alter');
 		}
 
-		byName[m.id] = byName[m.name] = m;
-		AddToLevel(m, m.level);
+		byName[raw.id] = byName[raw.name] = raw;
+		AddToLevel(raw, raw.level);
 
-		materials.push(m);
+		materials.push(raw);
 
 	}
+
+	console.log(`MATS LOADED: ${materials.length}`);
 
 }
 

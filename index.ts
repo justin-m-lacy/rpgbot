@@ -5,7 +5,7 @@ import { IsCommand, IsCommandModule, type Command } from '@/bot/command';
 import "dotenv/config";
 import * as fs from 'fs';
 import path from 'path';
-import { InitGame } from 'rpg/rpg';
+import { InitGame } from 'rpg/init';
 import { pathToFileURL } from 'url';
 import { DiscordBot } from './src/discordbot';
 

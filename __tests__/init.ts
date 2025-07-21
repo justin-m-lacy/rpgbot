@@ -12,4 +12,5 @@ const cache = new Cache({
 
 });
 
-export const TestGame = new Game(cache, cache.subcache('char'), GameActions);
+
+export const TestGame = () => new Game(cache, cache.subcache('char'), GameActions, false);

@@ -28,11 +28,9 @@ export class World {
 		this.cache = fcache;
 		this.chars = chars;
 
-		this.initWorld();
-
 	}
 
-	private async initWorld() {
+	async init() {
 		const st = await this.getOrGen(new Coord(0, 0));
 		if (!st.getFeature('shrine')) {
 			st.addFeature(GenFeature('shrine'));

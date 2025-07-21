@@ -12,7 +12,17 @@
 			"shins": null,
 			"feet": null,
 			"left": null,
-			"right": null
+			"right": {
+				"id": "ac371b57-bd74-4cd1-b87b-12971d20b55d",
+				"proto": "spear",
+				"desc": "",
+				"type": "weapon",
+				"price": 30,
+				"armor": 0,
+				"slot": "hands",
+				"mat": "iron",
+				"hit": 0
+			}
 		}
 	},
 	"race": "human",

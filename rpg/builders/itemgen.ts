@@ -3,6 +3,7 @@ import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
+import { LoadMaterials } from 'rpg/items/material';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { GenArmor } from 'rpg/parsers/armor';
 import { DecodeItem } from 'rpg/parsers/items';
@@ -11,7 +12,6 @@ import { LvlScroll } from 'rpg/parsers/scrolls';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Mob } from '../char/mobs';
 import { Loot } from '../combat/loot';
-import { LoadMaterials } from '../items/material';
 
 
 export type RawChestsData = (typeof import('data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" };

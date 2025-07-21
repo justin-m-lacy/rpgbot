@@ -66,7 +66,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	readonly combat = new Combat(this);
 
-	constructor(cache: Cache<any>, charCache: Cache<Char>, actions: A) {
+	constructor(cache: Cache<any>, charCache: Cache<Char>, actions: A, autostart: boolean = true) {
 
 		this.actions = actions;
 
@@ -77,10 +77,16 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.guilds = new GuildManager(cache.subcache('guilds'));
 
-		this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS).unref();
+		if (autostart) {
+			this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS).unref();
+		}
 
 		this.events.on('charDie', this.onCharDie, this);
 		this.events.on('charHit', this.onCharHit, this);
+	}
+
+	async load() {
+		await this.world.init();
 	}
 
 	stop() {

@@ -2,20 +2,11 @@ import { BotContext, type ContextSource } from '@/bot/botcontext';
 import type { ChatCommand } from '@/bot/cmd-wrapper';
 import Cache from 'archcache';
 import { MessageFlags, SendableChannels, User } from "discord.js";
-import { InitFeatures } from 'rpg/builders/features';
-import { InitItems } from 'rpg/builders/itemgen';
 import { ChannelStore } from 'rpg/channel-store';
 import { GameActions } from 'rpg/game-actions';
 import { ItemIndex } from 'rpg/items/container';
-import { LoadActions } from 'rpg/magic/action';
-import { LoadDotTypes } from 'rpg/magic/dots';
 import { GenName } from 'rpg/namegen';
-import { InitArmors } from 'rpg/parsers/armor';
-import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
-import { InitPotions } from 'rpg/parsers/potions';
 import { ReviveChar } from 'rpg/parsers/revive-char';
-import { LoadSpells } from 'rpg/parsers/spells';
-import { InitWeapons } from 'rpg/parsers/weapon';
 import { NewUserData, type UserData } from 'rpg/users/users';
 import { Char } from './char/char';
 import { Race } from './char/race';
@@ -72,6 +63,7 @@ export class Rpg {
 
 	async load() {
 		await this.loadLastChars();
+		await this.game.load();
 	}
 
 	getLastChar(owner: string) { return this.lastChars[owner] }
@@ -217,25 +209,5 @@ export class Rpg {
 		} while (true);
 
 	}
-
-}
-
-/**
- * Preload Rpg data.
- */
-export const InitGame = async () => {
-
-	await Promise.all([
-		InitRaces(),
-		InitClasses(),
-		InitItems(),
-		InitFeatures(),
-		InitArmors(),
-		InitWeapons(),
-		InitPotions(),
-		LoadDotTypes(),
-		LoadActions(),
-		LoadSpells()
-	]);
 
 }

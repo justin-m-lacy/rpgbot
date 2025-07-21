@@ -41,20 +41,21 @@ export class Weapon extends Wearable implements TNpcAction {
 	 */
 	static FromProto(base: RawWeaponData, mat?: Material) {
 
-		const it = new Weapon(undefined, {
+		const w = new Weapon(undefined, {
 			name: base.name,
 			proto: base, dmg: new DamageSrc(
 				ParseValue('dmg', base.dmg), base.kind
-			)
+			),
+			material: mat
 		});
 
-		it.tohit = base.hit || 0;
-		super.FromProto(base, mat, it);
+		w.tohit = base.hit || 0;
+		super.FromProto(base, mat, w);
 
-		it.hands = base.hands ?? 1;
-		it.dmg.bonus += mat?.dmg || mat?.bonus || 0;
+		w.hands = base.hands ?? 1;
+		w.dmg.bonus += mat?.dmg || mat?.bonus || 0;
 
-		return it;
+		return w;
 
 	}
 

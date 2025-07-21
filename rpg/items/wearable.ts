@@ -90,7 +90,7 @@ export class Wearable extends Item {
 
 	material?: Material;
 
-	get name() { return this.material ? `${this.material} ${super.name}` : super.name }
+	get name() { return this.material ? `${this.material.name} ${super.name}` : super.name }
 	set name(v) { super.name = v; }
 
 	/**
