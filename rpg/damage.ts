@@ -1,6 +1,6 @@
 import { ParseValue } from 'rpg/parsers/values';
 import { CanMod, IMod, IModdable, SymModdable } from 'rpg/values/imod';
-import { ToModded } from 'rpg/values/mods/modded';
+import { AsModded } from 'rpg/values/modding';
 import { Simple } from 'rpg/values/simple';
 import type { TValue } from 'rpg/values/types';
 import { Idable } from './values/types';
@@ -47,11 +47,13 @@ export class DamageSrc implements TValue, IModdable {
 		if (CanMod(this._val)) {
 			this._val.addMod(mod);
 		} else {
-			this._val = ToModded(this._val);
+			AsModded(this as any, "_val", this._val)?.addMod(mod);
 		}
 	}
 	removeMod(mod: IMod): void {
-		throw new Error('Method not implemented.');
+		if (CanMod(this._val)) {
+			this._val.removeMod(mod);
+		}
 	}
 
 	toString() { return this.value.toString() + ' ' + this.type; }

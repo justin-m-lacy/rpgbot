@@ -59,6 +59,7 @@ export const ApplyMods = (
 
 		} else {
 
+			console.log(`Apply mod: ${key} to: ${targ}`);
 			AsModded(
 				targ,
 				key,

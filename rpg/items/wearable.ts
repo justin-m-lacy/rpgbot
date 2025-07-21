@@ -111,7 +111,6 @@ export class Wearable extends Item {
 
 		this.material = opts.material;
 		if (this.material?.alter) {
-			console.log(`apply alter: ${this.material.name}`);
 			ApplyMods(this, this.material.alter);
 		}
 

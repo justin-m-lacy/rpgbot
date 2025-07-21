@@ -58,7 +58,7 @@ export const LoadMaterials = async () => {
 
 	for (let i = objs.length - 1; i >= 0; i--) {
 
-		const raw = Object.assign({}, objs[i]) as any;
+		const raw = objs[i] as any;
 
 		raw.name ??= raw.id;
 		raw.only = raw.only?.split(',');

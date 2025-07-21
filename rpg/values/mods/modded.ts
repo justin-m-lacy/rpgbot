@@ -3,15 +3,13 @@ import { IMod, type IModdable, SymModdable } from '../imod';
 import type { Id, Idable, TValue } from "../types";
 
 /// Create modded proxy for target.
-export const ToModded = <T extends TValue & Idable>(targ: T | number): IModdable => {
-
-	if (typeof targ == 'number') return new Modded('val', targ);
+export const ToModded = <T extends TValue & Idable>(targ: T): IModdable => {
 
 	const modded = {
 
 		[SymModdable]: true as true,
 
-		[Symbol.toPrimitive]() { return this._cached; },
+		valueOf() { return this._cached },
 
 		toString() { return this._cached.toString() },
 

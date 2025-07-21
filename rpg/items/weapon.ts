@@ -6,6 +6,7 @@ import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseValue } from 'rpg/parsers/values';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
+import { ApplyMods } from 'rpg/values/modding.js';
 import { DamageSrc } from '../damage.js';
 import { Wearable } from './wearable';
 
@@ -74,6 +75,13 @@ export class Weapon extends Wearable implements TNpcAction {
 		this.proto = opts.proto
 
 		this.type = ItemType.Weapon;
+
+
+		if (this.material?.alter) {
+			console.log(`apply alter: ${this.material.name}`);
+			console.log(`dmg: ${this.material.alter.dmg}`);
+			ApplyMods(this, this.material.alter);
+		}
 	}
 
 	getDetails(char?: Char) {

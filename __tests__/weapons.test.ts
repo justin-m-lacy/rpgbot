@@ -21,8 +21,8 @@ describe('Game Weapons', async () => {
 		const w = Weapon.FromProto(proto, mat);
 		expect(w.name).toBe('steel staff');
 
-		expect(w.dmg.roll()).toBeLessThanOrEqual(6);
-		expect(w.dmg.roll()).toBeGreaterThanOrEqual(1);
+		expect(w.dmg.roll()).toBeLessThanOrEqual(9);
+		expect(w.dmg.roll()).toBeGreaterThanOrEqual(4);
 
 	});
 });
