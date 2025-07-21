@@ -83,6 +83,12 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		this.events.on('charHit', this.onCharHit, this);
 	}
 
+	stop() {
+		if (this.updateTimer) {
+			clearInterval(this.updateTimer);
+		}
+	}
+
 	/**
 	 * Add npc to list of live-updating npcs.
 	 * @param npc 

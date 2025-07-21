@@ -15,6 +15,7 @@ import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
 import { InitPotions } from 'rpg/parsers/potions';
 import { ReviveChar } from 'rpg/parsers/revive-char';
 import { LoadSpells } from 'rpg/parsers/spells';
+import { InitWeapons } from 'rpg/parsers/weapon';
 import { NewUserData, type UserData } from 'rpg/users/users';
 import { Char } from './char/char';
 import { Race } from './char/race';
@@ -230,6 +231,7 @@ export const InitGame = async () => {
 		InitItems(),
 		InitFeatures(),
 		InitArmors(),
+		InitWeapons(),
 		InitPotions(),
 		LoadDotTypes(),
 		LoadActions(),

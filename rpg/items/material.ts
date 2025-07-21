@@ -2,11 +2,11 @@ import { ParseMods } from "rpg/parsers/mods";
 import { IMod } from "rpg/values/imod";
 import { Path } from "rpg/values/paths";
 
-let materials: Material[];
-let byName: { [name: string]: Material };
+const materials: Material[] = [];
+const byName: { [name: string]: Material } = {};
 
 // materials in lists by level.
-let byLevel: { [level: number]: Material[] | undefined };
+const byLevel: { [level: number]: Material[] | undefined } = {};
 
 // arrays of materials by type, e.g. cloth, metal, etc.
 //var byType;
@@ -27,14 +27,14 @@ export type Material = {
 
 export const RandMaterial = (maxLevel?: number) => {
 
-	if (maxLevel && !Number.isNaN(maxLevel)) {
+	console.log(`mat length: ${materials.length}`);
+	if (typeof maxLevel === 'number' && !Number.isNaN(maxLevel)) {
 
-		let list;
 		while (maxLevel >= 0) {
 
-			list = byLevel[maxLevel];
-			if (list && list.length > 0) return list[Math.floor(list.length * Math.random())];
-			console.log(maxLevel + ' material list is null');
+			const list = byLevel[maxLevel];
+			if (list?.length) return list[Math.floor(list.length * Math.random())];
+			console.log(maxLevel + ' material list null');
 			maxLevel--;
 
 		}
@@ -54,13 +54,9 @@ export const GetMaterial = (name: string) => {
 
 export const LoadMaterials = async () => {
 
-	if (materials != null) return;
-
-
 	const objs = (await import('data/items/materials.json', { assert: { type: 'json' } })).default;
-	materials = [];
-	byName = {};
-	byLevel = {};
+
+	console.log(`materials count: ${objs.length}`);
 
 	for (let i = objs.length - 1; i >= 0; i--) {
 

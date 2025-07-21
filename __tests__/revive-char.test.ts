@@ -1,30 +1,26 @@
-import { readFileSync } from 'fs';
-import * as path from 'path';
 import { InitGame } from 'rpg/rpg';
 import { ReviveChar } from '../rpg/parsers/revive-char';
+import CharData from './data/chars/joetest.json';
 import { TestGame } from './init';
 
-beforeAll(async () => {
-	await InitGame();
-	console.log(`game data loaded`);
-});
 
 describe('Revive Character File', () => {
 
-	it('Should parse character file.', () => {
-		// Load the JSON file
-		const jsonFilePath = path.join(__dirname, 'data/chars/joetest.json');
-		console.log(`file path: ${jsonFilePath}`);
+	beforeAll(async () => {
+		await InitGame();
+		console.log(`game data loaded`);
+	});
 
-		const jsonData = readFileSync(jsonFilePath, 'utf-8');
+	afterAll(() => {
+		TestGame.stop();
+	});
+
+	it('Should parse character file.', async () => {
 
 		// Parse the JSON data
-		const char = ReviveChar(TestGame, null);
+		const char = ReviveChar(TestGame, CharData);
 
 		// Assertions
-		expect(char).toEqual({
-			name: 'joetest'
-		});
 		expect(char.name).toBe('joetest');
 	});
 });

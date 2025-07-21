@@ -47,7 +47,9 @@ export const ReviveChar = (game: Game, json: {
 	if (json.history) Object.assign(char.history, json.history);
 	if (IsCoord(json.home)) char.home = new Coord(json.home.x, json.home.y);
 
-	if (!json.stats) throw new NullDataError();
+	if (!json.stats) {
+		throw new NullDataError();
+	}
 	if (typeof json.stats !== 'object') throw new BadTypeError(json.stats, 'object');
 	char.setBaseStats(json.stats);
 

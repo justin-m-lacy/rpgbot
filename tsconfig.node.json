@@ -45,7 +45,8 @@
   ],
   "include": [
     "strip-package.ts",
-    "__tests__/**/*",
+    "__tests__/**/*.json",
+    "__tests__/**/*.ts",
     "src/**/*.ts",
     "./*.ts",
     "data/**/*.json",
