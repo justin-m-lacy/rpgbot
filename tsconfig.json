@@ -47,7 +47,6 @@
     "strip-package.ts"
   ],
   "include": [
-    "strip-package.ts",
     "archcache",
     "index.ts",
     "auth.json",

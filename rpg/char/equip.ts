@@ -25,6 +25,20 @@ export class Equip {
 		right: null
 	};
 
+	/*toJSON() {
+
+		const out: { slots: Partial<Record<string, any>> } = {
+			slots: {
+			}
+		}
+		let k: keyof HumanSlots;
+		for (k in this.slots) {
+			out.slots[k] = this.slots[k] ?? undefined
+		}
+		return out;
+
+	}*/
+
 	constructor() {
 	}
 

@@ -5,6 +5,7 @@ import { Heal } from "rpg/talents/heal";
 import { Hike } from "rpg/talents/hike";
 import { Revive } from "rpg/talents/revive";
 import { Scout } from "rpg/talents/scout";
+import { Scribe } from "rpg/talents/scribe";
 import { Sneak } from "rpg/talents/sneak";
 import { Steal } from "rpg/talents/steal";
 import { Track } from "rpg/talents/track";
@@ -124,6 +125,11 @@ export const GameActions = {
 		tick: true,
 		talent: Scout,
 		rest: 0
+	},
+	scribe: {
+		tick: true,
+		talent: Scribe,
+		rest: 0.4,
 	},
 	sell: {
 		tick: true,

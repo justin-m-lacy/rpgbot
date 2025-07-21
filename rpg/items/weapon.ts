@@ -1,16 +1,13 @@
-import { GetProto } from 'rpg/builders/itemgen';
 import { Char } from 'rpg/char/char';
 import { TNpcAction } from 'rpg/combat/types';
-import { GetMaterial, Material } from 'rpg/items/material';
-import { ItemData, ItemType } from 'rpg/items/types';
+import { Material } from 'rpg/items/material';
+import { ItemType } from 'rpg/items/types';
 import { RawWearableData } from 'rpg/parsers/armor';
-import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
 import { DamageSrc } from '../formulas';
-import { Item } from './item';
-import { HumanSlot, Wearable } from './wearable';
+import { Wearable } from './wearable';
 
 export class Weapon extends Wearable implements TNpcAction {
 
@@ -58,44 +55,6 @@ export class Weapon extends Wearable implements TNpcAction {
 		it.dmg.bonus += mat?.dmg || mat?.bonus || 0;
 
 		return it;
-
-	}
-
-	static Revive(json: ItemData & {
-		slot?: HumanSlot, hit?: number, kind?: string,
-		proto?: string,
-		material?: string,
-		mat?: string,
-		mods: any, dmg: any
-	}) {
-
-		const mat = json.mat ?? json.material ? GetMaterial(json.mat ?? json.material!) : undefined;
-
-		if (json.proto) {
-
-			return Weapon.FromProto(GetProto<RawWeaponData>(json.proto)!, mat);
-
-
-		} else {
-			const w = new Weapon(json.id,
-				{
-					name: json.name, desc: json.desc,
-					material: mat,
-					dmg: DamageSrc.Decode(json.dmg)
-				},
-			);
-			w.slot = json.slot ?? 'hands';
-
-			if (json.mods) {
-				w.mods = ParseMods(json.mods, w.id);
-			}
-
-			if (json.kind) w.kind = json.kind;
-
-			w.tohit = json.hit || 0;
-			return Item.InitData(json, w);
-
-		}
 
 	}
 

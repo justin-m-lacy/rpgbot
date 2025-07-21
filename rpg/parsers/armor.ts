@@ -1,11 +1,14 @@
 
 import BaseArmors from 'data/items/armors.json';
 import { AddProtoItem, GetProto } from 'rpg/builders/itemgen';
+import { DamageSrc } from 'rpg/formulas';
 import { Item } from 'rpg/items/item';
 import { GetMaterial, RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
+import { Weapon } from 'rpg/items/weapon';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
+import { RawWeaponData } from 'rpg/parsers/weapon';
 
 export type RawWearableData = ItemData & (typeof BaseArmors)[number] & {
 
@@ -16,6 +19,45 @@ export type RawWearableData = ItemData & (typeof BaseArmors)[number] & {
 
 const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawWearableData[] }> = {};
 
+
+
+export const ReviveWeapon = (json: ItemData & {
+	slot?: HumanSlot, hit?: number, kind?: string,
+	proto?: string,
+	material?: string,
+	mat?: string,
+	mods: any, dmg: any
+}) => {
+
+	const mat = json.mat ?? json.material ? GetMaterial(json.mat ?? json.material!) : undefined;
+
+	if (json.proto) {
+
+		return Weapon.FromProto(GetProto<RawWeaponData>(json.proto)!, mat);
+
+
+	} else {
+		const w = new Weapon(json.id,
+			{
+				name: json.name, desc: json.desc,
+				material: mat,
+				dmg: DamageSrc.Decode(json.dmg)
+			},
+		);
+		w.slot = json.slot ?? 'hands';
+
+		if (json.mods) {
+			w.mods = ParseMods(json.mods, w.id);
+		}
+
+		if (json.kind) w.kind = json.kind;
+
+		w.tohit = json.hit || 0;
+		return Item.InitData(json, w);
+
+	}
+
+}
 
 export const ReviveWearable = (json: any) => {
 

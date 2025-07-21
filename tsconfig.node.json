@@ -2,19 +2,19 @@
   "ts-node": {
     "require": [
       "tsconfig-paths/register"
-    ],
+    ]
   },
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
     "outDir": "dist",
     "target": "esnext",
-    "module": "nodenext",
+    "module": "esnext",
     "allowJs": true,
     "composite": true,
     "moduleDetection": "auto",
     "useDefineForClassFields": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "strict": true,
     "skipLibCheck": true,
     "sourceMap": false,
@@ -32,7 +32,8 @@
       ]
     },
     "types": [
-      "node"
+      "node",
+      "vitest/globals"
     ]
   },
   "typeAcquisition": {
@@ -40,9 +41,11 @@
   },
   "exclude": [
     "dist",
-    "node_modules",
+    "node_modules"
   ],
   "include": [
+    "strip-package.ts",
+    "__tests__/**/*",
     "src/**/*.ts",
     "./*.ts",
     "data/**/*.json",

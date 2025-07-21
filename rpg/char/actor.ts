@@ -120,7 +120,6 @@ export class Actor {
 	readonly mods: ModBlock<typeof this>[] = [];
 
 	readonly events = new EventEmitter<CharEvents>();
-	readonly game: Game;
 
 	readonly attacks: TNpcAction[] = [];
 
@@ -140,8 +139,6 @@ export class Actor {
 		this.name = name;
 
 		this.sex = opts.sex ?? (Math.random() < 0.5 ? 'm' : 'f');
-
-		this.game = opts.game;
 
 		this._myClass = opts.cls;
 

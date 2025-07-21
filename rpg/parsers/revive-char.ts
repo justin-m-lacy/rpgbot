@@ -59,7 +59,7 @@ export const ReviveChar = (game: Game, json: {
 	} else {
 		console.warn(`missing char loc.`)
 	}
-	game.world.addChar(char);
+	game.world.addChar(char).then(v => console.log(`char added to world.`));
 
 	if (typeof json.flags === 'number') {
 		char.flags.setTo(json.flags);

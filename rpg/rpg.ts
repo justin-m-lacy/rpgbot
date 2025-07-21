@@ -157,6 +157,7 @@ export class Rpg {
 	 */
 	onCreateChar(user: User, char: Char) {
 		this.setUserChar(user, char);
+		this.world.addChar(char);
 		char.events.on('levelUp', this.updateCharInfo, this);
 	}
 

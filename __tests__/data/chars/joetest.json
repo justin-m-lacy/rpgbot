@@ -1,0 +1,262 @@
+{
+	"equip": {
+		"slots": {
+			"head": null,
+			"hands": null,
+			"back": null,
+			"waist": null,
+			"neck": null,
+			"fingers": null,
+			"chest": null,
+			"legs": null,
+			"shins": null,
+			"feet": null,
+			"left": null,
+			"right": null
+		}
+	},
+	"race": "human",
+	"cls": "wizard",
+	"teams": {
+		"chars": 34285109.46484375,
+		"good": 339.7265625,
+		"evil": -339.1015625,
+		"neutral": 339.09375,
+		"law": 342.2265625,
+		"beast": -2.80517578125
+	},
+	"sex": "f",
+	"talents": [],
+	"inv": {
+		"id": "bb323333-dcfe-4a14-8d1d-64bebb7e0af3",
+		"name": "bb323333-dcfe-4a14-8d1d-64bebb7e0af3",
+		"desc": "",
+		"type": "unknown",
+		"price": 0,
+		"items": [
+			{
+				"id": "454d448e-0323-4f19-9144-58f98dbc81da",
+				"name": "454d448e-0323-4f19-9144-58f98dbc81da",
+				"desc": "",
+				"type": "unknown",
+				"price": 0
+			},
+			{
+				"id": "2c25358d-3704-4fd0-b431-0fde15a4b45a",
+				"name": "2c25358d-3704-4fd0-b431-0fde15a4b45a",
+				"desc": "",
+				"type": "unknown",
+				"price": 0
+			},
+			{
+				"id": "8f416c51-dc89-43e6-af1b-350e1b9bb65f",
+				"name": "Gorilla Suit",
+				"desc": "An inconspicuous disguise.",
+				"type": "unknown",
+				"price": 0,
+				"armor": 1,
+				"slot": "body"
+			},
+			{
+				"id": "75a37fe2-fdb6-42f6-af29-1c85c88b66bd",
+				"name": "leather loop",
+				"desc": "",
+				"type": "unknown",
+				"price": 0,
+				"armor": 1,
+				"slot": "fingers"
+			},
+			{
+				"id": "1d41fda3-bb1b-48a8-b4e2-768281d1aef8",
+				"name": "stone battleaxe",
+				"desc": "",
+				"type": "weapon",
+				"price": 0,
+				"armor": 0,
+				"slot": "hands",
+				"mat": {
+					"id": "stone",
+					"kind": "natural",
+					"weight": 3,
+					"level": 0,
+					"alter": {
+						"enchants": {
+							"max": 1
+						},
+						"dmg": 1
+					},
+					"name": "stone"
+				},
+				"dmg": {
+					"dmg": 0,
+					"type": "weapon"
+				},
+				"hit": 0
+			},
+			{
+				"id": "ec43d16b-6302-42bf-a1d0-8ba20284b307",
+				"type": "grave",
+				"price": 0,
+				"char": "burthne",
+				"epitaph": "burthne has been killed and sold for spare parts",
+				"slayer": "joetest"
+			},
+			{
+				"id": "f09b5991-3355-495f-a7da-12306ccbe014",
+				"type": "grave",
+				"price": 0,
+				"char": "fieor",
+				"epitaph": "Here lies fieor. Sic Semper Tyrannis.",
+				"slayer": "joetest"
+			},
+			{
+				"id": "61d0e6e5-98c5-4fd0-a47e-89ab6c51f9c5",
+				"type": "grave",
+				"price": 0,
+				"char": "Gertrude",
+				"epitaph": "Easy is the descent into Hell. But Gertrude still managed to find a short cut.",
+				"slayer": "joetest"
+			},
+			{
+				"id": "e8462ade-513b-4e22-9793-3f00639f9b70",
+				"type": "grave",
+				"price": 0,
+				"char": "GGGGRNSHHHH",
+				"epitaph": "All the king's horses and all the king's men, couldn't put GGGGRNSHHHH's head back on.",
+				"slayer": "joetest"
+			},
+			{
+				"id": "16926121-3035-4047-bee7-26b787aed63a",
+				"type": "grave",
+				"price": 0,
+				"char": "johel",
+				"epitaph": "Here lies johel. Let's be honest; not the smartest cabbage in the cabbage patch.",
+				"slayer": "joetest"
+			},
+			{
+				"id": "3b921c62-e3b6-4976-92c4-4c50724df679",
+				"type": "grave",
+				"price": 0,
+				"char": "johel",
+				"epitaph": "This is the way johel ends. Not with a bang. But a whimper.",
+				"slayer": "joetest"
+			},
+			{
+				"id": "28610340-52a1-4c92-a252-6f6c7f9784d2",
+				"type": "grave",
+				"price": 0,
+				"char": "joetest",
+				"epitaph": "joetest was not cut out for this line of work.",
+				"slayer": "johel",
+				"n": 2
+			},
+			{
+				"id": "45d3f80a-2a68-46c8-8918-290b3c3c8280",
+				"type": "grave",
+				"price": 0,
+				"char": "johel",
+				"epitaph": "johel forgot to pack His Philosopher's Stone.",
+				"slayer": "joetest",
+				"n": 2
+			},
+			{
+				"id": "8ad0be9a-c401-49df-afa7-04ebb6ea3c2e",
+				"name": "leather cape",
+				"desc": "",
+				"type": "unknown",
+				"price": 5,
+				"armor": 1,
+				"slot": "back"
+			},
+			{
+				"id": "feac4b68-b9dd-4dac-99c8-aa885425c982",
+				"name": "potion of cure moderate wounds",
+				"desc": "",
+				"type": "potion",
+				"price": 5,
+				"form": "hp=hp+5d5+10"
+			},
+			{
+				"id": "a77fee12-6ba6-49cf-a6f1-b4e30792e6b5",
+				"name": "leather amulet",
+				"desc": "",
+				"type": "unknown",
+				"price": 50,
+				"armor": 1,
+				"slot": "neck"
+			},
+			{
+				"id": "3512656d-9fb8-4be0-bcad-655059370041",
+				"name": "3512656d-9fb8-4be0-bcad-655059370041",
+				"desc": "Tug them and they come right off.",
+				"type": "unknown",
+				"price": 1
+			},
+			{
+				"id": "af7afc42-5785-4c38-a69c-ccf03ab1acf8",
+				"name": "iron necklace",
+				"desc": "",
+				"type": "unknown",
+				"price": 50,
+				"armor": 3,
+				"slot": "neck"
+			},
+			{
+				"id": "d778714f-6a5f-439a-b9c5-d98bd37d6eba",
+				"name": "d778714f-6a5f-439a-b9c5-d98bd37d6eba",
+				"desc": "Tug them and they come right off.",
+				"type": "unknown",
+				"price": 1
+			},
+			{
+				"id": "cf03aaea-87ba-4210-84da-2f2dc6ec98bb",
+				"name": "cf03aaea-87ba-4210-84da-2f2dc6ec98bb",
+				"desc": "Tug them and they come right off.",
+				"type": "unknown",
+				"price": 1
+			},
+			{
+				"id": "4bdd2d5f-1341-40c5-833f-891b9a6658b2",
+				"type": "grave",
+				"price": 0,
+				"char": "johel",
+				"epitaph": "Why do bad things happen to bad people?",
+				"slayer": "bat",
+				"n": 3
+			}
+		]
+	},
+	"spentPoints": 1,
+	"statPoints": 200,
+	"history": {
+		"explore": 1,
+		"explored": 0,
+		"crafted": 0,
+		"slay": 13,
+		"pk": 14
+	},
+	"at": {
+		"x": 0,
+		"y": 0
+	},
+	"dots": [],
+	"stats": {
+		"hp": {
+			"v": -4.422009288079437,
+			"m": 14
+		},
+		"mp": 0,
+		"level": 200,
+		"armor": 0,
+		"str": 7,
+		"con": 16,
+		"dex": 13,
+		"int": 13,
+		"wis": 15,
+		"cha": 9,
+		"dr": 0
+	},
+	"owner": "202386671117926400",
+	"exp": 2484539550,
+	"name": "joetest"
+}

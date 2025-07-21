@@ -14,7 +14,6 @@ import { Loot } from '../combat/loot';
 import { LoadMaterials } from '../items/material';
 
 
-
 export type RawChestsData = (typeof import('data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" };
 type RawItemData = (typeof import('data/items/items.json', { assert: { type: 'json' } })['misc' | 'special'][number]) & { id: string }
 
