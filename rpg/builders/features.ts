@@ -2,7 +2,7 @@
 import { randElm } from '@/utils/jsutils';
 import FeatureData from 'data/world/features.json';
 import { GenShop } from 'rpg/builders/shopgen';
-import { DecodeFeature } from 'rpg/parsers/items';
+import { ReviveFeature } from 'rpg/parsers/items';
 import { Feature } from 'rpg/world/feature';
 import { Biome, Loc } from 'rpg/world/loc';
 
@@ -13,7 +13,7 @@ const byName: { [key: string]: typeof FeatureData[number] } = {};
  * @param s
  */
 export const GenFeature = (s: string) => {
-	return byName[s] ? DecodeFeature(byName[s]) : null;
+	return byName[s] ? ReviveFeature(byName[s]) : null;
 }
 
 
@@ -39,6 +39,6 @@ export const RandFeature = (loc: Loc): Feature => {
 		}
 	}
 
-	return DecodeFeature(randElm(FeatureData));
+	return ReviveFeature(randElm(FeatureData));
 
 }

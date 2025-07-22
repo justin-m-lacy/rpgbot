@@ -19,8 +19,8 @@ const ItemDecoders: Record<string, (data: any) => Item> = {
 	[ItemType.Grimoire]: Grimoire.Decode,
 	[ItemType.Grave]: Grave.Decode,
 	[ItemType.Chest]: Chest.Decode,
-	[ItemType.Shop]: DecodeShop,
-	[ItemType.Feature]: DecodeFeature,
+	[ItemType.Shop]: ReviveShop,
+	[ItemType.Feature]: ReviveFeature,
 	[ItemType.Unknown]: Item.SetData,
 }
 
@@ -35,10 +35,10 @@ export const DecodeItem = <T extends Item>(json: any): T | null => {
 
 }
 
-export function DecodeFeature<T extends Feature>(
+export function ReviveFeature<T extends Feature>(
 	json: ItemData & { desc: string, action?: string, fb?: string }, f?: T | Feature) {
 
-	f ??= new Feature(json.name, json.desc);
+	f ??= new Feature(json.id, { name: json.name, desc: json.desc });
 
 	if (json.action) {
 		f.action = GetAction(json.action);
@@ -49,15 +49,16 @@ export function DecodeFeature<T extends Feature>(
 
 }
 
-function DecodeShop(json: any): Shop {
+function ReviveShop(json: any): Shop {
 
-	const shop = new Shop(json.name, {
+	const shop = new Shop(json.id, {
+		name: json.name,
 		kind: json.kind,
 		level: json.level, desc: json.desc,
 		genItem: GetTypeGenerator(json.kind)
 	});
 
-	DecodeFeature(json, shop);
+	ReviveFeature(json, shop);
 
 	return shop;
 

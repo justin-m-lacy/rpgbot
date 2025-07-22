@@ -25,8 +25,10 @@ export class Feature extends Item {
 
 	action?: Action;
 
-	constructor(name: string, desc: string, type: ItemType = ItemType.Feature) {
-		super(undefined, { name: name, desc: desc, type });
+	constructor(id: string | undefined, opts: { name: string, desc?: string, type?: ItemType }) {
+		super(id, opts);
+
+		this.type = opts.type ?? ItemType.Feature;
 	}
 
 	/**

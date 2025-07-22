@@ -33,15 +33,19 @@ export class Shop<T extends Item = Item> extends Feature {
 	// used to save shop kind in json.
 	private kind: string;
 
-	constructor(name: string,
+	constructor(
+		id: string | undefined,
 		opts: {
+			name: string,
 			level?: number, kind: string,
 			desc?: string,
 			genItem?: (lvl: number) => T | null
 		}
 	) {
 
-		super(name, opts.desc ?? `${opts.kind} Shop`, ItemType.Shop);
+		super(id, opts);
+
+		this.desc ??= `${opts.kind} Shop`;
 
 		this.genItem = opts.genItem;
 

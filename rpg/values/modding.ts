@@ -1,6 +1,7 @@
 import { CanApplyMods, CanMod, IModdable, IsMod, type IMod } from "rpg/values/imod";
-import { Modded, ToModded } from "rpg/values/mods/modded";
+import { ToModded } from "rpg/values/mods/modded";
 import { IsPath, NewPath, type Path } from "rpg/values/paths";
+import { Simple } from "rpg/values/simple";
 import { Id, Idable, IsValue, Numeric } from "rpg/values/types";
 
 /// Path keys that are expected to end in Mod objects.
@@ -132,17 +133,17 @@ export function AsModded<
 	if (CanMod(cur)) return cur;
 
 	if (!cur || typeof cur === 'number') {
-		return obj[prop] = new Modded(prop, cur || 0);
+		return obj[prop] = new Simple(prop, cur || 0);
 	}
 	if (IsValue(cur)) {
-		return obj[prop] = ToModded(MakeIdable(cur, prop));
+		return obj[prop] = ToModded(ToIdable(cur, prop));
 	}
 
 	console.error(`Can't Mod: ${(obj as any).id}[${prop}] : ${cur}`);
 
 }
 
-export const MakeIdable = <T extends object>(it: T, id: string) => {
+export const ToIdable = <T extends object>(it: T, id: string) => {
 	if (!('id' in it)) {
 		(it as any).id = id;
 	}
