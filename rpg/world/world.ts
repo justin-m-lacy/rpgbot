@@ -15,7 +15,7 @@ import { Feature } from './feature';
 import { DirVal, Exit, Loc } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
-// WARNING: Changing block size will break the fetching of existing world data.
+// WARNING: Changing block size will break the fetching existing world data.
 const BLOCK_SIZE = 16;
 
 export class World {
@@ -23,9 +23,9 @@ export class World {
 	readonly cache: Cache<Block>;
 	readonly chars: Cache<Char>
 
-	constructor(chars: Cache<Char>, fcache: Cache<Block>) {
+	constructor(blockCache: Cache<Block>, chars: Cache<Char>) {
 
-		this.cache = fcache;
+		this.cache = blockCache;
 		this.chars = chars;
 
 	}

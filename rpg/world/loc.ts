@@ -218,7 +218,7 @@ export class Loc {
 
 	hasChars() { return this.chars.length > 0 }
 
-	static Decode(json: any) {
+	static Revive(json: any) {
 
 		const loc = new Loc(new Coord(json.coord.x, json.coord.y), json.biome);
 

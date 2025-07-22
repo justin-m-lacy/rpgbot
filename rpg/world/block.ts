@@ -27,7 +27,7 @@ export class Block {
 			if (locs) {
 
 				for (const p in locs) {
-					this.locs[p] = Loc.Decode(locs[p]);
+					this.locs[p] = Loc.Revive(locs[p]);
 				}
 
 			}

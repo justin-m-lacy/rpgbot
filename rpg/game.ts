@@ -70,8 +70,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.actions = actions;
 
-		this.world = new World(
-			charCache, cache.subcache<Block>('world', (data) => new Block(data)));
+		this.world = new World(cache.subcache<Block>('world', (data) => new Block(data)),
+			charCache);
 
 		this.charCache = charCache;
 

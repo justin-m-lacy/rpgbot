@@ -1,6 +1,7 @@
 import Cache from "archcache";
 import { Game } from "rpg/game";
 import { GameActions } from 'rpg/game-actions';
+import { World } from "rpg/world/world";
 import fsys from 'src/bot/botfs';
 
 const cache = new Cache({
@@ -13,4 +14,8 @@ const cache = new Cache({
 });
 
 
-export const TestGame = () => new Game(cache, cache.subcache('char'), GameActions, false);
+export const GetTestGame = () => new Game(cache, cache.subcache('char'), GameActions, false);
+
+
+export const GetTestWorld = () =>
+	new World(cache.subcache('world'), cache.subcache('chars'));

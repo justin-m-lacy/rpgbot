@@ -1,0 +1,103 @@
+{
+	"coord": {
+		"x": 5,
+		"y": 2
+	},
+	"exits": {
+		"w": {
+			"to": {
+				"x": -1,
+				"y": 0
+			}
+		},
+		"e": {
+			"to": {
+				"x": 1,
+				"y": 0
+			}
+		},
+		"n": {
+			"to": {
+				"x": 0,
+				"y": 1
+			}
+		},
+		"s": {
+			"to": {
+				"x": 0,
+				"y": -1
+			}
+		}
+	},
+	"inv": {
+		"id": "7f715334-48bb-4ef5-b13c-6ad2301085a7",
+		"name": "7f715334-48bb-4ef5-b13c-6ad2301085a7",
+		"desc": "",
+		"type": "unknown",
+		"price": 0,
+		"items": [
+			{
+				"id": "3a77df93-9254-4429-8b50-c36ce84f69c5",
+				"type": "grave",
+				"price": 0,
+				"char": "framiron jr",
+				"epitaph": "Why do bad things happen to bad people?",
+				"slayer": "harhar"
+			},
+			{
+				"id": "4222159f-d906-4493-85ea-3b0748485538",
+				"type": "grave",
+				"price": 0,
+				"char": "harhar",
+				"epitaph": "Here lies harhar. Again.",
+				"slayer": "harhar",
+				"n": 11
+			},
+			{
+				"id": "35a721e3-100a-4daf-b26f-faf74a0ed6d8",
+				"type": "grave",
+				"price": 0,
+				"char": "burthne",
+				"epitaph": "burthne finally fullfilled their yearbook prediction of 'most likely to brutally murdered.'",
+				"slayer": "harhar",
+				"n": 2
+			},
+			{
+				"id": "8948bf3b-c04d-4ebc-b67a-879fa34eb644",
+				"type": "grave",
+				"price": 0,
+				"char": "Gertrude",
+				"epitaph": "Easy is the descent into Hell. But Gertrude still managed to find a short cut.",
+				"slayer": "framiron jr"
+			}
+		]
+	},
+	"desc": "One of the classier areas of town.",
+	"biome": "town",
+	"features": [
+		{
+			"id": "486eb9f5-30d5-4469-9333-2b684af066f1",
+			"name": "Shrine",
+			"desc": "It looks mystical.",
+			"type": "feature",
+			"price": 0,
+			"action": "revive",
+			"fb": "%c chants to the mystical shrine."
+		},
+		{
+			"id": "b6c9e76f-f73a-4e0a-a490-b932e0f397f9",
+			"name": "Armor Shop",
+			"desc": "armor Shop",
+			"type": "shop",
+			"price": 0,
+			"kind": "armor",
+			"inv": {
+				"id": "3d0ed97f-7313-4158-8629-a7758ee3bf46",
+				"name": "3d0ed97f-7313-4158-8629-a7758ee3bf46",
+				"desc": "",
+				"type": "unknown",
+				"price": 0
+			}
+		}
+	]
+}

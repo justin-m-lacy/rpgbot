@@ -2,7 +2,7 @@ import { InitGame } from 'rpg/init';
 import { Weapon } from 'rpg/items/weapon';
 import { ReviveChar } from '../rpg/parsers/revive-char';
 import CharData from './data/chars/joetest.json';
-import { TestGame } from './init';
+import { GetTestGame } from './init';
 
 beforeAll(async () => {
 	await InitGame();
@@ -11,7 +11,7 @@ beforeAll(async () => {
 
 describe('Revive Character File', () => {
 
-	const game = TestGame();
+	const game = GetTestGame();
 
 	afterAll(() => {
 		game.stop();
