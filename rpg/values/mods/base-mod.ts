@@ -35,7 +35,7 @@ export class BaseMod implements IMod {
 
   readonly name: string | undefined;
 
-  constructor(id: Id, vars?: Numeric, source: Numeric = 0, name?: string) {
+  constructor(id: Id, vars?: Numeric, source: Numeric = 1, name?: string) {
 
     this.id = id;
     this.source = source;

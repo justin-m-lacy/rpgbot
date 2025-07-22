@@ -30,7 +30,14 @@ export class PctMod implements IMod {
   get count() { return +(this.source); }
   set count(_v) { }
 
-  constructor(id: Id, vars?: Numeric | { bonus?: number, pct?: number }, source: Numeric = 0) {
+  /**
+   * Applies a percent to base value.
+   * @param id 
+   * @param vars 
+   * @param vars.pct - 1-based percent
+   * @param source 
+   */
+  constructor(id: Id, vars?: Numeric | { bonus?: number, pct?: number }, source: Numeric = 1) {
 
     this.id = id;
     this.source = source;

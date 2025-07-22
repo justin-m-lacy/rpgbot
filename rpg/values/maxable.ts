@@ -18,7 +18,7 @@ export class Maxable implements ISimple, IModdable {
 	 * Decode stored value.
 	 * @param data 
 	 */
-	/*decode(data: any) {
+	/*revive(data: any) {
 		if (typeof data === 'number') this.setTo(data);
 		else if (typeof data === 'object') {
 			this.value = data.v;
