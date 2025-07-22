@@ -32,7 +32,7 @@ export const DecodeSpell = (json: any) => {
 
 	const spell = ParseSpell(json);
 
-	Item.InitData(json, spell);
+	Item.SetData(json, spell);
 
 	return spell;
 

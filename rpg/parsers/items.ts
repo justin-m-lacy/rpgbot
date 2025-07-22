@@ -21,7 +21,7 @@ const ItemDecoders: Record<string, (data: any) => Item> = {
 	[ItemType.Chest]: Chest.Decode,
 	[ItemType.Shop]: DecodeShop,
 	[ItemType.Feature]: DecodeFeature,
-	[ItemType.Unknown]: Item.InitData,
+	[ItemType.Unknown]: Item.SetData,
 }
 
 
@@ -45,7 +45,7 @@ export function DecodeFeature<T extends Feature>(
 	}
 	if (json.fb) f.fb = json.fb;
 
-	return Item.InitData(json, f) as Feature;
+	return Item.SetData(json, f) as Feature;
 
 }
 

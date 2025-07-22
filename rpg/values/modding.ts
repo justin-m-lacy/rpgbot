@@ -124,7 +124,7 @@ export const RemoveMods = (targ: object & any, mods: Path<IMod> | IMod,) => {
 export function AsModded<
 	K extends Id,
 >(
-	obj: { [key in K]: IModdable | Numeric | undefined | null },
+	obj: Partial<Record<K, IModdable | Numeric | undefined | null>>,
 	prop: K,
 	cur: any
 ) {
@@ -142,7 +142,7 @@ export function AsModded<
 
 }
 
-const MakeIdable = <T extends object>(it: T, id: string) => {
+export const MakeIdable = <T extends object>(it: T, id: string) => {
 	if (!('id' in it)) {
 		(it as any).id = id;
 	}

@@ -53,7 +53,7 @@ export const ReviveWeapon = (json: ItemData & {
 		if (json.kind) w.kind = json.kind;
 
 		w.tohit = json.hit || 0;
-		return Item.InitData(json, w);
+		return Item.SetData(json, w);
 
 	}
 
@@ -83,7 +83,7 @@ export const ReviveWearable = (json: any) => {
 			w.mods = ParseMods(json.mods, w.id);
 		}
 
-		Item.InitData(json, w);
+		Item.SetData(json, w);
 		return w;
 
 	}

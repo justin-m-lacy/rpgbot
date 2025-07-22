@@ -67,7 +67,7 @@ export class Wearable extends Item {
 			item.mods = ParseMods(proto.mods, item.id,);
 		}
 
-		return Item.InitData(proto, item) as Wearable;
+		return Item.SetData(proto, item) as Wearable;
 
 	}
 

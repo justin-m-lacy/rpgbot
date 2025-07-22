@@ -1,8 +1,7 @@
 import { precise } from "rpg/util/format";
-import { CanMod, SymModdable, type IModdable } from "rpg/values/imod";
+import { CanMod, IMod, SymModdable, type IModdable } from "rpg/values/imod";
 import { AsModded } from "rpg/values/modding";
 import { SymSimple, type Id, type ISimple, type Numeric, type TValue } from "rpg/values/types";
-import { IMod } from './imod';
 
 type RangeData = `${number}~${number}`;
 

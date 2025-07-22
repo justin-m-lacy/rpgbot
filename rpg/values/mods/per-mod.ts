@@ -1,4 +1,4 @@
-import { type IMod, ModState, SymMod } from "../imod";
+import { type IMod, ModState, SymMod } from "rpg/values/imod";
 import type { Numeric } from "../types";
 
 const PER_CHAR = ':';

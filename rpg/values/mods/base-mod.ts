@@ -1,4 +1,4 @@
-import { SymMod, type IMod, type IModdable, type ModState } from '../imod';
+import { SymMod, type IMod, type IModdable, type ModState } from "rpg/values/imod";
 import type { Id, Numeric } from '../types';
 
 /**
@@ -47,10 +47,8 @@ export class BaseMod implements IMod {
   }
 
   applyMod(_: IModdable, state: ModState): void {
-
     // Value might be altered by mods. bonus is a raw base.
-    state.bonus += (+this.source) * this.value;
-
+    state.bonus += this.value;
   }
 
 }

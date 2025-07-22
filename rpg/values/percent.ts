@@ -1,9 +1,9 @@
 import { precise } from "rpg/util/format";
-import { SymSimple, type Id, type ISimple } from "rpg/values/types";
+import { CanMod, IMod, IModdable, SymModdable } from "rpg/values/imod";
+import { AsModded } from "rpg/values/modding";
+import { Numeric, SymSimple, type Id, type ISimple } from "rpg/values/types";
 
 type PercentData = `${number}%`;
-
-const TYPE_PCT = '%';
 
 const PctTest = /^(\d+(?:\.\d+)?)\%$/i
 
@@ -26,9 +26,10 @@ export const IsPercentData = (v?: unknown): v is PercentData => {
 	return typeof v === 'string' && PctTest.test(v);
 }
 
-export class Percent implements ISimple {
+export class Percent implements ISimple, IModdable {
 
 	readonly [SymSimple] = true;
+	readonly [SymModdable] = true;
 
 	valueOf() {
 		return this.value;
@@ -37,32 +38,30 @@ export class Percent implements ISimple {
 	/**
 	 * @property pct - decimal percent.
 	 */
-	private pct: number;
+	pct: Numeric;
 
 	readonly id: Id;
 
-	toJSON() { return (100 * this.pct) + TYPE_PCT; }
+	toJSON() { return (100 * this.pct.valueOf()) + '%'; }
 
 
 	/**
 	 * @property value - 1 if a random roll
 	 * is below the percentile.
 	 */
-	get value() { return (Math.random() < this.pct) ? 1 : 0; }
+	get value() { return (Math.random() < this.pct.valueOf()) ? 1 : 0; }
 	set value(v: number) { this.pct = v; }
 
-	get base() { return this.pct; }
+	get base() { return this.pct.valueOf(); }
 
 	/**
 	 * Perform a percent roll with a percent modifier.
 	 * @param [mod=0] - 100-based percent.
 	 * @returns true if 100-based roll is under the percent.
 	 */
-	roll(mod = 0) { return 100 * Math.random() < this.pct * (100 + mod); }
+	roll(mod = 0) { return 100 * Math.random() < this.pct.valueOf() * (100 + mod); }
 
-	get type() { return TYPE_PCT }
-
-	toString() { return precise(100 * this.pct) + '%'; }
+	toString() { return precise(100 * this.pct.valueOf()) + '%'; }
 
 	/**
 	 * 
@@ -76,16 +75,34 @@ export class Percent implements ISimple {
 
 	}
 
+	addMod(mod: IMod) {
+		AsModded(this, 'pct', this.pct)!.addMod(mod);
+	};
+
+	removeMod(mod: IMod) {
+		if (CanMod(this.pct)) {
+			this.pct.removeMod(mod);
+		}
+	};
+
 	setTo(v: number) {
-		this.pct = v;
+		if (typeof this.pct === 'number') {
+			this.pct = v;
+		} else {
+			this.pct.value = v;
+		}
 	}
 
 	add(amt: number): void {
-		this.pct += amt;
+		if (typeof this.pct === 'number') {
+			this.pct += amt;
+		} else {
+			this.pct.value += amt;
+		}
 	}
 
 	clone() {
-		return new Percent(this.id, 100 * this.pct);
+		return new Percent(this.id, 100 * this.pct.valueOf());
 	}
 
 }

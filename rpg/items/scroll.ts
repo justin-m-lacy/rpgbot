@@ -12,7 +12,7 @@ export class Scroll extends Item implements TNpcAction {
 
 		const s = new Scroll(json.id, GetSpell(json.spell));
 
-		Item.InitData(json);
+		Item.SetData(json);
 		s.count = typeof (json.n === 'number') ? json.n : 1;
 
 		return s;

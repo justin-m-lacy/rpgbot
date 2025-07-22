@@ -49,7 +49,7 @@ export interface IModdable extends TValue {
 }
 
 export const CanMod = (it: any | null | undefined): it is IModdable => {
-	return it != null && typeof it === 'object' && it[SymModdable] === true;
+	return it != null && typeof it === 'object' && it[SymModdable] == true;
 }
 
 /**

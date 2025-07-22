@@ -1,5 +1,5 @@
+import { IMod } from "rpg/values/imod";
 import { SymSimple, type ISimple, type Numeric } from 'rpg/values/types';
-import { IMod } from './imod';
 
 export class Simple implements ISimple {
 

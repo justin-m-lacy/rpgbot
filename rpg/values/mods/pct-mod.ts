@@ -1,5 +1,5 @@
 import { precise } from 'rpg/util/format';
-import { IMod, IModdable, ModState, SymMod } from '../imod';
+import { IMod, IModdable, ModState, SymMod } from "rpg/values/imod";
 import { Id, Numeric } from '../types';
 
 

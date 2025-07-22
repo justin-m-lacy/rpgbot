@@ -17,7 +17,7 @@ export class Potion extends Item implements TStacker {
 		p.count = typeof (json.n === 'number') ? json.n : 1;
 
 
-		Item.InitData(json, p);
+		Item.SetData(json, p);
 
 		return p;
 

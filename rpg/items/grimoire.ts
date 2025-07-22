@@ -27,7 +27,7 @@ export class Grimoire extends Item {
 
 		}
 
-		Item.InitData(json, grim);
+		Item.SetData(json, grim);
 
 		return grim;
 

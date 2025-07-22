@@ -60,7 +60,7 @@ export class Item {
 	 * @param json
 	 * @param it
 	 */
-	static InitData<D extends ItemData = ItemData>(json?: D, it?: Item) {
+	static SetData<D extends ItemData = ItemData>(json?: D, it?: Item) {
 
 		it ??= new Item(json?.id, json);
 

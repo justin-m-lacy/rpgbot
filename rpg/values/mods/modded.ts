@@ -1,5 +1,5 @@
 import { asProxy } from 'rpg/util/proxy';
-import { IMod, type IModdable, SymModdable } from '../imod';
+import { IMod, type IModdable, SymModdable } from "rpg/values/imod";
 import type { Id, Idable, TValue } from "../types";
 
 /// Create modded proxy for target.
@@ -101,15 +101,12 @@ export class Modded implements TValue, IModdable {
 	readonly id: string;
 
 	constructor(id: string, base: number = 0) {
-
 		this.id = id;
 		this._base = base;
-
 	}
 	add(v: number): void {
 		this._base += v;
 		this.recalc();
-
 	}
 
 	addMod(m: IMod) {
@@ -133,11 +130,8 @@ export class Modded implements TValue, IModdable {
 
 	recalc() {
 
-		const state = {
-			pct: 0,
-			bonus: 0,
-			pctMult: 1
-		}
+		const state = { pct: 0, bonus: 0, pctMult: 1 }
+
 		for (const m of this.mods.values()) {
 			m.applyMod(this, state);
 		}

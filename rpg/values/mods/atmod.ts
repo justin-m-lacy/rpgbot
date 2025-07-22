@@ -1,6 +1,6 @@
 
 import { StrMod } from "rpg/parsers/mods";
-import { type IMod, ModState, SymMod } from "../imod";
+import { type IMod, ModState, SymMod } from "rpg/values/imod";
 import { Simple } from "../simple";
 import type { Id, Numeric } from "../types";
 

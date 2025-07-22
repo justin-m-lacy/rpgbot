@@ -19,7 +19,7 @@ export class Chest extends Item implements IInventory {
 			json.id, Inventory.Decode<Item>(json.inv, DecodeItem)!);
 		p.size = json.size;
 
-		return Item.InitData(json, p);
+		return Item.SetData(json, p);
 
 	}
 

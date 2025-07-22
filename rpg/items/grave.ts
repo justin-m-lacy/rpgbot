@@ -26,7 +26,7 @@ export class Grave extends Item implements TStacker {
 
 		p.count = json.n ?? 1;
 
-		Item.InitData(json, p);
+		Item.SetData(json, p);
 
 		return p;
 
