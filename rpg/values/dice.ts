@@ -1,5 +1,6 @@
+import { BadTypeError } from 'rpg/util/errors';
 import { ISimple, SymSimple, TValue } from './types';
-const rollex = /^([\+\-]?\d*)?d([\+\-]?\d*)([\+\-]?\d+)?/;
+const rollex = /^([+-]?\d*)?d([+-]?\d*)([+-]?\d+)?/;
 
 const MaxRoll = 99999;
 const MaxBonus = 999999;
@@ -66,13 +67,14 @@ export class Dice implements TValue, ISimple {
 
 	static Decode(json: string) {
 		if (typeof (json) === 'string') return Dice.Parse(json);
+		throw new BadTypeError(typeof json, 'string');
 	}
 
 	toJSON() {
 
 		return `${this.n}d${this.sides}` +
 			(this.base > 0 ? `+${this.base}` :
-				(this.base < 0 ? `-${this.base}` : '')
+				(this.base < 0 ? `${this.base}` : '')
 			);
 
 	}
@@ -110,7 +112,6 @@ export class Dice implements TValue, ISimple {
 	setTo(v: number): void {
 		this.base = v;
 	}
-
 
 	toString() { return this.toJSON(); }
 
