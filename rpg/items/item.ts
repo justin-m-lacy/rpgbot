@@ -15,7 +15,7 @@ export const IsStack = (it: Item): it is TStacker => {
 export class Item {
 
 	/**
-	 * accessors for subclass overrides
+	 * accessors for subclass override
 	 */
 	get name() { return this._name }
 	set name(v) { this._name = v }

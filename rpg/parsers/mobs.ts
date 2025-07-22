@@ -245,7 +245,11 @@ export const ReviveMob = (json: any) => {
 		m.attacks.push(ReviveWeapon(proto.weap));
 	}
 
-	if (m.tohit) m.tohit = Number(m.tohit);
+	if (json.tohit) m.tohit = Number(json.tohit);
+	if (json.armor && typeof json.armor === 'number') {
+		m.armor = json.armor;
+	}
+
 	return m;
 
 }

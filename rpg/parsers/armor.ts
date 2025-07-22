@@ -80,7 +80,6 @@ export const ReviveWearable = (json: any) => {
 		w.armor = json.armor;
 
 		if (json.mods) {
-			console.log(`wear mods: ${json.mods}`);
 			w.mods = ParseMods(json.mods, w.id);
 		}
 

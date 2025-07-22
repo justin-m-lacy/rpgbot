@@ -74,6 +74,19 @@
 	},
 	"desc": "One of the classier areas of town.",
 	"biome": "town",
+	"npcs": [
+		{
+			"id": "elfroid",
+			"name": "elfroid",
+			"desc": "Completely harmless.",
+			"level": 0,
+			"hp": 1,
+			"armor": 0,
+			"tohit": 0,
+			"evil": 0,
+			"proto": "elfroid"
+		}
+	],
 	"features": [
 		{
 			"id": "486eb9f5-30d5-4469-9333-2b684af066f1",

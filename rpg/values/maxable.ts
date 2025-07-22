@@ -1,10 +1,12 @@
+import { IMod, IModdable, SymModdable } from "rpg/values/imod";
 import { Simple } from "rpg/values/simple";
 import { IsValue, SymSimple, type ISimple, type Numeric } from "rpg/values/types";
 
-export class Maxable implements ISimple {
+export class Maxable implements ISimple, IModdable {
 
 	readonly id: string;
 
+	readonly [SymModdable] = true;
 	readonly [SymSimple] = true;
 
 	toJSON() {
@@ -36,6 +38,13 @@ export class Maxable implements ISimple {
 
 	get base() { return this._value; }
 	set base(v) { this._value = v; }
+
+	addMod(mod: IMod) {
+		this.max.addMod(mod);
+	}
+	removeMod(mod: IMod) {
+		this.max.removeMod(mod);
+	}
 
 	readonly max: Simple;
 

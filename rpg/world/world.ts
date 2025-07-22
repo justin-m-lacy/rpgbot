@@ -1,8 +1,8 @@
-import Cache from 'archcache';
 import { GenFeature } from 'rpg/builders/features';
 import { GenShop } from 'rpg/builders/shopgen';
 import { ItemType } from 'rpg/items/types';
 import { RandMonster } from 'rpg/parsers/mobs';
+import { ICache } from 'rpg/util/icache';
 import { Coord, TCoord } from 'rpg/world/coord';
 import { GenLoc } from 'rpg/world/worldgen';
 import { Char } from '../char/char';
@@ -20,10 +20,10 @@ const BLOCK_SIZE = 16;
 
 export class World {
 
-	readonly cache: Cache<Block>;
-	readonly chars: Cache<Char>
+	readonly cache: ICache<Block>;
+	readonly chars: ICache<Char>
 
-	constructor(blockCache: Cache<Block>, chars: Cache<Char>) {
+	constructor(blockCache: ICache<Block>, chars: ICache<Char>) {
 
 		this.cache = blockCache;
 		this.chars = chars;

@@ -1,0 +1,11 @@
+{
+	"id": "kobold",
+	"name": "kobold",
+	"desc": "You no take candle!",
+	"level": 0.75,
+	"hp": 2.7306023958204824,
+	"armor": 1,
+	"tohit": 1,
+	"evil": 0,
+	"proto": "kobold"
+}

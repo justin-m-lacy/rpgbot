@@ -70,16 +70,12 @@ export class Weapon extends Wearable implements TNpcAction {
 	constructor(id: string | undefined,
 		opts: { name?: string, desc?: string, dmg: DamageSrc, proto?: RawWearableData, material?: Material }) {
 
-		super(id, opts,);
+		super(id, opts, true);
 		this.dmg = opts.dmg;
-		this.proto = opts.proto
 
 		this.type = ItemType.Weapon;
 
-
 		if (this.material?.alter) {
-			console.log(`apply alter: ${this.material.name}`);
-			console.log(`dmg: ${this.material.alter.dmg}`);
 			ApplyMods(this, this.material.alter);
 		}
 	}

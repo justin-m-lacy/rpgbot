@@ -12,7 +12,6 @@ export const MemoOf = <T extends object>(proto: T, memo?: T) => {
 
 	return new Proxy<T>(memo ?? { proto } as T, ProtoProxy);
 
-
 }
 
 

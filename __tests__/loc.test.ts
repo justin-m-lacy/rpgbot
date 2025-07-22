@@ -8,7 +8,10 @@ describe('Location tests', async () => {
 		const loc = Loc.Revive(LocData);
 		expect(Object.keys(loc.exits).length).toBe(4);
 		expect(loc.inv.size).toBe(4);
+		expect(loc.biome).toBe('town');
+
 		expect(loc.features.length).toBe(2);
+		expect(loc.npcs.length).toBe(1);
 
 		expect(loc.coord).toEqual({ x: 5, y: 2 })
 

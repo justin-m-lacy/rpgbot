@@ -101,8 +101,15 @@ export class Wearable extends Item {
 
 	proto?: RawWearableData;
 
+	/**
+	 * 
+	 * @param id 
+	 * @param opts 
+	 * @param skipAlter - skip apply alter step. prevent double apply alters from superclass.
+	 */
 	constructor(id: string | undefined,
-		opts: { name?: string, desc?: string, proto?: RawWearableData, material?: Material }) {
+		opts: { name?: string, desc?: string, proto?: RawWearableData, material?: Material },
+		skipAlter: boolean = false) {
 
 		super(id, opts);
 
@@ -110,7 +117,7 @@ export class Wearable extends Item {
 		this._armor = opts.proto?.armor || 0;
 
 		this.material = opts.material;
-		if (this.material?.alter) {
+		if (!skipAlter && this.material?.alter) {
 			ApplyMods(this, this.material.alter);
 		}
 

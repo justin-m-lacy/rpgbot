@@ -75,6 +75,8 @@ export const LoadMaterials = async () => {
 
 	}
 
+	return materials;
+
 }
 
 const AddToLevel = (mat: Material, lvl: number = 0) => {
