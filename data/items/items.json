@@ -83,10 +83,10 @@
             "desc": "He's got plenty of em."
         },
         {
-            "id": "sm_pouch",
-            "name": "small pouch",
+            "id": "tatterpouch",
+            "name": "Tattered pouch",
             "type": "chest",
-            "desc": "Holds things."
+            "desc": "Hardly holds anything."
         },
         {
             "name": "Kakapo",

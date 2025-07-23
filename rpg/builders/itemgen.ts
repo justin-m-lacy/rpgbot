@@ -10,6 +10,7 @@ import { DecodeItem } from 'rpg/parsers/items';
 import { LvlPotion } from 'rpg/parsers/potions';
 import { LvlScroll } from 'rpg/parsers/scrolls';
 import { GenWeapon } from 'rpg/parsers/weapon';
+import { Uppercase } from 'rpg/util/string';
 import { Mob } from '../char/mobs';
 import { Loot } from '../combat/loot';
 
@@ -50,12 +51,18 @@ async function InitBasic() {
 	JunkItems.push(...items.misc as RawItemData[]);
 
 	for (let i = JunkItems.length - 1; i >= 0; i--) {
-		(JunkItems[i] as RawItemData).id ??= JunkItems[i].name.toLowerCase();
+
+		if (!JunkItems[i].id) JunkItems[i].id = JunkItems[i].name!.toLowerCase();
+		else if (!JunkItems[i].name) JunkItems[i].name = Uppercase(JunkItems[i].id!);
+
 		ProtoItems[JunkItems[i].id] = JunkItems[i];
 	}
 
 	for (let i = spec.length - 1; i >= 0; i--) {
-		(spec[i] as RawItemData).id ??= spec[i].name.toLowerCase();
+
+		if (!spec[i].id) spec[i].id = spec[i].name!.toLowerCase();
+		else if (!spec[i].name) spec[i].name = Uppercase(spec[i].id!);
+
 		ProtoItems[spec[i].id] = spec[i];
 	}
 
@@ -100,8 +107,12 @@ export const GenLoot = (mob: Mob | Actor) => {
 	}
 
 	if ('drops' in mob) {
-		const itms = getDrops(mob);
-		if (itms) loot.items = loot.items!.concat(itms);
+		const items = getDrops(mob);
+
+		if (Array.isArray(items)) {
+			loot.items.push(...items);
+		} else if (items) loot.items.push(items);
+
 	}
 
 
