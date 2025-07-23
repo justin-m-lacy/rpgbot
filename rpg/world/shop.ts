@@ -2,7 +2,7 @@ import { Char } from "rpg/char/char";
 import { Inventory } from "rpg/inventory";
 import { ItemIndex } from "rpg/items/container";
 import { Item } from "rpg/items/item";
-import { ItemData, ItemType } from "rpg/items/types";
+import { ItemData, ItemInfo, ItemType } from "rpg/items/types";
 import { GetTradeMod, PayOrFail } from "rpg/trade";
 import { Feature } from "rpg/world/feature";
 import { Loc } from "rpg/world/loc";
@@ -34,16 +34,14 @@ export class Shop<T extends Item = Item> extends Feature {
 	private kind: string;
 
 	constructor(
-		id: string | undefined,
-		opts: {
-			name: string,
+		opts: ItemInfo & {
 			level?: number, kind: string,
 			desc?: string,
 			genItem?: (lvl: number) => T | null
 		}
 	) {
 
-		super(id, opts);
+		super(opts);
 
 		this.desc ??= `${opts.kind} Shop`;
 

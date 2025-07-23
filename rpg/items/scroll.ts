@@ -12,7 +12,7 @@ export class Scroll extends Item implements TNpcAction {
 
 		const s = new Scroll(json.id, GetSpell(json.spell));
 
-		Item.SetData(json);
+		Item.SetProtoData(json);
 		s.count = typeof (json.n === 'number') ? json.n : 1;
 
 		return s;
@@ -41,9 +41,9 @@ export class Scroll extends Item implements TNpcAction {
 	get kind() { return this.spell?.kind ?? 'blank' }
 	get desc() { return this.spell?.desc ?? 'A blank scroll' }
 
-	constructor(id: string | undefined, spell: Spell | undefined, opts?: { desc?: string, name?: string }) {
+	constructor(spell: Spell | undefined, opts?: { id?: string, desc?: string, name?: string }) {
 
-		super(id, { type: ItemType.Scroll, ...opts });
+		super(opts);
 
 		this.type = ItemType.Scroll;
 		this.level = spell?.level ?? 0;

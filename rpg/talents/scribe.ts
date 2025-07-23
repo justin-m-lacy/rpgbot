@@ -24,7 +24,7 @@ export const Scribe = {
 		}
 
 		if (spell.level) char.addExp(2 * spell.level.valueOf());
-		const scroll = new Scroll(undefined, spell);
+		const scroll = new Scroll(spell);
 		const ind = char.addItem(scroll);
 
 		char.log(`${char.name} scribes ${scroll.name}. (${ind})`);

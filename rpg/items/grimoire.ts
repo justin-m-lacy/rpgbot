@@ -27,15 +27,15 @@ export class Grimoire extends Item {
 
 		}
 
-		Item.SetData(json, grim);
+		Item.SetProtoData(json, grim);
 
 		return grim;
 
 	}
 
-	constructor(id: string, data?: { name: string, desc: string, spells?: string[] }) {
+	constructor(data?: { id: string, name: string, desc: string, spells?: string[] }) {
 
-		super(id, data);
+		super(data);
 
 		if (data?.spells) {
 			this.spells.push(...data.spells);

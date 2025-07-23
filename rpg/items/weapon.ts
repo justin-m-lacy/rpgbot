@@ -2,15 +2,15 @@ import { Char } from 'rpg/char/char';
 import { TNpcAction } from 'rpg/combat/types';
 import { Material } from 'rpg/items/material';
 import { ItemType } from 'rpg/items/types';
-import { RawWearableData } from 'rpg/parsers/armor';
-import { ParseValue } from 'rpg/parsers/values';
+import { ParseMods } from 'rpg/parsers/mods.js';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
 import { ApplyMods } from 'rpg/values/modding.js';
+import { TValue } from 'rpg/values/types.js';
 import { DamageSrc } from '../damage.js';
 import { Wearable } from './wearable';
 
-export class Weapon extends Wearable implements TNpcAction {
+export class Weapon extends Wearable<RawWeaponData> implements TNpcAction {
 
 	toJSON() {
 
@@ -20,9 +20,6 @@ export class Weapon extends Wearable implements TNpcAction {
 
 			json.name = undefined;
 			json.desc = undefined;
-			if (this.slot != this.proto.slot) {
-				this.slot = this.slot;
-			}
 			json.price = undefined;
 
 		} else {
@@ -37,24 +34,19 @@ export class Weapon extends Wearable implements TNpcAction {
 
 	/**
 	 * From template data.
-	 * @param base
+	 * @param proto
 	 * @param mat
 	 */
-	static FromProto(base: RawWeaponData, mat?: Material) {
+	static FromProto(proto: RawWeaponData, mat?: Material) {
 
-		const w = new Weapon(undefined, {
-			name: base.name,
-			proto: base, dmg: new DamageSrc(
-				ParseValue('dmg', base.dmg), base.kind
-			),
+		const w = new Weapon({
+			name: proto.name,
+			proto: proto,
 			material: mat
 		});
 
-		w.tohit = base.hit || 0;
-		super.FromProto(base, mat, w);
-
-		w.hands = base.hands ?? 1;
-		w.dmg.base += mat?.dmg || mat?.bonus || 0;
+		w.tohit = proto.hit || 0;
+		super.FromProto(proto, mat, w);
 
 		return w;
 
@@ -67,17 +59,31 @@ export class Weapon extends Wearable implements TNpcAction {
 	get kind() { return this.dmg.type };
 	set kind(s: string) { this.dmg.type = s; }
 
-	constructor(id: string | undefined,
-		opts: { name?: string, desc?: string, dmg: DamageSrc, proto?: RawWearableData, material?: Material }) {
+	constructor(
+		opts: {
+			id?: string | undefined,
+			name?: string,
+			dmg?: number | string | TValue,
+			kind?: string,
+			desc?: string,
+			proto?: RawWeaponData,
+			material?: Material
+		}) {
 
-		super(id, opts, true);
-		this.dmg = opts.dmg;
+		super(opts, true);
+
+		this.dmg = DamageSrc.From(opts.dmg ?? opts.proto?.dmg, opts.kind ?? opts.proto?.kind);
 
 		this.type = ItemType.Weapon;
 
 		if (this.material?.alter) {
 			ApplyMods(this, this.material.alter);
 		}
+		if (this.proto?.mods) {
+			this.mods = ParseMods(this.proto?.mods, this.id, 1);
+		}
+		this.hands = this.proto?.hands ?? 1;
+
 	}
 
 	getDetails(char?: Char) {
@@ -87,9 +93,11 @@ export class Weapon extends Wearable implements TNpcAction {
 
 }
 
-export const Fists = new Weapon('fists',
+export const Fists = new Weapon(
 	{
+		id: 'fists',
 		name: 'fists', desc: 'Just plain fists.',
-		dmg: new DamageSrc(new Dice(1, 2, 0), 'blunt')
+		dmg: new Dice(1, 2, 0),
+		kind: 'blunt'
 	},
 );

@@ -6,5 +6,5 @@ import { RandSpell } from "rpg/parsers/spells";
  * @param lvl 
  */
 export const LvlScroll = (lvl: number = 1) => {
-	return new Scroll(undefined, RandSpell(lvl));
+	return new Scroll(RandSpell(lvl));
 }

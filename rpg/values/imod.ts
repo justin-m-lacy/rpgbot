@@ -1,5 +1,5 @@
 import type { Path } from "rpg/values/paths";
-import type { Id, TValue } from "./types";
+import type { Id, TValue } from "rpg/values/types";
 
 export type ModState = {
 	bonus: number,

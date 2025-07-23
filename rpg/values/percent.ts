@@ -76,6 +76,7 @@ export class Percent implements ISimple, IModdable {
 	}
 
 	addMod(mod: IMod) {
+		console.log(`pct: ${typeof this.pct}  CanMod: ${CanMod(this.pct)}`);
 		AsModded(this, 'pct', this.pct)!.addMod(mod);
 	};
 

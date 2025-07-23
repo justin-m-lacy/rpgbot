@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import { Char } from 'rpg/char/char';
 import { Game } from 'rpg/game';
-import { ItemData, ItemType } from 'rpg/items/types';
+import { ItemData, ItemInfo, ItemType } from 'rpg/items/types';
 
 export type TStacker = Item & {
 	stack: boolean,
@@ -60,20 +60,21 @@ export class Item {
 	 * @param json
 	 * @param it
 	 */
-	static SetData<D extends ItemData = ItemData>(json?: D, it?: Item) {
+	static SetProtoData<D extends ItemData = ItemData>(json?: D, it?: Item) {
 
-		it ??= new Item(json?.id, json);
+		it ??= new Item(json);
 
 		if (json) {
-			if (json.name) it.name = json.name;
-			if (json.desc) it.desc = json.desc;
 			if (json.price) it.price = json.price;
 			if (json.embed) it.embed = json.embed;
 			if (json.maker) it.maker = json.maker;
 			if (json.inscrip) it.inscrip = json.inscrip;
 
-			if (json.level && !Number.isNaN(json.level)) {
-				it.level = json.level;
+			if (json.level) {
+				if (typeof json.level === 'string') {
+					json.level = Number.parseInt(json.level);
+				}
+				it.level = typeof json.level === 'number' && Number.isNaN(json.level) ? json.level : 1;
 			}
 		}
 
@@ -97,14 +98,9 @@ export class Item {
 	 */
 	created: number = 0;
 
-	constructor(id: string | null | undefined,
-		info?: {
-			type?: ItemType,
-			desc?: string,
-			name?: string
-		}) {
+	constructor(info?: ItemInfo) {
 
-		this.id = id ?? randomUUID();
+		this.id = info?.id ?? randomUUID();
 		this.name = info?.name ?? this.id;
 		this.type = info?.type ?? ItemType.Unknown;
 		this.desc = info?.desc ?? '';

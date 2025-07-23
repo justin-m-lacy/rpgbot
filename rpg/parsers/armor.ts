@@ -1,7 +1,6 @@
 
 import BaseArmors from 'data/items/armors.json';
 import { AddProtoItem, GetProto } from 'rpg/builders/itemgen';
-import { DamageSrc } from 'rpg/damage.js';
 import { Item } from 'rpg/items/item';
 import { GetMaterial, RandMaterial } from 'rpg/items/material';
 import { ItemData } from 'rpg/items/types';
@@ -14,7 +13,7 @@ export type RawWearableData = ItemData & (typeof BaseArmors)[number] & {
 
 	mods?: Record<string, any>,
 	hit?: number,
-	dmg?: any
+	dmg?: number | string
 };
 
 const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawWearableData[] }> = {};
@@ -30,32 +29,24 @@ export const ReviveWeapon = (json: ItemData & {
 }) => {
 
 	const mat = json.mat ?? json.material ? GetMaterial(json.mat ?? json.material!) : undefined;
+	const proto = json.proto ? GetProto<RawWeaponData>(json.proto) : undefined;
 
-	if (json.proto) {
+	const w = new Weapon(
+		{
+			id: json.id,
+			name: json.name, desc: json.desc,
+			material: mat,
+			proto,
+			dmg: json.dmg
+		},
+	);
 
-		return Weapon.FromProto(GetProto<RawWeaponData>(json.proto)!, mat);
-
-
-	} else {
-		const w = new Weapon(json.id,
-			{
-				name: json.name, desc: json.desc,
-				material: mat,
-				dmg: DamageSrc.Decode(json.dmg)
-			},
-		);
-		w.slot = json.slot ?? 'hands';
-
-		if (json.mods) {
-			w.mods = ParseMods(json.mods, w.id);
-		}
-
-		if (json.kind) w.kind = json.kind;
-
-		w.tohit = json.hit || 0;
-		return Item.SetData(json, w);
-
+	if (json.mods) {
+		w.mods = ParseMods(json.mods, w.id);
 	}
+
+	w.tohit = json.hit || 0;
+	return Item.SetProtoData(json, w);
 
 }
 
@@ -64,29 +55,21 @@ export const ReviveWearable = (json: any) => {
 	const proto = GetProto<RawWearableData>(json.proto);
 	const mat = GetMaterial(json.mat);
 
-	if (proto) {
-
-		const w = Wearable.FromProto(proto, mat);
-		w.slot = json.slot;
-		return w;
-
-
-	} else {
-
-		const w = new Wearable(json.id,
-			{ name: json.name, desc: json.desc, material: mat, }
-		);
-		w.slot = json.slot;
-		w.armor = json.armor;
-
-		if (json.mods) {
-			w.mods = ParseMods(json.mods, w.id);
+	const w = new Wearable(
+		{
+			id: json.id,
+			name: json.name,
+			desc: json.desc,
+			material: mat, proto, slot: json.slot, armor: json.armor
 		}
+	);
 
-		Item.SetData(json, w);
-		return w;
-
+	if (json.mods) {
+		w.mods = ParseMods(json.mods, w.id);
 	}
+
+	Item.SetProtoData(json, w);
+	return w;
 
 }
 

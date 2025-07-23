@@ -26,7 +26,7 @@ export class Grave extends Item implements TStacker {
 
 		p.count = json.n ?? 1;
 
-		Item.SetData(json, p);
+		Item.SetProtoData(json, p);
 
 		return p;
 
@@ -80,7 +80,8 @@ export class Grave extends Item implements TStacker {
 		slayer?: string,
 		epitaph?: string) {
 
-		super(id, {
+		super({
+			id,
 			name: `${char}'s Gravestone`,
 			desc: `Here lies ${char}, slain by ${slayer}.`,
 			type: ItemType.Grave

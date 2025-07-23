@@ -1,5 +1,5 @@
 import { Formula } from 'formulic';
-import { ItemType } from 'rpg/items/types';
+import { ItemData, ItemType } from 'rpg/items/types';
 import { GetDot, ProtoDot } from 'rpg/magic/dots';
 import { Char } from '../char/char';
 import { type Game } from '../game';
@@ -9,7 +9,7 @@ export class Potion extends Item implements TStacker {
 
 	static Decode(json: any) {
 
-		let p = new Potion(json.id);
+		let p = new Potion(json);
 
 		if (json.effect) p.effect = json.effect;
 		if (json.form) p.form = json.form;
@@ -17,7 +17,7 @@ export class Potion extends Item implements TStacker {
 		p.count = typeof (json.n === 'number') ? json.n : 1;
 
 
-		Item.SetData(json, p);
+		Item.SetProtoData(json, p);
 
 		return p;
 
@@ -51,8 +51,9 @@ export class Potion extends Item implements TStacker {
 
 	dot?: ProtoDot;
 
-	constructor(id?: string) {
-		super(id, { name: '', desc: '', type: ItemType.Potion });
+	constructor(opts?: ItemData) {
+		super(opts);
+		this.type = ItemType.Potion;
 	}
 
 	use(_: Game, char: Char) {

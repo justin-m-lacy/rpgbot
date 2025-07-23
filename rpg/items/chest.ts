@@ -19,7 +19,7 @@ export class Chest extends Item implements IInventory {
 			json.id, Inventory.Decode<Item>(json.inv, DecodeItem)!);
 		p.size = json.size;
 
-		return Item.SetData(json, p);
+		return Item.SetProtoData(json, p);
 
 	}
 
@@ -49,9 +49,9 @@ export class Chest extends Item implements IInventory {
 
 	private readonly _inv;
 
-	constructor(id: string, inv: Inventory<Item>) {
+	constructor(id: string | undefined, inv: Inventory<Item>) {
 
-		super(id, { name: 'chest', type: ItemType.Chest });
+		super({ id, name: 'chest', type: ItemType.Chest });
 
 		this._inv = inv;
 

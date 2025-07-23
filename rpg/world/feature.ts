@@ -1,5 +1,5 @@
 import { type Game } from 'rpg/game';
-import { ItemType } from 'rpg/items/types';
+import { ItemInfo, ItemType } from 'rpg/items/types';
 import { Action } from 'rpg/magic/action';
 import { type Loc } from 'rpg/world/loc';
 import { Char } from '../char/char';
@@ -25,9 +25,8 @@ export class Feature extends Item {
 
 	action?: Action;
 
-	constructor(id: string | undefined, opts: { name: string, desc?: string, type?: ItemType }) {
-		super(id, opts);
-
+	constructor(opts: ItemInfo) {
+		super(opts);
 		this.type = opts.type ?? ItemType.Feature;
 	}
 

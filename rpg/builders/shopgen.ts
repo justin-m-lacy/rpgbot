@@ -12,7 +12,8 @@ export const GenShop = (biome: string, level: number) => {
 
 	const kind = randElm(kinds);
 
-	return new Shop(`${Uppercase(kind)} Shop`, {
+	return new Shop({
+		id: `${Uppercase(kind)} Shop`,
 		kind,
 		level, genItem: GetTypeGenerator(kind)
 	}).restock();

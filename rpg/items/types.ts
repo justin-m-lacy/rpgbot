@@ -1,4 +1,11 @@
 
+export type ItemInfo = {
+	id?: string,
+	type?: ItemType,
+	name?: string,
+	desc?: string
+}
+
 export type ItemData = {
 	id: string,
 	name: string,

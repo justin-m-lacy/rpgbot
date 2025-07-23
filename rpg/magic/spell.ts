@@ -36,7 +36,7 @@ export class Spell extends Item {
 		target?: TargetFlags
 	}) {
 
-		super(data.id, data);
+		super(data);
 
 		this.kind = data.kind ?? 'arcane';
 

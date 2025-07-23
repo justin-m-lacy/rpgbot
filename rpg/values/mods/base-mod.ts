@@ -1,5 +1,5 @@
 import { SymMod, type IMod, type IModdable, type ModState } from "rpg/values/imod";
-import type { Id, Numeric } from '../types';
+import type { Id, Numeric } from 'rpg/values/types';
 
 /**
  * A mod that adds a base amount times a source value,

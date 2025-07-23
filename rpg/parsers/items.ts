@@ -21,7 +21,7 @@ const ItemDecoders: Record<string, (data: any) => Item> = {
 	[ItemType.Chest]: Chest.Decode,
 	[ItemType.Shop]: ReviveShop,
 	[ItemType.Feature]: ReviveFeature,
-	[ItemType.Unknown]: Item.SetData,
+	[ItemType.Unknown]: Item.SetProtoData,
 }
 
 
@@ -36,22 +36,23 @@ export const DecodeItem = <T extends Item>(json: any): T | null => {
 }
 
 export function ReviveFeature<T extends Feature>(
-	json: ItemData & { desc: string, action?: string, fb?: string }, f?: T | Feature) {
+	json: ItemData & { action?: string, fb?: string }, f?: T | Feature) {
 
-	f ??= new Feature(json.id, { name: json.name, desc: json.desc });
+	f ??= new Feature(json);
 
 	if (json.action) {
 		f.action = GetAction(json.action);
 	}
 	if (json.fb) f.fb = json.fb;
 
-	return Item.SetData(json, f) as Feature;
+	return Item.SetProtoData(json, f) as Feature;
 
 }
 
 function ReviveShop(json: any): Shop {
 
-	const shop = new Shop(json.id, {
+	const shop = new Shop({
+		id: json.id,
 		name: json.name,
 		kind: json.kind,
 		level: json.level, desc: json.desc,

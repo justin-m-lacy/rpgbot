@@ -200,7 +200,7 @@ export class Actor {
 
 			const targ = this[k];
 			if (CanMod(targ)) {
-				console.log(`mod: ${k.toString()}`);
+				console.log(`Actor mod: ${k.toString()}`);
 				targ.addMod(m);
 			} else {
 

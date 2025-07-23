@@ -1,3 +1,4 @@
+import { ItemInfo } from 'rpg/items/types';
 import { IsInt } from 'rpg/util/parse';
 import { Simple } from 'rpg/values/simple';
 import { type ItemIndex } from './items/container';
@@ -65,12 +66,10 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	}
 
-	constructor(id?: string, info?: { max?: number, name?: string, desc?: string }) {
+	constructor(info?: ItemInfo & { max?: number }) {
 
-		super(id, info);
-
+		super(info);
 		this.type ??= 'inv';
-
 		this.max.base = info?.max ?? 10;
 
 	}

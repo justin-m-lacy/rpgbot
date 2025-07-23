@@ -1,4 +1,5 @@
 import { Char } from 'rpg/char/char';
+import { ItemInfo } from 'rpg/items/types';
 import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
@@ -44,7 +45,7 @@ export const toSlot = (slot?: string | null) => {
 	return null;
 }
 
-export class Wearable extends Item {
+export class Wearable<T extends RawWearableData = RawWearableData> extends Item {
 
 	/**
 	 * @property armor - armor added. replace with defense?
@@ -59,15 +60,13 @@ export class Wearable extends Item {
 	 */
 	static FromProto(proto: RawWearableData, material?: Material, item?: Wearable) {
 
-		item ??= new Wearable(undefined, { name: proto.name, proto, material: material });
-
-		item.slot = proto.slot as HumanSlot;
+		item ??= new Wearable({ name: proto.name, proto, material: material });
 
 		if (proto.mods) {
 			item.mods = ParseMods(proto.mods, item.id,);
 		}
 
-		return Item.SetData(proto, item) as Wearable;
+		return Item.SetProtoData(proto, item) as Wearable;
 
 	}
 
@@ -76,10 +75,15 @@ export class Wearable extends Item {
 		const json = super.toJSON();
 
 		json.proto = this.proto?.id;
+		json.mat = this.material?.id;
+
+		json.armor = this.armor;
 
 		json.armor = this._armor;
-		json.slot = this.slot;
-		json.mat = this.material;
+		if (this.slot && this.slot != this.proto?.slot) {
+			json.slot = this.slot;
+		}
+
 		if (this.mods) json.mods = this.mods;
 
 		return json;
@@ -96,28 +100,33 @@ export class Wearable extends Item {
 	/**
 	 * @property slot - equip slot used.
 	 */
-	slot: HumanSlot = 'hands';
+	slot: HumanSlot;
 	mods: Path<IMod> | undefined;
 
-	proto?: RawWearableData;
+	proto?: T;
 
 	/**
 	 * 
 	 * @param id 
 	 * @param opts 
-	 * @param skipAlter - skip apply alter step. prevent double apply alters from superclass.
+	 * @param skipInit - skip apply alter step. prevent double apply alters from superclass.
 	 */
-	constructor(id: string | undefined,
-		opts: { name?: string, desc?: string, proto?: RawWearableData, material?: Material },
-		skipAlter: boolean = false) {
+	constructor(
+		opts: { proto?: T, material?: Material, slot?: HumanSlot, armor?: number } & ItemInfo,
+		skipInit: boolean = false) {
 
-		super(id, opts);
+		super(opts);
 
 		this.proto = opts.proto;
-		this._armor = opts.proto?.armor || 0;
+		this.name = opts.name ?? opts.proto?.name ?? this.id;
+		this.slot = opts.slot ?? opts.proto?.slot as HumanSlot ?? 'hands';
+
+		this.price = opts.proto?.price || 1;
+
+		this._armor = opts?.armor || opts.proto?.armor || 0;
 
 		this.material = opts.material;
-		if (!skipAlter && this.material?.alter) {
+		if (!skipInit && this.material?.alter) {
 			ApplyMods(this, this.material.alter);
 		}
 

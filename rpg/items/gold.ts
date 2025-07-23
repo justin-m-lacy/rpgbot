@@ -10,7 +10,7 @@ export class GoldDrop extends Item {
 
 	constructor(amt: number) {
 
-		super(undefined, {
+		super({
 			name: `${amt} gold coins`,
 			desc: `${amt} gold coins`
 		});

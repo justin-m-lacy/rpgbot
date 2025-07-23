@@ -214,7 +214,7 @@ export const GetProto = <T extends ItemData>(s: string) => ProtoItems[s] as T;
 
 export const Craft = (char: Char, name: string, desc?: string, embed?: string) => {
 
-	const item = new Item(randomUUID({}), { name, desc });
+	const item = new Item({ name, desc });
 
 	if (embed) item.embed = embed;
 
