@@ -25,7 +25,7 @@ export const ReviveWeapon = (json: ItemData & {
 	proto?: string,
 	material?: string,
 	mat?: string,
-	mods: any, dmg: any
+	mods: any, dmg: string | number | undefined
 }) => {
 
 	const mat = json.mat ?? json.material ? GetMaterial(json.mat ?? json.material!) : undefined;

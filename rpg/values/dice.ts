@@ -1,5 +1,7 @@
 import { BadTypeError } from 'rpg/util/errors';
-import { ISimple, SymSimple, TValue } from './types';
+import { CanMod, IMod, IModdable, SymModdable } from 'rpg/values/imod';
+import { AsModded } from 'rpg/values/modding';
+import { ISimple, SymSimple } from './types';
 const rollex = /^([+-]?\d*)?d([+-]?\d*)([+-]?\d+)?/;
 
 const MaxRoll = 99999;
@@ -53,7 +55,10 @@ export const roll = (count: number, sides: number, bonus: number = 0) => {
 }
 
 
-export class Dice implements TValue, ISimple {
+export class Dice implements IModdable, ISimple {
+
+	readonly [SymSimple]: true = true;
+	readonly [SymModdable] = true;
 
 	static Parse(str: string) {
 
@@ -82,8 +87,6 @@ export class Dice implements TValue, ISimple {
 	get value() { return this.valueOf() }
 	set value(v: number) { }
 
-	[SymSimple]: true = true;
-
 	id: string = 'dice';
 
 	readonly n: number;
@@ -105,6 +108,16 @@ export class Dice implements TValue, ISimple {
 		this.base = bonus;
 
 	}
+
+	addMod(mod: IMod) {
+		AsModded(this, 'base', this.base)!.addMod(mod);
+	};
+
+	removeMod(mod: IMod) {
+		if (CanMod(this.base)) {
+			this.base.removeMod(mod);
+		}
+	};
 
 	add(amt: number): void {
 		this.base += amt;

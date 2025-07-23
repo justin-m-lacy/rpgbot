@@ -1,12 +1,11 @@
 import { ParseValue } from 'rpg/parsers/values';
 import { CanMod, IMod, IModdable, SymModdable } from 'rpg/values/imod';
 import { AsModded } from 'rpg/values/modding';
-import type { Numeric, TValue } from 'rpg/values/types';
+import { IsSimple, type Numeric, type TValue } from 'rpg/values/types';
 
 export class DamageSrc implements TValue, IModdable {
 
 	[SymModdable]: true = true;
-
 
 	static From(dmg: string | Numeric | undefined, kind: string = 'blunt') {
 
@@ -28,8 +27,17 @@ export class DamageSrc implements TValue, IModdable {
 
 	id: string = 'dmg';
 
-	base: number = 0;
 	private _val: number | (TValue);
+	get base() {
+		if (typeof this._val === 'number') return this._val;
+		if (IsSimple(this._val)) return this._val.base;
+		return this._val.value;
+	}
+	set base(v) {
+		if (typeof this._val === 'number') this._val = v;
+		else if (IsSimple(this._val)) this._val.base = v;
+		else this._val.value = v;
+	}
 	type: string;
 
 	constructor(value: TValue | number, type?: string) {

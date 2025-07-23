@@ -415,7 +415,7 @@
             "type": "ing"
         },
         {
-            "name": "bone",
+            "name": "it_bone",
             "desc": "Regular old bone. You probably have a few yourself.",
             "price": 5,
             "type": "ing"
