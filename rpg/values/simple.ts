@@ -1,9 +1,10 @@
-import { IMod } from "rpg/values/imod";
+import { IMod, IModdable, SymModdable } from "rpg/values/imod";
 import { SymSimple, type ISimple, type Numeric } from 'rpg/values/types';
 
-export class Simple implements ISimple {
+export class Simple implements ISimple, IModdable {
 
 	readonly [SymSimple] = true;
+	readonly [SymModdable] = true;
 
 	toJSON() { return this._base }
 	valueOf() { return this._value }

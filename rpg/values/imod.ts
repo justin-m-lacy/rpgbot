@@ -1,13 +1,15 @@
 import type { Path } from "rpg/values/paths";
 import type { Id, TValue } from "rpg/values/types";
 
+export const SymModdable = Symbol('Moddable');
+export const SymMod = Symbol('Mod');
+
 export type ModState = {
 	bonus: number,
 	pct: number,
 	pctMult: number,
 }
 
-export const SymMod = Symbol('Mod');
 export const IsMod = (v: any): v is IMod => {
 	return v && typeof v === 'object' && v[SymMod] === true;
 }
@@ -35,7 +37,6 @@ export type ModBlock<D extends object> = {
 //Record<keyof D, IMod>;
 
 /// object handles addMod() and removeMod()
-export const SymModdable = Symbol('Moddable');
 export interface IModdable extends TValue {
 
 	[SymModdable]: true,
