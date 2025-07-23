@@ -56,6 +56,12 @@
             "desc": "Totally useless."
         },
         {
+            "id": "brokenwand",
+            "name": "Broken Wand",
+            "desc": "There's no sign what it used to do.",
+            "price": 0.5
+        },
+        {
             "id": "cake",
             "type": "food",
             "name": "Piece of Cake",
@@ -64,7 +70,7 @@
         {
             "id": "pukeko",
             "name": "Pukeko",
-            "desc": "They’re pesky swamp hens and they get into everything."
+            "desc": "Pesky swamp hens that get into everything."
         },
         {
             "id": "hitchhiker_guide",
@@ -77,8 +83,14 @@
             "desc": "He's got plenty of em."
         },
         {
+            "id": "sm_pouch",
+            "name": "small pouch",
+            "type": "chest",
+            "desc": "Holds things."
+        },
+        {
             "name": "Kakapo",
-            "desc": "They're extremely rare."
+            "desc": "Extremely rare."
         },
         {
             "name": "Missing Link",
@@ -86,19 +98,25 @@
         },
         {
             "name": "Russell's Paradox",
-            "desc": "It's all loopy and self-referential."
+            "desc": "It's a bit self-referential."
         },
         {
             "name": "Piece of Pi",
             "desc": ".926535"
         },
         {
+            "id": "madmardigan",
+            "name": "Mad Mardigan",
+            "desc": "A small, angry vole."
+        },
+        {
             "name": "Towel",
-            "desc": "Don't Panic."
+            "desc": "Don't Panic.",
+            "price": 1
         },
         {
             "name": "Contact Lens",
-            "desc": "Someone is probably missing this."
+            "desc": "Someone might be missing this."
         },
         {
             "name": "Crumpled Note",
@@ -129,16 +147,34 @@
             "price": 10
         },
         {
+            "id": "snorkel",
+            "desc": "Crafted from a tube of bamboo.",
+            "slot": "head",
+            "price": 7
+        },
+        {
+            "name": "Statue of a Wumpus",
+            "desc": "The figurine is not as imposing as the reality."
+        },
+        {
             "name": "Yo-Yo Ma Solo",
             "desc": "Bach's Cello Suite No. 1 In G Major."
         },
         {
             "name": "Cucumber",
-            "desc": "One to eat..."
+            "desc": "One to eat...",
+            "type": "food"
         },
         {
             "name": "Banana",
-            "desc": "Don't make eye contact."
+            "desc": "Don't make eye contact.",
+            "type": "food"
+        },
+        {
+            "name": "Filthy rags",
+            "desc": "The stench...",
+            "type": "armor",
+            "slot": "arms"
         },
         {
             "name": "Taylor Swift CD",
@@ -161,10 +197,6 @@
             "desc": "Keep it secret. Keep it safe."
         },
         {
-            "name": "A Sheep",
-            "desc": "In New Zealand, you can legally marry one."
-        },
-        {
             "name": "Cthulhu Plushie",
             "desc": "Squish, Squish."
         },
@@ -173,16 +205,33 @@
             "desc": "It belongs in a museum."
         },
         {
-            "name": "Wikipedia",
+            "name": "Wyvernpedia",
             "desc": "Handy pocket-sized edition."
         },
         {
             "name": "Ugly Stick",
-            "desc": "You spent hours beating yourself with it as a child."
+            "desc": "You spent hours beating yourself with it as a child.",
+            "slot": "hands",
+            "dmg": 1
         },
         {
             "name": "Oscar for Best Picture",
             "desc": "You really should thank the Academy."
+        },
+        {
+            "name": "Candlestick",
+            "desc": "You could maybe bop someone on the head with it",
+            "dmg": "2~3",
+            "type": "weapon",
+            "kind": "blunt",
+            "slot": "hands"
+        },
+        {
+            "id": "sandals",
+            "desc": "Better than going barefoot.",
+            "type": "armor",
+            "armor": 0.1,
+            "slot": "feet"
         },
         {
             "name": "Piece of Candy",
@@ -205,6 +254,12 @@
             "desc": "Hold it close."
         },
         {
+            "id": "item_ankh",
+            "name": "Ankh",
+            "type": "armor",
+            "slot": "neck"
+        },
+        {
             "name": "A Paperclip",
             "desc": "I would rip apart the stars to make just one more."
         },
@@ -213,7 +268,7 @@
             "desc": "It puts it on its skin."
         },
         {
-            "name": "Book of German Love Poems",
+            "name": "Book of Teutonic Love Poems",
             "desc": "Such a romantic language."
         },
         {
@@ -221,8 +276,13 @@
             "desc": "Give it away or sell it."
         },
         {
+            "id": "goldcoin",
+            "name": "A Gold Coin",
+            "price": 1
+        },
+        {
             "name": "Ban Hammer",
-            "desc": "Preferred weapon of channel mods everywhere."
+            "desc": "Trusty weapon of mods everywhere."
         },
         {
             "name": "ArchBot",
@@ -249,12 +309,16 @@
             "desc": "Probably worthless."
         },
         {
+            "name": "Nondescript Rock",
+            "desc": "Why are you carrying it?"
+        },
+        {
             "name": "A simple golden ring.",
-            "desc": "This would probably be very powerful in another fictional world."
+            "desc": "This might be very powerful in another world."
         },
         {
             "name": "Log",
-            "desc": "Log rolls down stairs, alone or in pairs, rolls over your neighbor's dog."
+            "desc": "Log rolls down stairs, alone or in pairs."
         },
         {
             "name": "Bat Wing",
@@ -263,12 +327,14 @@
             "type": "ing"
         },
         {
+            "id": "rattail",
             "name": "Rat Tail",
             "desc": "Tug them and they come right off.",
             "price": 1,
             "type": "ing"
         },
         {
+            "id": "newteye",
             "name": "Eye of Newt",
             "desc": "Standard ingredient in every witch's brew.",
             "price": 1,

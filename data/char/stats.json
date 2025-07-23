@@ -1,0 +1,31 @@
+[
+	{
+		"id": "phy",
+		"name": "Physique",
+		"desc": "Physical power.",
+		"mod": {
+			"hp": 1
+		}
+	},
+	{
+		"id": "dex",
+		"name": "Dexterity",
+		"desc": ""
+	},
+	{
+		"id": "Wisdom",
+		"name": "Wisdom",
+		"desc": "Insight and discretion."
+	},
+	{
+		"id": "int",
+		"name": "Intelligence",
+		"mod": {
+			"mp": 1
+		}
+	},
+	{
+		"id": "cha",
+		"desc": "Personal appeal."
+	}
+]
