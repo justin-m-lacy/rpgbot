@@ -1,5 +1,5 @@
+import LocData from "__tests__/data/loc/loc5,2.json";
 import { Loc } from "rpg/world/loc";
-import LocData from "./data/loc/loc5,2.json";
 
 describe('Location tests', async () => {
 

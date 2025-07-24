@@ -6,6 +6,7 @@ import { Inventory } from 'rpg/inventory';
 import { HumanSlot, HumanSlots, Wearable } from 'rpg/items/wearable';
 import { Dot } from 'rpg/magic/dots';
 import { DecodeItem } from 'rpg/parsers/items';
+import { ReviveMob } from 'rpg/parsers/mobs';
 import { CharTeam } from 'rpg/social/teams';
 import { BadTypeError, NullDataError } from 'rpg/util/errors';
 import { Coord, IsCoord } from 'rpg/world/coord';
@@ -34,6 +35,20 @@ export const ReviveChar = (game: Game, json: {
 		for (let i = 0; i < json.talents.length; i++) {
 			if (typeof json.talents[i] === 'string') {
 				char.talents.push(json.talents[i]);
+			}
+		}
+	}
+
+	if (json.minions) {
+
+		for (let i = 0; i < json.minions.length; i++) {
+			try {
+				const m = ReviveMob(json.minions[i]);
+				if (m) {
+					char.minions.push(m);
+				}
+			} catch (e) {
+				console.warn(`load minion: ${char.name}`, json.minions[i]);
 			}
 		}
 	}

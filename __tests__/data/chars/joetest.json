@@ -37,6 +37,19 @@
 	},
 	"sex": "f",
 	"talents": [],
+	"minions": [
+		{
+			"id": "rat",
+			"name": "rat",
+			"desc": "Smelly rat.",
+			"level": 0.5,
+			"hp": 3.5342554749588544,
+			"armor": 0,
+			"tohit": 0,
+			"evil": 0,
+			"proto": "rat"
+		}
+	],
 	"inv": {
 		"id": "bb323333-dcfe-4a14-8d1d-64bebb7e0af3",
 		"name": "bb323333-dcfe-4a14-8d1d-64bebb7e0af3",

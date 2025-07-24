@@ -1,3 +1,4 @@
+import Epitaphs from 'data/items/epitaphs.json';
 import { TActor } from 'rpg/char/mobs';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { Char } from "../char/char";
@@ -5,8 +6,6 @@ import { genderfy } from '../social/gender';
 import { Item, TStacker } from "./item";
 
 export class Grave extends Item implements TStacker {
-
-	static _Epitaphs?: string[];
 
 	/**
 	 *
@@ -37,9 +36,7 @@ export class Grave extends Item implements TStacker {
 		if (!slayer) {
 			return `Here lies ${char}. Died of unknown causes.`;
 		}
-
-		const eps = this._Epitaphs ?? (this._Epitaphs = require('data/items/epitaphs.json'));
-		const ep = eps[Math.floor(Math.random() * eps.length)];
+		const ep = Epitaphs[Math.floor(Math.random() * Epitaphs.length)];
 
 		return genderfy(char.sex, ep.replace(/%c/g, char.name).replace(/%k/g, slayer));
 

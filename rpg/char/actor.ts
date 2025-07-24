@@ -201,8 +201,9 @@ export class Actor {
 
 			const targ = this[k];
 			if (CanMod(targ)) {
-				console.log(`Actor mod: ${k.toString()}`);
+				console.log(`${targ.id}: ${targ.value}`);
 				targ.addMod(m);
+				console.log(`Mod: ${targ.id}: ${targ.value}`);
 			} else {
 
 			}

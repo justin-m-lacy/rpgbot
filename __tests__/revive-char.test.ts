@@ -35,5 +35,8 @@ describe('Revive Character File', () => {
 		expect(weap.name).toBe('iron spear');
 		expect(char.attacks.length).toBe(1);
 
+		expect(char.minions[1].name).toBe('rat');
+
+
 	});
 });

@@ -59,6 +59,7 @@ const writable: Partial<Record<keyof Mob | keyof MobData, boolean>> = {};
 			writable[k as keyof Mob] = true;
 		}
 	}
+	writable['id'] = false;
 
 })();
 
@@ -126,12 +127,7 @@ const parseTemplate = (data: RawMobData) => {
 }
 
 export const GenMob = (id: string) => {
-
-	if (templates[id]) {
-		return CreateMob(templates[id]);
-	}
-	return null;
-
+	return templates[id] ? CreateMob(templates[id]) : null;
 }
 
 /**
