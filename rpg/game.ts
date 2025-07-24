@@ -287,18 +287,22 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	async attack(this: Game<A, K>, src: TActor, targ: TActor, atk?: TNpcAction) {
 
-		let p2: TActor | Party | undefined = targ instanceof Char ? this.getParty(targ) : undefined;
-		if (!p2 || !p2.at.equals(targ.at)) {
-			p2 = targ;
+		if (targ instanceof Char) {
+
+			const p = this.getParty(targ);
+			if (p && p.at.equals(src.at)) {
+				targ = await p.randTarget() ?? targ;
+			}
+
 		}
 
-		console.log(`attack cmd.: ${src}`);
-		await this.combat.tryAttack(src, atk ?? src.getAttack(), p2);
+		console.log(`Game.attack() ${src} -> ${targ}`);
+		await this.combat.doAction(src, atk ?? src.getAttack(), targ);
 
 		// reprisal.
 		if (targ.isAlive()) {
 			if (targ.attacks) {
-				await this.combat.tryAttack(targ, targ.getAttack(), src);
+				await this.combat.doAction(targ, targ.getAttack(), src);
 			}
 			if (targ instanceof Mob) {
 				this.setLiveLoc(targ.at);
@@ -336,30 +340,19 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		// single target.
 		if (targ?.isAlive()) {
 
-			this.combat.doAttack(char, spell, targ);
-			if (targ instanceof Mob) {
-				this.setLiveLoc(char.at);
-			}
-
+			this.combat.doAction(char, spell, targ);
 
 		} else if (spell.target & TargetFlags.mult) {
 
 			const loc = await this.world.getOrGen(char.at);
 			const targs = await this.getTargets(char, spell.target, loc);
 
-			let k: keyof typeof targs;
-			for (k in targs) {
-
-				if (targs[k]) {
-					this.combat.doAttack(char, spell, targs[k]!);
-				}
-
-			}
-			this.setLiveLoc(loc);
+			this.combat.doAction(char, spell, targs);
 
 		} else if (spell.target === TargetFlags.none) {
 			// generalized spell.
 			console.log(`no spell targ.`);
+			this.combat.doAction(char, spell, char);
 
 		}
 
@@ -546,46 +539,45 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	async getTargets(char: TActor, flags: TargetFlags, loc: Loc) {
 
-		const res: Record<string, TActor | undefined> = {};
+		const res: TActor[] = [];
 
 		const party = char instanceof Char ? this.getParty(char) : undefined;
 
 		if (flags & TargetFlags.enemies) {
 			for (const m of loc.npcs) {
 
-				if ((char.team & m.team) < 0) {
-					res[m.id] = m;;
+				if ((char.enemies & m.team) == 0) {
+					res.push(m);
 				}
 
 			}
 			for (const id of loc.chars) {
 
-				if (party?.includes(id)) continue;
+				if (id == char.id || party?.includes(id)) continue;
 				const p = await this.charCache.fetch(id);
-				if (p) res[p.id] = p;
+				if (p) res.push(p);
 			}
 		}
 
 		if (flags & TargetFlags.allies) {
 			for (const m of loc.npcs) {
 
-				if ((char.team & m.team) > 0) {
-					res[m.id] = m;
+				if ((char.team & m.team) > 0 && !res.some(v => v.id == m.id)) {
+					res.push(m);
 				}
 
 			}
 			if (party) {
 				for (const id of loc.chars) {
 
-					if (!party.includes(id)) continue;
+					if (id == char.id || !party.includes(id)) continue;
 					const p = await this.charCache.fetch(id);
-					if (p) res[p.id] = p;
+					if (p) res.push(p);
 				}
 			}
 		}
 
-		if (flags & TargetFlags.self) res[char.id] = char;
-		else res[char.id] = undefined;
+		if (flags & TargetFlags.self) res.push(char);
 
 		return res;
 

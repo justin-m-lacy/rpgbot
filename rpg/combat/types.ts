@@ -28,6 +28,8 @@ export type TNpcAction = {
 
 	kind?: Id;
 
+	cost?: Path<Numeric>,
+
 	tohit?: Numeric;
 	dmg?: Numeric;
 	bonus?: Numeric;

@@ -32,8 +32,8 @@ export class Faction {
 
 	// calculated team from standings bits.
 	private ally: Team = 0;
-	get team() { return this.ally; }
-	get enemy() { return this.anti };
+	get teamFlag() { return this.ally; }
+	get enemyFlag() { return this.anti };
 
 	constructor(flag: Team) {
 		this.flag = flag;

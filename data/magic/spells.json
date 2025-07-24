@@ -1,5 +1,16 @@
 [
     {
+        "id": "summonrat",
+        "name": "Summon rat",
+        "school": "wild",
+        "level": 1,
+        "target": "none",
+        "cost": {
+            "mp": 5
+        },
+        "summon": "rat"
+    },
+    {
         "id": "darkbolt",
         "name": "dark bolt",
         "level": 2,

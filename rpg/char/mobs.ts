@@ -78,6 +78,7 @@ export class Mob {
 	private _talents?: string[];
 
 	team: number = 0;
+	enemies: number = 0;
 
 	private _held?: Item[];
 
@@ -96,6 +97,7 @@ export class Mob {
 		this.size = proto?.size ?? 'medium';
 
 		this.team = proto?.team ?? Team.neutral;
+		this.enemies = ~this.team;
 
 	}
 

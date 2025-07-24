@@ -1,4 +1,3 @@
-import { Actor } from "rpg/char/actor";
 import { Char } from "rpg/char/char";
 import { Mob, TActor } from "rpg/char/mobs";
 import { ActionFlags, TNpcAction } from "rpg/combat/types";
@@ -48,28 +47,31 @@ export class Combat {
 
 	}
 
-	async tryAttack(char: TActor, atk: TNpcAction | null | undefined, who: TActor | Party,) {
+	async tryAttack(char: TActor, atk: TNpcAction | null | undefined,
+		targ: TActor): Promise<boolean> {
 
-		if (!atk) return;
+		if (!atk) return false;
 
-		console.log(`${char.name} attacks ${who.name} with ${atk.name}`);
+		console.log(`${char.name} attacks ${targ.name} with ${atk.name}`);
 
-		const targ = who instanceof Party ? await who.randTarget() : who;
-		if (!targ) return;
 
 		if (!targ?.isAlive()) {
-			if ((char instanceof Char)) char.log(`${targ.name} is already dead.`);
-			return;
+			char.log(`${targ.name} is already dead.`);
+			return false;
 		}
+
+		this.game.setLiveLoc(char.at);
 
 		const hitroll = + char.tohit + (atk.tohit?.valueOf() ?? 0);
 		if (hitroll < targ.armor.valueOf()) {
 
-			await this.game.send(char, `${char.name} attacks ${who.name} with ${atk.name} and misses!`);
+			await this.game.send(char, `${char.name} attacks ${targ.name} with ${atk.name} and misses!`);
+			return false;
 
 		} else {
 
 			this.doAttack(char, atk, targ);
+			return true;
 
 		}
 
@@ -77,7 +79,7 @@ export class Combat {
 
 	}
 
-	doAction(char: TActor, act: TNpcAction) {
+	async doAction(char: TActor, act: TNpcAction, targ: TActor | TActor[]) {
 
 		if (act.summon) {
 
@@ -90,19 +92,39 @@ export class Combat {
 
 		}
 
-		if (act.dot) {
-			char.addDot(act.dot, char.id);
+		if (Array.isArray(targ)) {
+			await Promise.all(targ.map(v => this.applyTarget(char, act, v)));
+		} else {
+			await this.applyTarget(char, act, targ);
 		}
+
 		if (act.add) {
 			AddValues(char, act.add, 1);
 		}
 
-		if (act.cure) {
-			char.flags.unset(act.cure);
-		}
-		if (act.heal) this.applyHealing(char, act as TNpcAction & { heal: TValue }, char);
-
 		return true;
+	}
+
+	/**
+	 * Apply result of action to single target.
+	 * @param char 
+	 * @param act 
+	 * @param targ 
+	 */
+	private async applyTarget(char: TActor, act: TNpcAction, targ: TActor) {
+
+		if (act.dot) {
+			targ.addDot(act.dot, char.id);
+		}
+		if (act.cure) {
+			targ.flags.unset(act.cure);
+		}
+		if (act.heal) this.applyHealing(targ, act as TNpcAction & { heal: TValue }, char);
+
+		if (act.dmg) {
+			await this.tryAttack(char, act, targ);
+		}
+
 	}
 
 	/**
@@ -111,7 +133,7 @@ export class Combat {
 	 * @param act 
 	 * @param targ 
 	 */
-	doAttack(char: TActor, act: TNpcAction, targ: Actor | Mob) {
+	private doAttack(char: TActor, act: TNpcAction, targ: TActor) {
 
 		if (targ.isImmune(act.kind)) {
 			char.log(`${targ.name} is immune to ${act.kind}`);
@@ -122,23 +144,8 @@ export class Combat {
 			this.game.likeStore.action(targ, char, 10, act.target);
 		}
 
-		if (act.summon) {
-		}
-
-		if (act.dot) {
-			targ.addDot(act.dot, char.id);
-		}
-		if (act.add) {
-			AddValues(targ, act.add, 1);
-		}
-
-		if (act.cure) {
-			targ.flags.unset(act.cure);
-		}
-
 		/// todo: need to log if non-damage event from combat.
 		if (act.dmg) this.applyDmg(targ, act, char);
-		if (act.heal) this.applyHealing(targ, act as TNpcAction & { heal: TValue }, char);
 
 		return true;
 	}
@@ -268,7 +275,7 @@ export class Combat {
 	}
 
 
-	async trySpellHit(src: Char | Mob, targ: TActor, spell: Spell, srcParty?: Party) {
+	private async trySpellHit(src: Char | Mob, targ: TActor, spell: Spell, srcParty?: Party) {
 
 		src.log(`${src.name} casts ${spell.name} at ${targ.name}`);
 
@@ -276,6 +283,18 @@ export class Combat {
 
 		} else {
 
+		}
+
+	}
+
+	private rollSpellHit(src: Char | Mob, targ: TActor) {
+
+		/// todo: some bs formula.
+		const roll = (src.statRoll('int') + src.tohit) * Math.random();
+		if (roll > (targ.level.valueOf() + targ.statRoll())) {
+			return true;
+		} else {
+			return false;
 		}
 
 	}
@@ -354,19 +373,10 @@ export class Combat {
 
 	}
 
-	rollSpellHit(src: Char | Mob, targ: TActor) {
 
-		/// todo: some bs formula.
-		const roll = (src.statRoll('int') + src.tohit) * Math.random();
-		if (roll > (targ.level.valueOf() + targ.statRoll())) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
-	applyHealing(target: TActor, attack: TNpcAction & { heal: Numeric }, attacker?: TActor) {
+	private applyHealing(target: TActor,
+		attack: TNpcAction & { heal: Numeric },
+		attacker?: TActor) {
 
 		target.hp.value += this.calcDamage(attack.heal, attack, attacker, target);
 
@@ -380,7 +390,7 @@ export class Combat {
 	 * @param target 
 	 * @returns 
 	 */
-	calcDamage(dmg: Numeric, attack: TNpcAction, attacker?: TActor, target?: TActor) {
+	private calcDamage(dmg: Numeric, attack: TNpcAction, attacker?: TActor, target?: TActor) {
 		return dmg.valueOf();
 	}
 

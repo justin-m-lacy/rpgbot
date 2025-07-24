@@ -126,7 +126,8 @@ export class Actor {
 	flags: CharFlags = new CharFlags();
 
 	readonly teams: Faction = new Faction(Team.chars);
-	get team() { return this.teams.team }
+	get team() { return this.teams.teamFlag }
+	get enemies() { return this.teams.enemyFlag }
 
 	readonly minions: TActor[] = [];
 
