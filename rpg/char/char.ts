@@ -20,7 +20,7 @@ import { tryLevel } from './level';
 import { StatIds, StatKey } from './stats';
 
 const SaveProps: Array<keyof Char> = ['name', 'exp', 'owner', 'flags', 'stats', 'dots',
-	'at', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents', 'minions'];
+	'at', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
 
 export class Char extends Actor {
 
@@ -40,14 +40,15 @@ export class Char extends Actor {
 
 		const json: any = {
 			equip: this._equip,
-			race: this.race.id,
+			race: this.race?.id,
 			cls: this.cls?.id,
 			home: this.home,
 			teams: this.teams,
 			sex: this.sex,
+			minions: this.minions.length ? this.minions : undefined
 		};
 		for (let i = SaveProps.length - 1; i >= 0; i--) {
-			json[SaveProps[i]] = this[SaveProps[i] as keyof Char];
+			json[SaveProps[i]] = this[SaveProps[i]];
 		}
 
 		return json;
@@ -207,7 +208,6 @@ export class Char extends Actor {
 			//console.log('adding armor: ' + it.armor);
 		}
 		if (it instanceof Weapon) {
-			console.log(`${this.name} add attack: ${it.name}`);
 			this.attacks.push(it);
 		}
 

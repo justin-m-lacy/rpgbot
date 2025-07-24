@@ -39,7 +39,7 @@
 	"talents": [],
 	"minions": [
 		{
-			"id": "rat",
+			"id": "534fas-324351",
 			"name": "rat",
 			"desc": "Smelly rat.",
 			"level": 0.5,
@@ -97,21 +97,9 @@
 				"price": 0,
 				"armor": 0,
 				"slot": "hands",
-				"mat": {
-					"id": "stone",
-					"kind": "natural",
-					"weight": 3,
-					"level": 0,
-					"alter": {
-						"enchants": {
-							"max": 1
-						},
-						"dmg": 1
-					},
-					"name": "stone"
-				},
+				"mat": "stone",
 				"dmg": {
-					"dmg": 0,
+					"dmg": "1d5",
 					"type": "weapon"
 				},
 				"hit": 0

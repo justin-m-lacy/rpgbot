@@ -7,18 +7,20 @@ export class DamageSrc implements TValue, IModdable {
 
 	[SymModdable]: true = true;
 
-	static From(dmg: string | Numeric | undefined, kind: string = 'blunt') {
+	static From(dmg?: string | Numeric | { dmg: any, type?: string }, kind: string = 'blunt') {
 
 		if (typeof dmg === 'string') {
 			return new DamageSrc(ParseValue('dmg', dmg) ?? 0, kind);
 		} else if (typeof dmg === 'number' || !dmg) {
 			return new DamageSrc(dmg ?? 0, kind);
 		} else {
-			return new DamageSrc(dmg, kind);
+			if ('dmg' in dmg) {
+				return new DamageSrc(ParseValue(dmg.dmg) ?? 0, dmg.type);
+			} else return new DamageSrc(dmg, kind);
 		}
 	}
 
-	toJSON() { return { dmg: this.value, type: this.type }; }
+	toJSON() { return { dmg: this._val, type: this.type }; }
 
 	valueOf() { return this._val.valueOf(); }
 

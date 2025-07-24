@@ -139,7 +139,7 @@ export function AsModded<
 		return obj[prop] = ToModded(ToIdable(cur, prop));
 	}
 
-	console.error(`Can't Mod: ${(obj as any).id}[${prop}] : ${cur}`);
+	console.log(`can't mod: ${(obj as any)?.id}[${prop}]`, cur);
 
 }
 

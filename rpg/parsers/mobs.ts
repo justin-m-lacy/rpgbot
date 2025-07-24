@@ -59,7 +59,7 @@ const writable: Partial<Record<keyof Mob | keyof MobData, boolean>> = {};
 			writable[k as keyof Mob] = true;
 		}
 	}
-	writable['id'] = false;
+	delete writable['id'];
 
 })();
 
@@ -138,6 +138,7 @@ export const GenMob = (id: string) => {
 const CreateMob = (tpl: MobData) => {
 
 	const m = new Mob(undefined, tpl);
+	console.log(`create id: ${m.id}`);
 
 	let k: keyof MobData;
 	for (k in tpl) {
@@ -216,6 +217,8 @@ export const RandMonster = (lvl: number, biome: string) => {
  * @returns 
  */
 export const ReviveMob = (json: any) => {
+
+	if (!json) return null;
 
 	const proto = GetMob(json.proto ?? json.name);
 	const m = new Mob(json.id ?? undefined, proto);

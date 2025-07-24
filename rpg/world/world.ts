@@ -184,7 +184,7 @@ export class World {
 
 		if (loc.chars.length > 0) {
 
-			r += '\chars: ' + loc.charList();
+			r += '\nchars: ' + loc.charList();
 
 			const minions: string[] = [];
 			for (let i = loc.chars.length - 1; i >= 0; i--) {
@@ -198,7 +198,7 @@ export class World {
 		}
 
 		if (loc.npcs.length > 0) {
-			r += '\creatures: ' + loc.npcList();
+			r += '\ncreatures: ' + loc.npcList();
 		}
 
 		if (showPaths) {

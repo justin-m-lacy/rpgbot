@@ -23,6 +23,7 @@ export const ReviveChar = (game: Game, json: {
 		json.name,
 		{
 			game: game,
+			sex: json.sex,
 			race: GetRace(json.race)!,
 			cls: GetClass(json.cls)!,
 			owner: json.owner
@@ -39,16 +40,14 @@ export const ReviveChar = (game: Game, json: {
 		}
 	}
 
-	if (json.minions) {
+	if (json.minions && Array.isArray(json.minions)) {
 
 		for (let i = 0; i < json.minions.length; i++) {
 			try {
 				const m = ReviveMob(json.minions[i]);
-				if (m) {
-					char.minions.push(m);
-				}
+				if (m) char.minions.push(m);
 			} catch (e) {
-				console.warn(`load minion: ${char.name}`, json.minions[i]);
+				console.error(`load minion: ${char.name}`, json.minions[i]);
 			}
 		}
 	}
@@ -76,7 +75,7 @@ export const ReviveChar = (game: Game, json: {
 	} else {
 		console.warn(`missing char loc.`)
 	}
-	game.world.addChar(char).then(v => console.log(`char added to world.`));
+	game.world.addChar(char);
 
 	if (typeof json.flags === 'number') {
 		char.flags.setTo(json.flags);
