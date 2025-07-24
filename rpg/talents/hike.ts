@@ -46,7 +46,7 @@ export const Hike = {
 			await p.move(game.world, loc);
 		}
 
-		char.log(loc.look(char));
+		char.log(game.world.look(loc, char));
 		return true;
 	}
 

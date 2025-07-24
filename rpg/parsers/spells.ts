@@ -47,6 +47,7 @@ export const ParseSpell = (raw: RawSpell) => {
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
 		dot: raw.dot ? ParseDotType(raw.dot, raw) : null,
 		time: raw.time,
+		summon: raw.summon
 	});
 
 

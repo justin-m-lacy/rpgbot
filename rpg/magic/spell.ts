@@ -23,6 +23,8 @@ export class Spell extends Item {
 	cost?: Path<Numeric>;
 	cure?: StatusFlag;
 
+	summon?: string[];
+
 	constructor(data: {
 		id: string;
 		name?: string;
@@ -33,13 +35,15 @@ export class Spell extends Item {
 		cure?: StatusFlag,
 		time?: number,
 		kind?: string,
-		target?: TargetFlags
+		target?: TargetFlags,
+		summon?: string[]
 	}) {
 
 		super(data);
 
 		this.kind = data.kind ?? 'arcane';
 
+		this.summon = data.summon;
 		this.cure = data.cure;
 		this.cost = data.cost;
 		this.dot = data.dot ?? undefined;

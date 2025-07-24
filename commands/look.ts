@@ -84,7 +84,7 @@ export default NewCommand<Rpg>({
 		const loc = await rpg.world.getOrGen(char.at);
 		//loc.embed
 		if (!what) {
-			return SendPrivate(m, loc.look(char), {
+			return SendPrivate(m, rpg.world.look(loc, char), {
 				components: WorldLocActions(loc)
 			});
 		}

@@ -1,5 +1,3 @@
-import { ItemList } from "rpg/display/items";
-import { type Game } from "rpg/game";
 import type { ItemIndex } from "rpg/items/container";
 import { DecodeItem } from "rpg/parsers/items";
 import { ReviveMob } from "rpg/parsers/mobs";
@@ -7,7 +5,6 @@ import { quickSplice } from "rpg/util/array";
 import { FindIndex } from "rpg/util/items";
 import { IsInt } from "rpg/util/parse";
 import { Coord } from "rpg/world/coord";
-import { Capitalize } from '../../src/utils/display';
 import { Char } from '../char/char';
 import { Mob } from '../char/mobs';
 import { Inventory } from '../inventory';
@@ -55,16 +52,6 @@ export enum Biome {
 	MOUNTAIN = 'mountains',
 	UNDER = 'underground',
 }
-
-const in_prefix: { [Property in Biome]: string } = {
-	[Biome.FOREST]: ' in a ',
-	[Biome.TOWN]: ' in a ',
-	[Biome.SWAMP]: ' in a ',
-	[Biome.PLAINS]: ' on the ',
-	[Biome.HILLS]: ' in the ',
-	[Biome.MOUNTAIN]: ' in the ',
-	[Biome.UNDER]: ' '
-};
 
 const DirMap: { [s: string]: DirVal } = {
 
@@ -339,69 +326,6 @@ export class Loc {
 
 	}
 
-	view() { return [this.look(undefined, true), this.embed]; }
-
-	/**
-	 * Returns text seen by character looking at location.
-	 * @param char - char looking
-	 * @param imgTag 
-	 * @param showPaths 
-	 * @returns 
-	 */
-	look(char?: Char, imgTag: boolean = true, showPaths: boolean = false) {
-
-		let r = (char ? char.name + ' is' : '') + in_prefix[this.biome as Biome] + Capitalize(this.biome) + (char ? ` [${char.state}]` : '');
-
-		if (this.embed && imgTag) r += ' [img]';
-		r += '\n' + this.desc;
-
-		if (this.features.length > 0) r += '\nFeatures: ' + ItemList(this.features);
-		r += '\nOn ground: ' + ItemList(this.inv);
-
-
-		if (this.chars.length > 0) {
-
-			const text = this.charList(char?.name);
-			if (text) {
-				r += '\nChars: ' + text;
-			}
-
-		}
-
-		if (this.npcs.length > 0) {
-			r += '\nCreatures: ' + this.npcList();
-		}
-
-		if (showPaths) {
-			r += '\nPaths:'
-			for (const k in this.exits) {
-				r += '\t' + ToDirStr(k as DirVal);
-			}
-		}
-
-		return r;
-
-	}
-
-	/**
-	 *
-	 * @param char
-	 * @param wot
-	 */
-	use(game: Game, char: Char, wot: string | number | Feature) {
-
-		let f: Feature | null;
-		if (typeof wot !== 'object') {
-			f = FindIndex(this.features, wot);
-			if (!f) return false;
-		} else {
-			f = wot;
-		}
-
-		f.use(game, char);
-
-	}
-
 	/**
 	 *
 	 * @param f
@@ -464,11 +388,8 @@ export class Loc {
 
 	}
 
-	charList(looker?: string) {
-
-		if (this.chars.length === 1 && this.chars[0] === looker) return undefined;
+	charList() {
 		return this.chars.join(', ');
-
 	}
 
 	npcList() {

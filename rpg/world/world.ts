@@ -1,5 +1,7 @@
+import { Capitalize } from '@/utils/display';
 import { GenFeature } from 'rpg/builders/features';
 import { GenShop } from 'rpg/builders/shopgen';
+import { ItemList } from 'rpg/display/items';
 import { ItemType } from 'rpg/items/types';
 import { RandMonster } from 'rpg/parsers/mobs';
 import { ICache } from 'rpg/util/icache';
@@ -12,7 +14,7 @@ import { ItemIndex, ItemPicker } from '../items/container';
 import { Item } from '../items/item';
 import { Block } from './block';
 import { Feature } from './feature';
-import { DirVal, Exit, Loc } from './loc';
+import { Biome, DirVal, Exit, Loc, ToDirStr } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
 // WARNING: Changing block size will break the fetching existing world data.
@@ -157,8 +159,56 @@ export class World {
 			return it.getView(char);
 
 		}
-		if (loc.embed) return [loc.look(), loc.embed];
-		else return loc.look();
+		if (loc.embed) return [this.look(loc, char), loc.embed];
+		else return this.look(loc, char);
+
+	}
+
+
+	/**
+	 * Returns text seen by character looking at location.
+	 * @param char - char looking
+	 * @param imgTag 
+	 * @param showPaths 
+	 * @returns 
+	 */
+	look(loc: Loc, char?: Char, imgTag: boolean = true, showPaths: boolean = false) {
+
+		let r = (char ? char.name + ' is' : '') + in_prefix[loc.biome as Biome] + Capitalize(loc.biome) + (char ? ` [${char.state}]` : '');
+
+		if (loc.embed && imgTag) r += ' [img]';
+		r += '\n' + loc.desc;
+
+		if (loc.features.length > 0) r += '\nFeatures: ' + ItemList(loc.features);
+		r += '\nground: ' + ItemList(loc.inv);
+
+		if (loc.chars.length > 0) {
+
+			r += '\chars: ' + loc.charList();
+
+			const minions: string[] = [];
+			for (let i = loc.chars.length - 1; i >= 0; i--) {
+				const char = this.chars.get(loc.chars[i]);
+				if (char?.minions.length) {
+					minions.push(...char.minions.map(v => `${v.name} [${char.name}]`))
+				}
+			}
+			if (minions.length > 0) r += `\nMinions: ` + minions.join(', ');
+
+		}
+
+		if (loc.npcs.length > 0) {
+			r += '\creatures: ' + loc.npcList();
+		}
+
+		if (showPaths) {
+			r += '\nPaths:'
+			for (const k in loc.exits) {
+				r += '\t' + ToDirStr(k as DirVal);
+			}
+		}
+
+		return r;
 
 	}
 
@@ -441,3 +491,14 @@ export class World {
 	}*/
 
 }
+
+
+const in_prefix: { [Property in Biome]: string } = {
+	[Biome.FOREST]: ' in a ',
+	[Biome.TOWN]: ' in a ',
+	[Biome.SWAMP]: ' in a ',
+	[Biome.PLAINS]: ' on the ',
+	[Biome.HILLS]: ' in the ',
+	[Biome.MOUNTAIN]: ' in the ',
+	[Biome.UNDER]: ' '
+};

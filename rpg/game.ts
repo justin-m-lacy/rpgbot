@@ -349,9 +349,8 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 			this.combat.doAction(char, spell, targs);
 
-		} else if (spell.target === TargetFlags.none) {
+		} else {
 			// generalized spell.
-			console.log(`no spell targ.`);
 			this.combat.doAction(char, spell, char);
 
 		}
@@ -623,7 +622,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		const to = await this.world.move(char, from, toCoord);
 
-		char.log(to.look(char));
+		char.log(this.world.look(to, char));
 
 		const p = this.getParty(char);
 		if (p && p.leader === char.id) {

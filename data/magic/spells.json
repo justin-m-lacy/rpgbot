@@ -8,7 +8,9 @@
         "cost": {
             "mp": 5
         },
-        "summon": "rat"
+        "summon": [
+            "rat"
+        ]
     },
     {
         "id": "darkbolt",

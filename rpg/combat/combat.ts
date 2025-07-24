@@ -47,7 +47,7 @@ export class Combat {
 
 	}
 
-	async tryAttack(char: TActor, atk: TNpcAction | null | undefined,
+	private async tryAttack(char: TActor, atk: TNpcAction | null | undefined,
 		targ: TActor): Promise<boolean> {
 
 		if (!atk) return false;
@@ -76,13 +76,11 @@ export class Combat {
 		}
 
 
-
 	}
 
 	async doAction(char: TActor, act: TNpcAction, targ: TActor | TActor[]) {
 
 		if (act.summon) {
-
 			for (let i = act.summon.length - 1; i >= 0; i--) {
 				const mob = GenMob(act.summon[i]);
 				if (mob && !(char as Char).minions.some(c => c.id == mob.id)) {
