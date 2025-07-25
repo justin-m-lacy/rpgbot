@@ -73,7 +73,7 @@ export const ReviveChar = (game: Game, json: {
 		/// @deprecated legacy. remove.
 		char.at.setTo(json.loc)
 	} else {
-		console.warn(`missing char loc.`)
+		console.warn(`${char.name}: No char loc.`)
 	}
 	game.world.addChar(char);
 

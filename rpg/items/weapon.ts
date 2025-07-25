@@ -2,7 +2,6 @@ import { Char } from 'rpg/char/char';
 import { TNpcAction } from 'rpg/combat/types';
 import { Material } from 'rpg/items/material';
 import { ItemType } from 'rpg/items/types';
-import { ParseMods } from 'rpg/parsers/mods.js';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
 import { ApplyMods } from 'rpg/values/modding.js';
@@ -78,9 +77,6 @@ export class Weapon extends Wearable<RawWeaponData> implements TNpcAction {
 
 		if (this.material?.alter) {
 			ApplyMods(this, this.material.alter);
-		}
-		if (this.proto?.mods) {
-			this.mods = ParseMods(this.proto?.mods, this.id, 1);
 		}
 		this.hands = this.proto?.hands ?? 1;
 

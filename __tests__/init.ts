@@ -1,3 +1,4 @@
+import { MockCache } from "__tests__/mocks";
 import Cache from "archcache";
 import { Game } from "rpg/game";
 import { GameActions } from 'rpg/game-actions';
@@ -13,8 +14,8 @@ const cache = new Cache({
 
 });
 
-
-export const GetTestGame = () => new Game(cache, cache.subcache('char'), GameActions, false);
+const FakeCache = MockCache();
+export const GetTestGame = () => new Game(new FakeCache(), new FakeCache(), GameActions, false);
 
 
 export const GetTestWorld = () =>

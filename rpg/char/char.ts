@@ -194,19 +194,16 @@ export class Char extends Actor {
 			} else this.applyEquip(it);
 
 		}
-		console.log(this.name + ' armor: ' + this.armor);
 
 	}
 
 	private applyEquip(it: Wearable) {
 
+		console.log(`chararmor: ${this.armor.valueOf()}  ${it.name} armor: ${it.armor}`)
 		if (it.mods) {
 			ApplyMods(this, it.mods);
 		}
-		if (it.armor) {
-			this.stats.armor.add(it.armor);;
-			//console.log('adding armor: ' + it.armor);
-		}
+		console.log(`newchararmor: ${this.armor.valueOf()}`);
 		if (it instanceof Weapon) {
 			this.attacks.push(it);
 		}
@@ -228,9 +225,6 @@ export class Char extends Actor {
 
 			if (wot.mods) {
 				RemoveMods(this, wot.mods);
-			}
-			if (wot.armor) {
-				this.stats.armor.add(-wot.armor);
 			}
 
 			const ind = this.attacks.indexOf(wot);
@@ -323,12 +317,12 @@ export class Char extends Actor {
 
 	testDmg() {
 
-		const weaps = this.attacks;
-		if (weaps.length == 0) return 'No weapons equipped.';
+		const atks = this.attacks;
+		if (atks.length == 0) return 'No weapons equipped.';
 
 		let res = '';
-		for (let i = weaps.length - 1; i >= 0; i--) {
-			res += weaps[i].name + ' rolled: ' + (weaps[i].dmg ?? 0).valueOf() + '\n';
+		for (let i = atks.length - 1; i >= 0; i--) {
+			res += atks[i].name + ' rolled: ' + (atks[i].dmg ?? 0).valueOf() + '\n';
 		}
 		return res;
 
@@ -336,7 +330,7 @@ export class Char extends Actor {
 
 	getDetails() {
 
-		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.evil}]\nhp:${smallNum(this.hp)}/${smallNum(this.hp.max)} armor:${this.armor}`;
+		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.evil}]\nhp:${smallNum(this.hp)}/${smallNum(this.hp.max)} armor:${this.armor.valueOf()}`;
 
 	}
 

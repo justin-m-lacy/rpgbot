@@ -1,4 +1,5 @@
 import Cache from 'archcache';
+import { ICache } from 'rpg/util/icache';
 import { Coord } from 'rpg/world/coord';
 import { World } from 'rpg/world/world';
 import { Char } from '../char/char';
@@ -29,7 +30,7 @@ export class Party extends SocialGroup {
 
 	readonly at: Coord;
 
-	constructor(leader: Char, cache: Cache) {
+	constructor(leader: Char, cache: ICache<Char>) {
 
 		super(cache);
 

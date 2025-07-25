@@ -1,4 +1,3 @@
-import Cache from 'archcache';
 import { SendableChannels } from 'discord.js';
 import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
@@ -20,6 +19,7 @@ import { Spell } from 'rpg/magic/spell';
 import { TryEat } from 'rpg/talents/cook';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';
+import { ICache } from 'rpg/util/icache';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 import { Block } from 'rpg/world/block';
 import { TCoord } from 'rpg/world/coord';
@@ -40,7 +40,7 @@ const LOC_UPDATE_MS = 1000 * 20;
 export class Game<A extends Record<string, TGameAction> = Record<string, TGameAction>,
 	K extends (string & keyof A) = string & keyof A> {
 
-	private readonly charCache: Cache<Char>;
+	private readonly charCache: ICache<Char>;
 	readonly world: World
 
 	// map every character in a party to Party instance.
@@ -66,7 +66,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	readonly combat = new Combat(this);
 
-	constructor(cache: Cache<any>, charCache: Cache<Char>, actions: A, autostart: boolean = true) {
+	constructor(cache: ICache<any>, charCache: ICache<Char>, actions: A, autostart: boolean = true) {
 
 		this.actions = actions;
 
@@ -75,7 +75,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.charCache = charCache;
 
-		this.guilds = new GuildManager(cache.subcache('guilds'));
+		this.guilds = new GuildManager(cache.subcache('guilds'), this.charCache);
 
 		if (autostart) {
 			this.updateTimer = setInterval(() => this.updateLocs(), LOC_UPDATE_MS).unref();

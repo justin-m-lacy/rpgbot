@@ -30,7 +30,8 @@
         "price": 10
     },
     {
-        "id": "padded armor",
+        "id": "paddedarmor",
+        "name": "Padded Armor",
         "armor": 3,
         "slot": "chest",
         "price": 15,
@@ -38,20 +39,23 @@
     },
     {
         "id": "chainmail",
+        "name": "Chainmail",
         "armor": 5,
         "slot": "chest",
         "price": 20,
         "level": 5
     },
     {
-        "id": "plate mail",
+        "id": "platemail",
+        "name": "Plate Mail",
         "armor": 8,
         "slot": "chest",
         "price": 30,
         "level": 12
     },
     {
-        "id": "conical helm",
+        "id": "conichelm",
+        "name": "Conical helm",
         "armor": 3,
         "slot": "head",
         "price": 4
@@ -70,7 +74,7 @@
     },
     {
         "id": "cincture",
-        "armor": 0,
+        "armor": 1,
         "slot": "waist",
         "price": 5
     },

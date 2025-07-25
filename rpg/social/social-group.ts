@@ -1,4 +1,4 @@
-import Cache from 'archcache';
+import { ICache } from 'rpg/util/icache';
 import { Char } from '../char/char';
 /**
  * Any named group of players.
@@ -29,9 +29,9 @@ export class SocialGroup {
 
 	private _leader: string = '';
 
-	readonly cache: Cache<Char>;
+	readonly cache: ICache<Char>;
 
-	constructor(cache: Cache<Char>) {
+	constructor(cache: ICache<Char>) {
 
 		this.cache = cache;
 	}

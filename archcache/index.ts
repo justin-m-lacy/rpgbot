@@ -162,7 +162,7 @@ export default class Cache<T = any> extends Emitter {
 	 * @param  [decoder=null]
 	 */
 	subcache<S extends T = T>(subkey: string,
-		decoder?: Decoder<S>, encoder?: Encoder<S>): Cache<S> {
+		decoder?: Decoder<S>): Cache<S> {
 
 		subkey = this._subkey(this._cacheKey, subkey);
 
@@ -171,7 +171,6 @@ export default class Cache<T = any> extends Emitter {
 
 		this._subs.set(subkey, cache = new Cache<S>({
 			loader: this.loader,
-			encoder: encoder ?? this.encoder,
 			checker: this.checker,
 			deleter: this.deleter,
 			saver: this.saver,

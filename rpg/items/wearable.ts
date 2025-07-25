@@ -4,6 +4,7 @@ import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
 import { ApplyMods } from 'rpg/values/modding';
+import { BaseMod } from 'rpg/values/mods/base-mod';
 import { Path } from 'rpg/values/paths';
 import { Item, } from './item';
 import { Material } from './material';
@@ -50,8 +51,8 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 	/**
 	 * @property armor - armor added. replace with defense?
 	 */
-	get armor() { return this._armor; }
-	set armor(v) { this._armor = v < 0 ? 0 : v }
+	get armor() { return this._armor.value; }
+	set armor(v) { this._armor.value = v < 0 ? 0 : v }
 
 	/**
 	 * From template data.
@@ -77,20 +78,18 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 		json.proto = this.proto?.id;
 		json.mat = this.material?.id;
 
-		json.armor = this.armor;
-
 		json.armor = this._armor;
 		if (this.slot && this.slot != this.proto?.slot) {
 			json.slot = this.slot;
 		}
 
-		if (this.mods) json.mods = this.mods;
+		//if (this.mods) json.mods = this.mods;
 
 		return json;
 
 	}
 
-	private _armor: number;
+	protected _armor: BaseMod;
 
 	material?: Material;
 
@@ -101,7 +100,7 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 	 * @property slot - equip slot used.
 	 */
 	slot: HumanSlot;
-	mods: Path<IMod> | undefined;
+	mods: Path<IMod>;
 
 	proto?: T;
 
@@ -118,23 +117,32 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 		super(opts);
 
 		this.proto = opts.proto;
+		this.mods = ParseMods(opts.proto?.mods ?? {}, this.id, 1);
+
+
 		this.name = opts.name ?? opts.proto?.name ?? this.id;
 		this.slot = opts.slot ?? opts.proto?.slot as HumanSlot ?? 'hands';
 
 		this.price = opts.proto?.price || 1;
 
-		this._armor = opts?.armor || opts.proto?.armor || 0;
+		if (opts.proto) console.log(`proto armor: ${opts.proto.id} ${opts.proto.armor}`);
+
+		this._armor = new BaseMod('armor', opts?.armor || opts.proto?.armor || 0);
+
+		this.mods.armor = this._armor;
 
 		this.material = opts.material;
 		if (!skipInit && this.material?.alter) {
+			console.log(`${this.name} base armor: ${this._armor.value}`)
 			ApplyMods(this, this.material.alter);
+			console.log(`${this.name} new armor: ${this._armor.value.valueOf()}`, this._armor)
 		}
 
 	}
 
 
 	getDetails(char?: Char) {
-		return this.name + '\t armor: ' + this.armor + '\t price: ' + this.price + '\n' + super.getDetails(char);
+		return this.name + '\t armor: ' + this.armor.valueOf() + '\t price: ' + this.price + '\n' + super.getDetails(char);
 	}
 
 

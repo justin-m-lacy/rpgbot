@@ -1,5 +1,5 @@
-import Cache from 'archcache';
 import { DecodeItem } from 'rpg/parsers/items';
+import { ICache } from 'rpg/util/icache';
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
 import { Coord } from '../world/coord';
@@ -12,10 +12,12 @@ import { SocialGroup } from './social-group';
  */
 export class GuildManager {
 
-	readonly cache: Cache<Guild>;
+	readonly cache: ICache<Guild>;
+	readonly chars: ICache<Char>;
 
-	constructor(cache: Cache<Guild>) {
+	constructor(cache: ICache<Guild>, chars: ICache<Char>) {
 		this.cache = cache;
+		this.chars = chars;
 	}
 
 	/**
@@ -29,9 +31,9 @@ export class GuildManager {
 		if (data) return data;
 
 		data = await this.cache.fetch(name);
-		if (!data || data instanceof Guild) return data;
+		if (!data) return data;
 
-		data = Guild.Decode(data, this.cache);
+		data = Guild.Decode(data, this.chars);
 		this.cache.cache(name, data);
 
 		return data;
@@ -44,7 +46,7 @@ export class GuildManager {
 	 */
 	async MakeGuild(name: string, leader: Char) {
 
-		const g = new Guild(name, this.cache);
+		const g = new Guild(name, this.chars);
 		g.leader = leader.name;
 		g.roster.push(leader.name);
 		g.createdAt = Date.now();
@@ -58,7 +60,7 @@ export class GuildManager {
 
 export class Guild extends SocialGroup {
 
-	static Decode(json: any, cache: Cache) {
+	static Decode(json: any, cache: ICache<Char>) {
 
 		const g = new Guild(json.name, cache);
 
@@ -108,7 +110,7 @@ export class Guild extends SocialGroup {
 	private _inv?: Inventory;
 	readonly loc: Coord = new Coord(0, 0);
 
-	constructor(name: string, cache: Cache) {
+	constructor(name: string, cache: ICache<Char>) {
 
 		super(cache);
 
