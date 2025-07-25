@@ -71,7 +71,6 @@
 				"proto": "loop",
 				"mat": "leather",
 				"type": "armor",
-				"price": 0,
 				"slot": "fingers"
 			},
 			{
@@ -79,20 +78,15 @@
 				"proto": "battleaxe",
 				"desc": "",
 				"type": "weapon",
-				"price": 0,
 				"armor": 0,
 				"slot": "hands",
 				"mat": "stone",
-				"dmg": {
-					"dmg": "1d5",
-					"type": "weapon"
-				},
+				"dmg": "1d5",
 				"hit": 0
 			},
 			{
 				"id": "ec43d16b-6302-42bf-a1d0-8ba20284b307",
 				"type": "grave",
-				"price": 0,
 				"char": "burthne",
 				"epitaph": "burthne has been killed and sold for spare parts",
 				"slayer": "joetest"
@@ -100,7 +94,6 @@
 			{
 				"id": "61d0e6e5-98c5-4fd0-a47e-89ab6c51f9c5",
 				"type": "grave",
-				"price": 0,
 				"char": "Gertrude",
 				"epitaph": "Easy is the descent into Hell. But Gertrude still managed to find a short cut.",
 				"slayer": "joetest"

@@ -138,7 +138,6 @@ export const GenMob = (id: string) => {
 const CreateMob = (tpl: MobData) => {
 
 	const m = new Mob(undefined, tpl);
-	console.log(`create id: ${m.id}`);
 
 	let k: keyof MobData;
 	for (k in tpl) {

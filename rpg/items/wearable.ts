@@ -114,7 +114,7 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 	 * @param skipInit - skip apply alter step. prevent double apply alters from superclass.
 	 */
 	constructor(
-		opts: { proto?: T, material?: Material, slot?: HumanSlot, armor?: number } & ItemInfo,
+		opts: { proto?: T, material?: Material, slot?: HumanSlot, armor?: number, price?: number } & ItemInfo,
 		skipInit: boolean = false) {
 
 		super(opts);
@@ -124,23 +124,18 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 		this.proto = opts.proto;
 		this.material = opts.material;
 
-		this.mods = ParseMods(opts.proto?.mods ?? {}, this.id, 1);
-
-
 		this.name = opts.name ?? opts.proto?.name ?? this.id;
 		this.slot = opts.slot ?? opts.proto?.slot as HumanSlot ?? 'hands';
 
-		this.price = opts.proto?.price || 1;
-
+		this.price = opts?.price ?? opts.proto?.price ?? 1;
 		this._armor = new BaseMod('armor', opts?.armor || opts.proto?.armor || 0);
 
+		this.mods = ParseMods(opts.proto?.mods ?? {}, this.id, 1);
 		this.mods.armor = this._armor;
 
 
 		if (!skipInit && this.material?.alter) {
-			console.log(`${this.name} base armor: ${this._armor.value}`)
 			ApplyMods(this, this.material.alter);
-			console.log(`${this.name} new armor: ${this._armor.value.valueOf()}`, this._armor)
 		}
 
 	}

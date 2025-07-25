@@ -33,11 +33,12 @@ export const ReviveWeapon = (json: ItemData & {
 
 	const w = new Weapon(
 		{
-			id: json.id,
+			id: json.id ?? json.name,
 			name: json.name, desc: json.desc,
 			material: mat,
 			proto,
-			dmg: json.dmg
+			dmg: json.dmg,
+			price: json.price
 		},
 	);
 

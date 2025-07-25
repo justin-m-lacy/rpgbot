@@ -2,11 +2,11 @@ import { Char } from 'rpg/char/char';
 import { TNpcAction } from 'rpg/combat/types';
 import { Material } from 'rpg/items/material';
 import { ItemType } from 'rpg/items/types';
+import { ParseValue } from 'rpg/parsers/values';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 import { Dice } from 'rpg/values/dice';
 import { ApplyMods } from 'rpg/values/modding.js';
-import { TValue } from 'rpg/values/types.js';
-import { DamageSrc } from '../damage.js';
+import { Numeric } from 'rpg/values/types.js';
 import { Wearable } from './wearable';
 
 export class Weapon extends Wearable<RawWeaponData> implements TNpcAction {
@@ -19,7 +19,9 @@ export class Weapon extends Wearable<RawWeaponData> implements TNpcAction {
 
 			json.name = undefined;
 			json.desc = undefined;
-			json.price = undefined;
+			json.price = this.price != this.proto.price ? this.price : undefined;
+
+			json.dmg = JSON.stringify(this.dmg) == this.proto.dmg ? undefined : this.dmg;
 
 		} else {
 			json.name = this._name;
@@ -53,27 +55,31 @@ export class Weapon extends Wearable<RawWeaponData> implements TNpcAction {
 
 	tohit: number = 0;
 	hands: number = 1;
-	dmg: DamageSrc;
+	dmg: Numeric;
 
-	get kind() { return this.dmg.type };
-	set kind(s: string) { this.dmg.type = s; }
+	/// damage kind.
+	kind: string;
 
 	constructor(
 		opts: {
 			id?: string | undefined,
 			name?: string,
-			dmg?: number | string | TValue,
+			dmg?: Numeric | string,
 			kind?: string,
 			desc?: string,
 			proto?: RawWeaponData,
-			material?: Material
+			material?: Material,
+			price?: number
 		}) {
 
 		super(opts, true);
 
 		this.type = ItemType.Weapon;
 
-		this.dmg = DamageSrc.From(opts.dmg ?? opts.proto?.dmg, opts.kind ?? opts.proto?.kind);
+		this.kind = opts.kind ?? opts.proto?.kind ?? 'blunt';
+
+		this.dmg = typeof opts.dmg == 'object' ? opts.dmg :
+			ParseValue('dmg', opts.dmg ?? opts.proto?.dmg ?? 0) ?? 0;
 
 		if (this.material?.alter) {
 			ApplyMods(this, this.material.alter);

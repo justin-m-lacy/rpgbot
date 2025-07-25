@@ -23,8 +23,7 @@ export const InitWeapons = () => {
 
 export const GenWeapon = (lvl: number = 0) => {
 
-	lvl = Math.floor(lvl);
-	const mat = RandMaterial(lvl ?? 0);
+	const mat = RandMaterial(Math.floor(lvl));
 	if (mat === null) return null;
 
 	return Weapon.FromProto(
