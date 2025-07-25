@@ -38,7 +38,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		return data;
 	}
 
-	static Decode<I extends Item = Item>(
+	static Revive<I extends Item = Item>(
 		json: any,
 		reviver: (data: any) => I | null | undefined,
 		inv?: Inventory<I>) {
@@ -66,7 +66,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	}
 
-	constructor(info?: ItemInfo & { max?: number }) {
+	constructor(info?: ItemInfo & { max?: number, id?: string }) {
 
 		super(info);
 		this.type ??= 'inv';

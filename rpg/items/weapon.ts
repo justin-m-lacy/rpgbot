@@ -71,9 +71,9 @@ export class Weapon extends Wearable<RawWeaponData> implements TNpcAction {
 
 		super(opts, true);
 
-		this.dmg = DamageSrc.From(opts.dmg ?? opts.proto?.dmg, opts.kind ?? opts.proto?.kind);
-
 		this.type = ItemType.Weapon;
+
+		this.dmg = DamageSrc.From(opts.dmg ?? opts.proto?.dmg, opts.kind ?? opts.proto?.kind);
 
 		if (this.material?.alter) {
 			ApplyMods(this, this.material.alter);

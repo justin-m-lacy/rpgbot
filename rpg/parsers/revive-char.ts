@@ -5,7 +5,7 @@ import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
 import { HumanSlot, HumanSlots, Wearable } from 'rpg/items/wearable';
 import { Dot } from 'rpg/magic/dots';
-import { DecodeItem } from 'rpg/parsers/items';
+import { ReviveItem } from 'rpg/parsers/items';
 import { ReviveMob } from 'rpg/parsers/mobs';
 import { CharTeam } from 'rpg/social/teams';
 import { BadTypeError, NullDataError } from 'rpg/util/errors';
@@ -88,7 +88,7 @@ export const ReviveChar = (game: Game, json: {
 	char.statPoints = json.statPoints || char.stats.level;
 	char.spentPoints = json.spentPoints || 0;
 
-	if (json.inv) Inventory.Decode(json.inv, DecodeItem, char.inv);
+	if (json.inv) Inventory.Revive(json.inv, ReviveItem, char.inv);
 
 	// SET AFTER BASE STATS.
 	if (Array.isArray(json.dots)) {
@@ -137,9 +137,9 @@ export const ReviveEquip = (char: Char, json: { slots?: Partial<HumanSlots> }) =
 			else if (Array.isArray(wot)) {
 
 				// @ts-ignore
-				dest[k] = wot.map(v => DecodeItem<Wearable>(v)).filter(v => v != null);
+				dest[k] = wot.map(v => ReviveItem<Wearable>(v)).filter(v => v != null);
 
-			} else dest[k] = DecodeItem<Wearable>(wot) ?? null;
+			} else dest[k] = ReviveItem<Wearable>(wot) ?? null;
 		} catch (e) {
 			console.log(`error: loading equip ${e}`);
 			char.log(`${char.name} failed to load ${k}`);

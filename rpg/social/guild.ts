@@ -1,4 +1,4 @@
-import { DecodeItem } from 'rpg/parsers/items';
+import { ReviveItem } from 'rpg/parsers/items';
 import { ICache } from 'rpg/util/icache';
 import { Char } from '../char/char';
 import { Inventory } from '../inventory';
@@ -66,7 +66,7 @@ export class Guild extends SocialGroup {
 
 		Object.assign(g, json);
 
-		if (g.inv) g.inv = Inventory.Decode(g.inv, DecodeItem, g.inv);
+		if (g.inv) g.inv = Inventory.Revive(g.inv, ReviveItem, g.inv);
 		else g.inv = new Inventory();
 
 		return g;

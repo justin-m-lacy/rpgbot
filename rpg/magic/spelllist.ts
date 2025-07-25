@@ -7,7 +7,7 @@ export class SpellList extends Inventory<Spell> {
 
 	[SymDecode](data: any) {
 
-		return Inventory.Decode(data, (s: string) => {
+		return Inventory.Revive(data, (s: string) => {
 			return GetSpell(s) ?? undefined;
 		});
 
@@ -23,7 +23,7 @@ export class SpellList extends Inventory<Spell> {
 
 	constructor(id: string) {
 
-		super(id, { name: 'Spells' });
+		super({ id, name: 'Spells' });
 
 	}
 

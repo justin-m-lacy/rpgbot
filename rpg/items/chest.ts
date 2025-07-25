@@ -2,7 +2,7 @@ import { Char } from 'rpg/char/char';
 import { ItemMenu } from 'rpg/display/items';
 import type { ItemIndex } from 'rpg/items/container';
 import { ItemType } from 'rpg/items/types';
-import { DecodeItem } from 'rpg/parsers/items';
+import { ReviveItem } from 'rpg/parsers/items';
 import { Inventory, SymInventory, type IInventory } from '../inventory';
 import { Item } from "./item";
 
@@ -16,7 +16,7 @@ export class Chest extends Item implements IInventory {
 	static Decode(json: any) {
 
 		const p = new Chest(
-			json.id, Inventory.Decode<Item>(json.inv, DecodeItem)!);
+			json.id, Inventory.Revive<Item>(json.inv, ReviveItem)!);
 		p.size = json.size;
 
 		return Item.SetProtoData(json, p);

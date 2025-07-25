@@ -54,14 +54,14 @@
 		"id": "bb323333-dcfe-4a14-8d1d-64bebb7e0af3",
 		"name": "bb323333-dcfe-4a14-8d1d-64bebb7e0af3",
 		"desc": "",
-		"type": "unknown",
+		"type": "inv",
 		"price": 0,
 		"items": [
 			{
 				"id": "8f416c51-dc89-43e6-af1b-350e1b9bb65f",
 				"name": "Gorilla Suit",
 				"desc": "An inconspicuous disguise.",
-				"type": "unknown",
+				"type": "armor",
 				"price": 0,
 				"armor": 1,
 				"slot": "body"
@@ -72,7 +72,6 @@
 				"mat": "leather",
 				"type": "armor",
 				"price": 0,
-				"armor": 1,
 				"slot": "fingers"
 			},
 			{

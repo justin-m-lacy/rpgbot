@@ -79,7 +79,7 @@ export class Char extends Actor {
 		this._statPts = 0;
 		this._spentPts = 0;
 
-		this.inv = new Inventory();
+		this.inv = new Inventory({ id: this.id + '_inv' });
 		this._equip = new Equip();
 
 		this.history = { explore: 0 };

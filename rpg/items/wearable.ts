@@ -1,5 +1,5 @@
 import { Char } from 'rpg/char/char';
-import { ItemInfo } from 'rpg/items/types';
+import { ItemInfo, ItemType } from 'rpg/items/types';
 import { RawWearableData } from 'rpg/parsers/armor';
 import { ParseMods } from 'rpg/parsers/mods';
 import { IMod } from 'rpg/values/imod';
@@ -78,6 +78,9 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 		json.proto = this.proto?.id;
 		json.mat = this.material?.id;
 
+		if (this.id === "75a37fe2-fdb6-42f6-af29-1c85c88b66bd") {
+			console.log(`encode proto: ${this.proto?.id} mat: ${this.material?.id}`)
+		}
 		json.armor = this._armor;
 		if (this.slot && this.slot != this.proto?.slot) {
 			json.slot = this.slot;
@@ -116,7 +119,11 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 
 		super(opts);
 
+		this.type = ItemType.Armor;
+
 		this.proto = opts.proto;
+		this.material = opts.material;
+
 		this.mods = ParseMods(opts.proto?.mods ?? {}, this.id, 1);
 
 
@@ -125,13 +132,11 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 
 		this.price = opts.proto?.price || 1;
 
-		if (opts.proto) console.log(`proto armor: ${opts.proto.id} ${opts.proto.armor}`);
-
 		this._armor = new BaseMod('armor', opts?.armor || opts.proto?.armor || 0);
 
 		this.mods.armor = this._armor;
 
-		this.material = opts.material;
+
 		if (!skipInit && this.material?.alter) {
 			console.log(`${this.name} base armor: ${this._armor.value}`)
 			ApplyMods(this, this.material.alter);

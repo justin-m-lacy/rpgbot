@@ -11,7 +11,7 @@ import { DecodeSpell } from "rpg/parsers/spells";
 import { Feature } from "rpg/world/feature";
 import { Shop } from "rpg/world/shop";
 
-const ItemDecoders: Record<string, (data: any) => Item> = {
+const ItemRevivers: Record<string, (data: any) => Item> = {
 	[ItemType.Armor]: ReviveWearable,
 	[ItemType.Weapon]: ReviveWeapon,
 	[ItemType.Spell]: DecodeSpell,
@@ -28,10 +28,10 @@ const ItemDecoders: Record<string, (data: any) => Item> = {
 /**
  * revive item from JSON
 */
-export const DecodeItem = <T extends Item>(json: any): T | null => {
+export const ReviveItem = <T extends Item>(json: any): T | null => {
 
 	if (!json) return null;
-	return (ItemDecoders[json.type]?.(json) as T ?? ItemDecoders[ItemType.Unknown](json) as T) ?? null;
+	return (ItemRevivers[json.type]?.(json) as T ?? ItemRevivers[ItemType.Unknown](json) as T) ?? null;
 
 }
 

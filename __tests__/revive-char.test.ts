@@ -42,9 +42,6 @@ describe('Revive Character File', () => {
 
 		const char1 = ReviveChar(game, CharData);
 
-
-		JSON.stringify(char1);
-
 		const char2 = ReviveChar(game, JSON.parse(JSON.stringify(char1)));
 		expect(char2).toEqual(char1);
 

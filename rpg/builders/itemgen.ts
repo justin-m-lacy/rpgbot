@@ -6,7 +6,7 @@ import { Item } from 'rpg/items/item';
 import { LoadMaterials } from 'rpg/items/material';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { GenArmor } from 'rpg/parsers/armor';
-import { DecodeItem } from 'rpg/parsers/items';
+import { ReviveItem } from 'rpg/parsers/items';
 import { LvlPotion } from 'rpg/parsers/potions';
 import { LvlScroll } from 'rpg/parsers/scrolls';
 import { GenWeapon } from 'rpg/parsers/weapon';
@@ -163,7 +163,7 @@ export const GenItem = (protoId: string, into?: Inventory) => {
 
 	const data = Object.create(ProtoItems[protoId]);
 	data.id = randomUUID();
-	const it = DecodeItem(data);
+	const it = ReviveItem(data);
 	if (it) into?.add(it);
 
 	return it;
@@ -190,7 +190,7 @@ export const GenJunkItem = () => {
 	const data = Object.create(it);
 	data.id = randomUUID();
 
-	return DecodeItem(data);
+	return ReviveItem(data);
 
 }
 

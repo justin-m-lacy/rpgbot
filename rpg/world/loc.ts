@@ -1,5 +1,5 @@
 import type { ItemIndex } from "rpg/items/container";
-import { DecodeItem } from "rpg/parsers/items";
+import { ReviveItem } from "rpg/parsers/items";
 import { ReviveMob } from "rpg/parsers/mobs";
 import { quickSplice } from "rpg/util/array";
 import { FindIndex } from "rpg/util/items";
@@ -180,7 +180,7 @@ export class Loc {
 
 		this.id = coord.x + '_' + coord.y;
 
-		this.inv = new Inventory();
+		this.inv = new Inventory({ id: this.id });
 
 	}
 
@@ -227,7 +227,7 @@ export class Loc {
 		if (json.features && Array.isArray(json.features)) {
 
 			for (let i = 0; i < json.features.length; i++) {
-				const f = DecodeItem(json.features[i]);
+				const f = ReviveItem(json.features[i]);
 				if (f) loc.features.push(f);
 			}
 
@@ -235,7 +235,7 @@ export class Loc {
 		if (json.attach) loc.embed = json.attach;
 
 		if (json.inv) {
-			Inventory.Decode<Item>(json.inv, DecodeItem, loc.inv);
+			Inventory.Revive<Item>(json.inv, ReviveItem, loc.inv);
 		}
 
 		loc.name = json.name;
