@@ -12,7 +12,6 @@ export class Potion extends Item implements TStacker {
 		let p = new Potion(json);
 
 		if (json.effect) p.effect = json.effect;
-		if (json.form) p.form = json.form;
 
 		p.count = typeof (json.n === 'number') ? json.n : 1;
 
@@ -31,14 +30,10 @@ export class Potion extends Item implements TStacker {
 
 		//if (this._spell) s.spell = this._spell;
 		if (this.dot) s.effect = this.dot;
-		if (this._form) s.form = this._form;
 
 		return s;
 
 	}
-
-	get form() { return this._form; }
-	set form(v) { this._form = v; }
 
 	get effect() { return this.dot; }
 	set effect(v) { this.dot = v; }

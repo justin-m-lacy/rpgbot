@@ -124,7 +124,7 @@
             "mp": 1
         },
         "dot": {
-            "kind": "poison",
+            "kind": "swarm",
             "duration": 10,
             "mod": {
                 "tohit": -1,

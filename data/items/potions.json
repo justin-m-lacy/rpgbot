@@ -1,7 +1,10 @@
 [
     {
         "name": "elfroid beer",
-        "form": "curMp=hp=1",
+        "set": {
+            "mp": 1,
+            "hp": 1
+        },
         "price": 1,
         "level": 0
     },
@@ -22,7 +25,9 @@
     {
         "id": "pot_mana1",
         "name": "minor mana potion",
-        "form": "mp=mp+1d4+2",
+        "add": {
+            "mp": "1d4+2"
+        },
         "price": 1,
         "level": 0
     },
@@ -69,14 +74,11 @@
         "level": 0
     },
     {
-        "name": "potion of cure minor wounds",
-        "form": "hp=hp+1d4+2",
-        "price": 1,
-        "level": 0
-    },
-    {
+        "id": "pot_agony1",
         "name": "potion of minor agony",
-        "form": "hp=hp-1d4-2",
+        "add": {
+            "hp": "-1d4-2"
+        },
         "price": 1,
         "level": 2
     },
@@ -87,14 +89,10 @@
         "level": 1
     },
     {
-        "name": "potion of cure light wounds",
-        "form": "hp=hp+3d8",
-        "price": 3,
-        "level": 1
-    },
-    {
         "name": "light mana potion",
-        "form": "mp=mp+3d8",
+        "add": {
+            "mp": "3d8"
+        },
         "price": 3,
         "level": 1
     },
@@ -135,38 +133,69 @@
         "level": 0
     },
     {
-        "name": "potion of light agony",
-        "form": "hp=hp-3d8",
-        "price": 3,
-        "level": 2
+        "name": "potion of cure minor wounds",
+        "add": {
+            "hp": "2~6"
+        },
+        "price": 1,
+        "level": 0
+    },
+    {
+        "name": "potion of cure light wounds",
+        "add": {
+            "hp": "3d8"
+        },
+        "price": 5,
+        "level": 1
     },
     {
         "name": "potion of cure moderate wounds",
-        "form": "hp=hp+5d5+10",
+        "add": {
+            "hp": "15~35"
+        },
         "price": 5,
         "level": 3
     },
     {
         "name": "simple mana potion",
-        "form": "mp=mp+2d5+10",
+        "add": {
+            "mp": "12~20"
+        },
         "price": 5,
         "level": 3
     },
     {
         "name": "potion of weakness",
-        "form": "str=str-1d4-1",
+        "dot": {
+            "mod": {
+                "str": "-1d4-1"
+            },
+            "duration": 200
+        },
         "price": 15,
         "level": 3
     },
     {
+        "name": "potion of light agony",
+        "add": {
+            "hp": "-3d8"
+        },
+        "price": 3,
+        "level": 2
+    },
+    {
         "name": "potion of moderate agony",
-        "form": "hp=hp-5d5-10",
+        "add": {
+            "hp": "-5d5-10"
+        },
         "price": 5,
         "level": 3
     },
     {
         "name": "minor exp potion",
-        "form": "exp=exp+10",
+        "add": {
+            "exp": 10
+        },
         "price": 25,
         "level": 4
     },
@@ -178,57 +207,51 @@
     },
     {
         "name": "potion of cure serious wounds",
-        "form": "hp=hp+8d8+12",
+        "add": {
+            "hp": "30~76"
+        },
         "price": 15,
         "level": 5
     },
     {
         "name": "mana potion",
-        "form": "mp=mp+4d8+8",
-        "price": 15,
-        "level": 5
-    },
-    {
-        "name": "potion of serious agony",
-        "form": "hp=hp-8d8-12",
+        "add": {
+            "mp": "20~40"
+        },
         "price": 15,
         "level": 5
     },
     {
         "name": "potion of cure major wounds",
-        "form": "hp=hp+8d10+25",
+        "add": {
+            "hp": "35~75"
+        },
         "price": 25,
         "level": 7
+    },
+    {
+        "name": "potion of cure critical wounds",
+        "add": {
+            "hp": "50~130"
+        },
+        "price": 100,
+        "level": 10
     },
     {
         "name": "greater mana potion",
-        "form": "mp=mp+5d10+15",
-        "price": 25,
-        "level": 7
-    },
-    {
-        "name": "potion of major agony",
-        "form": "hp=hp-8d10-25",
+        "add": {
+            "mp": "25~64"
+        },
         "price": 25,
         "level": 7
     },
     {
         "name": "potion of experience",
-        "form": "exp=exp+25",
+        "add": {
+            "exp": 25
+        },
         "price": 100,
         "level": 9
-    },
-    {
-        "name": "potion of cure critical wounds",
-        "form": "hp=hp+5d20+45",
-        "price": 100,
-        "level": 10
-    },
-    {
-        "name": "potion of serious agony",
-        "form": "hp=hp-5d20-45",
-        "price": 100,
-        "level": 10
     },
     {
         "name": "strong regeneration potion",
@@ -238,19 +261,17 @@
     },
     {
         "name": "major mana potion",
-        "form": "mp=mp+8d10+25",
+        "add": {
+            "mp": "30~100"
+        },
         "price": 25,
         "level": 10
     },
     {
         "name": "potion of cure desperate wounds",
-        "form": "hp=hp+10d20+45",
-        "price": 300,
-        "level": 15
-    },
-    {
-        "name": "potion of desperate agony",
-        "form": "hp=hp-10d20-45",
+        "add": {
+            "hp": "75~250"
+        },
         "price": 300,
         "level": 15
     },
@@ -262,31 +283,73 @@
     },
     {
         "name": "major exp potion",
-        "form": "exp=exp+50",
+        "add": {
+            "exp": 50
+        },
         "price": 400,
         "level": 17
     },
     {
         "name": "superior mana potion",
-        "form": "mp=mp+10d20+25",
+        "add": {
+            "mp": "100~200"
+        },
         "price": 50,
         "level": 15
     },
     {
         "name": "potion of cure hopeless wounds",
-        "form": "hp=hp+10d30+100",
+        "add": {
+            "hp": "110~430"
+        },
         "price": 1000,
         "level": 20
     },
     {
         "name": "mana elixir",
-        "form": "mp=mp+20d20+45",
+        "add": {
+            "mp": "200~400"
+        },
         "price": 1000,
         "level": 20
     },
     {
+        "name": "potion of serious agony",
+        "add": {
+            "hp": "-20~-76"
+        },
+        "price": 15,
+        "level": 5
+    },
+    {
+        "name": "potion of major agony",
+        "add": {
+            "hp": "-50~-125"
+        },
+        "price": 25,
+        "level": 7
+    },
+    {
+        "name": "potion of serious agony",
+        "add": {
+            "hp": "-100~-200"
+        },
+        "price": 100,
+        "level": 10
+    },
+    {
+        "name": "potion of desperate agony",
+        "add": {
+            "hp": "-175~-350"
+        },
+        "price": 300,
+        "level": 15
+    },
+    {
         "name": "potion of hopeless agony",
-        "form": "hp=hp-10d30-100",
+        "add": {
+            "hp": "-250~-500"
+        },
         "price": 1000,
         "level": 20
     },
@@ -298,7 +361,9 @@
     },
     {
         "name": "potion of godly experience",
-        "form": "exp=exp+1000",
+        "add": {
+            "exp": 1000
+        },
         "price": 3000,
         "level": 24
     }
