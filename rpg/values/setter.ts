@@ -1,10 +1,14 @@
+import { ParseValue } from "rpg/parsers/values";
 import { IsSimple, SymSimple, type ISimple, type Numeric } from "rpg/values/types";
 
+const IsSetterData = (str: string) => {
+	return str.startsWith('=:');
+}
 
 /**
  * Value that sets target to this value.
  */
-export class Setter implements ISimple {
+class Setter implements ISimple {
 
 	readonly id: string;
 
@@ -43,5 +47,13 @@ export class Setter implements ISimple {
 			this._value += amt;
 		} else this._value.value += amt;
 	}
+
+}
+
+const ParseSetter = (id: string, str: string) => {
+
+	// slice start chars.
+	const v = ParseValue(id, str.slice(2));
+	return v ? new Setter(id, v) : undefined;
 
 }

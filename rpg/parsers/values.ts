@@ -2,17 +2,12 @@ import { Dice, IsDiceRoll } from "rpg/values/dice";
 import { ParsePaths } from "rpg/values/paths";
 import { IsPercentData, ParsePercent } from "rpg/values/percent";
 import { IsRangeData, Range } from "rpg/values/range";
-import { Setter } from "rpg/values/setter";
 import { Simple } from "rpg/values/simple";
 import type { ISimple, TValue } from "rpg/values/types";
 import { JoinPath } from '../values/paths';
 
 /// IdTest - Test for a simple id name.
 const IdTest = /^[A-Za-z_]+\w*$/;
-
-const IsSetterData = (str: string) => {
-	return str.startsWith('=:');
-}
 
 /**
  * 
@@ -72,12 +67,4 @@ export const ParseNum = (id: string, v: string | number | object): TValue | numb
 
 	if (typeof v === 'number') return v;
 	return ParseValue(id, v);
-}
-
-export const ParseSetter = (id: string, str: string) => {
-
-	// slice start chars.
-	const v = ParseValue(id, str.slice(2));
-	return v ? new Setter(id, v) : undefined;
-
 }
