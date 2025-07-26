@@ -1,3 +1,4 @@
+import { Spell } from "rpg/actions/spell.js";
 import { Char } from "rpg/char/char";
 import { Mob, TActor } from "rpg/char/mobs";
 import { ActionFlags, TNpcAction } from "rpg/combat/types";
@@ -5,7 +6,6 @@ import { AttackInfo } from "rpg/events";
 import { Game } from "rpg/game";
 import { ItemPicker } from "rpg/inventory";
 import { Item } from "rpg/items/item";
-import { Spell } from "rpg/magic/spell";
 import { GenMob } from "rpg/parsers/mobs";
 import { PossPronoun } from "rpg/social/gender";
 import { Party } from "rpg/social/party";
@@ -111,6 +111,11 @@ export class Combat {
 	 */
 	private async applyTarget(char: TActor, act: TNpcAction, targ: TActor) {
 
+		if (!char.at.equals(targ.at)) {
+			char.log(`You not see ${targ.name} at your location.`);
+			return;
+		}
+
 		if (act.dot) {
 			targ.addDot(act.dot, char.id);
 		}
@@ -195,9 +200,8 @@ export class Combat {
 	}
 
 	/**
-		 *
-		 * @param wot - optional item to try to take.
-		 */
+	* @param wot - optional item to try to take.
+	*/
 	async trySteal(char: Char, who: TActor | Party, wot?: ItemPicker | null): Promise<boolean> {
 
 		const targ = who instanceof Party ? await who.randChar() : who;

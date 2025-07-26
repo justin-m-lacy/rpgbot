@@ -1,6 +1,6 @@
+import { Action } from 'rpg/actions/action.js';
 import { type Game } from 'rpg/game';
 import { ItemInfo, ItemType } from 'rpg/items/types';
-import { Action } from 'rpg/magic/action';
 import { type Loc } from 'rpg/world/loc';
 import { Char } from '../char/char';
 import { Item } from '../items/item';

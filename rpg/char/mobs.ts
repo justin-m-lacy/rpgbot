@@ -1,13 +1,13 @@
 import { randomUUID } from 'crypto';
+import { Dot, ProtoDot } from 'rpg/actions/dots.js';
 import { CharFlags, StatusFlag } from 'rpg/char/states';
 import { TNpcAction } from 'rpg/combat/types';
-import { Dot, ProtoDot } from 'rpg/magic/dots';
 import { type MobData } from 'rpg/parsers/mobs';
 import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
 import { IsInt } from 'rpg/util/parse';
 import { Maxable } from 'rpg/values/maxable';
-import { Coord, TCoord } from 'rpg/world/coord';
+import { Coord } from 'rpg/world/coord';
 import { Item, TStacker } from '../items/item';
 import { roll } from '../values/dice';
 import { Actor } from './actor';
@@ -83,7 +83,13 @@ export class Mob {
 	private _held?: Item[];
 
 	// location of coordinate.
-	at: TCoord = new Coord(0, 0);
+	at = new Coord(0, 0);
+
+	/**
+	 * Damage types immune to.
+	 */
+	private immunities?: string[];
+	private resists?: Record<string, number>;
 
 	readonly dots: Dot[] = [];
 
@@ -101,10 +107,10 @@ export class Mob {
 
 	}
 
-	isImmune(type?: string) { return false }
+	isImmune(type?: string) { return type && this.immunities?.includes(type) }
 
 	getResist(type?: string): number {
-		return 0;
+		return type ? this.resists?.[type] ?? 0 : 0;
 	}
 
 	/// TActor interface

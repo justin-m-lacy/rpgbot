@@ -6,8 +6,8 @@ import { AddValues } from 'rpg/values/apply';
 import type { IMod } from 'rpg/values/imod';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import type { Path } from 'rpg/values/paths';
-import { ParseMods } from '../parsers/mods';
-import { type TValue } from '../values/types';
+import { ParseMods } from '../parsers/mods.js';
+import { type TValue } from '../values/types.js';
 
 export type RawEffect = {
 	id: string,

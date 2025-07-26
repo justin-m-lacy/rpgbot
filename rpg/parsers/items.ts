@@ -1,3 +1,4 @@
+import { GetAction } from "rpg/actions/action.js";
 import { GetTypeGenerator } from "rpg/builders/itemgen";
 import { Chest } from "rpg/items/chest";
 import { Grave } from "rpg/items/grave";
@@ -5,7 +6,6 @@ import { Grimoire } from "rpg/items/grimoire";
 import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
 import { ItemData, ItemType } from "rpg/items/types";
-import { GetAction } from "rpg/magic/action";
 import { ReviveWeapon, ReviveWearable } from "rpg/parsers/armor";
 import { DecodeSpell } from "rpg/parsers/spells";
 import { Feature } from "rpg/world/feature";

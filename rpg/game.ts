@@ -1,6 +1,7 @@
 import { SendableChannels } from 'discord.js';
 import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
+import { Spell } from 'rpg/actions/spell.js';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
 import { ChannelStore } from 'rpg/channel-store';
@@ -15,7 +16,6 @@ import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
 import { HumanSlot, toSlot } from 'rpg/items/wearable';
-import { Spell } from 'rpg/magic/spell';
 import { TryEat } from 'rpg/talents/cook';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';

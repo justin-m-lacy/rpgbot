@@ -18,5 +18,5 @@ const FakeCache = MockCache();
 export const GetTestGame = () => new Game(new FakeCache(), new FakeCache(), GameActions, false);
 
 
-export const GetTestWorld = () =>
+const GetTestWorld = () =>
 	new World(cache.subcache('world'), cache.subcache('chars'));

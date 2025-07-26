@@ -4,7 +4,7 @@ import { Item } from 'rpg/items/item';
 import type { IMod } from 'rpg/values/imod';
 import type { Path } from 'rpg/values/paths';
 import type { Numeric } from 'rpg/values/types';
-import { ProtoDot } from './dots';
+import { ProtoDot } from './dots.js';
 
 export class Spell extends Item {
 

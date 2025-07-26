@@ -1,10 +1,10 @@
+import { Dot } from 'rpg/actions/dots.js';
 import { Char } from 'rpg/char/char';
 import { Equip } from 'rpg/char/equip';
 import { CharState, StatusFlag } from 'rpg/char/states';
 import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/inventory';
 import { HumanSlot, HumanSlots, Wearable } from 'rpg/items/wearable';
-import { Dot } from 'rpg/magic/dots';
 import { ReviveItem } from 'rpg/parsers/items';
 import { ReviveMob } from 'rpg/parsers/mobs';
 import { CharTeam } from 'rpg/social/teams';

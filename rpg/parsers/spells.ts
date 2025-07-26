@@ -1,6 +1,6 @@
+import { ParseDotType, RawEffect } from 'rpg/actions/dots.js';
+import { Spell } from 'rpg/actions/spell.js';
 import { Item } from 'rpg/items/item';
-import { ParseDotType, RawEffect } from 'rpg/magic/dots';
-import { Spell } from 'rpg/magic/spell';
 import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
 import { randElm } from '../util/array';

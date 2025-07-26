@@ -6,54 +6,63 @@
         "level": 0
     },
     {
+        "id": "pot_regen1",
         "name": "minor regeneration potion",
         "effect": "minor regeneration",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_poison1",
         "name": "minor poison potion",
         "effect": "minor poison",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_mana1",
         "name": "minor mana potion",
         "form": "mp=mp+1d4+2",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_str1",
         "name": "minor str potion",
         "effect": "minor str",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_con1",
         "name": "minor con potion",
         "effect": "minor con",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_dex1",
         "name": "minor dex potion",
         "effect": "minor dex",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_int1",
         "name": "minor int potion",
         "effect": "minor int",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_wis1",
         "name": "minor wis potion",
         "effect": "minor wis",
         "price": 1,
         "level": 0
     },
     {
+        "id": "pot_cha1",
         "name": "minor cha potion",
         "effect": "minor cha",
         "price": 1,

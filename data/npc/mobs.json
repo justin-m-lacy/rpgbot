@@ -48,34 +48,16 @@
     },
     {
         "name": "wombat",
-        "level": 1,
+        "level": 0.7,
         "kind": "beast",
         "evil": -2,
         "desc": "Just wombatting around.",
-        "hp": "2d6+4",
-        "armor": 10,
+        "hp": "6~15",
+        "armor": 7,
         "weap": {
             "name": "wombatting",
             "kind": "blunt",
             "dmg": "1d4"
-        }
-    },
-    {
-        "name": "gremlin",
-        "level": 0.5,
-        "kind": "goblinoid",
-        "team": "goblin",
-        "evil": 5,
-        "desc": "Na-na-na-na-Na-na Na-na-na-na-Na-na...",
-        "hp": "1~4",
-        "armor": 4,
-        "weap": {
-            "name": "claws",
-            "kind": "slash",
-            "dmg": "1~2"
-        },
-        "drops": {
-            "potion of cure minor wounds": 5
         }
     },
     {
@@ -102,7 +84,8 @@
         "desc": "Don't kill it! They're endangered!",
         "hp": "2~4",
         "tohit": 1,
-        "armor": 7,
+        "armor": 0,
+        "dodge": 5,
         "weap": {
             "name": "beak",
             "kind": "pierce",
@@ -110,6 +93,24 @@
         },
         "drops": {
             "kakapo feather": 10
+        }
+    },
+    {
+        "name": "gremlin",
+        "level": 0.5,
+        "kind": "goblinoid",
+        "team": "goblin",
+        "evil": 5,
+        "desc": "Na-na-na-na-Na-na Na-na-na-na-Na-na...",
+        "hp": "1~4",
+        "armor": 4,
+        "weap": {
+            "name": "claws",
+            "kind": "slash",
+            "dmg": "1~2"
+        },
+        "drops": {
+            "potion of cure minor wounds": 5
         }
     },
     {
@@ -203,8 +204,38 @@
         }
     },
     {
-        "name": "orc",
+        "name": "peasant",
         "level": 1,
+        "kind": "human",
+        "evil": -7,
+        "desc": "A lowly tiller of the soil.",
+        "hp": "10~15",
+        "armor": 4,
+        "weap": {
+            "name": "pitchfork",
+            "kind": "pierce",
+            "dmg": "3~7"
+        }
+    },
+    {
+        "id": "townguard",
+        "name": "Town Guard",
+        "level": 3,
+        "biome": "town",
+        "kind": "human",
+        "evil": -15,
+        "desc": "Patrols small hamlets.",
+        "hp": "15~25",
+        "armor": 7,
+        "weap": {
+            "name": "club",
+            "kind": "blunt",
+            "dmg": "3~7"
+        }
+    },
+    {
+        "name": "orc",
+        "level": 3,
         "kind": "humanoid",
         "desc": "For the Horde!",
         "hp": "3d4+3",
@@ -213,7 +244,7 @@
         "weap": {
             "name": "spear",
             "kind": "pierce",
-            "dmg": "1~6"
+            "dmg": "2~8"
         },
         "drops": {
             "potion of cure light wounds": 3
@@ -1077,20 +1108,20 @@
     },
     {
         "name": "heron guard",
-        "level": 5,
+        "level": 7,
         "kind": "humanoid",
-        "evil": -20,
-        "desc": "Something, something, myth quote.",
-        "hp": "5d8+5",
+        "evil": -50,
+        "desc": "From Muirthemne.",
+        "hp": "6d8+5",
         "tohit": 3,
         "armor": 40,
         "weap": {
             "name": "swords",
             "kind": "slash",
-            "dmg": "1d6+3"
+            "dmg": "1d6+4"
         },
         "drops": {
-            "mandrake root": 10,
+            "it_mandrake": 10,
             "potion of cure moderate wounds": 20,
             "potion of cure serious wounds": 10
         }

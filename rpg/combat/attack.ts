@@ -1,7 +1,7 @@
+import { ProtoDot } from "rpg/actions/dots.js";
 import { StatusFlag } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
 import { ActionFlags, TNpcAction } from "rpg/combat/types";
-import { ProtoDot } from "rpg/magic/dots";
 import { HasJSON } from "rpg/parsers/encode";
 import { Id, Numeric, TValue } from "rpg/values/types";
 

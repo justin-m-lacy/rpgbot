@@ -1,5 +1,5 @@
+import { Dot } from "rpg/actions/dots.js";
 import { TargetFlags } from "rpg/combat/targets";
-import { Dot } from "rpg/magic/dots";
 import { quickSplice } from "rpg/util/array";
 
 type StatusKeys = keyof typeof StatusFlag;

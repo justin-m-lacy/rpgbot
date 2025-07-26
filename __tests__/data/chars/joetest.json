@@ -118,8 +118,7 @@
 				"id": "8ad0be9a-c401-49df-afa7-04ebb6ea3c2e",
 				"proto": "cape",
 				"mat": "leather",
-				"desc": "",
-				"type": "unknown",
+				"type": "armor",
 				"price": 5,
 				"armor": 1,
 				"slot": "back"

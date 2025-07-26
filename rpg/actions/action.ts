@@ -1,7 +1,7 @@
+import { TestRequire, type RawIf, type TRequire } from 'rpg/actions/requires.js';
+import { ParseResult, type RawResult, type Result } from 'rpg/actions/results.js';
 import { TActor } from 'rpg/char/mobs';
-import { TestRequire, type RawIf, type TRequire } from 'rpg/magic/requires';
-import { ParseResult, type RawResult, type Result } from 'rpg/magic/results';
-import { Char } from '../char/char';
+import { Char } from '../char/char.js';
 
 
 const actions: Record<string, Action> = {};

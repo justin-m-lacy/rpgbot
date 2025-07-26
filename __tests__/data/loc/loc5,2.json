@@ -45,22 +45,10 @@
 				"slayer": "harhar"
 			},
 			{
-				"id": "4222159f-d906-4493-85ea-3b0748485538",
-				"type": "grave",
-				"price": 0,
-				"char": "harhar",
-				"epitaph": "Here lies harhar. Again.",
-				"slayer": "harhar",
-				"n": 11
-			},
-			{
-				"id": "35a721e3-100a-4daf-b26f-faf74a0ed6d8",
-				"type": "grave",
-				"price": 0,
-				"char": "burthne",
-				"epitaph": "burthne finally fullfilled their yearbook prediction of 'most likely to brutally murdered.'",
-				"slayer": "harhar",
-				"n": 2
+				"id": "8ad0be9a-c401-49df-afa7-04ebb6ea3c2e",
+				"proto": "cape",
+				"mat": "leather",
+				"type": "armor"
 			},
 			{
 				"id": "8948bf3b-c04d-4ebc-b67a-879fa34eb644",

@@ -1,7 +1,7 @@
+import { Spell } from 'rpg/actions/spell.js';
 import type { Char } from 'rpg/char/char';
 import { type Game } from 'rpg/game';
 import { Scroll } from 'rpg/items/scroll';
-import { Spell } from 'rpg/magic/spell';
 import { AddValues, MissingProp } from 'rpg/values/apply';
 
 export const Scribe = {

@@ -1,6 +1,6 @@
 import { Formula } from 'formulic';
+import { GetDot, ProtoDot } from 'rpg/actions/dots.js';
 import { ItemData, ItemType } from 'rpg/items/types';
-import { GetDot, ProtoDot } from 'rpg/magic/dots';
 import { Char } from '../char/char';
 import { type Game } from '../game';
 import { Item, TStacker } from './item';

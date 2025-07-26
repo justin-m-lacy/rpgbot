@@ -1,9 +1,9 @@
 import { TGameAction } from 'rpg/actions';
+import { SpellList } from 'rpg/actions/spelllist.js';
 import { GClass, Race } from 'rpg/char/race';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { Weapon } from 'rpg/items/weapon';
-import { SpellList } from 'rpg/magic/spelllist';
 import { SexType } from 'rpg/social/gender';
 import { smallNum } from 'rpg/util/format';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';

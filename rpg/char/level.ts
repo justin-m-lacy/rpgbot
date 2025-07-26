@@ -1,7 +1,7 @@
 import { Char } from './char';
 
 const requiredExp = (level: number) => {
-	return Math.floor(100 * (Math.pow(1.5, level)));
+	return Math.floor(500 * (Math.pow(1.5, level)));
 }
 
 export const getNextExp = (char: Char) => {

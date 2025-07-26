@@ -1,4 +1,4 @@
-import { TestRequire, type RawIf, type TRequire } from "rpg/magic/requires";
+import { TestRequire, type RawIf, type TRequire } from "rpg/actions/requires.js";
 import { ParseValue, ValueOrFb } from "rpg/parsers/values";
 import { AddValues } from "rpg/values/apply";
 import { ParsePaths, type Path } from "rpg/values/paths";
