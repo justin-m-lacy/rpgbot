@@ -60,11 +60,11 @@ export class Potion extends Item implements TStacker {
 
 				let e = GetDot(this.dot);
 				if (!e) {
-					console.log('effect not found: ' + this.dot);
+					console.log('dot not found: ' + this.dot);
 					return;
 				}
 
-				console.log('adding potion effect.');
+				console.log('add potion dot.');
 				char.addDot(e, this.name);
 
 			} else if (this.dot instanceof ProtoDot) {

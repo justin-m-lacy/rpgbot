@@ -4,7 +4,7 @@ import { IsAtMod, parseAtMod } from "rpg/values/mods/atmod";
 import { BaseMod } from "rpg/values/mods/base-mod";
 import { PctMod } from "rpg/values/mods/pct-mod";
 import { IsPerMod, PerMod } from "rpg/values/mods/per-mod";
-import { JoinPath, ParsePaths } from "rpg/values/paths";
+import { JoinPath, NewPath, ParsePaths, Path } from "rpg/values/paths";
 import type { Id, Numeric } from "rpg/values/types";
 
 /// +D+P%
@@ -17,13 +17,13 @@ export const ModTest = /^([\+\-]?\d+\.?\d*\b)?(?:([\+\-]?\d+\.?\d*)\%)?$/;
  * @param src - source value that multiplies the mod effect.
  * @returns 
  */
-export const ParseMods = (mods: Record<string, any>, id: string, src: Numeric = 1) => {
-	return ParsePaths(
+export const ParseMods = (mods: Record<string, any> | undefined, id: string, src: Numeric = 1): Path<IMod> => {
+	return mods ? ParsePaths(
 		mods,
 		'mod',
 		(path, orig) => ParseMod(
 			JoinPath(id, 'mod', path), orig, src)!
-	);
+	) : NewPath<IMod>(id);
 }
 
 export const ParseMod = (id: string, mod: string | number | boolean | undefined | null,

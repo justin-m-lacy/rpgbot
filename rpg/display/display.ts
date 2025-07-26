@@ -1,7 +1,8 @@
 import { type ChatCommand } from "@/bot/cmd-wrapper";
 import { EmbedBuilder, MessageFlags, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
-import { getEvil, StatIds, type StatKey } from "rpg/char/stats";
+import { StatIds, type StatKey } from "rpg/char/stats";
+import { getEvil } from "rpg/display/char";
 import { smallNum } from "rpg/util/format";
 import { Char } from '../char/char';
 
@@ -88,7 +89,7 @@ export const EchoChar = async function (chan: ChatCommand, char: Char,
 
 export const CharLongDesc = (char: Char): string => {
 
-	let desc = `level ${char.level.value} ${getEvil(+char.evil)} ${char.race.name} ${char.cls!.name} [${char.state}]`;
+	let desc = `level ${char.level.value} ${getEvil(+char.evil)} ${char.race.name} ${char.gclass!.name} [${char.state}]`;
 	desc += `\nage: ${smallNum(char.age)} sex: ${char.sex} gold: ${Math.floor(char.gold)} exp: ${Math.floor(char.exp)}/ ${getNextExp(char)}`;
 	desc += `\nhp: ${smallNum(char.hp)}/${Math.ceil(char.hp.max.valueOf())} armor: ${Math.floor(char.armor.valueOf())}`;
 	desc += statString(char);
@@ -101,7 +102,7 @@ export const CharLongDesc = (char: Char): string => {
 
 const statString = (char: Char) => {
 
-	let id = StatIds[0];
+	let id = '';
 	let res = '';
 
 	const len = StatIds.length;
@@ -110,6 +111,7 @@ const statString = (char: Char) => {
 
 		id = StatIds[i];
 		const stat = char.stats[id as StatKey];
+		if (!stat) continue;
 
 		res += `\n${id}: ` + (stat.value ?? 0) + (stat.base != stat.value ? ` (${stat.base} base)` : '');
 

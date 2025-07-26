@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { Dot, ProtoDot } from 'rpg/actions/dots.js';
 import { CharFlags, StatusFlag } from 'rpg/char/states';
 import { TNpcAction } from 'rpg/combat/types';
+import { getEvil } from 'rpg/display/char';
 import { type MobData } from 'rpg/parsers/mobs';
 import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
@@ -11,7 +12,6 @@ import { Coord } from 'rpg/world/coord';
 import { Item, TStacker } from '../items/item';
 import { roll } from '../values/dice';
 import { Actor } from './actor';
-import * as stats from './stats';
 
 export type TActor = Actor | Mob;
 
@@ -205,7 +205,7 @@ export class Mob {
 
 	getDetails() {
 
-		return `level ${this.level.valueOf()} ${this.name} [${stats.getEvil(this._evil)}${this.kind ?? ''}] \nhp:${Math.ceil(this._hp.valueOf())}/${Math.ceil(this._hp.max.valueOf())} armor:${Math.ceil(this._armor)}\n${this.desc}`;
+		return `level ${this.level.valueOf()} ${this.name} [${getEvil(this._evil)}${this.kind ?? ''}] \nhp:${Math.ceil(this._hp.valueOf())}/${Math.ceil(this._hp.max.valueOf())} armor:${Math.ceil(this._armor)}\n${this.desc}`;
 
 	}
 

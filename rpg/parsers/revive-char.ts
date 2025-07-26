@@ -12,7 +12,6 @@ import { BadTypeError, NullDataError } from 'rpg/util/errors';
 import { Coord, IsCoord } from 'rpg/world/coord';
 import { GetClass, GetRace } from './parse-class';
 
-
 export const ReviveChar = (game: Game, json: {
 	teams?: Partial<Record<string, number>>
 } & any) => {
@@ -31,6 +30,16 @@ export const ReviveChar = (game: Game, json: {
 
 	char.exp = Math.floor(json.exp) || 0;
 	char.guild = json.guild;
+
+	for (const id in char.stats) {
+
+		const data = json[id];
+		if (data && typeof data == 'number') {
+			char.stats[id]?.setTo(data);
+
+		}
+
+	}
 
 	if (json.talents && Array.isArray(json.talents)) {
 		for (let i = 0; i < json.talents.length; i++) {
@@ -61,12 +70,6 @@ export const ReviveChar = (game: Game, json: {
 	if (json.history) Object.assign(char.history, json.history);
 	if (IsCoord(json.home)) char.home = new Coord(json.home.x, json.home.y);
 
-	if (!json.stats) {
-		throw new NullDataError();
-	}
-	if (typeof json.stats !== 'object') throw new BadTypeError(json.stats, 'object');
-	char.setBaseStats(json.stats);
-
 	if (IsCoord(json.at)) {
 		char.at.setTo(json.at);
 	} else if (IsCoord(json.loc)) {
@@ -85,7 +88,7 @@ export const ReviveChar = (game: Game, json: {
 		char.state = CharState.Alive;
 	}
 
-	char.statPoints = json.statPoints || char.stats.level;
+	char.statPoints = json.statPoints || char.level;
 	char.spentPoints = json.spentPoints || 0;
 
 	if (json.inv) Inventory.Revive(json.inv, ReviveItem, char.inv);

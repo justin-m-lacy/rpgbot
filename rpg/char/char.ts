@@ -17,10 +17,7 @@ import { Actor } from './actor';
 import { Equip } from './equip';
 import { History } from './events';
 import { tryLevel } from './level';
-import { StatIds, StatKey } from './stats';
-
-const SaveProps: Array<keyof Char> = ['name', 'exp', 'owner', 'flags', 'stats', 'dots',
-	'at', 'history', 'statPoints', 'spentPoints', 'guild', 'inv', 'talents'];
+import { StatIds } from './stat';
 
 export class Char extends Actor {
 
@@ -38,21 +35,23 @@ export class Char extends Actor {
 
 	toJSON() {
 
-		const json: any = {
-			equip: this._equip,
-			race: this.race?.id,
-			cls: this.cls?.id,
-			home: this.home,
-			teams: this.teams,
-			sex: this.sex,
-			minions: this.minions.length ? this.minions : undefined
-		};
-		for (let i = SaveProps.length - 1; i >= 0; i--) {
-			json[SaveProps[i]] = this[SaveProps[i]];
-		}
+		const json: any = super.toJSON();
+
+		json.equip = this._equip;
+		json.home = this.home;
+		json.guild = this.guild;
+		json.inv = this.inv;
+		json.statPoints = this.statPoints;
+		json.spentPoints = this.spentPoints;
+		json.inv = this.inv;
+		json.history = this.history;
+		json.exp = this.exp;
+		json.owner = this.owner;
 
 		return json;
 	}
+
+	guild?: string;
 
 	private readonly _log: Log = new Log();
 	readonly inv: Inventory;
@@ -93,7 +92,7 @@ export class Char extends Actor {
 	 */
 	public init() {
 		this.race?.onInitChar(this);
-		this.cls?.onInitChar(this);
+		this.gclass?.onInitChar(this);
 	}
 
 	/**
@@ -112,7 +111,7 @@ export class Char extends Actor {
 			return false;
 		}
 
-		this.stats[stat as StatKey].add(1);
+		this.stats[stat]?.add(1);
 		this._spentPts++;
 
 		return true;
@@ -120,7 +119,7 @@ export class Char extends Actor {
 	}
 
 	hasTalent(t: string) {
-		return (this.talents?.includes(t)) || this.cls!.hasTalent(t) || this.race.hasTalent(t);
+		return (this.talents?.includes(t)) || this.gclass!.hasTalent(t) || this.race.hasTalent(t);
 	}
 
 	addHistory(evt: keyof History) {
@@ -301,10 +300,10 @@ export class Char extends Actor {
 	*/
 	rollBaseHp() {
 
-		const maxHp = Math.floor((this.race.HD + this.cls!.HD) / 2) +
-			roll(this.stats.level.value - 1, this.cls!.HD);
+		const maxHp = Math.floor((this.race.HD + this.gclass!.HD) / 2) +
+			roll(this.level.value - 1, this.gclass!.HD);
 
-		this.stats.hp.max.value = maxHp;
+		this.hp.max.value = maxHp;
 
 	}
 
@@ -330,7 +329,7 @@ export class Char extends Actor {
 
 	getDetails() {
 
-		return `${this.name} level ${this.level} ${this.race.name} ${this.cls?.name ?? ''} [${this.evil}]\nhp:${smallNum(this.hp)}/${smallNum(this.hp.max)} armor:${this.armor.valueOf()}`;
+		return `${this.name} level ${this.level} ${this.race.name} ${this.gclass?.name ?? ''} [${this.evil}]\nhp:${smallNum(this.hp)}/${smallNum(this.hp.max)} armor:${this.armor.valueOf()}`;
 
 	}
 

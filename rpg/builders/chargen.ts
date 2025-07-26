@@ -1,5 +1,5 @@
 import { randElm } from '@/utils/jsutils';
-import type { StatKey } from 'rpg/char/stats';
+import { StatKey } from 'rpg/char/stat';
 import { Game } from 'rpg/game';
 import { GenArmor } from 'rpg/parsers/armor';
 import { GenWeapon } from 'rpg/parsers/weapon';
@@ -40,7 +40,8 @@ export const GenChar = (
 	char.sex = Math.random() < 0.5 ? 'm' : 'f';
 	const statVals = rollStats(statRolls);
 
-	char.setBaseStats(statVals);
+	for (const k in statVals) {
+	}
 
 	opts.race.onNewChar(char);
 	opts.cls.onNewChar(char);

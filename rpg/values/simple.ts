@@ -11,7 +11,7 @@ export class Simple implements ISimple, IModdable {
 
 	readonly id: string;
 
-	readonly mods = new Map<string, IMod>();
+	private readonly mods = new Map<string, IMod>();
 
 	/**
 	 * cached value.

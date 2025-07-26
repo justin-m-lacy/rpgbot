@@ -1,5 +1,6 @@
 import { EventEmitter } from 'eventemitter3';
 import { TActor } from 'rpg/char/mobs';
+import { Stat } from 'rpg/char/stat.js';
 import { CharFlags, CharState, StatusFlag } from 'rpg/char/states';
 import { TNpcAction } from 'rpg/combat/types';
 import { CharEvents } from 'rpg/events';
@@ -10,18 +11,44 @@ import type { SexType } from 'rpg/social/gender';
 import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
 import { CanMod, type ModBlock } from 'rpg/values/imod';
-import { IsSimple, IsValue, type Numeric, type TValue } from 'rpg/values/types';
+import { Maxable } from 'rpg/values/maxable.js';
+import { Simple } from 'rpg/values/simple.js';
+import { type Numeric } from 'rpg/values/types';
 import { Dot, ProtoDot } from '../actions/dots.js';
 import { Item, TStacker } from '../items/item';
 import { Coord } from '../world/coord';
 import { Race, type GClass } from './race';
-import { StatBlock, type StatMod } from './stats';
+import { StatDefs } from './stat';
 
 export class Actor {
 
 	getStatus() { return `${this.hp.value}/${this.hp.max} [${this.state}]` }
 
 	isAlive() { return !this.flags.has(StatusFlag.dead) }
+
+	toJSON() {
+
+		const data: Record<string, any> = {
+			name: this.name,
+			teams: this.teams,
+			race: this.race?.id,
+			cls: this.gclass?.id,
+			sex: this.sex,
+			minions: this.minions.length ? this.minions : undefined,
+			flags: this.flags,
+			at: this.at,
+			dots: this.dots,
+			talents: this.talents
+		}
+
+		for (const k in this.stats) {
+			data[k] = this.stats[k];
+		}
+
+		return data;
+
+	}
+
 	/**
 	 * messy text-based state. flags makes it harder to test for blockers.
 	 * in theory could have states that set multiple flags, as well as
@@ -37,59 +64,50 @@ export class Actor {
 		}
 	}
 
+	readonly stats: Partial<Record<string, Stat>> = Object.create(null);
+
 	get evil() { return (this.teams.ranks[Team.evil] ?? 0) + (this.teams.ranks[Team.good] ?? 0); }
 
+	readonly _hp = new Maxable('hp');
+	readonly _mp = new Maxable('mp');
+
 	// convenience for shorter formulas.
-	get hp() { return this.stats.hp; }
-	set hp(v) { this.stats.hp.value = v.valueOf(); }
+	get hp() { return this._hp; }
+	set hp(v) { this._hp.value = v.valueOf(); }
 
-	get mp() { return this.stats.mp; }
-	set mp(v) { this.stats.mp.value = v.valueOf() }
+	get mp() { return this._mp; }
+	set mp(v) { this._mp.value = v.valueOf() }
 
-	get dr() { return this.stats.dr; }
-	set dr(v: Numeric) { this.stats.dr.value = v.valueOf() }
+	readonly level: Simple = new Simple('level');
+	readonly armor: Simple = new Simple('armor');
+	readonly age: Simple = new Simple('age');
+
+	// damage reduction.
+	readonly dr: Simple = new Simple('dr');
 
 	get resist() { return this.resists }
 
-	get level() { return this.stats.level; }
-	set level(v) { this.stats.level.value = v.valueOf() }
+	_gold: number = 0;
 
-	get gold() { return this.stats.gold; }
-	set gold(g) { this.stats.gold = g < 0 ? 0 : g; }
+	get gold() { return this._gold; }
+	set gold(g) { this._gold = g < 0 ? 0 : g; }
 
-	get age() { return this.stats.age; }
-	set age(s) { this.stats.age.setTo(s); }
 
-	get armor() { return this.stats.armor; }
-	set armor(v: Numeric) { this.stats.armor.setTo(v) }
-
-	get str() { return this.stats.str; }
-	set str(v: Numeric) { this.stats.str.value = v.valueOf() }
-
-	get con() { return this.stats.con; }
+	get con() { return this.stats.con!; }
 	set con(v: Numeric) {
 
-		this.stats.con.setTo(v);
+		this.stats.con?.setTo(v);
 		this.computeHp();
 
 	}
 
-	get dex() { return this.stats.dex; }
-	set dex(v: Numeric) { this.stats.dex.value = v.valueOf() }
-
-	get int() { return this.stats.int; }
-	set int(v: Numeric) { this.stats.int.value = v.valueOf() }
-	get wis() { return this.stats.wis; }
-	set wis(v: Numeric) { this.stats.wis.value = v.valueOf() }
-	get cha() { return this.stats.cha; }
-	set cha(v: Numeric) { this.stats.cha.value = v.valueOf() }
-
 	get HD() {
-		return this._myClass ?
-			Math.floor((this._myClass.HD + this.race.HD) / 2) : this.race.HD;
+		return this.gclass ?
+			Math.floor((this.gclass.HD + this.race.HD) / 2) : this.race.HD;
 	}
 
-	get cls() { return this._myClass }
+	gclass?: GClass;
+	race: Race;
 
 	get tohit() { return this.getModifier('dex'); }
 	get at() { return this._at; }
@@ -97,26 +115,18 @@ export class Actor {
 
 	readonly name: string;
 	private readonly _at: Coord;
-	race: Race;
-	readonly stats: StatBlock = new StatBlock();
+
 	readonly dots: Dot[] = [];
-	private _myClass?: GClass;
+
 	readonly talents: string[] = [];
 
 	readonly resists: Record<string, Numeric> = {};
 
-	height?: number;
-	weight?: number;
-
 	sex: SexType = 'm';
-
-	guild?: string;
 
 	get id() { return this.name }
 
-	/**
-	 * Current mods applied to char.
-	 */
+	/// Mods applied to char.
 	readonly mods: ModBlock<typeof this>[] = [];
 
 	readonly events = new EventEmitter<CharEvents>();
@@ -141,11 +151,15 @@ export class Actor {
 
 		this.sex = opts.sex ?? (Math.random() < 0.5 ? 'm' : 'f');
 
-		this._myClass = opts.cls;
+		this.gclass = opts.cls;
 
 		this.race = opts.race;
 
 		this._at = new Coord(0, 0);
+
+		for (const k in StatDefs) {
+			this.stats[k] = new Stat(StatDefs[k]);
+		}
 
 	}
 
@@ -158,36 +172,13 @@ export class Actor {
 		return false;
 	}
 
-	public setBaseStats(stats: Record<keyof Extract<StatBlock, TValue>, Numeric>) {
-
-		let k: keyof Extract<StatBlock, TValue>;
-		for (k in stats) {
-
-			if (!(k in this.stats)) {
-				console.warn(`bad stat: ${k}`)
-				continue;
-			};
-
-			const targ = this.stats[k as keyof StatBlock];
-			if (IsSimple(targ)) {
-
-				targ.setTo(stats[k]);
-
-			} else if (IsValue(targ)) {
-				targ.value = stats[k].valueOf();
-			}
-		}
-
-	}
-
 	getAttack() {
 		return this.attacks[Math.floor(this.attacks.length * Math.random())] ?? Fists;
 	}
 
 	/// todo
-	isImmune(type?: string): boolean {
-		return false;
-	}
+	isImmune(type?: string): boolean { return false; }
+
 	getResist(type?: string): number {
 		return this.resists[type ?? '']?.valueOf() ?? 0;
 	}
@@ -214,15 +205,18 @@ export class Actor {
 	}
 
 	/**
-	 * @param stat
+	 * Get modifier for stat.
+	 * @param stat 
 	 */
-	getModifier(stat: string) { return this.stats.getModifier(stat); }
+	getModifier(stat: string): number {
+		return ((this.stats[stat]?.value ?? 10) - 10) / 2;
+	}
 
 
 	statRoll(...stats: string[]) {
 		let v = 1 + 4 * Math.random() * (this.stats.level.value);
 		for (let s of stats) {
-			v += this.stats.getModifier(s);
+			v += this.getModifier(s);
 		}
 		return v;
 
@@ -231,15 +225,33 @@ export class Actor {
 
 	levelUp() {
 
-		this.stats.level.add(1);
+		this.level.add(1);
 
-		const hpBonus = this.HD + this.stats.getModifier('con');
-		this.stats.addMaxHp(hpBonus);
+		const hpBonus = this.HD;
+		this.addMaxHp(hpBonus);
+
+	}
+
+
+	addMaxHp(amt: number) {
+		this.hp.max.add(amt);
+		this.hp.value += amt;
+	}
+
+	/**
+	 * Computes current, as opposed to base hp.
+	*/
+	private computeHp() {
+
+		const hp =
+			Math.max(1,
+				this.hp.max.value + this.stats.level.value * this.getModifier('con'));
+		this.hp.max.value = hp;
 
 	}
 
 	/**
-	 * Add existing/created dot.
+	 * Add existing/create dot.
 	 * @param e 
 	 */
 	addDot(e: Dot | ProtoDot, maker?: string) {
@@ -266,7 +278,7 @@ export class Actor {
 
 	log(s: string) { console.log(s); }
 
-	addGold(amt: number) { this.stats.gold += amt; }
+	addGold(amt: number) { this.gold += amt; }
 
 	revive() {
 
@@ -281,13 +293,6 @@ export class Actor {
 		}
 	}
 
-	/*hit(amt: number) {
-		this.hp.value -= amt;
-		if (this.hp.value <= 0) {
-			this.flags &= (~StatusFlags.alive);
-		}
-	}*/
-
 	hasTalent(s: string) {
 		return this.talents?.includes(s);
 	}
@@ -296,18 +301,6 @@ export class Actor {
 	addItem(it: Item | Item[]): number { return 0 }
 	randItem(): Item | null { return null; }
 	removeItem(which: number | string | Item, sub?: number | string): Item | null { return null; }
-
-	/**
-	 * Computes current, as opposed to base hp.
-	*/
-	private computeHp() {
-
-		const hp =
-			Math.max(1,
-				this.stats.hp.max.value + this.stats.level.value * this.getModifier('con'));
-		this.hp.max.value = hp;
-
-	}
 
 	heal(amt: number) {
 		const prev = this.hp.value;
@@ -327,7 +320,4 @@ export class Actor {
 		return this.heal(scale * amt);
 	}
 
-	applyBaseMods(mods?: StatMod) {
-	}
-
-} //cls
+}

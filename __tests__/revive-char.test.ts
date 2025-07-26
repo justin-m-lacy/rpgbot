@@ -4,7 +4,6 @@ import { ReviveChar } from '../rpg/parsers/revive-char';
 import CharData from './data/chars/joetest.json';
 import { GetTestGame } from './init';
 
-
 describe('Revive Character File', () => {
 
 	beforeAll(async () => {
@@ -32,8 +31,8 @@ describe('Revive Character File', () => {
 
 		expect(weap.name).toBe('iron spear');
 
-		//expect(char.attacks.length).toBe(1);
-		//expect(char.minions[0].name).toBe('rat');
+		expect(char.attacks.length).toBe(1);
+		expect(char.minions[0].name).toBe('rat');
 
 
 	});
@@ -45,8 +44,6 @@ describe('Revive Character File', () => {
 		const char2 = ReviveChar(game, JSON.parse(JSON.stringify(char1)));
 		expect(char2).toEqual(char1);
 
-		const char3 = ReviveChar(game, JSON.parse(JSON.stringify(char2)));
-		//expect(char3).toEqual(char2);
 	});
 
 });

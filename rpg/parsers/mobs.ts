@@ -1,7 +1,7 @@
 import { Formula } from 'formulic';
 import { Mob } from 'rpg/char/mobs';
 import { StatusFlag } from 'rpg/char/states';
-import { StatName } from 'rpg/char/stats';
+import { StatKey } from 'rpg/char/stats';
 import { ItemData } from 'rpg/items/types';
 import { ReviveWeapon } from 'rpg/parsers/armor';
 import { ParseValue } from 'rpg/parsers/values';
@@ -32,7 +32,7 @@ export type MobData = {
 	drops?: any;
 	flags?: StatusFlag;
 	team?: Team;
-	stats?: Record<string, StatName>,
+	stats?: Record<string, StatKey>,
 	weap?: any;
 	//attacks: TCombatAction[]
 
