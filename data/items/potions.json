@@ -1,5 +1,6 @@
 [
     {
+        "id": "elfroidbeer",
         "name": "elfroid beer",
         "set": {
             "mp": 1,
@@ -9,25 +10,9 @@
         "level": 0
     },
     {
-        "id": "pot_regen1",
-        "name": "minor regeneration potion",
-        "effect": "minor regeneration",
-        "price": 1,
-        "level": 0
-    },
-    {
         "id": "pot_poison1",
         "name": "minor poison potion",
         "effect": "minor poison",
-        "price": 1,
-        "level": 0
-    },
-    {
-        "id": "pot_mana1",
-        "name": "minor mana potion",
-        "add": {
-            "mp": "1d4+2"
-        },
         "price": 1,
         "level": 0
     },
@@ -74,6 +59,270 @@
         "level": 0
     },
     {
+        "id": "pot_str2",
+        "name": "light str potion",
+        "effect": "light str",
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_con2",
+        "name": "light con potion",
+        "effect": "light con",
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_dex2",
+        "name": "light dex potion",
+        "effect": "light dex",
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_int2",
+        "name": "light int potion",
+        "effect": "light int",
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_wis2",
+        "name": "light wis potion",
+        "effect": "light wis",
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_cha2",
+        "name": "light cha potion",
+        "effect": "light cha",
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_heal1",
+        "name": "potion of cure minor wounds",
+        "add": {
+            "hp": "2~5"
+        },
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_heal2",
+        "name": "potion of cure light wounds",
+        "add": {
+            "hp": "3d8"
+        },
+        "price": 5,
+        "level": 1
+    },
+    {
+        "id": "pot_heal3",
+        "name": "potion of cure moderate wounds",
+        "add": {
+            "hp": "15~35"
+        },
+        "price": 5,
+        "level": 4
+    },
+    {
+        "id": "pot_heal4",
+        "name": "potion of cure serious wounds",
+        "add": {
+            "hp": "35~75"
+        },
+        "price": 25,
+        "level": 7
+    },
+    {
+        "id": "pot_heal5",
+        "name": "potion of cure critical wounds",
+        "add": {
+            "hp": "30~76"
+        },
+        "price": 15,
+        "level": 10
+    },
+    {
+        "id": "pot_heal6",
+        "name": "potion of cure major wounds",
+        "add": {
+            "hp": "50~130"
+        },
+        "price": 100,
+        "level": 15
+    },
+    {
+        "id": "pot_heal7",
+        "name": "potion of cure desperate wounds",
+        "add": {
+            "hp": "75~250"
+        },
+        "price": 300,
+        "level": 25
+    },
+    {
+        "id": "pot_heal8",
+        "name": "potion of cure hopeless wounds",
+        "add": {
+            "hp": "200~430"
+        },
+        "price": 1000,
+        "level": 40
+    },
+    {
+        "id": "pot_mana1",
+        "name": "minor mana potion",
+        "add": {
+            "mp": "1d4+2"
+        },
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_mana2",
+        "name": "light mana potion",
+        "add": {
+            "mp": "8~16"
+        },
+        "price": 3,
+        "level": 1
+    },
+    {
+        "id": "pot_mana3",
+        "name": "simple mana potion",
+        "add": {
+            "mp": "14~25"
+        },
+        "price": 5,
+        "level": 3
+    },
+    {
+        "id": "pot_mana4",
+        "name": "mana potion",
+        "add": {
+            "mp": "20~40"
+        },
+        "price": 15,
+        "level": 5
+    },
+    {
+        "id": "pot_mana5",
+        "name": "greater mana potion",
+        "add": {
+            "mp": "32~64"
+        },
+        "price": 25,
+        "level": 7
+    },
+    {
+        "id": "pot_mana6",
+        "name": "major mana potion",
+        "add": {
+            "mp": "50~100"
+        },
+        "price": 25,
+        "level": 10
+    },
+    {
+        "id": "pot_mana7",
+        "name": "superior mana potion",
+        "add": {
+            "mp": "100~200"
+        },
+        "price": 50,
+        "level": 15
+    },
+    {
+        "id": "pot_mana8",
+        "name": "mana elixir",
+        "add": {
+            "mp": "200~400"
+        },
+        "price": 1000,
+        "level": 20
+    },
+    {
+        "id": "pot_regen1",
+        "name": "minor regeneration potion",
+        "effect": "minor regeneration",
+        "price": 1,
+        "level": 0
+    },
+    {
+        "id": "pot_regen2",
+        "name": "light regeneration potion",
+        "effect": "light regeneration",
+        "price": 5,
+        "level": 1
+    },
+    {
+        "id": "pot_regen3",
+        "name": "potion of regeneration",
+        "effect": "regeneration",
+        "price": 25,
+        "level": 5
+    },
+    {
+        "id": "pot_regen4",
+        "name": "strong regeneration potion",
+        "effect": "strong regeneration",
+        "price": 5,
+        "level": 12
+    },
+    {
+        "id": "pot_regen5",
+        "name": "major regeneration potion",
+        "effect": "major regeneration",
+        "price": 400,
+        "level": 16
+    },
+    {
+        "id": "pot_regen6",
+        "name": "insane regeneration potion",
+        "effect": "insane regeneration",
+        "price": 2000,
+        "level": 22
+    },
+    {
+        "id": "pot_exp1",
+        "name": "minor exp potion",
+        "add": {
+            "exp": 10
+        },
+        "price": 25,
+        "level": 4
+    },
+    {
+        "id": "pot_exp2",
+        "name": "potion of experience",
+        "add": {
+            "exp": 25
+        },
+        "price": 100,
+        "level": 9
+    },
+    {
+        "id": "pot_exp3",
+        "name": "major exp potion",
+        "add": {
+            "exp": 50
+        },
+        "price": 400,
+        "level": 17
+    },
+    {
+        "id": "pot_exp4",
+        "name": "potion of godly experience",
+        "add": {
+            "exp": 1000
+        },
+        "price": 3000,
+        "level": 24
+    },
+    {
         "id": "pot_agony1",
         "name": "potion of minor agony",
         "add": {
@@ -83,88 +332,70 @@
         "level": 2
     },
     {
-        "name": "light regeneration potion",
-        "effect": "light regeneration",
-        "price": 5,
-        "level": 1
-    },
-    {
-        "name": "light mana potion",
+        "id": "pot_agony2",
+        "name": "potion of light agony",
         "add": {
-            "mp": "3d8"
+            "hp": "-3d8"
         },
         "price": 3,
-        "level": 1
+        "level": 2
     },
     {
-        "name": "light str potion",
-        "effect": "light str",
-        "price": 1,
-        "level": 0
-    },
-    {
-        "name": "light con potion",
-        "effect": "light con",
-        "price": 1,
-        "level": 0
-    },
-    {
-        "name": "light dex potion",
-        "effect": "light dex",
-        "price": 1,
-        "level": 0
-    },
-    {
-        "name": "light int potion",
-        "effect": "light int",
-        "price": 1,
-        "level": 0
-    },
-    {
-        "name": "light wis potion",
-        "effect": "light wis",
-        "price": 1,
-        "level": 0
-    },
-    {
-        "name": "light cha potion",
-        "effect": "light cha",
-        "price": 1,
-        "level": 0
-    },
-    {
-        "name": "potion of cure minor wounds",
+        "id": "pot_agony3",
+        "name": "potion of moderate agony",
         "add": {
-            "hp": "2~6"
-        },
-        "price": 1,
-        "level": 0
-    },
-    {
-        "name": "potion of cure light wounds",
-        "add": {
-            "hp": "3d8"
-        },
-        "price": 5,
-        "level": 1
-    },
-    {
-        "name": "potion of cure moderate wounds",
-        "add": {
-            "hp": "15~35"
+            "hp": "-5d5-10"
         },
         "price": 5,
         "level": 3
     },
     {
-        "name": "simple mana potion",
+        "id": "pot_agony4",
+        "name": "potion of serious agony",
         "add": {
-            "mp": "12~20"
+            "hp": "-20~-76"
         },
-        "price": 5,
-        "level": 3
+        "price": 15,
+        "level": 5
     },
     {
+        "id": "pot_agony5",
+        "name": "potion of critical agony",
+        "add": {
+            "hp": "-50~-125"
+        },
+        "price": 25,
+        "level": 7
+    },
+    {
+        "id": "pot_agony6",
+        "name": "potion of major agony",
+        "add": {
+            "hp": "-100~-200"
+        },
+        "price": 100,
+        "level": 10
+    },
+    {
+        "id": "pot_agony7",
+        "name": "potion of desperate agony",
+        "add": {
+            "hp": "-175~-350"
+        },
+        "price": 300,
+        "level": 15
+    },
+    {
+        "id": "pot_agony8",
+        "name": "potion of hopeless agony",
+        "add": {
+            "hp": "-250~-500"
+        },
+        "price": 1000,
+        "level": 20
+    },
+    {
+        "id": "pot_weak1",
         "name": "potion of weakness",
         "dot": {
             "mod": {
@@ -174,197 +405,5 @@
         },
         "price": 15,
         "level": 3
-    },
-    {
-        "name": "potion of light agony",
-        "add": {
-            "hp": "-3d8"
-        },
-        "price": 3,
-        "level": 2
-    },
-    {
-        "name": "potion of moderate agony",
-        "add": {
-            "hp": "-5d5-10"
-        },
-        "price": 5,
-        "level": 3
-    },
-    {
-        "name": "minor exp potion",
-        "add": {
-            "exp": 10
-        },
-        "price": 25,
-        "level": 4
-    },
-    {
-        "name": "potion of regeneration",
-        "effect": "regeneration",
-        "price": 25,
-        "level": 5
-    },
-    {
-        "name": "potion of cure serious wounds",
-        "add": {
-            "hp": "30~76"
-        },
-        "price": 15,
-        "level": 5
-    },
-    {
-        "name": "mana potion",
-        "add": {
-            "mp": "20~40"
-        },
-        "price": 15,
-        "level": 5
-    },
-    {
-        "name": "potion of cure major wounds",
-        "add": {
-            "hp": "35~75"
-        },
-        "price": 25,
-        "level": 7
-    },
-    {
-        "name": "potion of cure critical wounds",
-        "add": {
-            "hp": "50~130"
-        },
-        "price": 100,
-        "level": 10
-    },
-    {
-        "name": "greater mana potion",
-        "add": {
-            "mp": "25~64"
-        },
-        "price": 25,
-        "level": 7
-    },
-    {
-        "name": "potion of experience",
-        "add": {
-            "exp": 25
-        },
-        "price": 100,
-        "level": 9
-    },
-    {
-        "name": "strong regeneration potion",
-        "effect": "strong regeneration",
-        "price": 5,
-        "level": 12
-    },
-    {
-        "name": "major mana potion",
-        "add": {
-            "mp": "30~100"
-        },
-        "price": 25,
-        "level": 10
-    },
-    {
-        "name": "potion of cure desperate wounds",
-        "add": {
-            "hp": "75~250"
-        },
-        "price": 300,
-        "level": 15
-    },
-    {
-        "name": "major regeneration potion",
-        "effect": "major regeneration",
-        "price": 400,
-        "level": 16
-    },
-    {
-        "name": "major exp potion",
-        "add": {
-            "exp": 50
-        },
-        "price": 400,
-        "level": 17
-    },
-    {
-        "name": "superior mana potion",
-        "add": {
-            "mp": "100~200"
-        },
-        "price": 50,
-        "level": 15
-    },
-    {
-        "name": "potion of cure hopeless wounds",
-        "add": {
-            "hp": "110~430"
-        },
-        "price": 1000,
-        "level": 20
-    },
-    {
-        "name": "mana elixir",
-        "add": {
-            "mp": "200~400"
-        },
-        "price": 1000,
-        "level": 20
-    },
-    {
-        "name": "potion of serious agony",
-        "add": {
-            "hp": "-20~-76"
-        },
-        "price": 15,
-        "level": 5
-    },
-    {
-        "name": "potion of major agony",
-        "add": {
-            "hp": "-50~-125"
-        },
-        "price": 25,
-        "level": 7
-    },
-    {
-        "name": "potion of serious agony",
-        "add": {
-            "hp": "-100~-200"
-        },
-        "price": 100,
-        "level": 10
-    },
-    {
-        "name": "potion of desperate agony",
-        "add": {
-            "hp": "-175~-350"
-        },
-        "price": 300,
-        "level": 15
-    },
-    {
-        "name": "potion of hopeless agony",
-        "add": {
-            "hp": "-250~-500"
-        },
-        "price": 1000,
-        "level": 20
-    },
-    {
-        "name": "insane regeneration potion",
-        "effect": "insane regeneration",
-        "price": 2000,
-        "level": 22
-    },
-    {
-        "name": "potion of godly experience",
-        "add": {
-            "exp": 1000
-        },
-        "price": 3000,
-        "level": 24
     }
 ]

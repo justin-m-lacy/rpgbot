@@ -1,4 +1,3 @@
-import { Formula } from 'formulic';
 import { GetDot, ProtoDot } from 'rpg/actions/dots.js';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { Char } from '../char/char';
@@ -41,9 +40,6 @@ export class Potion extends Item implements TStacker {
 	get stack() { return true; }
 
 	count: number = 1;
-
-	_form?: Formula | string;
-
 	dot?: ProtoDot;
 
 	constructor(opts?: ItemData) {
@@ -58,17 +54,7 @@ export class Potion extends Item implements TStacker {
 
 		char.removeN(this);
 
-		if (this._form) {
-
-			if (typeof this._form === 'string') {
-				const f = Formula.TryParse(this._form);
-				if (f !== false) this._form = f;
-			}
-			if (this._form instanceof Formula) {
-				this._form.eval(char);
-			}
-
-		} else if (this.dot) {
+		if (this.dot) {
 
 			if (typeof (this.dot) === 'string') {
 

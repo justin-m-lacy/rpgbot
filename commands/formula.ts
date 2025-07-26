@@ -1,11 +1,5 @@
-import type { ChatCommand } from "@/bot/cmd-wrapper";
-import { CommandData, NewCommand, StrOpt } from "@/bot/command";
-import { PermissionFlagsBits } from "discord.js";
-import { Formula } from "formulic";
-import { SendPrivate } from "rpg/display/display";
-import { Rpg } from "rpg/rpg";
 
-export default NewCommand<Rpg>({
+/*export default NewCommand<Rpg>({
 	cls: Rpg,
 	data: CommandData('formula', 'Test formula')
 		.addStringOption(StrOpt('formula', 'Formula to compute').setRequired(true))
@@ -24,4 +18,4 @@ export default NewCommand<Rpg>({
 		return SendPrivate(m, 'result: ' + res);
 
 	}
-})
+})*/
