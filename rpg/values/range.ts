@@ -124,7 +124,7 @@ export class Range implements IModdable, ISimple {
 	addMod(mod: IMod,) {
 
 		AsModded(this, 'min', this.min)!.addMod(mod);
-		AsModded(this, 'max', this.max)!.addMod(mod);;
+		AsModded(this, 'max', this.max)!.addMod(mod);
 
 	}
 

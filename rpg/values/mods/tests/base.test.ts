@@ -21,20 +21,20 @@ describe('Base mod tests', async () => {
 	it('Apply base mod to Range.', async () => {
 
 		const s = new Range({ min: 2, max: 7 }, 'r');
-		const mod1 = new BaseMod('base', 4);
+		const mod1 = new BaseMod('mod1', 4);
 
 		s.addMod(mod1);
 		expect(s.min.valueOf()).toBe(6);
 		expect(s.max.valueOf()).toBe(11);
 
-		const mod2 = new BaseMod('base', 3);
+		const mod2 = new BaseMod('mod2', 3);
 		s.addMod(mod2);
 		expect(s.min.valueOf()).toBe(9);
 		expect(s.max.valueOf()).toBe(14);
 
 		s.removeMod(mod1);
-		expect(s.min.valueOf()).toBe(2);
-		expect(s.max.valueOf()).toBe(7);
+		expect(s.min.valueOf()).toBe(5);
+		expect(s.max.valueOf()).toBe(10);
 
 
 	});

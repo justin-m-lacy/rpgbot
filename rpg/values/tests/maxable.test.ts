@@ -8,7 +8,7 @@ describe('Maxable tests', async () => {
 		m1.setMax(14);
 		m1.value = 10;
 
-		const m2 = new Maxable('m2');
+		const m2 = new Maxable('m1');
 		m2.setTo(JSON.parse(JSON.stringify(m1)));
 
 		expect(m2).toEqual(m1);
