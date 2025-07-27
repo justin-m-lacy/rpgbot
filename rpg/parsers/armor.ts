@@ -65,10 +65,6 @@ export const ReviveWearable = (json: any) => {
 		}
 	);
 
-	if (json.mods) {
-		w.mods = ParseMods(json.mods, w.id);
-	}
-
 	Item.SetProtoData(json, w);
 	return w;
 

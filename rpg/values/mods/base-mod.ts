@@ -9,10 +9,11 @@ export class BaseMod implements IMod {
 
   readonly [SymMod] = true;
 
-  [Symbol.toPrimitive]() {
+  valueOf() {
     return this.value;
   }
 
+  // todo: if baseMod is modded, this value becomes wrong.
   toJSON() { return this.value; }
 
   toString() {

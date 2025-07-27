@@ -33,8 +33,6 @@ describe('Game Weapons', async () => {
 		const mat = GetMaterial('bone');
 		const w1 = Weapon.FromProto(proto, mat);
 
-		console.dir(JSON.stringify(w1));
-
 		expect(w1.name.toLowerCase()).toBe('bone short sword');
 
 		const data = JSON.stringify(w1);

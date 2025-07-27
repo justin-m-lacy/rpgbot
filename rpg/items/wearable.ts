@@ -6,6 +6,7 @@ import { IMod } from 'rpg/values/imod';
 import { ApplyMods } from 'rpg/values/modding';
 import { BaseMod } from 'rpg/values/mods/base-mod';
 import { Path } from 'rpg/values/paths';
+import { Numeric } from 'rpg/values/types';
 import { Item, } from './item';
 import { Material } from './material';
 
@@ -51,8 +52,8 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 	/**
 	 * @property armor - armor added. replace with defense?
 	 */
-	get armor() { return this._armor.value; }
-	set armor(v) { this._armor.value = v < 0 ? 0 : v }
+	get armor() { return this._armor; }
+	set armor(v: Numeric) { this._armor.value = Math.max(0, v.valueOf()) }
 
 	/**
 	 * From template data.
@@ -129,7 +130,6 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 
 		this.mods = ParseMods(opts.proto?.mods ?? {}, this.id, 1);
 		this.mods.armor = this._armor;
-
 
 		if (!skipInit && this.material?.alter) {
 			ApplyMods(this, this.material.alter);

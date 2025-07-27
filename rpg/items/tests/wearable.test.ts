@@ -34,7 +34,7 @@ describe('Game Armor', async () => {
 		const data = JSON.stringify(w1);
 		const w2 = ReviveWearable(JSON.parse(data));
 
-		expect(w1).toEqual(w2);
+		expect(w2).toEqual(w1);
 
 	});
 
