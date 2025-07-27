@@ -4,7 +4,6 @@ import { IsSimple, IsValue, type Numeric, type TValue } from "rpg/values/types";
 
 export const SetValues = (targ: any & object, apply: Path<TValue>) => {
 
-
 	for (const k in apply) {
 
 		const subVal = apply[k];

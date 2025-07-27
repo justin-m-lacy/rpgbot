@@ -53,6 +53,8 @@ export class Shop<T extends Item = Item> extends Feature {
 
 		this.inv = new Inventory({ id: this.id });
 
+		this.type = ItemType.Shop;
+
 	}
 
 	/**

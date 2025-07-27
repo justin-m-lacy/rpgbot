@@ -90,14 +90,12 @@
 			"name": "Armor Shop",
 			"desc": "armor Shop",
 			"type": "shop",
-			"price": 0,
 			"kind": "armor",
 			"inv": {
 				"id": "3d0ed97f-7313-4158-8629-a7758ee3bf46",
 				"name": "3d0ed97f-7313-4158-8629-a7758ee3bf46",
 				"desc": "",
-				"type": "unknown",
-				"price": 0
+				"type": "unknown"
 			}
 		}
 	]

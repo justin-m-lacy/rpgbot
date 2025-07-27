@@ -33,7 +33,6 @@ export class Simple implements ISimple, IModdable {
 	set base(v) {
 		this._base = v;
 		this.recalc();
-
 	}
 
 	setTo(v: Numeric) {

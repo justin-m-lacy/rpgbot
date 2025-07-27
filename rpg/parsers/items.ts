@@ -1,5 +1,6 @@
 import { GetAction } from "rpg/actions/action.js";
 import { GetTypeGenerator } from "rpg/builders/itemgen";
+import { Inventory } from "rpg/inventory";
 import { Chest } from "rpg/items/chest";
 import { Grave } from "rpg/items/grave";
 import { Grimoire } from "rpg/items/grimoire";
@@ -58,6 +59,8 @@ function ReviveShop(json: any): Shop {
 		level: json.level, desc: json.desc,
 		genItem: GetTypeGenerator(json.kind)
 	});
+
+	Inventory.Revive(json.inv, ReviveItem, shop.inv);
 
 	ReviveFeature(json, shop);
 

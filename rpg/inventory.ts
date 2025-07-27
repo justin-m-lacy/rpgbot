@@ -244,8 +244,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 			const it = this.items[i];
 			if (!it) continue;
-			if (it.id === lower) return this.items[i];
-			else if (it.name?.toLowerCase() === lower) return this.items[i];
+			if (it.id === lower || it.name?.toLowerCase() === lower) return this.items[i];
 
 		}
 		return null;
