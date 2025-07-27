@@ -182,6 +182,7 @@
         }
     },
     {
+        "id": "garden_gnome",
         "name": "garden gnome",
         "level": 0.75,
         "desc": "Standard variety garden gnome.",
@@ -351,6 +352,7 @@
         }
     },
     {
+        "id": "hobslinger",
         "name": "hobbit slinger",
         "level": 1,
         "biome": [
@@ -372,6 +374,7 @@
         }
     },
     {
+        "id": "direbat",
         "name": "dire bat",
         "level": 1,
         "kind": "magic beast",
@@ -387,6 +390,7 @@
         }
     },
     {
+        "id": "direbat",
         "name": "dire rat",
         "level": 1,
         "kind": "magic beast",
@@ -480,6 +484,7 @@
         }
     },
     {
+        "id": "breunor",
         "name": "bre'unor",
         "level": 2,
         "kind": "humanoid",
@@ -535,7 +540,7 @@
         "desc": "",
         "evil": 7,
         "team": "goblin",
-        "hp": "3d4+4",
+        "hp": "3d4+7",
         "armor": 17,
         "tohit": 2,
         "weap": {
@@ -548,6 +553,7 @@
         }
     },
     {
+        "id": "centipede",
         "name": "giant centipede",
         "level": 2,
         "desc": "creepy crawly",
@@ -557,6 +563,20 @@
             "name": "sting",
             "kind": "pierce",
             "dmg": "1d6+1"
+        }
+    },
+    {
+        "name": "wolf",
+        "level": 2,
+        "kind": "beast",
+        "desc": "",
+        "hp": "8~16",
+        "armor": 12,
+        "tohit": 2,
+        "weap": {
+            "name": "bite",
+            "kind": "pierce",
+            "dmg": "2d4+1"
         }
     },
     {
@@ -572,19 +592,6 @@
             "name": "claws",
             "kind": "slash",
             "dmg": "1d6+1"
-        }
-    },
-    {
-        "name": "wolf",
-        "level": 2,
-        "kind": "beast",
-        "desc": "",
-        "hp": "2d6+2",
-        "armor": 12,
-        "weap": {
-            "name": "bite",
-            "kind": "pierce",
-            "dmg": "2d4+1"
         }
     },
     {
@@ -664,6 +671,7 @@
         }
     },
     {
+        "id": "mech_swordsman",
         "name": "mechanical swordsman",
         "level": 3,
         "kind": "construct",
@@ -738,7 +746,7 @@
         "weap": {
             "name": "claws",
             "kind": "slash",
-            "dmg": "1d6+2"
+            "dmg": "4~9"
         },
         "drops": {
             "sulfur dust": 5,
@@ -747,17 +755,18 @@
         }
     },
     {
+        "id": "spider_1",
         "name": "giant spider",
         "level": 3,
         "kind": "arachnid",
         "evil": 1,
         "desc": "You can't tell if she looks hungry.",
-        "hp": "3d6",
-        "armor": 15,
+        "hp": "15~30",
+        "armor": 16,
         "weap": {
             "name": "bite",
             "kind": "pierce",
-            "dmg": "1d6+3"
+            "dmg": "5~10"
         },
         "biome": [
             "swamp",
@@ -891,6 +900,7 @@
         }
     },
     {
+        "id": "giantsnake",
         "name": "giant snake",
         "level": 4,
         "kind": "beast",
@@ -905,6 +915,7 @@
         }
     },
     {
+        "id": "evilpriest",
         "name": "evil priest",
         "level": 4,
         "kind": "humanoid",
@@ -974,6 +985,7 @@
         }
     },
     {
+        "id": "claygolem",
         "name": "clay golem",
         "level": 5,
         "kind": "construct",
@@ -1078,6 +1090,7 @@
         }
     },
     {
+        "id": "invis_stalker",
         "name": "invisible stalker",
         "level": 5,
         "evil": 13,
@@ -1107,6 +1120,7 @@
         }
     },
     {
+        "id": "heronguard",
         "name": "heron guard",
         "level": 7,
         "kind": "humanoid",

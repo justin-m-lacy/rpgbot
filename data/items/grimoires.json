@@ -7,6 +7,7 @@
 		"spells": [
 			"barkskin1",
 			"venom1",
+			"summonrat",
 			"flyswarm",
 			"whirlstep1",
 			"resistpoison1",
@@ -16,7 +17,7 @@
 	{
 		"id": "wiz_tome_1",
 		"name": "Cantrips",
-		"desc": "A verbose manual of magic.",
+		"desc": "A verbose manual of magic principles.",
 		"kind": "arcane",
 		"spells": [
 			"mana1",
@@ -25,6 +26,15 @@
 			"phase",
 			"resistfire1",
 			"firebolt1"
+		]
+	},
+	{
+		"id": "summons_1",
+		"name": "Book of Summons",
+		"desc": "A sturdy, illuminated tome.",
+		"kind": "planes",
+		"spells": [
+			"summonrat"
 		]
 	}
 ]

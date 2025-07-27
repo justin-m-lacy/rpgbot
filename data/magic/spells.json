@@ -13,6 +13,97 @@
         ]
     },
     {
+        "id": "summonskeleton",
+        "name": "Summon Skeleton",
+        "school": "dark",
+        "level": 2,
+        "target": "none",
+        "cost": {
+            "mp": 8
+        },
+        "summon": [
+            "skeleton"
+        ]
+    },
+    {
+        "id": "summondirerat",
+        "name": "Summon Dire Rat",
+        "school": "wild",
+        "level": 2,
+        "target": "none",
+        "cost": {
+            "mp": 8
+        },
+        "summon": [
+            "direrat"
+        ]
+    },
+    {
+        "id": "summonspider_1",
+        "name": "Summon Giant Spider",
+        "school": "wild",
+        "level": 5,
+        "target": "none",
+        "cost": {
+            "mp": 8
+        },
+        "summon": [
+            "spider_1"
+        ]
+    },
+    {
+        "id": "summonslime",
+        "name": "Summon Slime",
+        "school": "arcane",
+        "level": 3,
+        "target": "none",
+        "cost": {
+            "mp": 8
+        },
+        "summon": [
+            "slime"
+        ]
+    },
+    {
+        "id": "summonhobgoblin",
+        "name": "Summon Hobgoblin",
+        "school": "arcane",
+        "level": 4,
+        "target": "none",
+        "cost": {
+            "mp": 12
+        },
+        "summon": [
+            "hobgoblin"
+        ]
+    },
+    {
+        "id": "summoncentipede",
+        "name": "Summon Giant Centipede",
+        "school": "wild",
+        "level": 4,
+        "target": "none",
+        "cost": {
+            "mp": 12
+        },
+        "summon": [
+            "centipede"
+        ]
+    },
+    {
+        "id": "summonwolf",
+        "name": "Summon Wolf",
+        "school": "wild",
+        "level": 4,
+        "target": "none",
+        "cost": {
+            "mp": 12
+        },
+        "summon": [
+            "wolf"
+        ]
+    },
+    {
         "id": "darkbolt",
         "name": "dark bolt",
         "level": 2,
