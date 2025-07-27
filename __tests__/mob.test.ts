@@ -5,7 +5,7 @@ describe('Mob tests', async () => {
 
 	test('Revive Mob from JSON', async () => {
 
-		const mob = ReviveMob(Kobold);
+		const mob = ReviveMob(Kobold)!;
 
 		expect(mob.proto?.id).toBe('kobold');
 		expect(mob.name).toBe('kobold');

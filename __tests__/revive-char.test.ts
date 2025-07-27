@@ -24,6 +24,12 @@ describe('Revive Character File', () => {
 		// Assertions
 		expect(char.name).toBe('joetest');
 
+		expect(char.mp.value).toBe(3);
+
+		expect(char.hp.value).toBe(4);
+		expect(char.hp.max.value).toBe(14);
+
+
 		const weap = char.getEquip('right') as Weapon;
 
 		expect(weap).toBeTypeOf('object');

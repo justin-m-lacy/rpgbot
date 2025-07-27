@@ -33,6 +33,29 @@ export const ReviveChar = (game: Game, json: {
 
 	// legacy stat save.
 	const oldStats = json.stats;
+
+	const hp = json.hp ?? oldStats?.hp;
+	if (hp) {
+		char.hp.setTo(hp);
+	}
+	const mp = json.mp ?? oldStats?.mp;
+	if (mp) {
+		char.mp.setTo(mp);
+	}
+	if (json.level ?? oldStats?.level) {
+		char.level.setTo(json.level ?? oldStats.level)
+	}
+	const dr = json.dr ?? oldStats?.dr;
+	if (dr) {
+		char.dr.setTo(dr);
+	}
+	if (json.age ?? oldStats?.age) {
+		char.age.setTo(json.age ?? oldStats.age)
+	}
+	if (json.gold ?? oldStats?.gold) {
+		char.gold = json.gold ?? oldStats.gold;
+	}
+
 	for (const id in char.stats) {
 
 		const data = json[id] ?? oldStats?.[id];

@@ -78,9 +78,6 @@ export class Wearable<T extends RawWearableData = RawWearableData> extends Item 
 		json.proto = this.proto?.id;
 		json.mat = this.material?.id;
 
-		if (this.id === "75a37fe2-fdb6-42f6-af29-1c85c88b66bd") {
-			console.log(`encode proto: ${this.proto?.id} mat: ${this.material?.id}`)
-		}
 		json.armor = this._armor;
 		if (this.slot && this.slot != this.proto?.slot) {
 			json.slot = this.slot;

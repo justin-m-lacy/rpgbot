@@ -1,8 +1,16 @@
 [
 	{
-		"id": "phy",
-		"name": "Physique",
+		"id": "str",
+		"name": "Strength",
 		"desc": "Physical power.",
+		"mod": {
+			"hp": 1
+		}
+	},
+	{
+		"id": "con",
+		"name": "Constitution",
+		"desc": "Durability.",
 		"mod": {
 			"hp": 1
 		}
@@ -13,7 +21,7 @@
 		"desc": ""
 	},
 	{
-		"id": "Wisdom",
+		"id": "wis",
 		"name": "Wisdom",
 		"desc": "Insight and discretion."
 	},

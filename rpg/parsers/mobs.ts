@@ -1,7 +1,7 @@
 import { Formula } from 'formulic';
 import { Mob } from 'rpg/char/mobs';
+import { StatKey } from 'rpg/char/stat';
 import { StatusFlag } from 'rpg/char/states';
-import { StatKey } from 'rpg/char/stats';
 import { ItemData } from 'rpg/items/types';
 import { ReviveWeapon } from 'rpg/parsers/armor';
 import { ParseValue } from 'rpg/parsers/values';

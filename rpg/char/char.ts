@@ -11,7 +11,6 @@ import { Log } from '../display/log';
 import { Inventory } from '../inventory';
 import { Item, TStacker } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
-import { roll } from '../values/dice';
 import { Coord } from '../world/coord';
 import { Actor } from './actor';
 import { Equip } from './equip';
@@ -198,11 +197,9 @@ export class Char extends Actor {
 
 	private applyEquip(it: Wearable) {
 
-		console.log(`chararmor: ${this.armor.valueOf()}  ${it.name} armor: ${it.armor}`)
 		if (it.mods) {
 			ApplyMods(this, it.mods);
 		}
-		console.log(`newchararmor: ${this.armor.valueOf()}`);
 		if (it instanceof Weapon) {
 			this.attacks.push(it);
 		}
@@ -294,18 +291,6 @@ export class Char extends Actor {
 	}
 
 	removeRange(start: ItemIndex, end: ItemIndex) { return this.inv.takeRange(start, end); }
-
-	/**
-	 * reroll hp.
-	*/
-	rollBaseHp() {
-
-		const maxHp = Math.floor((this.race.HD + this.gclass!.HD) / 2) +
-			roll(this.level.value - 1, this.gclass!.HD);
-
-		this.hp.max.value = maxHp;
-
-	}
 
 	getTalents() {
 

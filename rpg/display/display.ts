@@ -1,7 +1,7 @@
 import { type ChatCommand } from "@/bot/cmd-wrapper";
 import { EmbedBuilder, MessageFlags, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
-import { StatIds, type StatKey } from "rpg/char/stats";
+import { StatIds, type StatKey } from "rpg/char/stat";
 import { getEvil } from "rpg/display/char";
 import { smallNum } from "rpg/util/format";
 import { Char } from '../char/char';

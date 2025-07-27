@@ -16,6 +16,7 @@ export class Maxable implements ISimple, IModdable {
 
 	/**
 	 * Decode stored value.
+	 * New: just use "setTo" maybe new system though?
 	 * @param data 
 	 */
 	/*revive(data: any) {
@@ -63,12 +64,12 @@ export class Maxable implements ISimple, IModdable {
 	setTo(v: Numeric | { v: number, m: number }) {
 
 		if (typeof v === 'number') {
-			this.value = this.max.value = v;
+			this._value = this.max.value = v;
 		} else if (IsValue(v)) {
-			this.value = this.max.value = v.valueOf();
+			this._value = this.max.value = v.valueOf();
 		} else {
-			this.value = v.v;
 			this.max.value = v.m;
+			this._value = v.v;
 		}
 
 	}

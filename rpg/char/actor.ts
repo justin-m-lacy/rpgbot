@@ -29,6 +29,12 @@ export class Actor {
 	toJSON() {
 
 		const data: Record<string, any> = {
+			hp: this.hp,
+			mp: this.mp,
+			dr: this.dr,
+			level: this.level,
+			age: this.age,
+
 			name: this.name,
 			teams: this.teams,
 			race: this.race?.id,
@@ -97,7 +103,7 @@ export class Actor {
 	set con(v: Numeric) {
 
 		this.stats.con?.setTo(v);
-		this.computeHp();
+		//this.computeHp();
 
 	}
 

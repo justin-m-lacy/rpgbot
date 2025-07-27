@@ -128,8 +128,7 @@
 				"name": "potion of cure moderate wounds",
 				"desc": "",
 				"type": "potion",
-				"price": 5,
-				"form": "hp=hp+5d5+10"
+				"price": 5
 			},
 			{
 				"id": "a77fee12-6ba6-49cf-a6f1-b4e30792e6b5",
@@ -164,10 +163,10 @@
 	},
 	"dots": [],
 	"hp": {
-		"v": -4.422009288079437,
+		"v": 4,
 		"m": 14
 	},
-	"mp": 0,
+	"mp": 3,
 	"level": 200,
 	"armor": 0,
 	"str": 7,
