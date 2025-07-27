@@ -4,7 +4,7 @@ import { Mob, TActor } from "rpg/char/mobs";
 import { ActionFlags, TNpcAction } from "rpg/combat/types";
 import { AttackInfo } from "rpg/events";
 import { Game } from "rpg/game";
-import { ItemPicker } from "rpg/inventory";
+import { ItemPicker } from "rpg/items/inventory.js";
 import { Item } from "rpg/items/item";
 import { GenMob } from "rpg/parsers/mobs";
 import { PossPronoun } from "rpg/social/gender";

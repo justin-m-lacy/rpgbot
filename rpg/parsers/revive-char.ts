@@ -3,7 +3,7 @@ import { Char } from 'rpg/char/char';
 import { Equip } from 'rpg/char/equip';
 import { CharState, StatusFlag } from 'rpg/char/states';
 import { Game } from 'rpg/game';
-import { Inventory } from 'rpg/inventory';
+import { Inventory } from 'rpg/items/inventory';
 import { HumanSlot, HumanSlots, Wearable } from 'rpg/items/wearable';
 import { ReviveItem } from 'rpg/parsers/items';
 import { ReviveMob } from 'rpg/parsers/mobs';

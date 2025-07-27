@@ -3,7 +3,7 @@ import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { Mob } from 'rpg/char/mobs';
 import { Loot } from 'rpg/combat/loot';
-import { Inventory } from 'rpg/inventory';
+import { Inventory } from 'rpg/items/inventory.js';
 import { Item } from 'rpg/items/item';
 import { LoadMaterials } from 'rpg/items/material';
 import { ItemData, ItemType } from 'rpg/items/types';

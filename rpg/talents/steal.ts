@@ -1,6 +1,6 @@
 import type { Char } from 'rpg/char/char';
 import { type Game } from 'rpg/game';
-import { ItemPicker } from 'rpg/inventory';
+import { ItemPicker } from 'rpg/items/inventory.js';
 
 export const Steal = {
 

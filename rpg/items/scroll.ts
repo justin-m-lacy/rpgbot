@@ -8,7 +8,7 @@ import { ItemType } from './types';
 
 export class Scroll extends Item implements TNpcAction {
 
-	static Decode(json: any) {
+	static Revive(json: any) {
 
 		const s = new Scroll(json.id, GetSpell(json.spell));
 

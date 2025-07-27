@@ -3,7 +3,7 @@ import type { ItemIndex } from 'rpg/items/container';
 import { GenArmor } from 'rpg/parsers/armor';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Char } from "./char/char";
-import { ItemPicker } from './inventory';
+import { ItemPicker } from './items/inventory.js';
 import { Item } from './items/item';
 import { Wearable, toSlot } from './items/wearable';
 

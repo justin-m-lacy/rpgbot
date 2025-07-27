@@ -1,7 +1,7 @@
 import { ReviveItem } from 'rpg/parsers/items';
 import { ICache } from 'rpg/util/icache';
 import { Char } from '../char/char';
-import { Inventory } from '../inventory';
+import { Inventory } from '../items/inventory.js';
 import { Coord } from '../world/coord';
 import { SocialGroup } from './social-group';
 

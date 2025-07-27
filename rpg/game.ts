@@ -26,7 +26,7 @@ import { TCoord } from 'rpg/world/coord';
 import { Shop } from 'rpg/world/shop';
 import { Char } from './char/char';
 import { Mob, TActor } from './char/mobs';
-import { ItemPicker } from './inventory';
+import { ItemPicker } from './items/inventory.js';
 import { Item } from './items/item';
 import { Potion } from './items/potion';
 import { GuildManager } from './social/guild';

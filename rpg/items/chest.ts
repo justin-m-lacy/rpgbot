@@ -3,7 +3,7 @@ import { ItemMenu } from 'rpg/display/items';
 import type { ItemIndex } from 'rpg/items/container';
 import { ItemType } from 'rpg/items/types';
 import { ReviveItem } from 'rpg/parsers/items';
-import { Inventory, SymInventory, type IInventory } from '../inventory';
+import { Inventory, SymInventory, type IInventory } from './inventory.js';
 import { Item } from "./item";
 
 /**

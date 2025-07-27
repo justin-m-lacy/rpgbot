@@ -7,7 +7,7 @@ import { IsInt } from "rpg/util/parse";
 import { Coord } from "rpg/world/coord";
 import { Char } from '../char/char';
 import { Mob } from '../char/mobs';
-import { Inventory } from '../inventory';
+import { Inventory } from '../items/inventory.js';
 import { Item } from "../items/item";
 import { Feature } from './feature';
 

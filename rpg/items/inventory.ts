@@ -1,8 +1,8 @@
 import { ItemInfo } from 'rpg/items/types';
 import { IsInt } from 'rpg/util/parse';
 import { Simple } from 'rpg/values/simple';
-import { type ItemIndex } from './items/container';
-import { IsStack, Item, TStacker } from './items/item';
+import { type ItemIndex } from './container.js';
+import { IsStack, Item, TStacker } from './item.js';
 
 export type ItemPicker<T = Item> = ItemIndex | T;
 
@@ -43,7 +43,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 		reviver: (data: any) => I | null | undefined,
 		inv?: Inventory<I>) {
 
-		inv ??= new Inventory<I>();
+		inv ??= new Inventory<I>({ id: json.id });
 
 		const arr = json.items;
 		if (arr && Array.isArray(arr)) {

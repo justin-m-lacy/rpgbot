@@ -102,7 +102,7 @@ export class Item {
 
 		this.id = info?.id ?? randomUUID();
 		this.name = info?.name ?? this.id;
-		this.type = info?.type ?? ItemType.Unknown;
+		this.type = info?.type ?? ItemType.Item;
 		this.desc = info?.desc ?? '';
 
 	}

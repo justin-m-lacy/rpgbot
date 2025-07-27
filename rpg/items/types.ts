@@ -36,5 +36,7 @@ export enum ItemType {
 	Chest = 'chest',
 	Feature = 'feature',
 	Grave = 'grave',
+	// general item.
+	Item = 'item',
 	Unknown = 'unknown'
 }

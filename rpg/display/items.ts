@@ -1,4 +1,4 @@
-import { Inventory } from "rpg/inventory";
+import { Inventory } from "rpg/items/inventory.js";
 import { Item } from "rpg/items/item";
 
 /**

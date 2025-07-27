@@ -8,7 +8,7 @@ import { SexType } from 'rpg/social/gender';
 import { smallNum } from 'rpg/util/format';
 import { ApplyMods, RemoveMods } from 'rpg/values/modding';
 import { Log } from '../display/log';
-import { Inventory } from '../inventory';
+import { Inventory } from '../items/inventory.js';
 import { Item, TStacker } from '../items/item';
 import { HumanSlot, Wearable } from '../items/wearable';
 import { Coord } from '../world/coord';

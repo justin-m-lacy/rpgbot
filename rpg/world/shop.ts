@@ -1,6 +1,6 @@
 import { Char } from "rpg/char/char";
-import { Inventory } from "rpg/inventory";
 import { ItemIndex } from "rpg/items/container";
+import { Inventory } from "rpg/items/inventory.js";
 import { Item } from "rpg/items/item";
 import { ItemData, ItemInfo, ItemType } from "rpg/items/types";
 import { GetTradeMod, PayOrFail } from "rpg/trade";

@@ -3,7 +3,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import type { Char } from "rpg/char/char";
 import type { Mob } from "rpg/char/mobs";
 import type { Game } from "rpg/game";
-import type { Inventory } from "rpg/inventory";
+import type { Inventory } from "rpg/items/inventory.js";
 import type { Item } from "rpg/items/item";
 import { Wearable } from "rpg/items/wearable";
 import { Loc } from "rpg/world/loc";

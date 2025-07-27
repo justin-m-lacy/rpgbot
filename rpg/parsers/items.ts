@@ -1,9 +1,9 @@
 import { GetAction } from "rpg/actions/action.js";
 import { GetTypeGenerator } from "rpg/builders/itemgen";
-import { Inventory } from "rpg/inventory";
 import { Chest } from "rpg/items/chest";
 import { Grave } from "rpg/items/grave";
 import { Grimoire } from "rpg/items/grimoire";
+import { Inventory } from "rpg/items/inventory.js";
 import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
 import { ItemData, ItemType } from "rpg/items/types";

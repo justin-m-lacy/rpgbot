@@ -1,5 +1,5 @@
 import { Spell } from "rpg/actions/spell.js";
-import { Inventory } from "rpg/inventory";
+import { Inventory } from "rpg/items/inventory.js";
 import { GetSpell } from "rpg/parsers/spells";
 import { SymDecode } from "rpg/values/types";
 
