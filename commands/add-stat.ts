@@ -1,11 +1,10 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { CustomButton } from "@/bot/command-map";
 import { ButtonStyle } from "discord.js";
-import { StatBlock, StatIds } from "rpg/char/stats";
+import { StatIds } from "rpg/char/stat";
 import { ToActionRows } from "rpg/components";
 import { SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
-import { Simple } from "rpg/values/simple";
 import { ChatCommand } from '../src/bot/cmd-wrapper';
 
 export default NewCommand<Rpg>(
@@ -46,7 +45,7 @@ export default NewCommand<Rpg>(
 			}
 
 			if (char.addStat(stat)) {
-				const val = char.stats[stat as keyof StatBlock] as Simple;
+				const val = char.stats[stat]!;
 				return SendPrivate(m, `${stat} increased. (` +
 					((val.value == val.base) ? (val.value) : (`${val.value}/${val.base}`)) + ')');
 			} else {

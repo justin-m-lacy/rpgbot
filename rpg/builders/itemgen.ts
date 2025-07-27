@@ -1,6 +1,8 @@
 import { randomUUID } from 'crypto';
 import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
+import { Mob } from 'rpg/char/mobs';
+import { Loot } from 'rpg/combat/loot';
 import { Inventory } from 'rpg/inventory';
 import { Item } from 'rpg/items/item';
 import { LoadMaterials } from 'rpg/items/material';
@@ -11,8 +13,6 @@ import { LvlPotion } from 'rpg/parsers/potions';
 import { LvlScroll } from 'rpg/parsers/scrolls';
 import { GenWeapon } from 'rpg/parsers/weapon';
 import { Uppercase } from 'rpg/util/string';
-import { Mob } from '../char/mobs';
-import { Loot } from '../combat/loot';
 
 
 export type RawChestsData = (typeof import('data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" };
@@ -187,7 +187,7 @@ export const GenJunkItem = () => {
 
 	const it = JunkItems[Math.floor(JunkItems.length * Math.random())];
 
-	const data = Object.create(it);
+	const data = Object.create(it ?? null);
 	data.id = randomUUID();
 
 	return ReviveItem(data);

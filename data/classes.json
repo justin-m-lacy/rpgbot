@@ -39,7 +39,7 @@
 		}
 	},
 	{
-		"id": "fighter",
+		"id": "warrior",
 		"hitdie": 10,
 		"desc": "",
 		"talents": [

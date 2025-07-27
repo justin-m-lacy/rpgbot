@@ -31,9 +31,11 @@ export const ReviveChar = (game: Game, json: {
 	char.exp = Math.floor(json.exp) || 0;
 	char.guild = json.guild;
 
+	// legacy stat save.
+	const oldStats = json.stats;
 	for (const id in char.stats) {
 
-		const data = json[id];
+		const data = json[id] ?? oldStats?.[id];
 		if (data && typeof data == 'number') {
 			char.stats[id]?.setTo(data);
 

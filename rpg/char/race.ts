@@ -13,7 +13,7 @@ export class Race {
 	desc?: string;
 
 	/**
-	 * Initial values for char. Not mods but
+	 * Initial values for char. Not stat mods but
 	 * permanent changes like starting gold.
 	 */
 	private createVals: Path<TValue> = NewPath('creates');

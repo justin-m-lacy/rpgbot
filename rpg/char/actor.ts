@@ -214,7 +214,7 @@ export class Actor {
 
 
 	statRoll(...stats: string[]) {
-		let v = 1 + 4 * Math.random() * (this.stats.level.value);
+		let v = 1 + 4 * Math.random() * (this.level.value);
 		for (let s of stats) {
 			v += this.getModifier(s);
 		}
@@ -245,7 +245,7 @@ export class Actor {
 
 		const hp =
 			Math.max(1,
-				this.hp.max.value + this.stats.level.value * this.getModifier('con'));
+				this.hp.max.value + this.level.value * this.getModifier('con'));
 		this.hp.max.value = hp;
 
 	}
