@@ -1,12 +1,12 @@
-import { TestRequire, type RawIf, type TRequire } from 'rpg/actions/requires.js';
-import { ParseResult, type RawResult, type Result } from 'rpg/actions/results.js';
 import { TActor } from 'rpg/char/mobs';
+import { TestRequire, type RawIf, type TRequire } from 'rpg/effects/requires.js';
+import { ParseResult, type RawResult, type Result } from 'rpg/effects/results.js';
 import { Char } from '../char/char.js';
 
 
-const actions: Record<string, Action> = {};
+const actions: Record<string, Effect> = {};
 
-export class Action {
+export class Effect {
 
 	toJSON() { return this; }
 
@@ -82,7 +82,7 @@ const ParseAction = (data: RawAction) => {
 
 	if (!data.id) return undefined;
 
-	const a = new Action(data.id, data.name);
+	const a = new Effect(data.id, data.name);
 
 	if (data.result) {
 		a.result.push(...data.result.map(ParseResult<Char>));
@@ -94,7 +94,7 @@ const ParseAction = (data: RawAction) => {
 
 export const LoadActions = async () => {
 
-	const data = (await import('data/magic/actions.json', { assert: { type: 'json' } })).default;
+	const data = (await import('data/magic/effects.json', { assert: { type: 'json' } })).default;
 
 	let k: keyof typeof data;
 	for (k in data) {

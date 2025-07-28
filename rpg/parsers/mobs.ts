@@ -13,6 +13,7 @@ import { Numeric } from '../values/types';
 type RawMobData = ItemData & any & {
 	team: typeof Team[number],
 	weap?: any;
+	ondie?: any;
 };
 
 export type MobData = {
@@ -34,6 +35,8 @@ export type MobData = {
 	team?: Team;
 	stats?: Record<string, StatKey>,
 	weap?: any;
+	onDie?: any;
+
 	//attacks: TCombatAction[]
 
 }
@@ -116,6 +119,10 @@ const parseTemplate = (data: RawMobData) => {
 		data.id ??= data.name;
 	} else if (data.id) {
 		data.name ??= data.id;
+	}
+
+	if (data.ondie) {
+		data.onDie = 
 	}
 
 	(data as MobData).team = CalcFaction(data);

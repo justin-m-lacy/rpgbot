@@ -1,8 +1,8 @@
-import { LoadActions } from 'rpg/actions/action.js';
-import { LoadDotTypes } from 'rpg/actions/dots.js';
 import { InitFeatures } from 'rpg/builders/features';
 import { InitItems } from 'rpg/builders/itemgen';
 import { LoadStats } from 'rpg/char/stat';
+import { LoadDotTypes } from 'rpg/effects/dots.js';
+import { LoadActions } from 'rpg/effects/effect.js';
 import { InitArmors } from 'rpg/parsers/armor';
 import { InitClasses, InitRaces } from 'rpg/parsers/parse-class';
 import { InitPotions } from 'rpg/parsers/potions';

@@ -1,7 +1,7 @@
-import { Spell } from "rpg/actions/spell.js";
 import { Char } from "rpg/char/char";
 import { Mob, TActor } from "rpg/char/mobs";
 import { ActionFlags, TNpcAction } from "rpg/combat/types";
+import { Spell } from "rpg/effects/spell.js";
 import { AttackInfo } from "rpg/events";
 import { Game } from "rpg/game";
 import { ItemPicker } from "rpg/items/inventory.js";
@@ -30,8 +30,8 @@ export class Combat {
 	 * Exp for killing target.
 	 * @param lvl
 	 */
-	npcExp(lvl: number) { return Math.floor(10 * Math.pow(1.3, lvl)) };
-	pvpExp(lvl: number) { return Math.floor(10 * Math.pow(1.2, lvl / 2)) };
+	npcExp(lvl: number) { return Math.floor(8 * Math.pow(1.3, lvl)) };
+	pvpExp(lvl: number) { return Math.floor(8 * Math.pow(1.2, lvl / 2)) };
 
 	/**
 	 * Test if one character can see a hiding character.

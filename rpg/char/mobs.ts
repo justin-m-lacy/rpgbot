@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
-import { Dot, ProtoDot } from 'rpg/actions/dots.js';
 import { CharFlags, StatusFlag } from 'rpg/char/states';
 import { TNpcAction } from 'rpg/combat/types';
 import { getEvil } from 'rpg/display/char';
+import { Dot, ProtoDot } from 'rpg/effects/dots.js';
 import { type MobData } from 'rpg/parsers/mobs';
 import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
@@ -58,6 +58,8 @@ export class Mob {
 	get desc() { return this.proto?.desc ?? '' }
 
 	isAlive() { return !this.flags.has(StatusFlag.dead) }
+
+	ondie() { return this.proto?.onDie }
 
 	readonly flags: CharFlags = new CharFlags();
 

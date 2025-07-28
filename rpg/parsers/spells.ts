@@ -1,5 +1,6 @@
-import { ParseDotType, RawEffect } from 'rpg/actions/dots.js';
-import { Spell } from 'rpg/actions/spell.js';
+import { ParseTarget } from 'rpg/combat/targets';
+import { ParseDotType, RawEffect } from 'rpg/effects/dots.js';
+import { Spell } from 'rpg/effects/spell.js';
 import { Item } from 'rpg/items/item';
 import { ParseMods } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
@@ -43,6 +44,7 @@ export const ParseSpell = (raw: RawSpell) => {
 	return new Spell({
 		id: raw.id,
 		name: raw.name ?? raw.id,
+		target: ParseTarget(raw.target),
 		dmg: ParseValue('dmg', raw.dmg),
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
 		dot: raw.dot ? ParseDotType(raw.dot, raw) : null,

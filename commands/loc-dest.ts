@@ -16,6 +16,7 @@ export default NewCommand<Rpg>({
 
 		const resp = await rpg.world.setDesc(char, desc);// m.attachments?.first()?.proxyURL);
 		if (resp) return SendPrivate(m, resp);
+		else return SendPrivate(m, "Description set.")
 
 
 	}

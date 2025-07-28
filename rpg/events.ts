@@ -1,7 +1,7 @@
-import { Dot } from 'rpg/actions/dots.js';
 import { Actor } from 'rpg/char/actor';
 import { Char } from 'rpg/char/char';
 import { TActor } from 'rpg/char/mobs';
+import { Dot } from 'rpg/effects/dots.js';
 
 export type AttackInfo = {
 

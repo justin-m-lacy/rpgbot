@@ -1,6 +1,6 @@
-import { Spell } from "rpg/actions/spell.js";
 import { TActor } from "rpg/char/mobs";
 import { TNpcAction } from "rpg/combat/types";
+import { Spell } from "rpg/effects/spell.js";
 import { Item } from "rpg/items/item";
 import { GetSpell } from "rpg/parsers/spells";
 import { type Game } from '../game';

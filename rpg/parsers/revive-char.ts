@@ -1,7 +1,7 @@
-import { Dot } from 'rpg/actions/dots.js';
 import { Char } from 'rpg/char/char';
 import { Equip } from 'rpg/char/equip';
 import { CharState, StatusFlag } from 'rpg/char/states';
+import { Dot } from 'rpg/effects/dots.js';
 import { Game } from 'rpg/game';
 import { Inventory } from 'rpg/items/inventory';
 import { HumanSlot, HumanSlots, Wearable } from 'rpg/items/wearable';

@@ -1,4 +1,4 @@
-import { Item } from './item';
+import type { Item } from './item';
 
 export type ItemPicker<T = Item> = string | number | T;
 export type ItemIndex = string | number;
@@ -11,7 +11,7 @@ type SimpleItem = {
     toString(): string
 }
 
-export class Container<T extends SimpleItem = Item> {
+class Container<T extends SimpleItem = SimpleItem> {
 
     /**
      * @property count

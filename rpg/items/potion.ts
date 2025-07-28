@@ -1,4 +1,4 @@
-import { GetDot, ProtoDot } from 'rpg/actions/dots.js';
+import { GetDot, ProtoDot } from 'rpg/effects/dots.js';
 import { ItemData, ItemType } from 'rpg/items/types';
 import { Char } from '../char/char';
 import { type Game } from '../game';

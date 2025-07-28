@@ -1,5 +1,5 @@
-import { Spell } from 'rpg/actions/spell.js';
 import type { Char } from 'rpg/char/char';
+import { Spell } from 'rpg/effects/spell.js';
 import { type Game } from 'rpg/game';
 import { Scroll } from 'rpg/items/scroll';
 import { AddValues, MissingProp } from 'rpg/values/apply';

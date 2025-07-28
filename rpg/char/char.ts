@@ -1,6 +1,6 @@
 import { TGameAction } from 'rpg/actions';
-import { SpellList } from 'rpg/actions/spelllist.js';
 import { GClass, Race } from 'rpg/char/race';
+import { SpellList } from 'rpg/effects/spelllist.js';
 import { Game } from 'rpg/game';
 import type { ItemIndex } from 'rpg/items/container';
 import { Weapon } from 'rpg/items/weapon';

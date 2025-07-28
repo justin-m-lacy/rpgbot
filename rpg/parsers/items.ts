@@ -1,5 +1,5 @@
-import { GetAction } from "rpg/actions/action.js";
 import { GetTypeGenerator } from "rpg/builders/itemgen";
+import { GetAction } from "rpg/effects/effect.js";
 import { Chest } from "rpg/items/chest";
 import { Grave } from "rpg/items/grave";
 import { Grimoire } from "rpg/items/grimoire";

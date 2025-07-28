@@ -1,7 +1,6 @@
 import { SendableChannels } from 'discord.js';
 import { EventEmitter } from 'eventemitter3';
 import { ActParams, Blockers, TGameAction } from 'rpg/actions';
-import { Spell } from 'rpg/actions/spell.js';
 import * as itemgen from 'rpg/builders/itemgen';
 import { Craft } from 'rpg/builders/itemgen';
 import { ChannelStore } from 'rpg/channel-store';
@@ -11,6 +10,7 @@ import { useLikeStore } from 'rpg/combat/like-store';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
 import { TNpcAction } from 'rpg/combat/types';
+import { Spell } from 'rpg/effects/spell.js';
 import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';

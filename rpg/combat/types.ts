@@ -1,7 +1,7 @@
-import { ProtoDot } from "rpg/actions/dots.js";
 import { TActor } from "rpg/char/mobs";
 import { StatusFlag } from "rpg/char/states";
 import { TargetFlags } from "rpg/combat/targets";
+import { ProtoDot } from "rpg/effects/dots.js";
 import { Party } from "rpg/social/party";
 import { Path } from "rpg/values/paths";
 import { Id, Numeric, TValue } from "rpg/values/types";

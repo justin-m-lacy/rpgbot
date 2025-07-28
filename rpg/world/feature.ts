@@ -1,4 +1,4 @@
-import { Action } from 'rpg/actions/action.js';
+import { Effect } from 'rpg/effects/effect.js';
 import { type Game } from 'rpg/game';
 import { ItemInfo, ItemType } from 'rpg/items/types';
 import { type Loc } from 'rpg/world/loc';
@@ -23,7 +23,7 @@ export class Feature extends Item {
 
 	}
 
-	action?: Action;
+	action?: Effect;
 
 	constructor(opts: ItemInfo) {
 		super(opts);

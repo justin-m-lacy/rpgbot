@@ -14,7 +14,7 @@ import { CanMod, type ModBlock } from 'rpg/values/imod';
 import { Maxable } from 'rpg/values/maxable.js';
 import { Simple } from 'rpg/values/simple.js';
 import { type Numeric } from 'rpg/values/types';
-import { Dot, ProtoDot } from '../actions/dots.js';
+import { Dot, ProtoDot } from '../effects/dots.js';
 import { Item, TStacker } from '../items/item';
 import { Coord } from '../world/coord';
 import { Race, type GClass } from './race';

@@ -1,8 +1,15 @@
 import { Char } from "rpg/char/char";
 import { Mob } from "rpg/char/mobs";
 
-export const ParseTarget = (s: keyof typeof TargetFlags) => {
-	return TargetFlags[s] ?? TargetFlags.none;
+export const ParseTarget = (s?: string) => {
+
+	if (!s) return TargetFlags.enemies;
+	const parts = s.split(',');
+	let f = 0;
+	for (let i = parts.length - 1; i >= 0; i--) {
+		f |= (TargetFlags[parts[i] as any] as any as number ?? TargetFlags.none)
+	}
+	return f;
 }
 
 export enum TargetFlags {

@@ -7,13 +7,13 @@ import { RandMonster } from 'rpg/parsers/mobs';
 import { ICache } from 'rpg/util/icache';
 import { Coord, TCoord } from 'rpg/world/coord';
 import { GenLoc } from 'rpg/world/worldgen';
-import { Char } from '../char/char';
-import { Mob } from '../char/mobs';
-import { Game } from '../game';
+import type { Char } from '../char/char';
+import type { Mob } from '../char/mobs';
+import type { Game } from '../game';
 import { ItemIndex, ItemPicker } from '../items/container';
-import { Item } from '../items/item';
+import type { Item } from '../items/item';
 import { Block } from './block';
-import { Feature } from './feature';
+import type { Feature } from './feature';
 import { Biome, DirVal, Exit, Loc, ToDirStr } from './loc';
 
 // Locations are merged into blocks of width/block_size, height/block_size.
@@ -59,7 +59,7 @@ export class World {
 		if (desc) loc.desc = desc;
 		if (attach) loc.embed = attach;
 
-		await this.quickSave(loc);
+		return this.quickSave(loc);
 
 	}
 
@@ -69,8 +69,9 @@ export class World {
 	 * @param who
 	 */
 	async getNpc(char: Char, who: ItemIndex) {
-		const loc = await this.getOrGen(char.at, char);
-		return loc.getNpc(who);
+		// generate b/c if char loc is invalid and player attacks, e.g,
+		// npc 1, that npc could exist in generated loc.
+		return (await this.getOrGen(char.at, char)).getNpc(who);
 	}
 
 	/**
@@ -98,9 +99,7 @@ export class World {
 	 */
 	async useLoc(game: Game, char: Char, wot: string | number | Feature) {
 
-		const loc = await this.getOrGen(char.at, char);
-
-		const f = typeof wot !== 'object' ? loc.getFeature(wot) : wot;
+		const f = typeof wot !== 'object' ? (await this.getOrGen(char.at, char)).getFeature(wot) : wot;
 		if (!f) {
 			char.log('You do not see any such thing here.');
 		} else {
@@ -213,9 +212,7 @@ export class World {
 	}
 
 	async view(char: Char, what: string | number) {
-
-		const loc = await this.getOrGen(char.at);
-		return loc.getNpc(what)?.getDetails();
+		return (await this.getOrGen(char.at)).getNpc(what)?.getDetails();
 	}
 
 	/**
@@ -224,9 +221,7 @@ export class World {
 	 * @param what
 	 */
 	async examine(char: Char, what: string | number) {
-
-		const loc = await this.getOrGen(char.at);
-		return loc.get(what)?.getView() ?? null;
+		return (await this.getOrGen(char.at)).get(what)?.getView() ?? null;
 	}
 
 	/**
@@ -328,10 +323,7 @@ export class World {
 	 * @param char 
 	 */
 	async addChar(char: Char) {
-
-		const loc = await this.getOrGen(char.at);
-		loc.addChar(char);
-
+		(await this.getOrGen(char.at)).addChar(char);
 	}
 
 	/**
