@@ -110,7 +110,7 @@
             "dmg": "1~2"
         },
         "drops": {
-            "potion of cure minor wounds": 5
+            "pot_heal1": 5
         }
     },
     {
@@ -161,7 +161,7 @@
             "swamp"
         ],
         "drops": {
-            "potion of cure minor wounds": 3
+            "pot_heal1": 3
         }
     },
     {
@@ -177,8 +177,8 @@
             "dmg": "1~4"
         },
         "drops": {
-            "potion of cure minor wounds": 5,
-            "potion of cure light wounds": 1
+            "pot_heal1": 5,
+            "pot_heal2": 1
         }
     },
     {
@@ -200,8 +200,8 @@
             "hills"
         ],
         "drops": {
-            "potion of cure light wounds": 5,
-            "potion of cure minor wounds": 5
+            "pot_heal1": 5,
+            "pot_heal2": 5
         }
     },
     {
@@ -248,7 +248,7 @@
             "dmg": "2~8"
         },
         "drops": {
-            "potion of cure light wounds": 3
+            "pot_heal2": 3
         }
     },
     {
@@ -267,7 +267,7 @@
         },
         "biome": "town",
         "drops": {
-            "potion of cure light wounds": 3
+            "pot_heal2": 3
         }
     },
     {
@@ -315,7 +315,7 @@
         },
         "drops": {
             "bone": 10,
-            "potion of light agony": 5
+            "pot_agony2": 5
         }
     },
     {
@@ -348,7 +348,7 @@
             "dmg": "1~6"
         },
         "drops": {
-            "potion of cure light wounds": 5
+            "pot_heal2": 5
         }
     },
     {
@@ -450,7 +450,7 @@
             "dmg": "1d6"
         },
         "drops": {
-            "potion of cure light wounds": 10
+            "pot_heal2": 10
         }
     },
     {
@@ -549,7 +549,7 @@
             "dmg": "1d6+1"
         },
         "drops": {
-            "potion of cure light wounds": 10
+            "pot_heal2": 10
         }
     },
     {
@@ -633,7 +633,7 @@
             "dmg": "1d6+5"
         },
         "drops": {
-            "potion of cure light wounds": 10
+            "pot_heal2": 10
         }
     },
     {
@@ -750,8 +750,8 @@
         },
         "drops": {
             "sulfur dust": 5,
-            "potion of cure light wounds": 10,
-            "potion of cure moderate wounds": 10
+            "pot_heal2": 10,
+            "pot_heal3": 10
         }
     },
     {
@@ -931,8 +931,8 @@
             "dmg": "2d6"
         },
         "drops": {
-            "potion of cure moderate wounds": 20,
-            "potion of cure serious wounds": 10
+            "pot_heal3": 20,
+            "pot_heal4": 10
         }
     },
     {
@@ -951,8 +951,8 @@
         },
         "drops": {
             "sulfur dust": 10,
-            "potion of cure moderate wounds": 10,
-            "potion of cure serious wounds": 10
+            "pot_heal3": 10,
+            "pot_heal4": 10
         }
     },
     {
@@ -1136,8 +1136,8 @@
         },
         "drops": {
             "it_mandrake": 10,
-            "potion of cure moderate wounds": 20,
-            "potion of cure serious wounds": 10
+            "pot_heal3": 20,
+            "pot_heal4": 10
         }
     },
     {
@@ -1318,7 +1318,7 @@
         },
         "drops": {
             "bone": 10,
-            "potion of moderate agony": 10
+            "pot_agony3": 10
         }
     },
     {
@@ -1356,7 +1356,7 @@
         },
         "drops": {
             "vampire fang": 5,
-            "potion of moderate agony": 10
+            "pot_agony3": 10
         }
     },
     {
@@ -1408,7 +1408,7 @@
         },
         "drops": {
             "sulfur dust": 10,
-            "potion of moderate agony": 10
+            "pot_agony3": 10
         }
     },
     {
@@ -1426,9 +1426,9 @@
             "dmg": "3d4+8"
         },
         "drops": {
-            "phoenix feather": 5,
-            "phoenix ashes": 1,
-            "potion of cure critical wounds": 5
+            "phoenixfeather": 5,
+            "phoenixash": 1,
+            "pot_heal5": 5
         }
     },
     {
@@ -1445,7 +1445,7 @@
             "dmg": "8d4"
         },
         "drops": {
-            "potion of cure serious wounds": 20
+            "pot_heal4": 20
         }
     },
     {
@@ -1498,8 +1498,8 @@
         },
         "drops": {
             "medusa head": 5,
-            "potion of light agony": 5,
-            "potion of cure light wounds": 5
+            "pot_agony2": 5,
+            "pot_heal3": 5
         }
     },
     {
@@ -1518,7 +1518,7 @@
         },
         "drops": {
             "sulfur dust": 15,
-            "potion of serious agony": 10
+            "pot_agony4": 10
         }
     },
     {
@@ -1535,7 +1535,7 @@
             "dmg": "1d10+4"
         },
         "drops": {
-            "potion of cure light wounds": 20
+            "pot_heal2": 20
         }
     },
     {
@@ -1622,7 +1622,7 @@
             "dmg": "2d6+8"
         },
         "drops": {
-            "potion of cure major wounds": 15
+            "pot_heal6": 15
         }
     },
     {
@@ -1669,7 +1669,7 @@
             "dmg": "2d6+7"
         },
         "drops": {
-            "potion of cure serious wounds": 15
+            "pot_heal4": 15
         }
     },
     {
@@ -1737,7 +1737,7 @@
             "dmg": "4d6+5"
         },
         "drops": {
-            "potion of cure serious wounds": 15
+            "pot_heal4": 15
         }
     },
     {
@@ -1776,7 +1776,7 @@
         },
         "drops": {
             "vampire fang": 10,
-            "potion of major agony": 10
+            "pot_agony6": 10
         }
     },
     {
@@ -1814,7 +1814,7 @@
             "dmg": "4d5+3"
         },
         "drops": {
-            "potion of major agony": 15
+            "pot_agony6": 15
         }
     },
     {
@@ -1831,7 +1831,7 @@
             "dmg": "3d5+5"
         },
         "drops": {
-            "potion of cure major wounds": 15
+            "pot_heal6": 15
         }
     },
     {
@@ -2036,7 +2036,7 @@
         "drops": {
             "angel wing": 10,
             "halo": 5,
-            "potion of cure critical wounds": 20
+            "pot_heal5": 20
         }
     },
     {
@@ -2054,7 +2054,7 @@
             "dmg": "5d8+4"
         },
         "drops": {
-            "potion of critical agony": 15
+            "pot_agony6": 15
         }
     },
     {
@@ -2072,8 +2072,8 @@
             "dmg": "5d10+7"
         },
         "drops": {
-            "potion of major agony": 15,
-            "potion of cure major wounds": 15
+            "pot_agony6": 15,
+            "pot_heal6": 15
         }
     },
     {
@@ -2093,7 +2093,7 @@
         "drops": {
             "sulfur": 30,
             "fire essence": 1,
-            "potion of critical agony": 15
+            "pot_agony5": 15
         }
     },
     {
@@ -2146,7 +2146,7 @@
         },
         "drops": {
             "vampire fang": 15,
-            "potion of critical agony": 20
+            "pot_agony5": 20
         }
     },
     {
@@ -2182,7 +2182,7 @@
         },
         "drops": {
             "vampire fang": 25,
-            "potion of critical agony": 30
+            "pot_agony5": 30
         }
     },
     {

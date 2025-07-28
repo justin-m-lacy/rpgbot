@@ -122,7 +122,7 @@ const parseTemplate = (data: RawMobData) => {
 	}
 
 	if (data.ondie) {
-		data.onDie = 
+		//data.onDie = 
 	}
 
 	(data as MobData).team = CalcFaction(data);

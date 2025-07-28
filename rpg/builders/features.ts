@@ -22,7 +22,9 @@ export const GenFeature = (s: string) => {
 export function InitFeatures() {
 
 	for (let i = FeatureData.length - 1; i >= 0; i--) {
+
 		byId[FeatureData[i].id] = byId[FeatureData[i].name.toLowerCase()] = FeatureData[i];
+
 	}
 
 }

@@ -391,16 +391,24 @@
             "type": "ing"
         },
         {
+            "id": "phoenixfeather",
             "name": "Phoenix Feather",
             "desc": "Feather of a phoenix.",
             "price": 75,
             "type": "ing"
         },
         {
+            "id": "phoenixash",
             "name": "Phoenix Ashes",
-            "desc": "Ashes of a dead phoenix.",
+            "desc": "Ashes of a slain phoenix.",
             "price": 175,
-            "type": "ing"
+            "type": "ing",
+            "ondrop": {
+                "spawn": [
+                    "phoenix"
+                ],
+                "destroy": true
+            }
         },
         {
             "name": "vampire fang",
