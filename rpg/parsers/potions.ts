@@ -1,9 +1,9 @@
 import { randElm } from '@/utils/jsutils';
 import { AddProtoItems } from 'rpg/builders/itemgen';
 import { Potion } from 'rpg/items/potion';
-import { ItemData, ItemType } from 'rpg/items/types';
+import { ItemProto, ItemType } from 'rpg/items/types';
 
-export type RawPotionData = (typeof import('data/items/potions.json', { assert: { type: 'json' } }))[number] & ItemData;
+export type RawPotionData = (typeof import('data/items/potions.json', { assert: { type: 'json' } }))[number] & ItemProto;
 
 const potsByName: { [name: string]: RawPotionData } = {};
 const PotsByLevel: { [key: number]: RawPotionData[] } = [];

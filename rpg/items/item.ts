@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import { Char } from 'rpg/char/char';
 import { Game } from 'rpg/game';
-import { ItemData, ItemInfo, ItemType } from 'rpg/items/types';
+import { ItemProto, ItemType } from 'rpg/items/types';
 
 export type TStacker = Item & {
 	stack: boolean,
@@ -12,7 +12,7 @@ export const IsStack = (it: Item): it is TStacker => {
 	return it.stack && typeof (it as any).count === 'number';
 }
 
-export class Item {
+export class Item<Proto extends ItemProto = ItemProto> {
 
 	/**
 	 * accessors for subclass override
@@ -60,9 +60,9 @@ export class Item {
 	 * @param json
 	 * @param it
 	 */
-	static SetProtoData<D extends ItemData = ItemData>(json?: D, it?: Item) {
+	static SetProtoData<D extends ItemProto = ItemProto>(json?: D, it?: Item) {
 
-		it ??= new Item(json);
+		it ??= new Item(json ?? { id: 'ads' });
 
 		if (json) {
 			if (json.price) it.price = json.price;
@@ -98,12 +98,17 @@ export class Item {
 	 */
 	created: number = 0;
 
-	constructor(info?: ItemInfo) {
+	proto?: Proto;
+
+	constructor(info?: Omit<Proto, 'id'> & { id?: string }, proto?: Proto) {
 
 		this.id = info?.id ?? randomUUID();
-		this.name = info?.name ?? this.id;
-		this.type = info?.type ?? ItemType.Item;
-		this.desc = info?.desc ?? '';
+
+		this.proto = proto;
+
+		this.name = info?.name ?? proto?.name ?? this.id;
+		this.type = info?.type ?? proto?.type ?? ItemType.Item;
+		this.desc = info?.desc ?? proto?.desc ?? '';
 
 	}
 

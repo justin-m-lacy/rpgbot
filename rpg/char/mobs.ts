@@ -59,7 +59,7 @@ export class Mob {
 
 	isAlive() { return !this.flags.has(StatusFlag.dead) }
 
-	ondie() { return this.proto?.onDie }
+	get ondie() { return this.proto?.ondie }
 
 	readonly flags: CharFlags = new CharFlags();
 

@@ -390,15 +390,21 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			);
 
 		} else if (char instanceof Mob) {
+
 			const loc = await this.world.fetchLoc(char.at);
-			if (loc) {
-				loc.removeNpc(char);
-				await this.getLoot(itemgen.GenLoot(char), loc,
-					typeof slayer === 'object' ? slayer : loc
-				);
-			} else {
-				console.log(`npc no loc: ${char.at}`);
+			if (!loc) {
+				console.warn(`npc no loc: ${char.at}`);
+				return;
 			}
+
+			if (char.ondie) {
+			}
+
+			loc.removeNpc(char);
+			await this.getLoot(itemgen.GenLoot(char), loc,
+				typeof slayer === 'object' ? slayer : loc
+			);
+
 		} else {
 			console.log(`dead char is not npc or mob or anything`);
 		}

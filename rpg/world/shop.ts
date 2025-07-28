@@ -2,14 +2,15 @@ import { Char } from "rpg/char/char";
 import { ItemIndex } from "rpg/items/container";
 import { Inventory } from "rpg/items/inventory.js";
 import { Item } from "rpg/items/item";
-import { ItemData, ItemType } from "rpg/items/types";
+import { ItemProto, ItemType } from "rpg/items/types";
 import { GetTradeMod, PayOrFail } from "rpg/trade";
+import { Replace } from "rpg/util/type-utils";
 import { Feature, FeatureProto } from "rpg/world/feature";
 import { Loc } from "rpg/world/loc";
 
-type SaleItem = ItemData & { price: number };
+type SaleItem = ItemProto & { price: number };
 
-type ShopData = FeatureProto<{ level?: number, kind: string }>;
+type ShopData = FeatureProto & { level?: number, kind: string };
 
 export const IsShop = (t: Item): t is Shop => {
 	return t.type === ItemType.Shop;
@@ -26,7 +27,7 @@ export class Shop<T extends Item = Item> extends Feature<ShopData> {
 
 	toJSON() {
 		const json = super.toJSON();
-		json.kind = (this.proto.kind == this.kind) ? undefined : this.kind;
+		json.kind = (this.proto?.kind == this.kind) ? undefined : this.kind;
 		json.inv = this.inv;
 
 		return json;
@@ -36,13 +37,12 @@ export class Shop<T extends Item = Item> extends Feature<ShopData> {
 	private kind: string;
 
 	constructor(
-		opts: FeatureProto & {
-			level?: number, kind: string,
+		opts: Replace<ShopData, { id?: string }> & {
 			genItem?: (lvl: number) => T | null
-		}
+		}, proto?: ShopData
 	) {
 
-		super(opts);
+		super(opts, proto);
 
 		this.desc ??= `${opts.kind} Shop`;
 

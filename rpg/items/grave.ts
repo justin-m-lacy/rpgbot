@@ -1,6 +1,6 @@
 import Epitaphs from 'data/items/epitaphs.json';
 import { TActor } from 'rpg/char/mobs';
-import { ItemData, ItemType } from 'rpg/items/types';
+import { ItemProto, ItemType } from 'rpg/items/types';
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
 import { Item, TStacker } from "./item";
@@ -19,7 +19,7 @@ export class Grave extends Item implements TStacker {
 
 	}
 
-	static Decode(json: ItemData & { n?: number, char: string, slayer?: string, epitaph?: string }) {
+	static Decode(json: ItemProto & { n?: number, char: string, slayer?: string, epitaph?: string }) {
 
 		const p = new Grave(json.id, json.char, json.slayer, json.epitaph);
 

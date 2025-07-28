@@ -1,5 +1,5 @@
 import { GetDot, ProtoDot } from 'rpg/effects/dots.js';
-import { ItemData, ItemType } from 'rpg/items/types';
+import { ItemProto, ItemType } from 'rpg/items/types';
 import { Char } from '../char/char';
 import { type Game } from '../game';
 import { Item, TStacker } from './item';
@@ -42,7 +42,7 @@ export class Potion extends Item implements TStacker {
 	count: number = 1;
 	dot?: ProtoDot;
 
-	constructor(opts?: ItemData) {
+	constructor(opts?: ItemProto) {
 		super(opts);
 		this.type = ItemType.Potion;
 	}

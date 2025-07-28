@@ -1,5 +1,5 @@
-import { GenFeature, InitFeatures } from "rpg/builders/features";
-import { ReviveFeature } from "rpg/parsers/items";
+import { GenFeature, InitFeatures, ReviveFeature } from "rpg/builders/features";
+
 describe('Feature tests', async () => {
 
 	beforeAll(() => {

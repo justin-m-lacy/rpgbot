@@ -1,14 +1,9 @@
 
-export type ItemInfo = {
-	id?: string,
-	type?: ItemType,
-	name?: string,
-	desc?: string
-}
+export type ItemInfo<T extends object = {}> = Partial<ItemProto>;
 
-export type ItemData = {
+export type ItemProto = {
 	id: string,
-	name: string,
+	name?: string,
 	type?: ItemType,
 	desc?: string,
 	price?: number,

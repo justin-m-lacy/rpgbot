@@ -2,7 +2,7 @@ import { Formula } from 'formulic';
 import { Mob } from 'rpg/char/mobs';
 import { StatKey } from 'rpg/char/stat';
 import { StatusFlag } from 'rpg/char/states';
-import { ItemData } from 'rpg/items/types';
+import { ItemProto } from 'rpg/items/types';
 import { ReviveWeapon } from 'rpg/parsers/armor';
 import { ParseValue } from 'rpg/parsers/values';
 import { CalcFaction, Team } from 'rpg/social/teams';
@@ -10,7 +10,7 @@ import { TWritable } from 'rpg/util/type-utils';
 import { Biome } from 'rpg/world/loc';
 import { Numeric } from '../values/types';
 
-type RawMobData = ItemData & any & {
+type RawMobData = ItemProto & any & {
 	team: typeof Team[number],
 	weap?: any;
 	ondie?: any;
@@ -35,7 +35,7 @@ export type MobData = {
 	team?: Team;
 	stats?: Record<string, StatKey>,
 	weap?: any;
-	onDie?: any;
+	ondie?: any;
 
 	//attacks: TCombatAction[]
 

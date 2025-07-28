@@ -29,16 +29,14 @@ export function InitFeatures() {
 
 }
 
-
 export function ReviveFeature<T extends Feature>(
-	json: FeatureProto<{ proto?: string }>, f?: T | Feature) {
+	json: FeatureProto & { proto?: string }, f?: T | Feature) {
 
-	f ??= new Feature<any>((json.proto ? byId[json.proto] : undefined) ?? json);
+	f ??= new Feature<any>(json, json.proto ? byId[json.proto] : undefined);
 
 	if (json.effect) {
 		f!.effect = ParseEffect(json.effect);
 	}
-	if (json.fb) f!.fb = json.fb;
 
 	return Item.SetProtoData(json, f) as Feature;
 

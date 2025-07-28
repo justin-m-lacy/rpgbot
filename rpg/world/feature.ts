@@ -1,18 +1,19 @@
 import { Effect } from 'rpg/effects/effect.js';
 import { type Game } from 'rpg/game';
-import { ItemData, ItemType } from 'rpg/items/types';
+import { ItemProto, ItemType } from 'rpg/items/types';
+import { Replace } from 'rpg/util/type-utils';
 import { type Loc } from 'rpg/world/loc';
 import { Char } from '../char/char';
 import { Item } from '../items/item';
 
-export type FeatureProto<T extends object = {}> = T & ItemData & { effect?: string | string[], fb?: string };
+export type FeatureProto = ItemProto & { effect?: string | string[], fb?: string };
 
-export class Feature<Proto extends object = {}> extends Item {
+export class Feature<Proto extends FeatureProto = FeatureProto> extends Item<Proto> {
 
 	/**
 	 * feedback when using item.
 	 */
-	fb?: string;
+	get fb() { return this.proto?.fb }
 
 	toJSON() {
 
@@ -21,32 +22,35 @@ export class Feature<Proto extends object = {}> extends Item {
 		if (this.effect) {
 
 			const f = Array.isArray(this.effect) ? this.effect.map(v => v.id).join(',') : this.effect.id;
-			if (f != this.proto.effect) {
+			if (f != this.proto!.effect) {
 				ob.effect = f;
 			}
 
 		}
-		ob.proto = this.proto.id;
+		if (this.proto) {
+			console.log(`PROTO found...`);
+			ob.proto = this.proto.id;
+			if (this.desc == this.proto.desc) ob.desc = undefined;
+			if (this.name == this.proto.name) ob.name = undefined;
+			if (this.price == this.proto.price) ob.price = undefined;
+			if (this.effect == this.proto.effect) ob.effect = undefined;
+			//if (this.fb) ob.fb = (this.fb != this.proto.fb) ? this.fb : undefined;
+		} else {
+			console.log(`no proto: ${this.name}`);
+		}
 
-		if (this.desc == this.proto.desc) ob.desc = undefined;
-		if (this.name == this.proto.name) ob.name = undefined;
-		if (this.price == this.proto.price) ob.price = undefined;
-
-		if (this.fb) ob.fb = (this.fb != this.proto.fb) ? this.fb : undefined;
 
 		return ob;
 
 	}
 
 	effect?: Effect | Effect[];
-	proto: FeatureProto<Proto>;
 
-	constructor(proto: FeatureProto<Proto>) {
+	constructor(info: Replace<Proto, { id?: string }>, proto?: Proto) {
 
-		super(proto);
+		super(info, proto);
 
-		this.proto = proto;
-		this.type = proto.type ?? ItemType.Feature;
+		this.type = info.type ?? ItemType.Feature;
 	}
 
 	/**

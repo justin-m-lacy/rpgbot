@@ -3,13 +3,13 @@ import BaseArmors from 'data/items/armors.json';
 import { AddProtoItem, GetProto } from 'rpg/builders/itemgen';
 import { Item } from 'rpg/items/item';
 import { GetMaterial, RandMaterial } from 'rpg/items/material';
-import { ItemData } from 'rpg/items/types';
+import { ItemProto } from 'rpg/items/types';
 import { Weapon } from 'rpg/items/weapon';
 import { HumanSlot, Wearable } from 'rpg/items/wearable';
 import { ParseMods } from 'rpg/parsers/mods';
 import { RawWeaponData } from 'rpg/parsers/weapon';
 
-export type RawWearableData = ItemData & (typeof BaseArmors)[number] & {
+export type RawWearableData = ItemProto & (typeof BaseArmors)[number] & {
 
 	mods?: Record<string, any>,
 	hit?: number,
@@ -20,7 +20,7 @@ const ArmorBySlot: Partial<{ [Property in HumanSlot]: RawWearableData[] }> = {};
 
 
 
-export const ReviveWeapon = (json: ItemData & {
+export const ReviveWeapon = (json: ItemProto & {
 	slot?: HumanSlot, hit?: number, kind?: string,
 	proto?: string,
 	material?: string,
