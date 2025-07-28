@@ -84,7 +84,7 @@
 					"desc": "It looks mystical.",
 					"type": "feature",
 					"price": 0,
-					"action": "revive",
+					"effect": "revive",
 					"fb": "%c chants to the mystical shrine."
 				},
 				{
@@ -316,7 +316,7 @@
 					"desc": "It looks evil.",
 					"type": "feature",
 					"price": 0,
-					"action": "hurt",
+					"effect": "hurt",
 					"fb": "%c prays to the wicked altar."
 				}
 			],

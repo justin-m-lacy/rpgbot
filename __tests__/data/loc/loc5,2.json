@@ -82,7 +82,7 @@
 			"desc": "It looks mystical.",
 			"type": "feature",
 			"price": 0,
-			"action": "revive",
+			"effect": "revive",
 			"fb": "%c chants to the mystical shrine."
 		},
 		{

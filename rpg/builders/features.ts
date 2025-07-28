@@ -2,28 +2,46 @@
 import { randElm } from '@/utils/jsutils';
 import FeatureData from 'data/world/features.json';
 import { GenShop } from 'rpg/builders/shopgen';
-import { ReviveFeature } from 'rpg/parsers/items';
-import { Feature } from 'rpg/world/feature';
+import { ParseEffect } from 'rpg/effects/effect';
+import { Item } from 'rpg/items/item';
+import { Feature, FeatureProto } from 'rpg/world/feature';
 import { Biome, Loc } from 'rpg/world/loc';
 
-const byName: { [key: string]: typeof FeatureData[number] } = {};
+// by name or id.
+const byId: { [key: string]: typeof FeatureData[number] } = {};
 
 /**
  * Create named feature from data.
  * @param s
  */
 export const GenFeature = (s: string) => {
-	return byName[s] ? ReviveFeature(byName[s]) : null;
+	return byId[s] ? ReviveFeature(byId[s]) : null;
 }
 
 
 export function InitFeatures() {
 
 	for (let i = FeatureData.length - 1; i >= 0; i--) {
-		byName[FeatureData[i].id] = byName[FeatureData[i].name] = FeatureData[i];
+		byId[FeatureData[i].id] = byId[FeatureData[i].name.toLowerCase()] = FeatureData[i];
 	}
 
 }
+
+
+export function ReviveFeature<T extends Feature>(
+	json: FeatureProto<{ proto?: string }>, f?: T | Feature) {
+
+	f ??= new Feature<any>((json.proto ? byId[json.proto] : undefined) ?? json);
+
+	if (json.effect) {
+		f!.effect = ParseEffect(json.effect);
+	}
+	if (json.fb) f!.fb = json.fb;
+
+	return Item.SetProtoData(json, f) as Feature;
+
+}
+
 
 export const RandFeature = (loc: Loc): Feature => {
 

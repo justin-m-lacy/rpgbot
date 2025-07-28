@@ -1,15 +1,14 @@
+import { ReviveFeature } from "rpg/builders/features";
 import { GetTypeGenerator } from "rpg/builders/itemgen";
-import { GetAction } from "rpg/effects/effect.js";
 import { Chest } from "rpg/items/chest";
 import { Grave } from "rpg/items/grave";
 import { Grimoire } from "rpg/items/grimoire";
 import { Inventory } from "rpg/items/inventory.js";
 import { Item } from "rpg/items/item";
 import { Potion } from "rpg/items/potion";
-import { ItemData, ItemType } from "rpg/items/types";
+import { ItemType } from "rpg/items/types";
 import { ReviveWeapon, ReviveWearable } from "rpg/parsers/armor";
 import { DecodeSpell } from "rpg/parsers/spells";
-import { Feature } from "rpg/world/feature";
 import { Shop } from "rpg/world/shop";
 
 const ItemRevivers: Record<string, (data: any) => Item> = {
@@ -33,20 +32,6 @@ export const ReviveItem = <T extends Item>(json: any): T | null => {
 
 	if (!json) return null;
 	return (ItemRevivers[json.type]?.(json) as T ?? ItemRevivers[ItemType.Unknown](json) as T) ?? null;
-
-}
-
-export function ReviveFeature<T extends Feature>(
-	json: ItemData & { action?: string, fb?: string }, f?: T | Feature) {
-
-	f ??= new Feature(json);
-
-	if (json.action) {
-		f.action = GetAction(json.action);
-	}
-	if (json.fb) f.fb = json.fb;
-
-	return Item.SetProtoData(json, f) as Feature;
 
 }
 

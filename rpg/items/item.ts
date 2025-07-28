@@ -46,7 +46,7 @@ export class Item {
 			name: this._name,
 			desc: this.desc,
 			type: this.type,
-			price: this._price,
+			price: this._price != 0 ? this._price : undefined,
 			level: this._level || undefined,
 			embed: this.embed,
 			maker: this.maker,

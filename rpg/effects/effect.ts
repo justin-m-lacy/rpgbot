@@ -4,7 +4,7 @@ import { ParseResult, type RawResult, type Result } from 'rpg/effects/results.js
 import { Char } from '../char/char.js';
 
 
-const actions: Record<string, Effect> = {};
+const effects: Record<string, Effect> = {};
 
 export class Effect {
 
@@ -99,10 +99,15 @@ export const LoadActions = async () => {
 	let k: keyof typeof data;
 	for (k in data) {
 		const a = ParseAction(data[k] as any);
-		if (a) actions[a.id] = a;
+		if (a) effects[a.id] = a;
 	}
 }
 
-export const GetAction = (s: string) => {
-	return actions[s];
+export const ParseEffect = (s: string | string[]) => {
+
+	if (typeof s == 'string') s = s.split(',');
+	if (s.length == 0) return undefined;
+	if (s.length == 1) return effects[s[0]];
+	return s.map(p => effects[p]);
+
 }

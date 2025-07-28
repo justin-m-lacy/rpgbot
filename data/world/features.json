@@ -4,7 +4,7 @@
         "name": "Healing Fount",
         "desc": "Healing waters of healing power.",
         "fb": "%c drinks from the shimmering water.",
-        "action": "heal"
+        "effect": "heal"
     },
     {
         "id": "portal",
@@ -17,20 +17,20 @@
         "name": "Gate",
         "fb": "%c steps through existence.",
         "desc": "A magical rip in reality. You doubt there's a way back.",
-        "action": "gate"
+        "effect": "gate"
     },
     {
         "id": "shrine",
         "name": "Shrine",
         "desc": "It looks mystical.",
         "fb": "%c chants to the mystical shrine.",
-        "action": "revive"
+        "effect": "revive"
     },
     {
         "id": "shrineevil",
         "name": "Evil Shrine",
         "fb": "%c prays to the wicked altar.",
         "desc": "It looks evil.",
-        "action": "hurt"
+        "effect": "hurt"
     }
 ]
