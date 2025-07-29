@@ -3,6 +3,7 @@ import { CharFlags, StatusFlag } from 'rpg/char/states';
 import { TNpcAction } from 'rpg/combat/types';
 import { getEvil } from 'rpg/display/char';
 import { Dot, ProtoDot } from 'rpg/effects/dots.js';
+import type { Game } from 'rpg/game';
 import { type MobData } from 'rpg/parsers/mobs';
 import { Team } from 'rpg/social/teams';
 import { quickSplice } from 'rpg/util/array';
@@ -58,8 +59,6 @@ export class Mob {
 	get desc() { return this.proto?.desc ?? '' }
 
 	isAlive() { return !this.flags.has(StatusFlag.dead) }
-
-	get ondie() { return this.proto?.ondie }
 
 	readonly flags: CharFlags = new CharFlags();
 
@@ -134,6 +133,21 @@ export class Mob {
 
 		this.dots.push(e);
 		e.start(this);
+
+	}
+
+	/**
+	 * 
+	 * @param game 
+	 * @param slayer 
+	 * @returns false to cancel die.
+	 */
+	onDie(game: Game, slayer?: TActor) {
+
+		if (this.proto?.ondie) {
+
+		}
+		return true;
 
 	}
 

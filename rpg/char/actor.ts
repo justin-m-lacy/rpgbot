@@ -1,10 +1,10 @@
 import { EventEmitter } from 'eventemitter3';
-import { TActor } from 'rpg/char/mobs';
+import type { TActor } from 'rpg/char/mobs';
 import { Stat } from 'rpg/char/stat.js';
 import { CharFlags, CharState, StatusFlag } from 'rpg/char/states';
-import { TNpcAction } from 'rpg/combat/types';
-import { CharEvents } from 'rpg/events';
-import { Game } from 'rpg/game';
+import type { TNpcAction } from 'rpg/combat/types';
+import type { CharEvents } from 'rpg/events';
+import type { Game } from 'rpg/game';
 import { Fists } from 'rpg/items/weapon';
 import { Faction } from 'rpg/social/faction';
 import type { SexType } from 'rpg/social/gender';
@@ -15,9 +15,9 @@ import { Maxable } from 'rpg/values/maxable.js';
 import { Simple } from 'rpg/values/simple.js';
 import { type Numeric } from 'rpg/values/types';
 import { Dot, ProtoDot } from '../effects/dots.js';
-import { Item, TStacker } from '../items/item';
+import type { Item, TStacker } from '../items/item';
 import { Coord } from '../world/coord';
-import { Race, type GClass } from './race';
+import type { GClass, Race } from './race';
 import { StatDefs } from './stat';
 
 export class Actor {
@@ -253,6 +253,10 @@ export class Actor {
 			Math.max(1,
 				this.hp.max.value + this.level.value * this.getModifier('con'));
 		this.hp.max.value = hp;
+
+	}
+
+	onDie(game: Game, slayer?: TActor) {
 
 	}
 

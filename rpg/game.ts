@@ -376,6 +376,10 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	 */
 	async onCharDie(char: TActor, slayer: TActor | string) {
 
+		if (!char.onDie(this, typeof slayer === 'string' ? undefined : slayer)) {
+			return;
+		}
+
 		if (slayer instanceof Char) {
 			this.onSlay(slayer, char);
 		}
@@ -397,9 +401,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 			if (!loc) {
 				console.warn(`npc no loc: ${char.at}`);
 				return;
-			}
-
-			if (char.ondie) {
 			}
 
 			loc.removeNpc(char);
