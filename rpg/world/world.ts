@@ -10,7 +10,7 @@ import { GenLoc } from 'rpg/world/worldgen';
 import type { Char } from '../char/char';
 import type { Mob } from '../char/mobs';
 import type { Game } from '../game';
-import { ItemIndex, ItemPicker } from '../items/container';
+import { ItemIndex } from '../items/container';
 import type { Item } from '../items/item';
 import { Block } from './block';
 import type { Feature } from './feature';
@@ -254,10 +254,7 @@ export class World {
 	 * @param char
 	 * @param  what
 	 */
-	async drop(char: Char, what: ItemPicker, end?: ItemIndex | null) {
-
-		const it = end ? char.removeRange(what as ItemIndex, end) : char.removeItem(what);
-		if (!it) return 'Invalid item.';
+	async drop(char: Char, it: Item | Item[]) {
 
 		const loc = await this.getOrGen(char.at, char);
 		const ind = loc.put(it);

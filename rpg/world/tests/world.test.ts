@@ -1,4 +1,4 @@
-import { MockCache } from "__tests__/mocks";
+import { MockCache } from "__tests__/mock-cache";
 import { InitGame } from "rpg/init";
 import { World } from "rpg/world/world";
 

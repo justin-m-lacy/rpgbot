@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { Char } from 'rpg/char/char';
-import { Game } from 'rpg/game';
-import { ItemProto, ItemType } from 'rpg/items/types';
+import type { Char } from 'rpg/char/char';
+import type { Game } from 'rpg/game';
+import { type ItemProto, ItemType } from 'rpg/items/types';
 
 export type TStacker = Item & {
 	stack: boolean,
@@ -121,6 +121,26 @@ export class Item<Proto extends ItemProto = ItemProto> {
 	 * Option to remap Item on player take.
 	 */
 	onTake(char: Char): Item | null | undefined { return this }
+
+	/**
+	 * On Item dropped.
+	 * @param game 
+	 * @param char
+	 * @returns false to cancel drop. true to allow.
+	 */
+	onDrop(game: Game, char: Char) {
+
+		if (this.proto?.ondrop) {
+
+			if (this.proto.ondrop.spawn) {
+				game.genMobs(this.proto.ondrop.spawn, char.at);
+			}
+			return !this.proto.ondrop.destroy;
+
+		}
+		return true;
+
+	}
 
 	getView(char?: Char): [string, string | undefined] {
 		return [this.getDetails(char, false), this.embed];

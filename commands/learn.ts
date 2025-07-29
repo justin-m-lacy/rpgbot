@@ -22,6 +22,7 @@ export default NewCommand<Rpg>({
 
 		const spellName = m.options.getString('spell');
 		if (!spellName) {
+			// TODO collect from all books.
 			return SendPrivate(m, 'Learn what spell?');
 		}
 
@@ -40,23 +41,14 @@ export default NewCommand<Rpg>({
 		if (!spell) {
 			return SendPrivate(m, `'${spellName}' is not a spell.`);
 		}
+
 		if (char.spelllist.has(spell.id)) {
 			return SendPrivate(m, `You already know spell ${spellName}`);
 		}
 
-		if (char.gclass?.schools.includes(book.kind) || char.race.schools.includes(book.kind)) {
-			return SendPrivate(m, 'You cannot learn that type of magic. Allowed schools:\n' +
-				(char.race.schools.concat(char.gclass?.schools ?? []).join(', '))
-			);
-		}
+		const res = await rpg.game.exec('learn', char, book, spell);
 
-		if (spell.level.valueOf() > char.level.value) {
-			return SendPrivate(m, `Your level (${char.level.valueOf()}) is to low to learn ${spell.name} (${spell.level.valueOf()})`);
-		}
-
-		char.spelllist.add(spell);
-
-		return SendPrivate(m, `${char.name} has learned spell ${spell.name}`);
+		return SendPrivate(m, res);
 
 	}
 })

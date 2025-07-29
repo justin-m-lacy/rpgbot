@@ -1,8 +1,8 @@
 import { InitGame } from 'rpg/init';
 import { Weapon } from 'rpg/items/weapon';
 import { ReviveChar } from '../rpg/parsers/revive-char';
-import CharData from './data/chars/joetest.json';
-import { GetTestGame } from './init';
+import CharData from './data/chars/wizardtest.json';
+import { GetTestGame } from './mock-game';
 
 describe('Revive Character File', () => {
 

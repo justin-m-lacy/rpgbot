@@ -6,24 +6,22 @@ import { Loot } from 'rpg/combat/loot';
 import { Inventory } from 'rpg/items/inventory.js';
 import { Item } from 'rpg/items/item';
 import { LoadMaterials } from 'rpg/items/material';
-import { ItemProto, ItemType } from 'rpg/items/types';
+import { ItemProto, ItemType, RawItemData } from 'rpg/items/types';
 import { GenArmor } from 'rpg/parsers/armor';
 import { ReviveItem } from 'rpg/parsers/items';
 import { LvlPotion } from 'rpg/parsers/potions';
+import { InitProto } from 'rpg/parsers/proto';
 import { LvlScroll } from 'rpg/parsers/scrolls';
 import { GenWeapon } from 'rpg/parsers/weapon';
-import { Uppercase } from 'rpg/util/string';
 
-
-export type RawChestsData = (typeof import('data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" };
-type RawItemData = (typeof import('data/items/items.json', { assert: { type: 'json' } })['misc' | 'special'][number]) & { id: string }
+export type RawChestsData = (typeof import('data/items/chests.json', { assert: { type: 'json' } }))[number] & { type?: "chest" } & Partial<RawItemData>;
 
 /**
  * Master item prototypes. ( raw data)
  */
 const ProtoItems: { [str: string]: RawItemData | RawChestsData | ItemProto } = Object.create(null);
 
-const JunkItems: RawItemData[] = [];
+const JunkProtos: RawItemData[] = [];
 
 const ItemTypeGen: Partial<Record<string, (lvl?: number) => Item | null>> = {
 
@@ -43,27 +41,21 @@ export const InitItems = async () => {
 
 }
 
+
+
 async function InitBasic() {
 
 	const items = (await import('data/items/items.json', { assert: { type: 'json' } })).default;
 	const spec = items.special as RawItemData[];
 
-	JunkItems.push(...items.misc as RawItemData[]);
+	JunkProtos.push(...items.misc as RawItemData[]);
 
-	for (let i = JunkItems.length - 1; i >= 0; i--) {
-
-		if (!JunkItems[i].id) JunkItems[i].id = JunkItems[i].name!.toLowerCase();
-		else if (!JunkItems[i].name) JunkItems[i].name = Uppercase(JunkItems[i].id!);
-
-		ProtoItems[JunkItems[i].id] = JunkItems[i];
+	for (let i = JunkProtos.length - 1; i >= 0; i--) {
+		ProtoItems[JunkProtos[i].id] = InitProto(JunkProtos[i]);
 	}
 
 	for (let i = spec.length - 1; i >= 0; i--) {
-
-		if (!spec[i].id) spec[i].id = spec[i].name!.toLowerCase();
-		else if (!spec[i].name) spec[i].name = Uppercase(spec[i].id!);
-
-		ProtoItems[spec[i].id] = spec[i];
+		ProtoItems[spec[i].id] = InitProto(spec[i]);
 	}
 
 }
@@ -76,9 +68,9 @@ async function InitChests() {
 	for (let i = packs.length - 1; i >= 0; i--) {
 
 		const p: RawChestsData = packs[i];
-		p.type = 'chest';	// assign type.
+		p.type = ItemType.Chest;	// assign type.
 
-		ProtoItems[p.name.toLowerCase()] = p;
+		ProtoItems[p.name.toLowerCase()] = InitProto(p);
 
 	}
 
@@ -185,7 +177,7 @@ export const GetTypeGenerator = (type: string) => {
  */
 export const GenJunkItem = () => {
 
-	const it = JunkItems[Math.floor(JunkItems.length * Math.random())];
+	const it = JunkProtos[Math.floor(JunkProtos.length * Math.random())];
 
 	const data = Object.create(it ?? null);
 	data.id = randomUUID();

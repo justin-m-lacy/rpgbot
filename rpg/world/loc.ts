@@ -227,7 +227,8 @@ export class Loc {
 		if (json.features && Array.isArray(json.features)) {
 
 			for (let i = 0; i < json.features.length; i++) {
-				const f = ReviveItem(json.features[i]);
+				// todo: use reviveFeature. ReviveFeature doesn't handle shops yet.
+				const f = ReviveItem<Feature>(json.features[i]);
 				if (f) loc.features.push(f);
 			}
 
@@ -347,7 +348,9 @@ export class Loc {
 	 *
 	 * @param item
 	 */
-	put(item: Item | Item[]) { return this.inv.add(item); }
+	put(item: Item | Item[]) {
+		return this.inv.add(item);
+	}
 
 	takeRange(start: number, end: number) {
 		return this.inv.takeRange(start, end);

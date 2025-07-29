@@ -96,6 +96,11 @@ export const GameActions = {
 		exec: Game.prototype.inscribe,
 		rest: 1,
 	},
+	learn: {
+		tick: true,
+		exec: Game.prototype.learn,
+		rest: 0.3
+	},
 	/*map: {
 		tick: true,
 		exec: Game.prototype.map,

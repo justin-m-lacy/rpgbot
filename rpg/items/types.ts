@@ -1,3 +1,6 @@
+import { TOnDrop } from "rpg/effects/ondrop";
+
+export type RawItemData = (typeof import('data/items/items.json', { assert: { type: 'json' } })['misc' | 'special'][number]) & { id: string }
 
 export type ItemInfo<T extends object = {}> = Partial<ItemProto>;
 
@@ -12,7 +15,8 @@ export type ItemProto = {
 	level?: number,
 	created?: number,
 	/// file/image attachment
-	embed?: string
+	embed?: string,
+	ondrop?: TOnDrop
 }
 
 export enum ItemType {

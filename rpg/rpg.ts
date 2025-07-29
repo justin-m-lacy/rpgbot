@@ -4,14 +4,14 @@ import Cache from 'archcache';
 import { MessageFlags, SendableChannels, User } from "discord.js";
 import { ChannelStore } from 'rpg/channel-store';
 import { GameActions } from 'rpg/game-actions';
-import { ItemIndex } from 'rpg/items/container';
+import { type ItemIndex } from 'rpg/items/container';
 import { GenName } from 'rpg/namegen';
 import { ReviveChar } from 'rpg/parsers/revive-char';
 import { NewUserData, type UserData } from 'rpg/users/users';
-import { Char } from './char/char';
-import { Race } from './char/race';
+import { type Char } from './char/char';
+import { type Race } from './char/race';
 import { Game } from './game';
-import { World } from './world/world';
+import { type World } from './world/world';
 
 export const LAST_CHARS = '`lastchars`';
 

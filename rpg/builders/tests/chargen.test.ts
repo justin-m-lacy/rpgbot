@@ -1,4 +1,4 @@
-import { GetTestGame } from '__tests__/init';
+import { GetTestGame } from '__tests__/mock-game';
 import { GenChar } from 'rpg/builders/chargen';
 import { InitGame } from 'rpg/init';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';

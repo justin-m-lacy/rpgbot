@@ -24,6 +24,12 @@ const ItemRevivers: Record<string, (data: any) => Item> = {
 	[ItemType.Unknown]: Item.SetProtoData,
 }
 
+/**
+ * Get Reviver for item type.
+ * @param type 
+ * @returns 
+ */
+export const GetReviver = (type: ItemType) => ItemRevivers[type];
 
 /**
  * revive item from JSON

@@ -15,7 +15,9 @@ import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
 import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
+import { Grimoire } from 'rpg/items/grimoire';
 import { HumanSlot, toSlot } from 'rpg/items/wearable';
+import { GenMob } from 'rpg/parsers/mobs';
 import { TryEat } from 'rpg/talents/cook';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';
@@ -846,6 +848,27 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
+	learn(this: Game<A, K>, char: Char, from: Grimoire, spell: Spell) {
+
+		if (char.gclass?.schools.includes(from.kind) || char.race.schools.includes(from.kind)) {
+			char.log('You cannot learn that type of magic. Allowed schools:\n' +
+				(char.race.schools.concat(char.gclass?.schools ?? []).join(', '))
+			);
+			return;
+		}
+
+		if (spell.level.valueOf() > char.level.value) {
+			char.log(`Your level (${char.level.valueOf()}) is to low to learn ${spell.name} (${spell.level.valueOf()})`);
+			return;
+		}
+
+		char.spelllist.add(spell);
+
+		char.log(`${char.name} has learned spell ${spell.name}`);
+
+	}
+
+
 	buy(this: Game<A, K>, char: Char, shop: Shop, item: ItemIndex) {
 		shop.buy(char, item);
 	}
@@ -886,8 +909,32 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
+	public genMobs(s: string[], at: TCoord) {
+
+		const loc = this.world.getLoc(at);
+		if (!loc) return false;
+
+		for (let i = 0; i < s.length; i++) {
+			const m = GenMob(s[i]);
+			if (m) loc.addNpc(m);
+		}
+
+	}
+
 	async drop(this: Game<A, K>, char: Char, what: ItemPicker, end?: ItemIndex | null) {
-		char.log(await this.world.drop(char, what, end));
+
+		const it = end ? char.removeRange(what as ItemIndex, end) : char.removeItem(what);
+		if (!it) {
+			char.log('Invalid item.');
+			return;
+		}
+		if (Array.isArray(it)) {
+			it.filter(v => v.onDrop(this, char));
+		} else if (!it.onDrop(this, char)) {
+			return;
+		}
+
+		char.log(await this.world.drop(char, it));
 
 	}
 
