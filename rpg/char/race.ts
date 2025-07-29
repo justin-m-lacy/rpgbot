@@ -31,6 +31,11 @@ export class Race {
 	 */
 	readonly items: string[] = [];
 
+	/**
+	 * schools of magic allowed.
+	 */
+	readonly schools: string[] = [];
+
 	constructor(id: string, hitDie: number = 1, minLevels: number = 0) {
 
 		this.id = this.name = id;

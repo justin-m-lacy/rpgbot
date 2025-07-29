@@ -1,15 +1,19 @@
 import { Char } from "rpg/char/char";
 import { MenuList } from "rpg/display/items";
 import { Item } from "rpg/items/item";
-import { ItemType } from "rpg/items/types";
+import { ItemProto, ItemType } from "rpg/items/types";
 import { BadTypeError } from "rpg/util/errors";
 
+type GrimoireProto = ItemProto & {
+	kind: string,
+	spells: string[]
+}
 export class Grimoire extends Item {
 
 	readonly spells: string[] = [];
 
 	toJSON() {
-		return { spells: this.spells, ...super.toJSON() }
+		return { kind: this.kind, spells: this.spells, ...super.toJSON() }
 	}
 
 	static Decode(json: any) {
@@ -33,9 +37,15 @@ export class Grimoire extends Item {
 
 	}
 
-	constructor(data?: { id: string, name: string, desc: string, spells?: string[] }) {
+	kind: string;
 
-		super(data);
+	constructor(data: { id: string, name: string, desc: string, kind: string, spells?: string[] },
+		proto?: GrimoireProto
+	) {
+
+		super(data, proto);
+
+		this.kind = data.kind;
 
 		if (data?.spells) {
 			this.spells.push(...data.spells);

@@ -43,6 +43,7 @@ export class Item<Proto extends ItemProto = ItemProto> {
 
 		return {
 			id: this.id,
+			proto: this.proto?.id,
 			name: this._name,
 			desc: this.desc,
 			type: this.type,

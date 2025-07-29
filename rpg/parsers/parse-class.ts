@@ -2,7 +2,7 @@ import { ParseMod } from 'rpg/parsers/mods';
 import { ParseValue } from 'rpg/parsers/values';
 import { Race, type GClass } from '../char/race';
 
-type RawRaceData = typeof import('data/races.json')[number] | typeof import('data/classes.json')[number];
+type RawRaceData = (typeof import('data/races.json')[number] | typeof import('data/classes.json')[number]) & { schools?: string[] };
 
 const races: Race[] = [];
 const raceByName: Record<string, Race> = {};
@@ -61,6 +61,10 @@ const ParseRace = (raw: RawRaceData) => {
 		}
 
 	}
+	if (raw.schools) {
+		race.schools.push(...raw.schools);
+	}
+
 	const mods = raw.mod;
 	if (mods) {
 		let k: keyof typeof mods;
