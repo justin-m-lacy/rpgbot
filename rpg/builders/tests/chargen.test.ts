@@ -1,4 +1,4 @@
-import { GetTestGame } from '__tests__/mock-game';
+import { MockGame } from '__tests__/mock-game';
 import { GenChar } from 'rpg/builders/chargen';
 import { InitGame } from 'rpg/init';
 import { GetClass, GetRace } from 'rpg/parsers/parse-class';
@@ -14,7 +14,7 @@ describe('Generate New Char', () => {
 
 	it('Should Generate new Character', () => {
 
-		const game = GetTestGame();
+		const game = MockGame();
 		const race = GetRace('elf')!;
 		const cls = GetClass('warrior')!;
 

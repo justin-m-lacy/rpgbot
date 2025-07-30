@@ -1,4 +1,4 @@
-import { TOnDrop } from "rpg/effects/ondrop";
+import { TItemEffect } from "rpg/effects/ondrop";
 
 export type RawItemData = (typeof import('data/items/items.json', { assert: { type: 'json' } })['misc' | 'special'][number]) & { id: string }
 
@@ -16,7 +16,7 @@ export type ItemProto = {
 	created?: number,
 	/// file/image attachment
 	embed?: string,
-	ondrop?: TOnDrop
+	ondrop?: TItemEffect
 }
 
 export enum ItemType {

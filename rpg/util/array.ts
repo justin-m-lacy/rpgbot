@@ -1,3 +1,17 @@
+/**
+ * Apply map and filter to array at same time.
+ * @param arr 
+ * @param f 
+ * @returns 
+ */
+export const mapFilter = <T, B>(arr: T[], f: (v: T, i: number) => B | null | undefined) => {
+	const res: B[] = [];
+	for (let i = 0; i < arr.length; i++) {
+		const b = f(arr[i], i);
+		if (b) res.push(b);
+	}
+	return res;
+}
 
 /**
  * Determines if array contains any of the given params.

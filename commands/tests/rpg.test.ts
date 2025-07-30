@@ -6,7 +6,7 @@ describe('Test rpg mock', () => {
 
 		const rpg = MockRpg();
 
-		console.log('ctx type: ' + rpg.context.type);
+		//console.log('ctx type: ' + rpg.context.type);
 
 	});
 

@@ -1,3 +1,5 @@
+import { Percent } from "rpg/values/percent";
+
 export type RawIf = Record<string, any>;
 
 export type TestFunc<T extends object> = (targ: T) => boolean;
@@ -21,23 +23,38 @@ export const TestRequire = <T extends object>(targ: T, req: TRequire<T>) => {
 
 }
 
-/**
- * Test if requirement is met.
- * @param targ 
- * @param req 
- * @returns 
- */
-const TestEqual = (targ: Record<string, any>, req?: RawIf) => {
 
-	if (!req) return true;
+export class TestEqual<T extends any = any> {
 
-	if (typeof req == 'object') {
+	vals: Record<string, any>;
 
-		for (const k in req) {
-			if (targ[k] != req[k]) return false;
+	constructor(vals: Record<string, any>) {
+		this.vals = vals;
+	}
+
+	test(targ: T) {
+
+		for (const k in this.vals) {
+			if (targ[k as keyof T] != this.vals[k]) return false;
 		}
 		return true;
 
+
+	}
+
+}
+
+
+export class TestPct {
+
+	pct: Percent;
+
+	constructor(pct: Percent) {
+		this.pct = pct;
+	}
+
+	test(_: any) {
+		return this.pct.value > 0;
 	}
 
 }

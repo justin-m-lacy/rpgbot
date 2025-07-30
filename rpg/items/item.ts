@@ -118,9 +118,10 @@ export class Item<Proto extends ItemProto = ItemProto> {
 	}
 
 	/**
-	 * Option to remap Item on player take.
+	 * On pickup item from ground.
+	 * @returns optional remap Item on player take.
 	 */
-	onTake(char: Char): Item | null | undefined { return this }
+	onTake(game: Game, char: Char): Item | null { return this }
 
 	/**
 	 * On Item dropped.
@@ -133,7 +134,7 @@ export class Item<Proto extends ItemProto = ItemProto> {
 		if (this.proto?.ondrop) {
 
 			if (this.proto.ondrop.spawn) {
-				game.genMobs(this.proto.ondrop.spawn, char.at);
+				game.spawn(this.proto.ondrop.spawn, char.at);
 			}
 			return !this.proto.ondrop.destroy;
 
@@ -141,6 +142,7 @@ export class Item<Proto extends ItemProto = ItemProto> {
 		return true;
 
 	}
+
 
 	getView(char?: Char): [string, string | undefined] {
 		return [this.getDetails(char, false), this.embed];

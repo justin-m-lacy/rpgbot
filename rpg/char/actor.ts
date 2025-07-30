@@ -77,7 +77,7 @@ export class Actor {
 	readonly _hp = new Maxable('hp');
 	readonly _mp = new Maxable('mp');
 
-	// convenience for shorter formulas.
+	// convenience for setter.
 	get hp() { return this._hp; }
 	set hp(v) { this._hp.value = v.valueOf(); }
 

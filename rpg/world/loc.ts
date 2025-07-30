@@ -341,6 +341,7 @@ export class Loc {
 
 	/**
 	 * Get item data without taking it.
+	 * @param - 1-based index of item to get.
 	 */
 	get(item: ItemIndex) { return this.inv.get(item); }
 
@@ -352,7 +353,7 @@ export class Loc {
 		return this.inv.add(item);
 	}
 
-	takeRange(start: number, end: number) {
+	takeRange(start: ItemIndex, end: ItemIndex) {
 		return this.inv.takeRange(start, end);
 	}
 

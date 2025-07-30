@@ -148,7 +148,7 @@ export class Inventory<T extends Item = Item> extends Item implements IInventory
 
 	/**
 	 * Return item without removing it.
-	 * @param  start
+	 * @param  start - 1-based index of item to get.
 	 * @returns  Item found, or null on failure.
 	 */
 	get(start?: ItemIndex): T | null {

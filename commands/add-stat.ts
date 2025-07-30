@@ -1,7 +1,6 @@
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { CustomButton } from "@/bot/command-map";
 import { ButtonStyle } from "discord.js";
-import { StatIds } from "rpg/char/stat";
 import { ToActionRows } from "rpg/components";
 import { SendPrivate } from "rpg/display/display";
 import { Rpg } from "rpg/rpg";
@@ -28,7 +27,7 @@ export default NewCommand<Rpg>(
 
 						ToActionRows(
 
-							StatIds.map(s =>
+							Object.keys(char.stats).map(s =>
 								CustomButton({
 									customId: 'addstat',
 									label: s,

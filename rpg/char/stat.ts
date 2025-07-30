@@ -6,7 +6,6 @@ import { Simple } from "rpg/values/simple";
 export type StatDef = typeof import('data/char/stats.json')[number];
 export const StatDefs: Record<string, typeof import('data/char/stats.json')[number]> = {};
 
-export const StatIds = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 export type StatKey = typeof import('data/char/stats.json')[number]['id'];
 
 export async function LoadStats() {

@@ -1,5 +1,6 @@
 import { Char } from "rpg/char/char";
 import { Item } from "rpg/items/item";
+import type { Game } from '../game';
 
 /**
  * Quantity of gold dropped on ground.
@@ -18,10 +19,10 @@ export class GoldDrop extends Item {
 		this.amt = amt;
 	}
 
-	onTake(char: Char) {
+	onTake(_: Game, char: Char) {
 
 		char.gold += this.amt;
-		return undefined;
+		return null;
 
 	}
 

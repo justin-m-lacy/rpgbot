@@ -15,8 +15,9 @@ export const IsPctValue = (str: string): str is `${number}%:${number}` => {
 }
 
 
-export const ParsePercent = (data: PercentData, id: string = 'pct') => {
+export const ParsePercent = (data: PercentData | number, id: string = 'pct') => {
 
+	if (typeof data === 'number') return new Percent(id, data);
 	const res = PctTest.exec(data);
 	return res ? new Percent(id, parseInt(res[1])) : undefined;
 

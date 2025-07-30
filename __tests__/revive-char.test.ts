@@ -2,7 +2,7 @@ import { InitGame } from 'rpg/init';
 import { Weapon } from 'rpg/items/weapon';
 import { ReviveChar } from '../rpg/parsers/revive-char';
 import CharData from './data/chars/wizardtest.json';
-import { GetTestGame } from './mock-game';
+import { MockGame } from './mock-game';
 
 describe('Revive Character File', () => {
 
@@ -10,7 +10,7 @@ describe('Revive Character File', () => {
 		await InitGame();
 	});
 
-	const game = GetTestGame();
+	const game = MockGame();
 
 	afterAll(() => {
 		game.stop();

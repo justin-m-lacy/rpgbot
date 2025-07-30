@@ -1,5 +1,6 @@
 import Epitaphs from 'data/items/epitaphs.json';
 import { TActor } from 'rpg/char/mobs';
+import { Game } from 'rpg/game';
 import { ItemProto, ItemType } from 'rpg/items/types';
 import { Char } from "../char/char";
 import { genderfy } from '../social/gender';
@@ -87,6 +88,16 @@ export class Grave extends Item implements TStacker {
 		this.char = typeof char === 'string' ? char : char?.name;
 		this.slayer = slayer ?? 'none';
 		this.epitaph = epitaph ?? '';
+
+	}
+
+	onTake(game: Game, char: Char): Item | null {
+
+		if (Math.random() < 0.2) {
+			game.spawn(["zombie"], char.at);
+		}
+
+		return this;
 
 	}
 

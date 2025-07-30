@@ -4,6 +4,7 @@ import { GenShop } from 'rpg/builders/shopgen';
 import { ItemList } from 'rpg/display/items';
 import { ItemType } from 'rpg/items/types';
 import { RandMonster } from 'rpg/parsers/mobs';
+import { mapFilter } from 'rpg/util/array';
 import { ICache } from 'rpg/util/icache';
 import { Coord, TCoord } from 'rpg/world/coord';
 import { GenLoc } from 'rpg/world/worldgen';
@@ -25,7 +26,11 @@ export class World {
 	readonly cache: ICache<Block>;
 	readonly chars: ICache<Char>
 
-	constructor(blockCache: ICache<Block>, chars: ICache<Char>) {
+	readonly game: Game;
+
+	constructor(game: Game, blockCache: ICache<Block>, chars: ICache<Char>) {
+
+		this.game = game;
 
 		this.cache = blockCache;
 		this.chars = chars;
@@ -109,22 +114,36 @@ export class World {
 	}
 
 	/**
-	 * Attempt to take an item from cur location.
-	 * @param char
-	 * @param first
+	 * Get items at location without taking.
+	 * @param char 
+	 * @param first 
+	 * @param end 
 	 */
-	async take(char: Char, first: string | number, end?: string | number | null) {
+	get(char: Char, first: string | number, end?: string | number | null) {
+
+	}
+
+	/**
+	 * Attempt to take item from cur location.
+	 * @param char
+	 * @param start
+	 */
+	async take(char: Char, start: string | number, end?: string | number | null) {
 
 		const loc = await this.getOrGen(char.at, char);
 
-		const it = (end != null) ? loc.takeRange(first as number, end as number) : loc.take(first);
-		if (!it) return 'Item not found.';
+		if (end != null) {
 
-		const ind = char.addItem(it);
-		await this.quickSave(loc);
+			const items = loc.takeRange(start, end);
+			return items ? mapFilter(items, (v) => v.onTake(this.game, char)) : undefined;
 
-		return Array.isArray(it) ? `${char.name} took ${it.length} items.` :
-			`${char.name} took ${it.name}. (${ind})`;
+		} else {
+
+			// can take fail or just remap to null??
+			return loc.take(start)?.onTake(this.game, char);
+
+		}
+
 	}
 
 	/**

@@ -1,7 +1,6 @@
 import { type ChatCommand } from "@/bot/cmd-wrapper";
 import { EmbedBuilder, MessageFlags, type InteractionReplyOptions } from "discord.js";
 import { getNextExp } from "rpg/char/level";
-import { StatIds, type StatKey } from "rpg/char/stat";
 import { getEvil } from "rpg/display/char";
 import { smallNum } from "rpg/util/format";
 import { Char } from '../char/char';
@@ -102,15 +101,11 @@ export const CharLongDesc = (char: Char): string => {
 
 const statString = (char: Char) => {
 
-	let id = '';
 	let res = '';
 
-	const len = StatIds.length;
+	for (const id in char.stats) {
 
-	for (let i = 0; i < len; i++) {
-
-		id = StatIds[i];
-		const stat = char.stats[id as StatKey];
+		const stat = char.stats[id];
 		if (!stat) continue;
 
 		res += `\n${id}: ` + (stat.value ?? 0) + (stat.base != stat.value ? ` (${stat.base} base)` : '');

@@ -72,7 +72,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 		this.actions = actions;
 
-		this.world = new World(cache.subcache<Block>('world', (data) => new Block(data)),
+		this.world = new World(this, cache.subcache<Block>('world', (data) => new Block(data)),
 			charCache);
 
 		this.charCache = charCache;
@@ -358,8 +358,6 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 		}
 
 	}
-
-
 
 	async onCharHit(char: TActor, attacker: TActor | string, info: AttackInfo) {
 
@@ -910,7 +908,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	public genMobs(s: string[], at: TCoord) {
+	public spawn(s: string[], at: TCoord) {
 
 		const loc = this.world.getLoc(at);
 		if (!loc) return false;
@@ -940,7 +938,18 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 	}
 
 	async take(this: Game<A, K>, char: Char, first: ItemIndex, end?: ItemIndex | null) {
-		char.log(await this.world.take(char, first, end));
+
+		let it = await this.world.take(char, first, end);
+
+		if (!it || (Array.isArray(it) && it.length == 0)) {
+			char.log('Item not found.');
+			return;
+		}
+
+		const ind = char.addItem(it);
+		char.log(Array.isArray(it) ? `${char.name} took ${it.length} items.` :
+			`${char.name} took ${it.name}. (${ind})`);
+
 	}
 
 

@@ -1,7 +1,8 @@
 import { TActor } from 'rpg/char/mobs';
-import { TestRequire, type RawIf, type TRequire } from 'rpg/effects/requires.js';
+import { type RawIf } from 'rpg/effects/requires.js';
 import { ParseResult, type RawResult, type Result } from 'rpg/effects/results.js';
-import { Char } from '../char/char.js';
+import type { Char } from '../char/char.js';
+import type { Game } from '../game';
 
 
 const effects: Record<string, Effect> = {};
@@ -13,10 +14,6 @@ export class Effect {
 	readonly id: string;
 	readonly name: string;
 	readonly result: Result<TActor>[];
-
-	private err?: string;
-
-	private need?: TRequire<Char> = undefined;
 
 	constructor(id: string, name?: string) {
 
@@ -31,36 +28,26 @@ export class Effect {
 	 * @param char 
 	 * @returns 
 	 */
-	apply(char: TActor) {
+	apply(game: Game, char: TActor) {
 
-		if (this.need && !TestRequire(char, this.need)) {
+		const len = this.result.length;
+		for (let i = 0; i < len; i++) {
 
-			if (this.err) char.log(this.err);
-			return false;
+			const res = this.result[i];
+			if (res.apply(game, char)) {
 
-		}
-
-		if (this.result) {
-
-			const len = this.result.length;
-			for (let i = 0; i < len; i++) {
-
-				const res = this.result[i];
-				if (res.apply(char)) {
-
-					if (res.fb) {
-						char.log(res.fb);
-					}
-				} else {
-
-					if (res.err) {
-						char.log(res.err);
-					}
+				if (res.fb) {
+					char.log(res.fb);
 				}
+			} else {
 
+				if (res.err) {
+					char.log(res.err);
+				}
 			}
 
 		}
+
 		return true;
 
 

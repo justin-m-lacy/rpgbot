@@ -69,8 +69,8 @@ export class Feature<Proto extends FeatureProto = FeatureProto> extends Item<Pro
 		if (this.effect) {
 
 			if (Array.isArray(this.effect)) {
-				for (let i = 0; i < this.effect.length; i++) this.effect[i].apply(char);
-			} else this.effect.apply(char);
+				for (let i = 0; i < this.effect.length; i++) this.effect[i].apply(game, char);
+			} else this.effect.apply(game, char);
 
 		} else {
 			char.log('Nothing seems to happen.');

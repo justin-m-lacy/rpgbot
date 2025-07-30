@@ -6,6 +6,7 @@ import type { Path } from 'rpg/values/paths';
 import type { Numeric } from 'rpg/values/types';
 import { ProtoDot } from './dots.js';
 
+// todo: this could just be a TNpcAction/TCharAction
 export class Spell extends Item {
 
 	/**

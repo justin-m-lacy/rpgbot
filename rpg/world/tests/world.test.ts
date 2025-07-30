@@ -1,4 +1,5 @@
 import { MockCache } from "__tests__/mock-cache";
+import { MockGame } from "__tests__/mock-game";
 import { InitGame } from "rpg/init";
 import { World } from "rpg/world/world";
 
@@ -15,7 +16,7 @@ describe('Game World', async () => {
 	test('Generate new world.', async () => {
 
 		const Cache = MockCache();
-		const world = new World(new Cache(), new Cache());
+		const world = new World(MockGame(), new Cache(), new Cache());
 
 		await world.init();
 
@@ -30,7 +31,7 @@ describe('Game World', async () => {
 	it('Can generate new locations', async () => {
 
 		const Cache = MockCache();
-		const world = new World(new Cache(), new Cache());
+		const world = new World(MockGame(), new Cache(), new Cache());
 
 		const loc = await world.getOrGen({ x: 3, y: -2 });
 		expect(loc).toBeDefined();

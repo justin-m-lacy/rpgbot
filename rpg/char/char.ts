@@ -16,7 +16,6 @@ import { Actor } from './actor';
 import { Equip } from './equip';
 import { History } from './events';
 import { tryLevel } from './level';
-import { StatIds } from './stat';
 
 export class Char extends Actor {
 
@@ -101,7 +100,7 @@ export class Char extends Actor {
 	addStat(stat: string) {
 
 		stat = stat.toLowerCase();
-		if (!StatIds.includes(stat)) {
+		if (!Object.hasOwn(this.stats, stat)) {
 			this.log('Stat not found');
 			return false;
 		}
@@ -263,11 +262,11 @@ export class Char extends Actor {
 		if (Array.isArray(it)) {
 			const ind = this.inv.size;
 			for (let i = 0; i < it.length; i++) {
-				this.inv.add(it[i]?.onTake(this));
+				this.inv.add(it[i]);
 			}
 			return ind;
 		} else {
-			return this.inv.add(it?.onTake(this));
+			return this.inv.add(it);
 		}
 
 	}
