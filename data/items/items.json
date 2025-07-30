@@ -343,8 +343,8 @@
     ],
     "special": [
         {
+            "id": "dragontears",
             "name": "Dragon Tears",
-            "desc": "You made him cry!!!",
             "price": 100,
             "type": "ing"
         },

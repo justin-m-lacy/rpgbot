@@ -51,11 +51,13 @@ async function InitBasic() {
 	JunkProtos.push(...items.misc as RawItemData[]);
 
 	for (let i = JunkProtos.length - 1; i >= 0; i--) {
-		ProtoItems[JunkProtos[i].id] = InitProto(JunkProtos[i]);
+		InitProto(JunkProtos[i]);
+		ProtoItems[JunkProtos[i].id] = JunkProtos[i];
 	}
 
 	for (let i = spec.length - 1; i >= 0; i--) {
-		ProtoItems[spec[i].id] = InitProto(spec[i]);
+		InitProto(spec[i]);
+		ProtoItems[spec[i].id] = spec[i];
 	}
 
 }
@@ -75,6 +77,24 @@ async function InitChests() {
 	}
 
 }
+export const AddProtoItems = <T extends ItemProto>(arr: Record<string, T> | T[]) => {
+
+	if (Array.isArray(arr)) {
+		for (const it of arr) ProtoItems[it.id] = it;
+	} else {
+		for (const k in arr) {
+			ProtoItems[arr[k].id] = arr[k];
+		}
+	}
+
+}
+
+export const AddProtoItem = <T extends ItemProto>(it: T) => {
+	ProtoItems[it.id] = it;
+	if (it.name) ProtoItems[it.name] = it;
+}
+
+export const GetProto = <T extends ItemProto>(s: string) => ProtoItems[s] as T;
 
 
 export const GenLoot = (mob: Mob | Actor) => {
@@ -185,25 +205,6 @@ export const GenJunkItem = () => {
 	return ReviveItem(data);
 
 }
-
-export const AddProtoItems = <T extends ItemProto>(arr: Record<string, T> | T[]) => {
-
-	if (Array.isArray(arr)) {
-		for (const it of arr) ProtoItems[it.id] = it;
-	} else {
-		for (const k in arr) {
-			ProtoItems[arr[k].id] = arr[k];
-		}
-	}
-
-}
-
-export const AddProtoItem = <T extends ItemProto>(it: T) => {
-	ProtoItems[it.id] = it;
-	if (it.name) ProtoItems[it.name] = it;
-}
-
-export const GetProto = <T extends ItemProto>(s: string) => ProtoItems[s] as T;
 
 export const Craft = (char: Char, name: string, desc?: string, embed?: string) => {
 
