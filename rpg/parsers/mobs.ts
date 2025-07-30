@@ -8,6 +8,7 @@ import { ParseValue } from 'rpg/parsers/values';
 import { CalcFaction, Team } from 'rpg/social/teams';
 import { TWritable } from 'rpg/util/type-utils';
 import { Biome } from 'rpg/world/loc';
+import { randElm } from '../../src/utils/jsutils';
 import { Numeric } from '../values/types';
 
 type RawMobData = ItemProto & any & {
@@ -15,6 +16,12 @@ type RawMobData = ItemProto & any & {
 	weap?: any;
 	ondie?: any;
 };
+
+export type TSpawnOpts = string | {
+	kind: string;
+	level?: number;
+	biome?: string;
+} | { kind?: string, level: number, biome?: string }
 
 export type MobData = {
 
@@ -68,8 +75,9 @@ const writable: Partial<Record<keyof Mob | keyof MobData, boolean>> = {};
 
 
 // monster template objects.
-const templates: { [name: string]: MobData } = {};
+const templates: Partial<{ [id: string]: MobData }> = {};
 const byLevel: (MobData[])[] = [];
+const byKind: Partial<{ [kind: string]: MobData[] }> = {};
 
 export const GetMob = (id: string) => {
 	return templates[id];
@@ -85,8 +93,10 @@ const InitMobs = async () => {
 
 		templates[t.name] = t;
 
-		const a = byLevel[Math.floor(t.level)] ?? (byLevel[Math.floor(t.level)] = []);
-		a.push(t);
+		if (t.kind) {
+			(byKind[t.kind] ??= []).push(t);
+		}
+		(byLevel[Math.floor(t.level)] ??= []).push(t);
 
 	}
 
@@ -136,6 +146,29 @@ const parseTemplate = (data: RawMobData) => {
 export const GenMob = (id: string) => {
 	return templates[id] ? CreateMob(templates[id]) : null;
 }
+export const SpawnMob = (info: Exclude<TSpawnOpts, string>) => {
+
+	if (info.kind) {
+		const group = byKind[info.kind];
+		if (!group || !group.length) return null;
+		if (info.level) {
+
+			const min = info.level - 0.2 * info.level;
+			const max = info.level + 0.2 * info.level;
+			const elm = randElm(group.filter(v => v.level >= min && v.level <= max));
+			if (elm) return CreateMob(elm);
+
+		} else {
+			const elm = randElm(group);
+			if (elm) return CreateMob(elm);
+		}
+
+	} else if (info.level) {
+		return RandMonster(info.level, info.biome);
+	}
+	return null;
+
+}
 
 /**
  * Create mob from template
@@ -180,7 +213,7 @@ const CreateMob = (tpl: MobData) => {
 
 }
 
-export const RandMonster = (lvl: number, biome: string) => {
+export const RandMonster = (lvl: number, biome?: string) => {
 
 	lvl = Math.floor(lvl);
 
