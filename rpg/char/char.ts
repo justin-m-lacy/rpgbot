@@ -53,7 +53,10 @@ export class Char extends Actor {
 
 	private readonly _log: Log = new Log();
 	readonly inv: Inventory;
+
 	private _equip: Equip;
+	get equip() { return this._equip }
+
 	private _statPts: number;
 	private _spentPts: number;
 	private _skillPts: number = 0;
@@ -144,7 +147,7 @@ export class Char extends Actor {
 	 * @param what
 	 * @returns Error message or true.
 	 */
-	equip(what: ItemIndex) {
+	wear(what: ItemIndex) {
 
 		const item = this.inv.get(what);
 		if (!item) {
@@ -237,8 +240,6 @@ export class Char extends Actor {
 	 * @param slot
 	 */
 	getEquip(slot: HumanSlot) { return this._equip.get(slot); }
-
-	listEquip() { return this._equip.getList(); }
 
 	/**
 	 * Remove and returns a random item, or null.

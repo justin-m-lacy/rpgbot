@@ -8,7 +8,7 @@ export class Potion extends Item implements TStacker {
 
 	static Decode(json: any) {
 
-		let p = new Potion(json);
+		const p = new Potion(json);
 
 		if (json.effect) p.effect = json.effect;
 

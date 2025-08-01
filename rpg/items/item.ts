@@ -133,9 +133,7 @@ export class Item<Proto extends ItemProto = ItemProto> {
 
 		if (this.proto?.ondrop) {
 
-			if (this.proto.ondrop.spawn) {
-				game.spawn(this.proto.ondrop.spawn, char.at);
-			}
+			this.proto.ondrop.apply(game, char)
 			return !this.proto.ondrop.destroy;
 
 		}

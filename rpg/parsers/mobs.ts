@@ -2,6 +2,7 @@ import { Formula } from 'formulic';
 import { Mob } from 'rpg/char/mobs';
 import { StatKey } from 'rpg/char/stat';
 import { StatusFlag } from 'rpg/char/states';
+import { TSpawnOpts } from 'rpg/effects/spawn';
 import { ItemProto } from 'rpg/items/types';
 import { ReviveWeapon } from 'rpg/parsers/armor';
 import { ParseValue } from 'rpg/parsers/values';
@@ -16,12 +17,6 @@ type RawMobData = ItemProto & any & {
 	weap?: any;
 	ondie?: any;
 };
-
-export type TSpawnOpts = string | {
-	kind: string;
-	level?: number;
-	biome?: string;
-} | { kind?: string, level: number, biome?: string }
 
 export type MobData = {
 
@@ -146,7 +141,9 @@ const parseTemplate = (data: RawMobData) => {
 export const GenMob = (id: string) => {
 	return templates[id] ? CreateMob(templates[id]) : null;
 }
-export const SpawnMob = (info: Exclude<TSpawnOpts, string>) => {
+export const SpawnMob = (info: TSpawnOpts) => {
+
+	if (typeof info == 'string') return GenMob(info);
 
 	if (info.kind) {
 		const group = byKind[info.kind];

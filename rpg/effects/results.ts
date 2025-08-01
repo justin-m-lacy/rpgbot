@@ -1,6 +1,7 @@
 import { Char } from "rpg/char/char";
 import { TActor } from "rpg/char/mobs";
 import { TestRequire, type RawIf, type TRequire } from "rpg/effects/requires.js";
+import { TSpawnOpts } from "rpg/effects/spawn";
 import type { Game } from "rpg/game";
 import { ParseValue, ValueOrFb } from "rpg/parsers/values";
 import { AddValues } from "rpg/values/apply";
@@ -14,7 +15,8 @@ export type RawResult = {
 	add: Record<string, any>,
 	fb?: string,
 	err?: string,
-	pct?: number
+	pct?: number,
+	destroy?: boolean
 }
 
 type BaseResult<T extends object> = {
@@ -69,13 +71,15 @@ export class Result<T extends TActor> {
 	set?: Path<Numeric | string | object>;
 	add?: Path<TValue>;
 	pct?: Percent;
-	spawn?: string[];
+	spawn?: TSpawnOpts[];
+	destroy?: boolean;
 
 	constructor(opts: {
 		if?: TRequire<T>,
 		set?: Path<TValue | string | object>,
 		add?: Path<TValue>,
 		pct?: Percent,
+		destroy?: boolean,
 		fb?: string, err?: string
 	}) {
 
@@ -85,6 +89,7 @@ export class Result<T extends TActor> {
 		this.fb = opts.fb;
 		this.err = opts.err;
 		this.pct = opts.pct;
+		this.destroy = opts.destroy;
 
 	}
 

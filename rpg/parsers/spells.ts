@@ -39,7 +39,7 @@ export const DecodeSpell = (json: any) => {
 
 }
 
-export const ParseSpell = (raw: RawSpell) => {
+const ParseSpell = (raw: RawSpell) => {
 
 	return new Spell({
 		id: raw.id,

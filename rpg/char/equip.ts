@@ -1,4 +1,3 @@
-import { ItemList } from 'rpg/display/items';
 import { ItemType } from 'rpg/items/types';
 import { Item } from '../items/item';
 import { HumanSlot, HumanSlots, THanded, Wearable } from "../items/wearable";
@@ -25,50 +24,7 @@ export class Equip {
 		right: null
 	};
 
-	/*toJSON() {
-
-		const out: { slots: Partial<Record<string, any>> } = {
-			slots: {
-			}
-		}
-		let k: keyof HumanSlots;
-		for (k in this.slots) {
-			out.slots[k] = this.slots[k] ?? undefined
-		}
-		return out;
-
-	}*/
-
 	constructor() {
-	}
-
-	/**
-	 * @returns string list of all equipped items.
-	*/
-	getList() {
-
-		let list = '';
-
-		let cur, slot: HumanSlot;
-		for (slot in this.slots) {
-
-			list += '\n' + slot + ': ';
-
-			cur = this.slots[slot];
-			if (cur == null) {
-				list += 'nothing'
-			} else if (Array.isArray(cur)) {
-
-				list += ItemList(cur);
-
-			} else {
-				list += cur.name;
-			}
-
-		}
-
-		return list;
-
 	}
 
 	get(slot: HumanSlot) {

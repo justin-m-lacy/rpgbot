@@ -10,6 +10,7 @@ import { useLikeStore } from 'rpg/combat/like-store';
 import { Loot } from 'rpg/combat/loot';
 import { TargetFlags } from 'rpg/combat/targets';
 import { TNpcAction } from 'rpg/combat/types';
+import { TSpawnOpts } from 'rpg/effects/spawn';
 import { Spell } from 'rpg/effects/spell.js';
 import { AttackInfo, TGameEvents } from 'rpg/events';
 import type { ItemIndex } from 'rpg/items/container';
@@ -17,7 +18,7 @@ import { GoldDrop } from 'rpg/items/gold';
 import { Grave } from 'rpg/items/grave';
 import { Grimoire } from 'rpg/items/grimoire';
 import { HumanSlot, toSlot } from 'rpg/items/wearable';
-import { GenMob } from 'rpg/parsers/mobs';
+import { SpawnMob } from 'rpg/parsers/mobs';
 import { TryEat } from 'rpg/talents/cook';
 import { quickSplice } from 'rpg/util/array';
 import { smallNum } from 'rpg/util/format';
@@ -829,7 +830,7 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	equip(this: Game<A, K>, char: Char, wot: ItemIndex) {
 
-		if (char.equip(wot)) {
+		if (char.wear(wot)) {
 			char.log(`${char.name} equips ${wot}`);
 		}
 
@@ -908,13 +909,13 @@ export class Game<A extends Record<string, TGameAction> = Record<string, TGameAc
 
 	}
 
-	public spawn(s: string[], at: TCoord) {
+	public spawn(s: TSpawnOpts[], at: TCoord) {
 
 		const loc = this.world.getLoc(at);
 		if (!loc) return false;
 
 		for (let i = 0; i < s.length; i++) {
-			const m = GenMob(s[i]);
+			const m = SpawnMob(s[i]);
 			if (m) loc.addNpc(m);
 		}
 

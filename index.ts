@@ -85,6 +85,7 @@ async function loadCommands() {
 	for (const file of fileList) {
 
 		if (!file.isFile()) continue;
+		if (file.name.includes('.test')) continue;
 		const ext = path.extname(file.name).toLowerCase();
 		if (!ValidExtensions.includes(ext)) continue;
 

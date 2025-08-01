@@ -1,6 +1,7 @@
 import type { ChatCommand } from "@/bot/cmd-wrapper";
 import { CommandData, NewCommand, StrOpt } from "@/bot/command";
 import { SendBlock, SendPrivate } from "rpg/display/display";
+import { EquipList } from "rpg/display/equip";
 import type { HumanSlot } from "rpg/items/wearable";
 import { Rpg } from "rpg/rpg";
 
@@ -17,7 +18,7 @@ export default NewCommand<Rpg>({
 		const who = m.options.getString('who', true);
 
 		const slot = m.options.getString('slot', true) as HumanSlot;
-		if (!slot) await SendBlock(m, `${char.name} equip:\n${char.listEquip()}`);
+		if (!slot) await SendBlock(m, `${char.name} equip:\n${EquipList(char)}`);
 		else {
 
 			const item = char.getEquip(slot);
