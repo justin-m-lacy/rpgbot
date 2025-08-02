@@ -136,7 +136,7 @@ export const ParsePaths = <T extends any, C extends any = T>(
 }
 
 /**
- * Parses paths using a converter that includes a 'source' Table value.
+ * Parses paths using a converter that includes a 'source' value.
  * Expand object of { `key0.key1...keyN`:Value} into recursive object paths:
  * { key0:{key1:{...keyN:Value}}}
  * Converter converts the original values before inserted into end of path.
@@ -145,16 +145,12 @@ export const ParsePaths = <T extends any, C extends any = T>(
  * @param converter - Optional converter for each original value item.
  * @returns 
  */
-export const ParseTablePaths = <Vals extends any, S extends any, C extends any = Vals,>(
-  srcVals: Record<string, Vals> | string,
+export const ConvertToPath = <Vals extends any, S extends any, C extends any = Vals,>(
+  srcVals: Record<string, Vals>,
   source: S,
   id: string,
   converter?: (orig: Vals, key: string, table: S) => C,
 ) => {
-
-  if (typeof srcVals === 'string') {
-    srcVals = { [srcVals]: 1 } as Record<string, Vals>;
-  }
 
   const dest = NewPath<Exclude<C, undefined>>(id);
 

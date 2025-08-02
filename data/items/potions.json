@@ -12,91 +12,91 @@
     {
         "id": "pot_poison1",
         "name": "minor poison potion",
-        "effect": "minor poison",
+        "effect": "poison1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_str1",
         "name": "minor str potion",
-        "effect": "minor str",
+        "effect": "str1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_con1",
         "name": "minor con potion",
-        "effect": "minor con",
+        "effect": "con1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_dex1",
         "name": "minor dex potion",
-        "effect": "minor dex",
+        "effect": "dex1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_int1",
         "name": "minor int potion",
-        "effect": "minor int",
+        "effect": "int1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_wis1",
         "name": "minor wis potion",
-        "effect": "minor wis",
+        "effect": "wis1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_cha1",
         "name": "minor cha potion",
-        "effect": "minor cha",
+        "effect": "cha1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_str2",
         "name": "light str potion",
-        "effect": "light str",
+        "effect": "str2",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_con2",
         "name": "light con potion",
-        "effect": "light con",
+        "effect": "con2",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_dex2",
         "name": "light dex potion",
-        "effect": "light dex",
+        "effect": "dex2",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_int2",
         "name": "light int potion",
-        "effect": "light int",
+        "effect": "int2",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_wis2",
         "name": "light wis potion",
-        "effect": "light wis",
+        "effect": "wis2",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_cha2",
         "name": "light cha potion",
-        "effect": "light cha",
+        "effect": "cha2",
         "price": 1,
         "level": 0
     },
@@ -247,42 +247,42 @@
     {
         "id": "pot_regen1",
         "name": "minor regeneration potion",
-        "effect": "minor regeneration",
+        "effect": "regen1",
         "price": 1,
         "level": 0
     },
     {
         "id": "pot_regen2",
         "name": "light regeneration potion",
-        "effect": "light regeneration",
+        "effect": "regen2",
         "price": 5,
         "level": 1
     },
     {
         "id": "pot_regen3",
         "name": "potion of regeneration",
-        "effect": "regeneration",
+        "effect": "regen3",
         "price": 25,
         "level": 5
     },
     {
         "id": "pot_regen4",
         "name": "strong regeneration potion",
-        "effect": "strong regeneration",
+        "effect": "regen4",
         "price": 5,
         "level": 12
     },
     {
         "id": "pot_regen5",
         "name": "major regeneration potion",
-        "effect": "major regeneration",
+        "effect": "regen5",
         "price": 400,
         "level": 16
     },
     {
         "id": "pot_regen6",
         "name": "insane regeneration potion",
-        "effect": "insane regeneration",
+        "effect": "regen6",
         "price": 2000,
         "level": 22
     },

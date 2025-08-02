@@ -78,6 +78,11 @@ export class Mob {
 	readonly attacks: TNpcAction[] = [];
 	private _talents?: string[];
 
+	/**
+	 * applied properties.
+	 */
+	props?: any[] = [];
+
 	team: number = 0;
 	enemies: number = 0;
 

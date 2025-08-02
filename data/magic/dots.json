@@ -1,13 +1,13 @@
 [
     {
-        "id": "armor_1",
+        "id": "armor1",
         "name": "minor armor",
         "mod": {
             "armor": 1
         }
     },
     {
-        "id": "poison_1",
+        "id": "poison1",
         "name": "minor poison",
         "add": {
             "hp": "-1d2"
@@ -15,7 +15,7 @@
         "duration": 4
     },
     {
-        "id": "regen_1",
+        "id": "regen1",
         "name": "minor regeneration",
         "add": {
             "hp": "1d2"
@@ -23,55 +23,55 @@
         "duration": 4
     },
     {
-        "id": "str_1",
+        "id": "str1",
         "name": "minor str",
-        "mods": {
+        "mod": {
             "str": 1
         },
         "duration": 15
     },
     {
-        "id": "con_1",
+        "id": "con1",
         "name": "minor con",
-        "mods": {
+        "mod": {
             "con": 1
         },
         "duration": 15
     },
     {
-        "id": "dex_1",
+        "id": "dex1",
         "name": "minor dex",
-        "mods": {
+        "mod": {
             "dex": 1
         },
         "duration": 15
     },
     {
-        "id": "wis_1",
+        "id": "wis1",
         "name": "minor wis",
-        "mods": {
+        "mod": {
             "wis": 1
         },
         "duration": 15
     },
     {
-        "id": "int_1",
+        "id": "int1",
         "name": "minor int",
-        "mods": {
+        "mod": {
             "int": 1
         },
         "duration": 15
     },
     {
-        "id": "cha_1",
+        "id": "cha1",
         "name": "minor cha",
-        "mods": {
+        "mod": {
             "cha": 1
         },
         "duration": 15
     },
     {
-        "id": "regen_2",
+        "id": "regen2",
         "name": "light regeneration",
         "add": {
             "hp": "1d6"
@@ -79,103 +79,103 @@
         "duration": 5
     },
     {
-        "id": "str_2",
+        "id": "str2",
         "name": "light str",
-        "mods": {
+        "mod": {
             "str": 2
         },
         "duration": 25
     },
     {
-        "id": "con_2",
+        "id": "con2",
         "name": "light con",
-        "mods": {
+        "mod": {
             "con": 2
         },
         "duration": 25
     },
     {
-        "id": "dex_2",
+        "id": "dex2",
         "name": "light dex",
-        "mods": {
+        "mod": {
             "dex": 2
         },
         "duration": 25
     },
     {
-        "id": "int_2",
+        "id": "int2",
         "name": "light int",
-        "mods": {
+        "mod": {
             "int": 2
         },
         "duration": 25
     },
     {
-        "id": "wis_2",
+        "id": "wis2",
         "name": "light wis",
-        "mods": {
+        "mod": {
             "wis": 2
         },
         "duration": 25
     },
     {
-        "id": "cha_2",
+        "id": "cha2",
         "name": "light cha",
-        "mods": {
+        "mod": {
             "cha": 2
         },
         "duration": 25
     },
     {
-        "id": "str_3",
+        "id": "str3",
         "name": "medium str",
-        "mods": {
+        "mod": {
             "str": 4
         },
         "duration": 30
     },
     {
-        "id": "con_3",
+        "id": "con3",
         "name": "medium con",
-        "mods": {
+        "mod": {
             "con": 4
         },
         "duration": 30
     },
     {
-        "id": "dex_3",
+        "id": "dex3",
         "name": "medium dex",
-        "mods": {
+        "mod": {
             "dex": 4
         },
         "duration": 30
     },
     {
-        "id": "int_3",
+        "id": "int3",
         "name": "medium int",
-        "mods": {
+        "mod": {
             "int": 4
         },
         "duration": 30
     },
     {
-        "id": "wis_3",
+        "id": "wis3",
         "name": "medium wis",
-        "mods": {
+        "mod": {
             "wis": 4
         },
         "duration": 30
     },
     {
-        "id": "cha_3",
+        "id": "cha3",
         "name": "medium cha",
-        "mods": {
+        "mod": {
             "cha": 4
         },
         "duration": 30
     },
     {
-        "id": "regen_3",
+        "id": "regen3",
         "name": "regeneration",
         "add": {
             "hp": "3d4+4"
@@ -183,7 +183,7 @@
         "duration": 10
     },
     {
-        "id": "regen_4",
+        "id": "regen4",
         "name": "strong regeneration",
         "add": {
             "hp": "3d6+8"
@@ -191,7 +191,7 @@
         "duration": 15
     },
     {
-        "id": "regen_5",
+        "id": "regen5",
         "name": "major regeneration",
         "add": {
             "hp": "3d8+10"
@@ -199,7 +199,7 @@
         "duration": 15
     },
     {
-        "id": "regen_6",
+        "id": "regen6",
         "name": "insane regeneration",
         "add": {
             "hp": "5d8+15"
@@ -207,7 +207,14 @@
         "duration": 15
     },
     {
-        "id": "revive_1",
+        "id": "bleed1",
+        "add": {
+            "hp": "-0.25~1"
+        },
+        "duration": 5
+    },
+    {
+        "id": "revive1",
         "name": "revive",
         "require": {
             "state": "dead"

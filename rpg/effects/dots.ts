@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { TActor } from 'rpg/char/mobs';
 import { StatusFlag } from 'rpg/char/states';
 import { Game } from 'rpg/game';
@@ -17,10 +18,12 @@ export type RawEffect = {
 	/// damage type.
 	type?: string;
 	dot?: Record<string, RawEffect>,
+	mod?: Record<string, string | number>,
+	add?: Record<string, string | number>,
+	stack?: number,
+	duration?: number,
 	time?: number
-} &
-	typeof import('data/magic/dots.json',
-	{ assert: { type: 'json' } })[number];
+}
 
 // effect types. loading at bottom.
 const DotTypes: { [name: string]: ProtoDot } = {};
@@ -33,8 +36,8 @@ export class ProtoDot {
 	readonly id: string;
 	readonly name: string;
 	readonly desc?: string;
-	readonly mods: Path<IMod> | null;
-	readonly add: Path<TValue> | null;
+	readonly mod?: Path<IMod> | undefined;
+	readonly add?: Path<TValue> | undefined;
 	readonly duration: number;
 
 	// kind of damage.
@@ -54,8 +57,8 @@ export class ProtoDot {
 	constructor(data: {
 		id: string,
 		name?: string,
-		mods?: Path<IMod> | null,
-		add?: Path<TValue> | null,
+		mod?: Path<IMod>,
+		add?: Path<TValue>,
 		duration?: number,
 		flags?: StatusFlag;
 		stack?: number,
@@ -64,8 +67,8 @@ export class ProtoDot {
 
 		this.id = data.id;
 		this.name = data.name ?? data.id;
-		this.add = data.add ?? null;
-		this.mods = data.mods ?? null;
+		this.add = data.add;
+		this.mod = data.mod;
 
 		this.kind = data.kind ?? 'unknown';
 
@@ -79,7 +82,7 @@ export class ProtoDot {
 	toJSON() {
 
 		return {
-			mods: this.mods,
+			mod: this.mod,
 			dot: this.add,			// formulas have toJSON()?
 			time: this.duration
 		};
@@ -101,7 +104,7 @@ export class Dot {
 			return null;
 		}
 
-		let e = json.efx;
+		let e = json.efx ?? json.dot;
 		if (typeof (e) === 'string') e = DotTypes[e];
 		else if (e && typeof e === 'object') e = new ProtoDot(e);
 		if (!e) return null;
@@ -114,38 +117,46 @@ export class Dot {
 
 		return {
 			src: this.maker,
-			efx: this.proto.id,
-			time: this._time
+			dot: this.proto ? this.proto?.id : undefined,
+			time: this.time
 		};
 
 	}
 
-	get flags() { return this.proto.flags }
+	readonly id: string;
 
-	get name() { return this.proto.name; }
-
-	get dot() { return this.proto.add; }
-
-	get mod() { return this.proto.mods }
-
-	get time() { return this._time; }
-
-	get id() { return this.proto.id }
+	readonly name: string;
 
 	// template for effect.
-	readonly proto: ProtoDot;
+	readonly proto?: ProtoDot;
 
-	private _time: number;
+	private time: number;
+
+	readonly mod: Path<IMod> | null;
+	readonly add: Path<TValue> | null;
+
+	duration: number;
 
 	// spell, npc, or action that created the effect.
 	readonly maker?: string;
 
+	flags: StatusFlag;
 
-	constructor(proto: ProtoDot, maker?: string, time?: number) {
+	constructor(proto?: ProtoDot, maker?: string, time?: number) {
+
+		this.id = proto?.id ?? randomUUID();
+
+		this.name = proto?.name ?? 'unknown';
+		this.flags = proto?.flags ?? 0;
+
+		this.mod = proto?.mod ?? null;
+		this.add = proto?.add ?? null;
+
+		this.duration = proto?.duration ?? 0;
 
 		this.proto = proto;
 		this.maker = maker;
-		this._time = time || this.proto.duration;
+		this.time = time ?? this.proto?.duration ?? 10;
 
 	}
 
@@ -174,45 +185,63 @@ export class Dot {
 	 */
 	tick<T extends TActor>(char: T, game: Game) {
 
-		if (!this.proto.duration) return false;
+		if (this.add) {
 
-		this._time--;
-
-		if (this.dot) {
-
-			AddValues(char, this.dot, 1);
+			AddValues(char, this.add, 1);
 			if (!char.isAlive()) {
-
-				if (this.maker) {
-					game.loadChar(this.maker).then((slayer) => {
-						game.events.emit('charDie', char, slayer ?? this.name);
-					})
-				} else {
-					game.events.emit('charDie', char, this.name);
-				}
-
+				game.events.emit('charDie', char, this.maker ?? this.id);
 			} else {
 				char.log(`${char.name} affected by ${this.name}.`);
 			}
 
 		}
 
-		return (this._time <= 0);
+		if (!this.duration) return false;
+
+		this.time--;
+		return (this.time <= 0);
 
 	}
 
 }
 
-export const ParseDotType = (raw: RawEffect, parent?: { id: string, name?: string }) => {
+export const ParseDotProto = (raw: RawEffect, parent?: { id: string, name?: string }) => {
 
 	return new ProtoDot({
 		id: raw.id ?? parent?.id,
 		name: raw.name ?? parent?.name,
-		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
-		add: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : null,
+		mod: raw.mod ? ParseMods(raw.mod, raw.id,) : undefined,
+		add: raw.dot ? ParseValues(raw.id, 'dot', raw.dot) : undefined,
 		duration: raw.time,
 	});
 
+
+}
+
+export const GetOrParseDots = (arr: Array<string | RawEffect>): undefined | ProtoDot[] => {
+
+	if (!Array.isArray(arr) || !arr.length) {
+		return undefined;
+	}
+
+	const res: ProtoDot[] = [];
+
+	for (let i = 0; i < arr.length; i++) {
+
+		if (typeof arr[i] === 'string') {
+			const d = DotTypes[arr[i] as string];
+			if (d) res.push(d);
+
+		} else {
+
+			const d = ParseDotProto(arr[i] as any);
+			if (d) res.push(d);
+
+		}
+
+	}
+
+	return res;
 
 }
 
@@ -220,7 +249,7 @@ export const LoadDotTypes = async () => {
 
 	const efx = (await import('data/magic/dots.json', { assert: { type: 'json' } })).default;
 	for (let i = efx.length - 1; i >= 0; i--) {
-		DotTypes[efx[i].id] = ParseDotType(efx[i] as any);
+		DotTypes[efx[i].id] = ParseDotProto(efx[i] as any);
 	}
 
 }

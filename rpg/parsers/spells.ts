@@ -1,5 +1,5 @@
 import { ParseTarget } from 'rpg/combat/targets';
-import { ParseDotType, RawEffect } from 'rpg/effects/dots.js';
+import { ParseDotProto, RawEffect } from 'rpg/effects/dots.js';
 import { Spell } from 'rpg/effects/spell.js';
 import { Item } from 'rpg/items/item';
 import { ParseMods } from 'rpg/parsers/mods';
@@ -47,7 +47,7 @@ const ParseSpell = (raw: RawSpell) => {
 		target: ParseTarget(raw.target),
 		dmg: ParseValue('dmg', raw.dmg),
 		mods: raw.mods ? ParseMods(raw.mods, raw.id,) : null,
-		dot: raw.dot ? ParseDotType(raw.dot, raw) : null,
+		dot: raw.dot ? ParseDotProto(raw.dot, raw) : null,
 		time: raw.time,
 		summon: raw.summon
 	});

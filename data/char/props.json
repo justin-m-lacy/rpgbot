@@ -1,0 +1,13 @@
+[
+	{
+		"id": "ghost",
+		"name": "ghost",
+		"rename": "Ghost of {name}",
+		"flags": "incorp,invis",
+		"mod": {
+			"hp": "-50%",
+			"armor": "-50%",
+			"dodge": "10+20%"
+		}
+	}
+]
